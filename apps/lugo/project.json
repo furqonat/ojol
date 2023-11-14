@@ -1,0 +1,67 @@
+{
+  "name": "lugo",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/lugo/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/lugo",
+        "main": "apps/lugo/src/main.ts",
+        "tsConfig": "apps/lugo/tsconfig.app.json",
+        "assets": [
+          "apps/lugo/src/assets"
+        ],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/lugo/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "lugo:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "lugo:build:development"
+        },
+        "production": {
+          "buildTarget": "lugo:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "apps/lugo/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "apps/lugo/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
