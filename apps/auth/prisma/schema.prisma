@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/@prisma/client/auth"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model customer {
+  id             String                  @id @default(cuid())
+  name           String?
+  email          String?
+  phone          String?
+  password       String?
+  device_token   customer_device_token[]
+  last_sign_in   DateTime?
+  last_active    DateTime?
+  email_verified Boolean                 @default(false)
+  phone_verified Boolean                 @default(false)
+}
+
+model customer_device_token {
+  id          String    @id @default(cuid())
+  token       String
+  customer    customer? @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  customer_id String?
+}
