@@ -13,6 +13,11 @@ export class CustomerController {
   @Post()
   async signIn(@Headers('Authorization') token?: string) {
     if (token) return this.customerService.signIn(token)
-    throw new UnauthorizedException()
+    else {
+      throw new UnauthorizedException({
+        message: 'Unauthorized',
+        token: null,
+      })
+    }
   }
 }
