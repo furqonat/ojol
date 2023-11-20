@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Headers,
   Post,
   UnauthorizedException,
@@ -16,6 +17,13 @@ export class DriverController {
       return this.driverService.signIn(token)
     } else {
       throw new UnauthorizedException()
+    }
+  }
+
+  @Get('/test')
+  async testApp() {
+    return {
+      message: 'hello api',
     }
   }
 }
