@@ -12,6 +12,9 @@ provider:
         path: ./
         file: auth.Dockerfile
 
+plugins:
+  - serverless-offline
+
 functions:
   app:
     image:
