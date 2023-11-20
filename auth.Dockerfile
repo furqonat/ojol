@@ -4,9 +4,7 @@ COPY apps/auth ./apps/auth
 RUN true
 COPY firebase ./firebase
 RUN true
-RUN true
 COPY bcrypt ./bcrypt
-RUN true
 RUN true
 COPY guard ./guard
 RUN true
@@ -23,7 +21,6 @@ RUN true
 COPY jest.config.ts .
 RUN true
 COPY jest.config.ts .
-RUN true
 RUN true
 COPY nx.json .
 RUN true
