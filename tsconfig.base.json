@@ -16,8 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@auth/*": ["apps/auth/src/app/*"],
+      "@lugo/bcrypt": ["bcrypt/src/index.ts"],
       "@lugo/firebase": ["firebase/src/index.ts"],
       "@lugo/guard": ["guard/src/index.ts"],
+      "@lugo/password": ["password/src/index.ts"],
       "@lugo/prisma-auth": ["prisma-auth/src/index.ts"]
     }
   },
