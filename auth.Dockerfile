@@ -10,8 +10,6 @@ RUN true
 RUN true
 COPY guard ./guard
 RUN true
-COPY tools ./tools
-RUN true
 COPY .eslintignore .
 RUN true
 COPY .eslintrc.json .
