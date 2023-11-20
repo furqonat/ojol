@@ -17,7 +17,7 @@ functions:
     image:
       name: auth
       command:
-        - ./dist/apps/auth/main.handler
+        - ./dist/apps/auth/main.js.handler
       entryPoint:
         - '/lambda-entrypoint.sh'
     timeout: 30

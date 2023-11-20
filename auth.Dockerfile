@@ -46,4 +46,4 @@ RUN npx nx run auth:build
 
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
-CMD ["./dist/apps/auth/main.handler"]
+CMD ["./dist/apps/auth/main.js.handler"]
