@@ -1,0 +1,33 @@
+service: auth
+provider:
+  name: aws
+  runtime: nodejs16.x
+  region: ap-southeast-3
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: ./google-services.json
+
+  ecr:
+    images:
+      auth:
+        path: ./
+        file: auth.Dockerfile
+
+plugins:
+  - serverless-offline
+
+functions:
+  app:
+    image:
+      name: auth
+      command:
+        - dist/packages/auth/main.handler
+      entryPoint:
+        - '/lambda-entrypoint.sh'
+    timeout: 30
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+      - http:
+          method: any
+          path: /
