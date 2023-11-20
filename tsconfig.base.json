@@ -21,7 +21,8 @@
       "@lugo/guard": ["guard/src/index.ts"],
       "@lugo/password": ["password/src/index.ts"],
       "@lugo/prisma-auth": ["prisma-auth/src/index.ts"]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules", "tmp"]
 }
