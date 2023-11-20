@@ -1,11 +1,10 @@
+import serverlessExpress from '@vendia/serverless-express'
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
-import serverlessExpress from '@vendia/serverless-express'
 
 import { AppModule } from './app/app.module'
 
 import { Handler } from 'express'
-import * as admin from 'firebase-admin'
 let server: Handler
 
 async function bootstrap() {
@@ -18,12 +17,8 @@ async function bootstrap() {
     },
   })
   app.useGlobalPipes(new ValidationPipe())
-  const adminApp = admin.apps.find((app) => app.name === '[DEFAULT]')
-  if (!adminApp) {
-    admin.initializeApp()
-  }
-  await app.init()
   app.setGlobalPrefix('auth')
+  await app.init()
   const expressApp = app.getHttpAdapter().getInstance()
   return serverlessExpress({ app: expressApp })
   // const port = process.env.PORT || 3333
