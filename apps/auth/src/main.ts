@@ -22,6 +22,7 @@ async function bootstrap() {
   if (!adminApp) {
     admin.initializeApp()
   }
+  app.setGlobalPrefix('auth')
   await app.init()
   const expressApp = app.getHttpAdapter().getInstance()
   return serverlessExpress({ app: expressApp })
