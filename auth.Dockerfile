@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/nodejs:18
+FROM public.ecr.aws/lambda/nodejs:16
 
 COPY apps/auth ./apps/auth
 RUN true
@@ -50,4 +50,4 @@ RUN cat ./apps/auth/.env
 
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
-CMD ["./dist/apps/auth/main.handler"]
+CMD ["dist/apps/auth/main.js.handler"]
