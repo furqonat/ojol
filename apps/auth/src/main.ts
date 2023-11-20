@@ -22,8 +22,8 @@ async function bootstrap() {
   if (!adminApp) {
     admin.initializeApp()
   }
-  app.setGlobalPrefix('auth')
   await app.init()
+  app.setGlobalPrefix('auth')
   const expressApp = app.getHttpAdapter().getInstance()
   return serverlessExpress({ app: expressApp })
   // const port = process.env.PORT || 3333
