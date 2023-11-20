@@ -23,6 +23,9 @@ dependencies:
   '@prisma/client':
     specifier: 5.6.0
     version: 5.6.0(prisma@5.6.0)
+  '@vendia/serverless-express':
+    specifier: ^4.10.4
+    version: 4.10.4
   axios:
     specifier: ^1.0.0
     version: 1.6.1
@@ -35,6 +38,9 @@ dependencies:
   class-validator:
     specifier: ^0.14.0
     version: 0.14.0
+  express:
+    specifier: ^4.18.2
+    version: 4.18.2
   firebase-admin:
     specifier: ^11.11.0
     version: 11.11.0
@@ -3641,6 +3647,11 @@ packages:
       '@typescript-eslint/types': 6.11.0
       eslint-visitor-keys: 3.4.3
     dev: true
+
+  /@vendia/serverless-express@4.10.4:
+    resolution: {integrity: sha512-OH2cX+LqtrayCIkHAkShiLnvrgqGDvwIQEex5dHc/uJitBQjIz3q7dZtfU7cZ5vcR9Vkide5xJQDBEMbXoWLeA==}
+    engines: {node: '>=12'}
+    dev: false
 
   /@webassemblyjs/ast@1.11.6:
     resolution: {integrity: sha512-IN1xI7PwOvLPgjcf180gC1bqn3q/QaOCwYUahIOhbYUu8KA/3tw2RT/T0Gidi1l7Hhj5D/INhJxiICObqpMu4Q==}

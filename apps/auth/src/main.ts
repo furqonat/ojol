@@ -1,9 +1,12 @@
-import { Logger, ValidationPipe } from '@nestjs/common'
+import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
+import serverlessExpress from '@vendia/serverless-express'
 
 import { AppModule } from './app/app.module'
 
+import { Handler } from 'express'
 import * as admin from 'firebase-admin'
+let server: Handler
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -20,11 +23,17 @@ async function bootstrap() {
     admin.initializeApp()
   }
   await app.init()
-  // const expressApp = app.getHttpAdapter().getInstance()
-  // return serverlessExpress({ app: expressApp })
-  const port = process.env.PORT || 3333
-  await app.listen(port)
-  Logger.log(`🚀 Application is running on: http://localhost:${port}`)
+  const expressApp = app.getHttpAdapter().getInstance()
+  return serverlessExpress({ app: expressApp })
+  // const port = process.env.PORT || 3333
+  // await app.listen(port)
+  // // Logger.log(
+  // //   `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
+  // // )
 }
 
-bootstrap()
+export const handler: Handler = async (event, context, callback) => {
+  server = server ?? (await bootstrap())
+  return server(event, context, callback)
+}
+/* bootstrap() */
