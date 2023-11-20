@@ -12,8 +12,6 @@ COPY guard ./guard
 RUN true
 COPY tools ./tools
 RUN true
-COPY .env .
-RUN true
 COPY .eslintignore .
 RUN true
 COPY .eslintrc.json .
