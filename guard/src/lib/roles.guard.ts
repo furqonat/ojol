@@ -8,11 +8,14 @@ import { Reflector } from '@nestjs/core'
 import { Role } from './roles.enum'
 import { Request } from 'express'
 import { ROLE_KEY } from './roles.decorator'
-import { getAuth } from 'firebase-admin/auth'
+import { FirebaseService } from '@lugo/firebase'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private readonly firebase: FirebaseService,
+  ) {}
 
   async canActivate(context: ExecutionContext) {
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLE_KEY, [
@@ -29,7 +32,7 @@ export class RolesGuard implements CanActivate {
       return false
     }
     try {
-      const userDecode = await getAuth()?.verifyIdToken(token)
+      const userDecode = await this.firebase.auth?.verifyIdToken(token)
       return requiredRoles.includes(userDecode['roles'])
     } catch (error) {
       Logger.error(

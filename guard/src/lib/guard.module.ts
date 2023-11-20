@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common'
 import { RolesGuard } from './roles.guard'
 import { APP_GUARD } from '@nestjs/core'
+import { FirebaseService } from '@lugo/firebase'
 
 @Module({
   controllers: [],
@@ -9,6 +10,7 @@ import { APP_GUARD } from '@nestjs/core'
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    FirebaseService,
   ],
 })
 export class GuardModule {}
