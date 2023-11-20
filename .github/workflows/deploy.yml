@@ -17,6 +17,7 @@ jobs:
       # todo: add test case
       - run: pnpm install
       - run: cd apps/auth && npx prisma generate
+      - run: pnpm install express
       - run: npx nx run auth:test
       - run: npx nx run auth:build
       - run: npx serverless deploy --config auth.serverless.yml
