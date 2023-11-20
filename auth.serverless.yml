@@ -24,7 +24,7 @@ functions:
     events:
       - http:
           method: any
-          path: /auth/{proxy+}
+          path: /{proxy+}
       - http:
           method: any
-          path: /auth
+          path: /
