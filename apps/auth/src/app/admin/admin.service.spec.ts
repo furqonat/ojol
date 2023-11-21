@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { AdminService } from './admin.service'
 import { BcryptService } from '@lugo/bcrypt'
-import { PrismaService } from '../prisma/prisma.service'
 import { JwtService } from '@nestjs/jwt'
 import { admin } from '@prisma/client/auth'
+import { UsersPrismaService } from '@lugo/users'
 
 describe('AdminService', () => {
   let service: AdminService
@@ -25,7 +25,7 @@ describe('AdminService', () => {
           },
         },
         {
-          provide: PrismaService,
+          provide: UsersPrismaService,
           useValue: {
             admin: {
               findUnique: findUniqueMock,

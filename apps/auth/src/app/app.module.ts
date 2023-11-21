@@ -7,8 +7,8 @@ import { AdminModule } from './admin/admin.module'
 import { CustomerModule } from './customer/customer.module'
 import { DriverModule } from './driver/driver.module'
 import { MerchantModule } from './merchant/merchant.module'
-import { PrismaModule } from './prisma/prisma.module'
 import { GuardModule } from '@lugo/guard'
+import { UsersModule } from '@lugo/users'
 import { JwtModule } from '@nestjs/jwt'
 
 @Module({
@@ -17,7 +17,7 @@ import { JwtModule } from '@nestjs/jwt'
     MerchantModule,
     DriverModule,
     AdminModule,
-    PrismaModule,
+    UsersModule,
     FirebaseModule,
     ConfigModule.forRoot({
       isGlobal: true,

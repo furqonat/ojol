@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output = "../../node_modules/@prisma/client/users"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model customer {
+  id             String                  @id @default(cuid())
+  name           String?
+  email          String?
+  phone          String?
+  password       String?
+  device_token   customer_device_token[]
+  last_sign_in   DateTime?
+  last_active    DateTime?
+  email_verified Boolean                 @default(false)
+  phone_verified Boolean                 @default(false)
+}
+
+model customer_device_token {
+  id          String    @id @default(cuid())
+  token       String
+  customer    customer? @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  customer_id String?
+}
+
+model driver {
+  id             String                @id @default(cuid())
+  name           String?
+  email          String?
+  phone          String?
+  password       String?
+  device_token   driver_device_token[]
+  last_sign_in   DateTime?
+  last_active    DateTime?
+  email_verified Boolean               @default(false)
+  phone_verified Boolean               @default(false)
+}
+
+model driver_device_token {
+  id        String  @id @default(cuid())
+  token     String
+  driver    driver? @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  driver_id String?
+}
+
+model merchant {
+  id             String                  @id @default(cuid())
+  name           String?
+  email          String?
+  phone          String?
+  password       String?
+  device_token   merchant_device_token[]
+  last_sign_in   DateTime?
+  last_active    DateTime?
+  email_verified Boolean                 @default(false)
+  phone_verified Boolean                 @default(false)
+}
+
+model merchant_device_token {
+  id          String    @id @default(cuid())
+  token       String
+  merchant    merchant? @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+  merchant_id String?
+}
+
+// admin database
+model admin {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  password     String
+  last_sign_in DateTime?
+  status       Boolean   @default(true)
+  role         roles[]
+}
+
+model roles {
+  id    String  @id @default(cuid())
+  name  String
+  admin admin[]
+}
