@@ -9,6 +9,7 @@ import { DriverModule } from './driver/driver.module'
 import { MerchantModule } from './merchant/merchant.module'
 import { PrismaModule } from './prisma/prisma.module'
 import { GuardModule } from '@lugo/guard'
+import { JwtModule } from '@nestjs/jwt'
 
 @Module({
   imports: [
@@ -18,9 +19,15 @@ import { GuardModule } from '@lugo/guard'
     AdminModule,
     PrismaModule,
     FirebaseModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     BcryptModule,
     GuardModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+    }),
   ],
 })
 export class AppModule {}
