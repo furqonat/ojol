@@ -1,7 +1,8 @@
-FROM public.ecr.aws/lambda/nodejs:16
+FROM public.ecr.aws/lambda/nodejs:20
 
 COPY apps/auth ./apps/auth
 RUN true
+COPY apps/auth/.env ./.env
 COPY firebase ./firebase
 RUN true
 COPY bcrypt ./bcrypt
@@ -38,16 +39,12 @@ RUN npm install -g pnpm
 
 RUN pnpm install
 
-RUN pnpm install express
 
 RUN npx prisma generate --schema=./apps/auth/prisma/schema.prisma
 RUN true
-RUN mkdir dist
+
 RUN npx nx run auth:build
 
-RUN ls -l .
-RUN ls -l ./apps/auth/
-RUN cat ./apps/auth/.env
 
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
