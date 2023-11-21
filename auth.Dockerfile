@@ -42,11 +42,12 @@ RUN pnpm install express
 
 RUN cd apps/auth && npx prisma generate
 RUN true
+RUN mkdir dist
 RUN npx nx run auth:build
 
-# RUN ls -l .
-# RUN ls -l ./apps/auth/
-# RUN cat ./apps/auth/.env
+RUN ls -l .
+RUN ls -l ./apps/auth/
+RUN cat ./apps/auth/.env
 
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
