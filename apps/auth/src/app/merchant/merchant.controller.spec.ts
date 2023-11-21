@@ -1,10 +1,10 @@
-import { PrismaService } from '../prisma/prisma.service'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MerchantController } from './merchant.controller'
 import { MerchantService } from './merchant.service'
 import { UnauthorizedException } from '@nestjs/common'
+import { UsersPrismaService } from '@lugo/users'
 
 describe('MerchantController', () => {
   let controller: MerchantController
@@ -17,7 +17,7 @@ describe('MerchantController', () => {
       providers: [
         FirebaseService,
         ConfigService,
-        PrismaService,
+        UsersPrismaService,
         {
           provide: MerchantService,
           useValue: {

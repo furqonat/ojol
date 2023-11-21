@@ -3,11 +3,11 @@ FROM public.ecr.aws/lambda/nodejs:20
 COPY apps/auth ./apps/auth
 RUN true
 COPY apps/auth/.env ./.env
-COPY firebase ./firebase
+COPY libs/firebase ./libs/firebase
 RUN true
-COPY bcrypt ./bcrypt
+COPY libs/bcrypt ./libs/bcrypt
 RUN true
-COPY guard ./guard
+COPY libs/guard ./libs/guard
 RUN true
 COPY .eslintignore .
 RUN true
@@ -40,7 +40,7 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 
-RUN npx prisma generate --schema=./apps/auth/prisma/schema.prisma
+RUN npx prisma generate --schema=./libs/users_schema/schema.prisma
 RUN true
 
 RUN npx nx run auth:build

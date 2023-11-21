@@ -1,11 +1,11 @@
-import { PrismaService } from '../prisma/prisma.service'
 import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { BcryptService } from '@lugo/bcrypt'
+import { UsersPrismaService } from '@lugo/users'
 @Injectable()
 export class AdminService {
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly prismaService: UsersPrismaService,
     private readonly jwtService: JwtService,
     private readonly bcryptService: BcryptService,
   ) {}

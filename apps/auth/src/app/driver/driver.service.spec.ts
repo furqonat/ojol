@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { DriverService } from './driver.service'
-import { PrismaService } from '../prisma/prisma.service'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 import { DecodedIdToken } from 'firebase-admin/auth'
 import { driver } from '@prisma/client/auth'
+import { UsersPrismaService } from '@lugo/users'
 
 describe('DriverService', () => {
   let service: DriverService
@@ -31,7 +31,7 @@ describe('DriverService', () => {
           },
         },
         {
-          provide: PrismaService,
+          provide: UsersPrismaService,
           useValue: {
             driver: {
               findUniqueOrThrow: findUniqueOrThrowMock,

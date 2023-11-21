@@ -1,14 +1,13 @@
 import { BcryptModule, BcryptService } from '@lugo/bcrypt'
 import { Module } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { PrismaModule } from '../prisma/prisma.module'
-import { PrismaService } from '../prisma/prisma.service'
 import { AdminController } from './admin.controller'
 import { AdminService } from './admin.service'
+import { UsersPrismaService } from '@lugo/users'
 
 @Module({
-  imports: [BcryptModule, PrismaModule],
-  providers: [AdminService, JwtService, PrismaService, BcryptService],
+  imports: [BcryptModule],
+  providers: [AdminService, JwtService, UsersPrismaService, BcryptService],
   controllers: [AdminController],
 })
 export class AdminModule {}

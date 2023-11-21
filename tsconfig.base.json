@@ -16,13 +16,13 @@
     "baseUrl": ".",
     "paths": {
       "@auth/*": ["apps/auth/src/app/*"],
-      "@lugo/JWTGuard": ["JWTGuard/src/index.ts"],
-      "@lugo/bcrypt": ["bcrypt/src/index.ts"],
-      "@lugo/firebase": ["firebase/src/index.ts"],
-      "@lugo/guard": ["guard/src/index.ts"],
-      "@lugo/jwtguard": ["jwtguard/src/index.ts"],
-      "@lugo/password": ["password/src/index.ts"],
-      "@lugo/prisma-auth": ["prisma-auth/src/index.ts"]
+      "@lugo/bcrypt": ["libs/bcrypt/src/index.ts"],
+      "@lugo/firebase": ["libs/firebase/src/index.ts"],
+      "@lugo/guard": ["libs/guard/src/index.ts"],
+      "@lugo/jwtguard": ["libs/jwtguard/src/index.ts"],
+      "@lugo/password": ["libs/password/src/index.ts"],
+      "@lugo/prisma-auth": ["libs/prisma-auth/src/index.ts"],
+      "@lugo/users": ["libs/users/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
