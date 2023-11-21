@@ -16,7 +16,7 @@ async function bootstrap() {
       optionsSuccessStatus: 200,
     },
   })
-  app.useGlobalPipes(new ValidationPipe())
+  app.useGlobalPipes(new ValidationPipe({ transform: true }))
   app.setGlobalPrefix('account')
   await app.init()
   const expressApp = app.getHttpAdapter().getInstance()
