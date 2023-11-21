@@ -40,7 +40,7 @@ RUN pnpm install
 
 RUN pnpm install express
 
-RUN cd apps/auth && npx prisma generate
+RUN npx prisma generate --schema=./apps/auth/prisma/schema.prisma
 RUN true
 RUN mkdir dist
 RUN npx nx run auth:build
