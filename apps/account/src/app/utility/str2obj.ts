@@ -1,4 +1,7 @@
 export function str2obj(input?: unknown) {
+  if (!input) {
+    return undefined
+  }
   if (Object.keys(input).length === 0) {
     return undefined
   }

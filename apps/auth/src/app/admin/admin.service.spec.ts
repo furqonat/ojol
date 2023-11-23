@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AdminService } from './admin.service'
 import { BcryptService } from '@lugo/bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { admin } from '@prisma/client/auth'
+import { admin } from '@prisma/client/users'
 import { UsersPrismaService } from '@lugo/users'
 
 describe('AdminService', () => {
@@ -59,6 +59,7 @@ describe('AdminService', () => {
         password: '12341234',
         last_sign_in: undefined,
         status: false,
+        avatar: '',
       }
       findUniqueMock.mockReturnValue(adminT)
       comparePasswordMock.mockReturnValue(true)
@@ -92,6 +93,7 @@ describe('AdminService', () => {
         password: '12341234',
         last_sign_in: undefined,
         status: false,
+        avatar: '',
       }
       findUniqueMock.mockReturnValue(adminT)
       comparePasswordMock.mockReturnValue(false)

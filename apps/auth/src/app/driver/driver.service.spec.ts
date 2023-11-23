@@ -3,7 +3,7 @@ import { DriverService } from './driver.service'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 import { DecodedIdToken } from 'firebase-admin/auth'
-import { driver } from '@prisma/client/auth'
+import { driver } from '@prisma/client/users'
 import { UsersPrismaService } from '@lugo/users'
 
 describe('DriverService', () => {
@@ -66,6 +66,8 @@ describe('DriverService', () => {
         last_active: undefined,
         email_verified: false,
         phone_verified: false,
+        avatar: '',
+        status: 'ACTIVE',
       }
       user = {
         aud: '',
@@ -112,6 +114,8 @@ describe('DriverService', () => {
         last_active: undefined,
         email_verified: false,
         phone_verified: false,
+        avatar: '',
+        status: 'ACTIVE',
       }
       user = {
         aud: '',
