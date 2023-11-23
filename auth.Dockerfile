@@ -10,6 +10,8 @@ COPY libs/guard ./libs/guard
 RUN true
 COPY libs/users_schema ./libs/users_schema
 RUN true
+COPY libs/users ./libs/users
+RUN true
 COPY .eslintignore .
 RUN true
 COPY .eslintrc.json .
