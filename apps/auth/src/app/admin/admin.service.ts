@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { BcryptService } from '@lugo/bcrypt'
 import { UsersPrismaService } from '@lugo/users'
+import { Role } from '@lugo/guard'
 @Injectable()
 export class AdminService {
   constructor(
@@ -23,7 +24,7 @@ export class AdminService {
         admin.password,
       )
       if (passwordValid) {
-        const payload = { sub: admin.id, email: admin.email }
+        const payload = { sub: admin.id, email: admin.email, role: Role.ADMIN }
         return {
           message: 'OK',
           token: await this.jwtService.signAsync(payload),

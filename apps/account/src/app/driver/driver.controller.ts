@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Headers, Post, Query } from '@nestjs/common'
 import { DriverService } from './driver.service'
 import { Prisma } from '@prisma/client/users'
+import { str2obj } from '../utility'
 
 @Controller('driver')
 export class DriverController {
@@ -11,7 +12,7 @@ export class DriverController {
     @Headers('Authorization') token?: string,
     @Query() select?: Prisma.driverSelect,
   ) {
-    return this.driverService.getDriver(token, select)
+    return this.driverService.getDriver(token, str2obj(select))
   }
 
   @Post()

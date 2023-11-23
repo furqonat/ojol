@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common'
 import { CustomerBasicUpdate, CustomerQuery } from '../dto/customer.dto'
 import { CustomerService } from './customer.service'
+import { str2obj } from '../utility'
 
 @Controller('customer')
 export class CustomerController {
@@ -20,7 +21,7 @@ export class CustomerController {
     @Query() query?: CustomerQuery,
   ) {
     if (token) {
-      return this.customerService.getCustomer(token, query)
+      return this.customerService.getCustomer(token, str2obj(query))
     } else {
       throw new UnauthorizedException()
     }

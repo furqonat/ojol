@@ -23,9 +23,7 @@ async function bootstrap() {
   return serverlessExpress({ app: expressApp })
   // const port = process.env.PORT || 3333
   // await app.listen(port)
-  // // Logger.log(
-  // //   `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  // // )
+  // Logger.log(`🚀 Application is running on: http://localhost:${port}}`)
 }
 
 const handler: Handler = async (event, context, callback) => {
@@ -34,4 +32,4 @@ const handler: Handler = async (event, context, callback) => {
 }
 
 export { handler }
-/* bootstrap() */
+// bootstrap()
