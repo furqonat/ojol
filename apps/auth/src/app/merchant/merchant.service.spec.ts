@@ -2,7 +2,7 @@ import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { MerchantService } from './merchant.service'
-import { merchant } from '@prisma/client/auth'
+import { merchant } from '@prisma/client/users'
 import { DecodedIdToken } from 'firebase-admin/auth'
 import { UsersPrismaService } from '@lugo/users'
 
@@ -66,6 +66,8 @@ describe('MerchantService', () => {
         last_active: undefined,
         email_verified: false,
         phone_verified: false,
+        status: 'ACTIVE',
+        avatar: '',
       }
       user = {
         aud: '',
@@ -112,6 +114,8 @@ describe('MerchantService', () => {
         last_active: undefined,
         email_verified: false,
         phone_verified: false,
+        avatar: '',
+        status: 'ACTIVE',
       }
       user = {
         aud: '',
