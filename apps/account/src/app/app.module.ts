@@ -5,6 +5,7 @@ import { GuardModule } from '@lugo/guard'
 import { FirebaseModule } from '@lugo/firebase'
 import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
+import { UsersModule } from '@lugo/users'
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { JwtModule } from '@nestjs/jwt'
       secret: process.env.JWT_SECRET,
       global: true,
     }),
+    UsersModule,
   ],
   controllers: [],
   providers: [],
