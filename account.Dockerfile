@@ -1,6 +1,6 @@
 FROM public.ecr.aws/lambda/nodejs:20
 
-COPY apps/auth ./apps/auth
+COPY apps/account ./apps/account
 RUN true
 COPY libs/firebase ./libs/firebase
 RUN true
@@ -42,9 +42,9 @@ RUN pnpm install
 RUN npx prisma generate --schema=./libs/users_schema/schema.prisma
 RUN true
 
-RUN npx nx run auth:build
+RUN npx nx run account:build
 
 
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
-CMD ["dist/apps/auth/main.handler"]
+CMD ["dist/apps/account/main.handler"]
