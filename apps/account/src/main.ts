@@ -17,7 +17,6 @@ async function bootstrap() {
     },
   })
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
-  app.setGlobalPrefix('account')
   await app.init()
   const expressApp = app.getHttpAdapter().getInstance()
   return serverlessExpress({ app: expressApp })
