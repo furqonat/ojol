@@ -2,6 +2,8 @@ FROM public.ecr.aws/lambda/nodejs:20
 
 COPY apps/account ./apps/account
 RUN true
+COPY .env ./.env
+RUN true
 COPY libs/firebase ./libs/firebase
 RUN true
 COPY libs/bcrypt ./libs/bcrypt

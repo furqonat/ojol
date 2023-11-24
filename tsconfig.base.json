@@ -22,7 +22,8 @@
       "@lugo/jwtguard": ["libs/jwtguard/src/index.ts"],
       "@lugo/password": ["libs/password/src/index.ts"],
       "@lugo/prisma-auth": ["libs/prisma-auth/src/index.ts"],
-      "@lugo/users": ["libs/users/src/index.ts"]
+      "@lugo/users": ["libs/users/src/index.ts"],
+      "@lugo/management/*": ["apps/management/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

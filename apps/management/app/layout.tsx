@@ -15,7 +15,7 @@ type LayoutType = {
 
 export default function RootLayout({ children }: LayoutType) {
   return (
-    <html lang={'en'}>
+    <html lang={'en'} data-theme={'light'}>
       <body className={poppins.className}>{children}</body>
     </html>
   )

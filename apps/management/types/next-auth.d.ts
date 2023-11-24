@@ -9,7 +9,7 @@ declare module 'next-auth' {
       /** The user's postal address. */
       id: string
       email: string
-      fullname: string
+      name: string
       avatar: string
       role: []
     } & DefaultSession['user']
@@ -17,9 +17,22 @@ declare module 'next-auth' {
 
   interface User {
     id: string
+    id: string
+    email: string
+    name: string
+    avatar: string
+    role: []
   }
+}
 
+declare module 'next-auth/jwt' {
   interface JWT {
-    user: Session.user
+    user: {
+      id: string
+      email: string
+      name: string
+      avatar: string
+      role: []
+    } & DefaultSession['user']
   }
 }
