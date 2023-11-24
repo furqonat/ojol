@@ -6,13 +6,14 @@ module.exports = {
   content: [
     join(
       __dirname,
-      '{components,app,prebuilt}/**/*!(*.stories|*.spec).{ts,tsx,html}',
+      '{components,app,prebuilt}/**/*!(*.stories|*.spec).{ts,tsx,jsx,js,html}',
     ),
     ...createGlobPatternsForDependencies(__dirname),
   ],
-  theme: {},
-  daisyui: {
-    themes: ['lofi', 'wireframe'],
+  theme: {
+    container: {
+      center: true,
+    },
   },
   plugins: [require('daisyui'), require('@tailwindcss/typography')],
 }

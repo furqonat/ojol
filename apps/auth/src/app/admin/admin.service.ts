@@ -20,6 +20,7 @@ export class AdminService {
         avatar: true,
         role: true,
         email: true,
+        status: true,
       },
     })
 
@@ -35,6 +36,7 @@ export class AdminService {
           email: admin.email,
           role: admin.role,
           avatar: admin.avatar,
+          status: admin.status,
         }
       } else {
         throw new BadRequestException({ message: 'Invalid credential' })
