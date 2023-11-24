@@ -1,13 +1,10 @@
-import { Injectable } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
 import { BcryptService } from '@lugo/bcrypt'
 import { UsersPrismaService } from '@lugo/users'
-import { Role } from '@lugo/guard'
+import { BadRequestException, Injectable } from '@nestjs/common'
 @Injectable()
 export class AdminService {
   constructor(
     private readonly prismaService: UsersPrismaService,
-    private readonly jwtService: JwtService,
     private readonly bcryptService: BcryptService,
   ) {}
 
@@ -15,6 +12,14 @@ export class AdminService {
     const admin = await this.prismaService.admin.findUnique({
       where: {
         email: email,
+      },
+      select: {
+        password: true,
+        id: true,
+        name: true,
+        avatar: true,
+        role: true,
+        email: true,
       },
     })
 
@@ -24,22 +29,18 @@ export class AdminService {
         admin.password,
       )
       if (passwordValid) {
-        const payload = { sub: admin.id, email: admin.email, role: Role.ADMIN }
         return {
-          message: 'OK',
-          token: await this.jwtService.signAsync(payload),
+          id: admin.id,
+          name: admin.name,
+          email: admin.email,
+          role: admin.role,
+          avatar: admin.avatar,
         }
       } else {
-        return {
-          message: 'Invalid credential',
-          token: null,
-        }
+        throw new BadRequestException({ message: 'Invalid credential' })
       }
     } else {
-      return {
-        message: 'Invalid credential',
-        token: null,
-      }
+      throw new BadRequestException({ message: 'Invalid credential' })
     }
   }
 }
