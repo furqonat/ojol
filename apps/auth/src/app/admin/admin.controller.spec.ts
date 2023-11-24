@@ -28,34 +28,34 @@ describe('AdminController', () => {
     expect(controller).toBeDefined()
   })
 
-  describe('return token if credential is valid', () => {
+  describe('return admin if credential is valid', () => {
     beforeEach(() => {
       signInMock.mockReturnValue({
-        token: '12341234',
-        message: 'OK',
+        id: '1234',
+        name: 'test',
       })
     })
-    it('test signin and return token', async () => {
+    it('test signin and return admin', async () => {
       const result = await controller.signIn({
         email: 'email',
         password: 'password',
       })
-      expect(result!.message).toBe('OK')
+      expect(result.name).toBe('test')
     })
   })
   describe('return message is invalid credential if credential is invalid', () => {
     beforeEach(() => {
-      signInMock.mockReturnValue({
-        token: null,
-        message: 'Invalid credential',
-      })
+      signInMock.mockReturnValue(undefined)
     })
     it('test signin and invalid credential', async () => {
-      const result = await controller.signIn({
-        email: 'email',
-        password: 'password',
-      })
-      expect(result!.message).toBe('Invalid credential')
+      try {
+        await controller.signIn({
+          email: 'email',
+          password: 'password',
+        })
+      } catch (e) {
+        expect(e).toBeInstanceOf(BadRequestException)
+      }
     })
   })
   describe('return message is bad request when some field not provided', () => {

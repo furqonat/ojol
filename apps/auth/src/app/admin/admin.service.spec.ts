@@ -1,19 +1,17 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { AdminService } from './admin.service'
 import { BcryptService } from '@lugo/bcrypt'
-import { JwtService } from '@nestjs/jwt'
-import { admin } from '@prisma/client/users'
 import { UsersPrismaService } from '@lugo/users'
+import { Test, TestingModule } from '@nestjs/testing'
+import { admin } from '@prisma/client/users'
+import { AdminService } from './admin.service'
+import { BadRequestException } from '@nestjs/common'
 
 describe('AdminService', () => {
   let service: AdminService
   let comparePasswordMock: jest.Mock
   let findUniqueMock: jest.Mock
-  let signAsyncMock: jest.Mock
   beforeEach(async () => {
     comparePasswordMock = jest.fn()
     findUniqueMock = jest.fn()
-    signAsyncMock = jest.fn()
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -32,12 +30,6 @@ describe('AdminService', () => {
             },
           },
         },
-        {
-          provide: JwtService,
-          useValue: {
-            signAsync: signAsyncMock,
-          },
-        },
       ],
     }).compile()
 
@@ -50,7 +42,6 @@ describe('AdminService', () => {
 
   describe('should be return token when signIn', () => {
     let adminT: admin
-    const token = '1231234'
     beforeEach(() => {
       adminT = {
         id: '123',
@@ -63,11 +54,10 @@ describe('AdminService', () => {
       }
       findUniqueMock.mockReturnValue(adminT)
       comparePasswordMock.mockReturnValue(true)
-      signAsyncMock.mockReturnValue(token)
     })
     it('test signin with valid credential', async () => {
       const result = await service.signIn('admintest@mail.com', '12341234')
-      expect(result.token).toBe(token)
+      expect(result.id).toBe(adminT.id)
     })
   })
 
@@ -78,8 +68,11 @@ describe('AdminService', () => {
     })
 
     it('test signin with invalid email', async () => {
-      const result = await service.signIn('admintest', '1234')
-      expect(result.token).toBe(null)
+      try {
+        await service.signIn('admintest', '1234')
+      } catch (e) {
+        expect(e).toBeInstanceOf(BadRequestException)
+      }
     })
   })
 
@@ -99,8 +92,11 @@ describe('AdminService', () => {
       comparePasswordMock.mockReturnValue(false)
     })
     it('test signin with valid email but invalid password', async () => {
-      const result = await service.signIn('admintest@mail.com', '12341234')
-      expect(result.token).toBe(null)
+      try {
+        await service.signIn('admintest@mail.com', '12341234')
+      } catch (e) {
+        expect(e).toBeInstanceOf(BadRequestException)
+      }
     })
   })
 })
