@@ -1,10 +1,14 @@
 import { Prisma, UsersPrismaService } from '@lugo/users'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { AdminQueryDTO } from '../dto/admin.dto'
+import { FirebaseService } from '@lugo/firebase'
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly prismaService: UsersPrismaService) {}
+  constructor(
+    private readonly prismaService: UsersPrismaService,
+    private readonly firebase: FirebaseService,
+  ) {}
 
   async getAdmin(adminId: string) {
     return this.prismaService.admin.findUnique({
@@ -47,7 +51,6 @@ export class AdminService {
     select?: Prisma.customerSelect
   }) {
     const { take = 20, skip = 0, query, select } = options
-    console.log(select)
     return this.prismaService.customer.findMany({
       where: {
         name: query ? { contains: query } : undefined,
@@ -141,5 +144,143 @@ export class AdminService {
       },
       data: data,
     })
+  }
+
+  async getRegistrations(take?: number, skip?: number) {
+    const merchant = this.prismaService.merchant.findMany({
+      where: {
+        status: 'PROCESS',
+      },
+      select: {
+        id: true,
+        email: true,
+        email_verified: true,
+        phone: true,
+        phone_verified: true,
+        status: true,
+        details: true,
+      },
+      take: take ? Number(take) : 20,
+      skip: skip ? Number(skip) : 0,
+    })
+    const merchantCount = this.prismaService.merchant.count({
+      where: {
+        status: 'PROCESS',
+      },
+    })
+
+    const driver = this.prismaService.driver.findMany({
+      where: {
+        status: 'PROCESS',
+      },
+      select: {
+        id: true,
+        email: true,
+        email_verified: true,
+        phone: true,
+        phone_verified: true,
+        status: true,
+        driver_details: true,
+      },
+      take: take ? Number(take) : 20,
+      skip: skip ? Number(skip) : 0,
+    })
+    const driverCount = this.prismaService.driver.count({
+      where: {
+        status: 'PROCESS',
+      },
+    })
+
+    const [merchants, mCount, drivers, dCount] = await Promise.all([
+      merchant,
+      merchantCount,
+      driver,
+      driverCount,
+    ])
+    return {
+      data: {
+        merchant: merchants,
+        driver: drivers,
+      },
+      total: {
+        merchant: mCount,
+        driver: dCount,
+      },
+    }
+  }
+
+  async applyDriver(driverId: string) {
+    const device_tokens = await this.prismaService.driver_device_token.findMany(
+      {
+        where: {
+          driver_id: driverId,
+        },
+      },
+    )
+    const driver = await this.prismaService.driver.update({
+      where: {
+        id: driverId,
+      },
+      data: {
+        status: 'ACTIVE',
+      },
+    })
+    const notification = {
+      title: 'Permintaan menjadi driver lugo',
+      body: `Selamat ${driver.name} kamu telah di setujui oleh lugo untuk menjadi driver`,
+    }
+    await this.firebase.messaging.sendEachForMulticast({
+      notification: notification,
+      android: {
+        notification: notification,
+        priority: 'high',
+      },
+      apns: {
+        payload: {
+          aps: {
+            alert: notification,
+          },
+        },
+      },
+      tokens: device_tokens.map((it) => it.token),
+    })
+    return { message: 'OK' }
+  }
+
+  async applyMerchant(merchantId: string) {
+    const device_tokens =
+      await this.prismaService.merchant_device_token.findMany({
+        where: {
+          merchant_id: merchantId,
+        },
+      })
+    const merchant = await this.prismaService.merchant.update({
+      where: {
+        id: merchantId,
+      },
+      data: {
+        status: 'ACTIVE',
+      },
+    })
+    const notification = {
+      title: 'Permintaan menjadi merchant lugo',
+      body: `Selamat ${merchant.name} kamu telah di setujui oleh lugo untuk menjadi merchant`,
+    }
+    await this.firebase.messaging.sendEachForMulticast({
+      notification: notification,
+      android: {
+        notification: notification,
+        priority: 'high',
+      },
+      apns: {
+        payload: {
+          aps: {
+            alert: notification,
+          },
+        },
+      },
+      tokens: device_tokens.map((it) => it.token),
+    })
+    return { message: 'OK' }
   }
 }

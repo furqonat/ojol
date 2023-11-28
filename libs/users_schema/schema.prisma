@@ -29,7 +29,7 @@ model customer {
 
 model customer_device_token {
   id          String    @id @default(cuid())
-  token       String
+  token       String    @unique
   customer    customer? @relation(fields: [customer_id], references: [id], onDelete: Cascade)
   customer_id String?
 }
@@ -99,7 +99,7 @@ enum vehicle_type {
 
 model driver_device_token {
   id        String  @id @default(cuid())
-  token     String
+  token     String  @unique
   driver    driver? @relation(fields: [driver_id], references: [id], onDelete: Cascade)
   driver_id String?
 }
@@ -159,7 +159,7 @@ enum merchant_type {
 
 model merchant_device_token {
   id          String    @id @default(cuid())
-  token       String
+  token       String    @unique
   merchant    merchant? @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
   merchant_id String?
 }
