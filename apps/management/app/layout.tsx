@@ -1,3 +1,4 @@
+import { PageProvider } from '../provider'
 import './global.css'
 
 import { Poppins } from 'next/font/google'
@@ -16,7 +17,9 @@ type LayoutType = {
 export default function RootLayout({ children }: LayoutType) {
   return (
     <html lang={'en'} data-theme={'light'}>
-      <body className={poppins.className}>{children}</body>
+      <body className={poppins.className}>
+        <PageProvider>{children}</PageProvider>
+      </body>
     </html>
   )
 }

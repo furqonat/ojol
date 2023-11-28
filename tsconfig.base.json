@@ -20,10 +20,10 @@
       "@lugo/firebase": ["libs/firebase/src/index.ts"],
       "@lugo/guard": ["libs/guard/src/index.ts"],
       "@lugo/jwtguard": ["libs/jwtguard/src/index.ts"],
+      "@lugo/management/*": ["apps/management/*"],
       "@lugo/password": ["libs/password/src/index.ts"],
       "@lugo/prisma-auth": ["libs/prisma-auth/src/index.ts"],
-      "@lugo/users": ["libs/users/src/index.ts"],
-      "@lugo/management/*": ["apps/management/*"]
+      "@lugo/users": ["libs/users/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

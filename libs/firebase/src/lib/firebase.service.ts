@@ -4,12 +4,14 @@ import * as admin from 'firebase-admin'
 import { App, getApps } from 'firebase-admin/app'
 import { Auth, getAuth } from 'firebase-admin/auth'
 import { Firestore, getFirestore } from 'firebase-admin/firestore'
+import { Messaging, getMessaging } from 'firebase-admin/messaging'
 
 @Injectable()
 export class FirebaseService {
   public readonly app!: App
   public readonly auth: Auth
   public readonly firestore: Firestore
+  public readonly messaging: Messaging
 
   constructor(@Inject(ConfigService) private readonly config: ConfigService) {
     if (!this.app && getApps().length === 0) {
@@ -19,5 +21,6 @@ export class FirebaseService {
     }
     this.firestore = getFirestore(this.app)
     this.auth = getAuth(this.app)
+    this.messaging = getMessaging(this.app)
   }
 }
