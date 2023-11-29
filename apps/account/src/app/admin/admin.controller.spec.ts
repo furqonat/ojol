@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AdminController } from './admin.controller'
 import { AdminService } from './admin.service'
 import { UsersPrismaService } from '@lugo/users'
+import { FirebaseService } from '@lugo/firebase'
+import { ConfigService } from '@nestjs/config'
 
 describe('AdminController', () => {
   let controller: AdminController
@@ -9,7 +11,12 @@ describe('AdminController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AdminController],
-      providers: [AdminService, UsersPrismaService],
+      providers: [
+        AdminService,
+        UsersPrismaService,
+        FirebaseService,
+        ConfigService,
+      ],
     }).compile()
 
     controller = module.get<AdminController>(AdminController)
