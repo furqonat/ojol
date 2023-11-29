@@ -1,21 +1,21 @@
 {
   "name": "firebase",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "firebase/src",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/firebase/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["firebase/**/*.ts"]
+        "lintFilePatterns": ["libs/firebase/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "firebase/jest.config.ts"
+        "jestConfig": "libs/firebase/jest.config.ts"
       }
     }
   },
