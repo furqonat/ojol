@@ -29,6 +29,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "next-router-mock": "^0.9.10",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.0.2",
     "@nx/eslint": "17.1.3",

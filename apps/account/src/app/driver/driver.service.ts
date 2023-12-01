@@ -69,4 +69,25 @@ export class DriverService {
       })
     }
   }
+
+  async updateOrderSetting(
+    token: string,
+    data: Prisma.driver_settingsUpdateInput,
+  ) {
+    try {
+      const decodeToken = await this.firebase.auth.verifyIdToken(token)
+      const driver = await this.prismaService.driver_settings.update({
+        where: {
+          driver_id: decodeToken.uid,
+        },
+        data: data,
+      })
+      return {
+        message: 'OK',
+        res: driver.id,
+      }
+    } catch (e) {
+      throw new BadRequestException({ message: 'Bad Request' })
+    }
+  }
 }

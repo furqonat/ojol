@@ -41,19 +41,34 @@ enum customer_status {
 }
 
 model driver {
-  id             String                @id @default(cuid())
-  name           String?
-  email          String?
-  phone          String?
-  password       String?
-  device_token   driver_device_token[]
-  last_sign_in   DateTime?
-  last_active    DateTime?
-  email_verified Boolean               @default(false)
-  phone_verified Boolean               @default(false)
-  avatar         String?
-  status         driver_status         @default(PROCESS)
-  driver_details driver_details?
+  id              String                @id @default(cuid())
+  name            String?
+  email           String?
+  phone           String?
+  password        String?
+  device_token    driver_device_token[]
+  last_sign_in    DateTime?
+  last_active     DateTime?
+  email_verified  Boolean               @default(false)
+  phone_verified  Boolean               @default(false)
+  avatar          String?
+  status          driver_status         @default(PROCESS)
+  driver_details  driver_details?
+  driver_settings driver_settings?
+}
+
+model driver_settings {
+  id             String  @id @default(cuid())
+  driver         driver? @relation(fields: [driver_id], references: [id])
+  driver_id      String  @unique
+  ride           Boolean @default(true)
+  ride_price     Int     @default(0)
+  delivery       Boolean @default(true)
+  delevery_price Int     @default(0)
+  food           Boolean @default(true)
+  food_price     Int     @default(0)
+  mart           Boolean @default(true)
+  mart_price     Int     @default(0)
 }
 
 model driver_details {

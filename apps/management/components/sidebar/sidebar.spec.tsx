@@ -1,5 +1,5 @@
 import { render } from '@testing-library/react'
-
+import '../../test/router-test'
 import Sidebar from './sidebar'
 
 describe('Sidebar', () => {
