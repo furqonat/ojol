@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Headers, Post, Query } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common'
 import { DriverService } from './driver.service'
 import { Prisma } from '@prisma/client/users'
 import { str2obj } from '../utility'
@@ -21,5 +29,13 @@ export class DriverController {
     @Body() details?: Prisma.driver_detailsCreateInput,
   ) {
     return this.driverService.applyDriver(token, { details: details })
+  }
+
+  @Put('/setting/order')
+  async updateOrderSetting(
+    @Headers('Authorization') token: string,
+    @Body() data: Prisma.driver_settingsUpdateInput,
+  ) {
+    return this.driverService.updateOrderSetting(token, data)
   }
 }
