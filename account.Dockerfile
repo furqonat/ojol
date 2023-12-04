@@ -54,5 +54,6 @@ RUN npx nx run account:build
 
 
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
+RUN export JWT_SECRET=auth-secret-1234
 
 CMD ["dist/apps/account/main.handler"]

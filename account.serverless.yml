@@ -5,6 +5,7 @@ provider:
   region: ap-southeast-1
   environment:
     GOOGLE_APPLICATION_CREDENTIALS: ./google-services.json
+    JWT_SECRET: auth-secret-1234
 
   ecr:
     images:

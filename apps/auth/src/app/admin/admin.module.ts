@@ -4,13 +4,9 @@ import { Module } from '@nestjs/common'
 import { JwtModule, JwtService } from '@nestjs/jwt'
 import { AdminController } from './admin.controller'
 import { AdminService } from './admin.service'
-import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       global: true,
