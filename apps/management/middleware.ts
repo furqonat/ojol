@@ -15,7 +15,7 @@ export default withAuth(
     pages: {
       signIn: '/auth',
     },
-    secret: 'secret-app',
+    secret: process.env.NEXTAUTH_SECRET,
   },
 )
 

@@ -10,6 +10,8 @@ COPY libs/bcrypt ./libs/bcrypt
 RUN true
 COPY libs/guard ./libs/guard
 RUN true
+COPY libs/guard ./libs/jwtguard
+RUN true
 COPY libs/users_schema ./libs/users_schema
 RUN true
 COPY libs/users ./libs/users

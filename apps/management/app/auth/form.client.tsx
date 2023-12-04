@@ -48,7 +48,7 @@ export function Form() {
           router.push('/')
         }
       })
-      .catch(() => {
+      .catch((e) => {
         setLoading(false)
       })
   }

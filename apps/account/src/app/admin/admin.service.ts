@@ -1,20 +1,27 @@
 import { Prisma, UsersPrismaService } from '@lugo/users'
-import { Injectable, NotFoundException } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import { AdminQueryDTO } from '../dto/admin.dto'
 import { FirebaseService } from '@lugo/firebase'
+import { BcryptService } from '@lugo/bcrypt'
 
 @Injectable()
 export class AdminService {
   constructor(
     private readonly prismaService: UsersPrismaService,
     private readonly firebase: FirebaseService,
+    private readonly bcrypt: BcryptService,
   ) {}
 
-  async getAdmin(adminId: string) {
+  async getAdmin(adminId: string, select?: Prisma.adminSelect) {
     return this.prismaService.admin.findUnique({
       where: {
         id: adminId,
       },
+      select: select ? select : { id: true },
     })
   }
 
@@ -27,6 +34,39 @@ export class AdminService {
       select: select ? select : { id: true },
       take: take ? Number(take) : 10,
       skip: skip ? Number(skip) : 0,
+    })
+  }
+
+  async createAmin(
+    data: Omit<Prisma.adminCreateInput, 'role'>,
+    roleId: string,
+  ) {
+    try {
+      const admin = await this.prismaService.admin.create({
+        data: {
+          ...data,
+          role: {
+            connect: {
+              id: roleId,
+            },
+          },
+          password: await this.bcrypt.generateHashPassword(data.password),
+        },
+      })
+      return {
+        message: 'OK',
+        res: admin.id,
+      }
+    } catch (e) {
+      throw new BadRequestException(e)
+    }
+  }
+
+  async deleteAdmin(id: string) {
+    return this.prismaService.admin.delete({
+      where: {
+        id: id,
+      },
     })
   }
 

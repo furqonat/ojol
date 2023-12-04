@@ -2,7 +2,7 @@ import { NextAuthOptions } from 'next-auth'
 import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-const option: NextAuthOptions = {
+export const option: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
@@ -18,16 +18,19 @@ const option: NextAuthOptions = {
           return null
         }
 
-        const response = await fetch(`${process.env.BASE_URL}auth/admin`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_PROD_BASE_URL}auth/admin`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
           },
-          body: JSON.stringify({
-            email: credentials.email,
-            password: credentials.password,
-          }),
-        })
+        )
 
         const user = await response.json()
         if (!user) {
@@ -45,22 +48,20 @@ const option: NextAuthOptions = {
     maxAge: 28800,
     updateAge: 3600,
   },
-  secret: 'secret-app',
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user }) {
-      token.user = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-        role: user.role,
-      }
       if (user) {
-        token.id = user.id
-        token.name = user.name
-        token.email = user.email
-        token.avatar = user.avatar
+        token.picture = user.avatar
         token.role = user.role
+        token.user = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          avatar: user.avatar,
+          role: user.role,
+          token: user.token,
+        }
       }
       return token
     },
@@ -69,7 +70,6 @@ const option: NextAuthOptions = {
       if (session.user) {
         session.user = token.user
       }
-      session.user.role = token.user.role
       return session
     },
   },
