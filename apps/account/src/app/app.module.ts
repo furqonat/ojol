@@ -10,6 +10,9 @@ import { JwtGuardModule } from '@lugo/jwtguard'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       global: true,
@@ -18,9 +21,6 @@ import { JwtGuardModule } from '@lugo/jwtguard'
     AdminModule,
     GuardModule,
     FirebaseModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     UsersModule,
     JwtGuardModule,
   ],

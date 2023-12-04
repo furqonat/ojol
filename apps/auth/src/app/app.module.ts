@@ -13,6 +13,9 @@ import { JwtModule } from '@nestjs/jwt'
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       global: true,
@@ -23,9 +26,6 @@ import { JwtModule } from '@nestjs/jwt'
     AdminModule,
     UsersModule,
     FirebaseModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     BcryptModule,
     GuardModule,
   ],
