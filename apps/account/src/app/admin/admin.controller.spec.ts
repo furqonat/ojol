@@ -5,6 +5,7 @@ import { UsersPrismaService } from '@lugo/users'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 import { BcryptService } from '@lugo/bcrypt'
+import { JwtService } from '@nestjs/jwt'
 
 describe('AdminController', () => {
   let controller: AdminController
@@ -14,6 +15,7 @@ describe('AdminController', () => {
       controllers: [AdminController],
       providers: [
         AdminService,
+        JwtService,
         UsersPrismaService,
         BcryptService,
         FirebaseService,
