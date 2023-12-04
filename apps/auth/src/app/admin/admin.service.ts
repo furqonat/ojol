@@ -1,11 +1,13 @@
 import { BcryptService } from '@lugo/bcrypt'
 import { UsersPrismaService } from '@lugo/users'
 import { BadRequestException, Injectable } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 @Injectable()
 export class AdminService {
   constructor(
     private readonly prismaService: UsersPrismaService,
     private readonly bcryptService: BcryptService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signIn(email: string, password: string) {
@@ -30,6 +32,11 @@ export class AdminService {
         admin.password,
       )
       if (passwordValid) {
+        const payload = {
+          id: admin.id,
+          name: admin.name,
+          role: admin.role,
+        }
         return {
           id: admin.id,
           name: admin.name,
@@ -37,6 +44,7 @@ export class AdminService {
           role: admin.role,
           avatar: admin.avatar,
           status: admin.status,
+          token: this.jwtService.sign(payload),
         }
       } else {
         throw new BadRequestException({ message: 'Invalid credential' })

@@ -18,7 +18,7 @@ export function Navbar(props: NavbarProps) {
   }
 
   return (
-    <div className={'w-full border-b-gray-200 border py-2'}>
+    <div className={'w-full border-b-gray-200 md:border-none border py-2'}>
       <div className={'container flex flex-row gap-2 items-center'}>
         <div className="drawer visible md:hidden">
           <input id="my-drawer" type="checkbox" className="drawer-toggle" />
