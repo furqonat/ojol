@@ -11,7 +11,7 @@ import { JwtGuardModule } from '@lugo/jwtguard'
 @Module({
   imports: [
     JwtModule.register({
-      secret: 'App Secret',
+      secret: process.env.JWT_SECRET,
       global: true,
     }),
     CustomerModule,
