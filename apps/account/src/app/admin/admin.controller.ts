@@ -6,18 +6,20 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import { AdminService } from './admin.service'
-import { Role, Roles } from '@lugo/jwtguard'
+import { Role, Roles, RolesGuard } from '@lugo/jwtguard'
 import { Prisma } from '@prisma/client/users'
 import { str2obj } from '../utility'
 
-@Roles(Role.ADMIN, Role.SUPERADMIN)
+@UseGuards(RolesGuard)
 @Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Get()
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   async getAdmins(
     @Query('take') take?: number,
     @Query('skip') skip?: number,
@@ -31,6 +33,7 @@ export class AdminController {
   }
 
   @Post()
+  @Roles(Role.SUPERADMIN)
   async createAdmin(
     @Body() data: Prisma.adminCreateInput,
     @Body('roleId') roleId: string,
@@ -39,6 +42,7 @@ export class AdminController {
   }
 
   @Get('customer')
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   async getCustomers(
     @Query('take') take?: number,
     @Query('skip') skip?: number,
@@ -54,11 +58,13 @@ export class AdminController {
   }
 
   @Delete(':id')
+  @Roles(Role.SUPERADMIN)
   async deleteAdmin(@Param('id') adminId: string) {
     return this.adminService.deleteAdmin(adminId)
   }
 
   @Get(':id')
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
   async getAdmin(
     @Param('id') adminId: string,
     @Query() select?: Prisma.adminSelect,
