@@ -18,7 +18,7 @@ import { JwtGuardModule } from '@lugo/jwtguard'
       isGlobal: true,
     }),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: 'App Secret',
       global: true,
     }),
     UsersModule,
