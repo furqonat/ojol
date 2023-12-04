@@ -13,6 +13,10 @@ import { JwtModule } from '@nestjs/jwt'
 
 @Module({
   imports: [
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      global: true,
+    }),
     CustomerModule,
     MerchantModule,
     DriverModule,
@@ -24,10 +28,6 @@ import { JwtModule } from '@nestjs/jwt'
     }),
     BcryptModule,
     GuardModule,
-    JwtModule.register({
-      global: true,
-      secret: process.env.JWT_SECRET,
-    }),
   ],
 })
 export class AppModule {}
