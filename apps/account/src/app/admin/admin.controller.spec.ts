@@ -4,6 +4,7 @@ import { AdminService } from './admin.service'
 import { UsersPrismaService } from '@lugo/users'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
+import { BcryptService } from '@lugo/bcrypt'
 
 describe('AdminController', () => {
   let controller: AdminController
@@ -14,6 +15,7 @@ describe('AdminController', () => {
       providers: [
         AdminService,
         UsersPrismaService,
+        BcryptService,
         FirebaseService,
         ConfigService,
       ],

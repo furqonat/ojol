@@ -4,18 +4,27 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { admin } from '@prisma/client/users'
 import { AdminService } from './admin.service'
 import { BadRequestException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 
 describe('AdminService', () => {
   let service: AdminService
   let comparePasswordMock: jest.Mock
   let findUniqueMock: jest.Mock
+  let signMock: jest.Mock
   beforeEach(async () => {
     comparePasswordMock = jest.fn()
     findUniqueMock = jest.fn()
+    signMock = jest.fn()
 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AdminService,
+        {
+          provide: JwtService,
+          useValue: {
+            sign: signMock,
+          },
+        },
         {
           provide: BcryptService,
           useValue: {
@@ -54,6 +63,7 @@ describe('AdminService', () => {
       }
       findUniqueMock.mockReturnValue(adminT)
       comparePasswordMock.mockReturnValue(true)
+      signMock.mockReturnValue('test1234')
     })
     it('test signin with valid credential', async () => {
       const result = await service.signIn('admintest@mail.com', '12341234')
