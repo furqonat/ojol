@@ -3,6 +3,7 @@ import { AdminService } from './admin.service'
 import { UsersPrismaService } from '@lugo/users'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
+import { BcryptService } from '@lugo/bcrypt'
 
 describe('AdminService', () => {
   let service: AdminService
@@ -14,6 +15,7 @@ describe('AdminService', () => {
         UsersPrismaService,
         FirebaseService,
         ConfigService,
+        BcryptService,
       ],
     }).compile()
 

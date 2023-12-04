@@ -1,9 +1,9 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { DriverController } from './driver.controller'
 import { FirebaseService } from '@lugo/firebase'
-import { ConfigService } from '@nestjs/config'
 import { UsersPrismaService } from '@lugo/users'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { Test, TestingModule } from '@nestjs/testing'
+import { DriverController } from './driver.controller'
 import { DriverService } from './driver.service'
 
 describe('DriverController', () => {
