@@ -130,16 +130,27 @@ model merchant {
 }
 
 model merchant_details {
-  id            String    @id @default(cuid())
-  merchant      merchant? @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
-  merchant_id   String?   @unique
-  id_card_image String
-  address       String
-  latitude      Float?
-  longitude     Float?
-  name          String
-  images        images[]
-  badge         badge     @default(BASIC)
+  id             String                    @id @default(cuid())
+  merchant       merchant?                 @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+  merchant_id    String?                   @unique
+  id_card_image  String
+  address        String
+  latitude       Float?
+  longitude      Float?
+  name           String
+  images         images[]
+  badge          badge                     @default(BASIC)
+  operation_time merchant_operation_time[]
+}
+
+model merchant_operation_time {
+  id                  String            @id @default(cuid())
+  day                 String
+  status              Boolean           @default(false)
+  open_time           DateTime          @db.Time()
+  close_time          DateTime          @db.Time()
+  merchant_details    merchant_details? @relation(fields: [merchant_details_id], references: [id])
+  merchant_details_id String?
 }
 
 model images {
@@ -189,7 +200,6 @@ model roles {
   name  String
   admin admin[]
 }
-
 
 model service_fee {
   id           String       @id @default(cuid())
