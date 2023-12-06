@@ -8,6 +8,9 @@ import (
 	"apps/transactions/routes"
 	"apps/transactions/services"
 	"apps/transactions/utils"
+
+	"github.com/apex/gateway"
+
 	"go.uber.org/fx"
 )
 
@@ -39,8 +42,11 @@ func bootstrap(
 				host := "0.0.0.0"
 				if env.Environment == "development" {
 					host = "127.0.0.1"
+					handler.Gin.Run(host + ":" + env.ServerPort)
+				} else {
+					gateway.ListenAndServe(host, handler.Gin)
 				}
-				handler.Gin.Run(host + ":" + env.ServerPort)
+
 			}()
 			return nil
 		},
