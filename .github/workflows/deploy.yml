@@ -63,12 +63,9 @@ jobs:
       - run: npm install -g serverless
       - run: pnpm install
       # todo: add test case
-      - run: export GOOS=linux 
-      - run: GOARCH=amd64
-      - run: CGO_ENABLED=0
       - run: npx nx run transactions:test
       - run: npx nx run transactions:build
-      - run: npx serverless deploy --config transactions.serverless.yml --force
+      - run: npx serverless deploy --config transactions.serverless.yml
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
