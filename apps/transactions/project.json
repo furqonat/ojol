@@ -1,56 +1,27 @@
 {
   "name": "transactions",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/transactions/src",
   "projectType": "application",
+  "sourceRoot": "apps/transactions",
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
-      "outputs": ["{options.outputPath}"],
-      "defaultConfiguration": "production",
+      "executor": "@nx-golang/gin:build",
       "options": {
-        "target": "node",
-        "compiler": "tsc",
         "outputPath": "dist/apps/transactions",
-        "main": "apps/transactions/src/main.ts",
-        "tsConfig": "apps/transactions/tsconfig.app.json",
-        "assets": ["apps/transactions/src/assets"],
-        "isolatedConfig": true,
-        "webpackConfig": "apps/transactions/webpack.config.js"
-      },
-      "configurations": {
-        "development": {},
-        "production": {}
+        "main": "apps/transactions/main.go"
       }
     },
     "serve": {
-      "executor": "@nx/js:node",
-      "defaultConfiguration": "development",
+      "executor": "@nx-go/nx-go:serve",
       "options": {
-        "buildTarget": "transactions:build"
-      },
-      "configurations": {
-        "development": {
-          "buildTarget": "transactions:build:development"
-        },
-        "production": {
-          "buildTarget": "transactions:build:production"
-        }
-      }
-    },
-    "lint": {
-      "executor": "@nx/eslint:lint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/transactions/**/*.ts"]
+        "main": "apps/transactions/main.go"
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
-      "options": {
-        "jestConfig": "apps/transactions/jest.config.ts"
-      }
+      "executor": "@nx-go/nx-go:test"
+    },
+    "lint": {
+      "executor": "@nx-golang/gin:lint"
     }
   },
   "tags": []
