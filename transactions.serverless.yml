@@ -4,10 +4,21 @@ provider:
   runtime: go1.x
   region: ap-southeast-1
 
+  ecr:
+    images:
+      transactions:
+        path: ./
+        file: transactions.Dockerfile
+
 
 functions:
   app:
-    handler: dist/apps/transactions
+    image:
+      name: transactions
+      command:
+        - dist/apps/transactions
+      entryPoint:
+        - '/lambda-entrypoint.sh'
     timeout: 30
     events:
       - http:
@@ -16,7 +27,3 @@ functions:
       - http:
           method: any
           path: /
-package:
-  patterns:
-    - '!*/**'
-    - dist/apps/transactions
