@@ -48,16 +48,13 @@ jobs:
           AWS_REGION: ap-southeast-3
   transactions-service:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version: ['1.21.4']
 
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Go ${{ matrix.go-version }}
+      - name: Setup Go 
         uses: actions/setup-go@v4
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: '1.21.4'
       # You can test your matrix by printing the current Go version
       - name: Display Go version
         run: go version
@@ -66,6 +63,9 @@ jobs:
       - run: npm install -g serverless
       - run: pnpm install
       # todo: add test case
+      - run: export GOOS=linux 
+      - run: GOARCH=amd64
+      - run: CGO_ENABLED=0
       - run: npx nx run transactions:test
       - run: npx nx run transactions:build
       - run: npx serverless deploy --config transactions.serverless.yml
