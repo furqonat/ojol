@@ -15,10 +15,6 @@ functions:
   app:
     image:
       name: transactions
-      command:
-        - dist/apps/transactions
-      entryPoint:
-        - '/lambda-entrypoint.sh'
     timeout: 30
     events:
       - http:
