@@ -11,7 +11,7 @@ provider:
     images:
       account:
         path: ./
-        file: account.Dockerfile
+        file: Dockerfile
 
 plugins:
   - serverless-offline

@@ -11,7 +11,7 @@ provider:
     images:
       auth:
         path: ./
-        file: auth.Dockerfile
+        file: Dockerfile
 
 plugins:
   - serverless-offline
