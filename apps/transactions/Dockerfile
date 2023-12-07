@@ -2,9 +2,9 @@ FROM golang:1.21.4 as build
 
 WORKDIR /apps/transactions
 
-COPY ../../apps/transactions ./
-COPY ../../go.work /go.work
-COPY ../../go.work.sum /go.work.sum
+COPY apps/transactions ./
+COPY go.work /go.work
+COPY go.work.sum /go.work.sum
 
 
 RUN go mod tidy & go mod vendor & go build -tags lambda.norpc -o dist/apps/transactions main.go 
