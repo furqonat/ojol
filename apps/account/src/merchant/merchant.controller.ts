@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client/users'
-import { str2obj } from '../utility'
+import { str2obj } from '@lugo/common'
 import { MerchantService } from './merchant.service'
 
 @Controller('merchant')

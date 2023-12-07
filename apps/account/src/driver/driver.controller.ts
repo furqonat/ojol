@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common'
 import { DriverService } from './driver.service'
 import { Prisma } from '@prisma/client/users'
-import { str2obj } from '../utility'
+import { str2obj } from '@lugo/common'
 
 @Controller('driver')
 export class DriverController {

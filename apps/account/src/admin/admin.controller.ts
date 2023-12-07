@@ -11,7 +11,7 @@ import {
 import { AdminService } from './admin.service'
 import { Role, Roles, RolesGuard } from '@lugo/jwtguard'
 import { Prisma } from '@prisma/client/users'
-import { str2obj } from '../utility'
+import { str2obj } from '@lugo/common'
 
 @UseGuards(RolesGuard)
 @Controller('admin')
