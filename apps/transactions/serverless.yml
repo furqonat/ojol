@@ -7,8 +7,8 @@ provider:
   ecr:
     images:
       transactions:
-        path: ../../apps/transactions
-        file: Dockerfile
+        path: ../../
+        file: apps/transactions/Dockerfile
 
 
 functions:

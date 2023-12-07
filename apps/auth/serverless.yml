@@ -10,8 +10,8 @@ provider:
   ecr:
     images:
       auth:
-        path: ../../apps/auth
-        file: Dockerfile
+        path: ../../
+        file: apps/auth/Dockerfile
 
 plugins:
   - serverless-offline
