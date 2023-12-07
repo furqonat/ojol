@@ -10,7 +10,7 @@ provider:
   ecr:
     images:
       auth:
-        path: ./
+        path: ../../apps/auth
         file: Dockerfile
 
 plugins:
