@@ -3,7 +3,7 @@ FROM golang:1.21.4 as build
 WORKDIR /apps/transactions
 
 COPY apps/transactions ./
-COPY go.work /go.work
+RUN echo $'go 1.21.4 \n\nuse apps/transactions' > go.work
 COPY go.work.sum /go.work.sum
 
 
