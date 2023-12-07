@@ -29,7 +29,7 @@ model customer {
   customer_merchant_review customer_merchant_review[]
   customer_driver_review   customer_driver_review[]
   driver_customer_review   driver_customer_review[]
-  cart                     cart[]
+  cart                     cart?
   order                    order[]
   favorites                favorites[]
 }
@@ -291,11 +291,10 @@ model product {
   price                   BigInt
   status                  Boolean                   @default(false)
   customer_product_review customer_product_review[]
-  cart                    cart                      @relation(fields: [cart_id], references: [id])
-  cart_id                 String
   order                   order[]
   favorites               favorites?                @relation(fields: [favorites_id], references: [id])
   favorites_id            String?
+  cart_item               cart_item[]
 }
 
 model favorites {
@@ -373,11 +372,20 @@ model order {
 }
 
 model cart {
-  id          String    @id @default(cuid())
-  customer    customer  @relation(fields: [customer_id], references: [id])
-  customer_id String
-  created_at  DateTime  @default(now())
-  product     product[]
+  id          String      @id @default(cuid())
+  customer    customer    @relation(fields: [customer_id], references: [id])
+  customer_id String      @unique
+  created_at  DateTime    @default(now())
+  cart_item   cart_item[]
+}
+
+model cart_item {
+  id         String   @id @default(cuid())
+  product    product? @relation(fields: [product_id], references: [id])
+  cart       cart     @relation(fields: [cart_id], references: [id])
+  quantity   Int
+  product_id String?
+  cart_id    String
 }
 
 model transactions {

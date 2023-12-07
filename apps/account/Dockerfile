@@ -12,6 +12,8 @@ COPY libs/guard ./libs/guard
 RUN true
 COPY libs/jwtguard ./libs/jwtguard
 RUN true
+COPY libs/common ./libs/common
+RUN true
 COPY libs/users_schema ./libs/users_schema
 RUN true
 COPY libs/users ./libs/users

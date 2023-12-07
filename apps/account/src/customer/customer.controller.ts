@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common'
 import { CustomerBasicUpdate, CustomerQuery } from '../dto/customer.dto'
 import { CustomerService } from './customer.service'
-import { str2obj } from '../utility'
+import { str2obj } from '@lugo/common'
 
 @Controller('customer')
 export class CustomerController {
