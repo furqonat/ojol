@@ -49,8 +49,12 @@ jobs:
       
       - name: Install pnpm
         run: npm install -g pnpm
+
       - name: Install serverless
         run: npm install -g serverless
+
+      - name: Install dependencies
+        run: pnpm install
       
       - name: Test transactions service
         run: npx nx run transactions:test
