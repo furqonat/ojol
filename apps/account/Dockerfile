@@ -1,45 +1,45 @@
 FROM public.ecr.aws/lambda/nodejs:20
 
-COPY ../../apps/account ./apps/account
+COPY apps/account ./apps/account
 RUN true
-COPY ../../.env ./.env
+COPY .env ./.env
 RUN true
-COPY ../../libs/firebase ./libs/firebase
+COPY libs/firebase ./libs/firebase
 RUN true
-COPY ../../libs/bcrypt ./libs/bcrypt
+COPY libs/bcrypt ./libs/bcrypt
 RUN true
-COPY ../../libs/guard ./libs/guard
+COPY libs/guard ./libs/guard
 RUN true
-COPY ../../libs/jwtguard ./libs/jwtguard
+COPY libs/jwtguard ./libs/jwtguard
 RUN true
-COPY ../../libs/users_schema ./libs/users_schema
+COPY libs/users_schema ./libs/users_schema
 RUN true
-COPY ../../libs/users ./libs/users
+COPY libs/users ./libs/users
 RUN true
-COPY ../../.eslintignore .
+COPY .eslintignore .
 RUN true
-COPY ../../.eslintrc.json .
+COPY .eslintrc.json .
 RUN true
-COPY ../../.editorconfig .
+COPY .editorconfig .
 RUN true
-COPY ../../.prettierrc .
+COPY .prettierrc .
 RUN true
-COPY ../../.prettierignore .
+COPY .prettierignore .
 RUN true
-COPY ../../jest.config.ts .
+COPY jest.config.ts .
 RUN true
-COPY ../../jest.config.ts .
+COPY jest.config.ts .
 RUN true
-COPY ../../nx.json .
+COPY nx.json .
 RUN true
-COPY ../../google-services.json .
+COPY google-services.json .
 
 RUN true
-COPY ../../package.json .
+COPY package.json .
 RUN true
-COPY ../../tsconfig.base.json .
+COPY tsconfig.base.json .
 RUN true
-COPY ../../pnpm-lock.yaml .
+COPY pnpm-lock.yaml .
 RUN true
 
 RUN npm install -g pnpm
