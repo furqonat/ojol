@@ -20,7 +20,7 @@ jobs:
       - run: pnpm install express
       - run: npx nx run auth:test
       - run: npx nx run auth:build
-      - run: npx serverless deploy --config auth.serverless.yml
+      - run: npx serverless deploy --config apps/auth/serverless.yml
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -41,7 +41,7 @@ jobs:
       - run: pnpm install express
       - run: npx nx run account:test
       - run: npx nx run account:build
-      - run: npx serverless deploy --config account.serverless.yml
+      - run: npx serverless deploy --config apps/account/serverless.yml
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -65,7 +65,7 @@ jobs:
       # todo: add test case
       - run: npx nx run transactions:test
       - run: npx nx run transactions:build
-      - run: npx serverless deploy --config transactions.serverless.yml
+      - run: npx serverless deploy --config apps/transactions/serverless.yml
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
