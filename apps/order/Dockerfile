@@ -2,9 +2,9 @@ FROM golang:1.21.4 as build
 
 WORKDIR /apps/order
 
-COPY ../../apps/order .
-COPY ../../go.work /go.work
-COPY ../../go.work.sum /go.work.sum
+COPY apps/order .
+RUN echo $'go 1.21.4 \n\nuse apps/order' > go.work
+COPY go.work.sum /go.work.sum
 
 
 RUN go mod tidy & go mod vendor & go build -tags lambda.norpc -o dist/apps/order main.go 
