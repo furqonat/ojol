@@ -58,6 +58,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Generate prisma schema
+        run: npx prisma generate --schema=./libs/users_schema/schema.prisma
       
       - name: Test transactions service
         run: npx nx run transactions:test
