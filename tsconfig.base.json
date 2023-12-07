@@ -42,9 +42,6 @@
       "@lugo/prisma-auth": [
         "libs/prisma-auth/src/index.ts"
       ],
-      "@lugo/transactions-lib": [
-        "libs/transactions/src/index.ts"
-      ],
       "@lugo/users": [
         "libs/users/src/index.ts"
       ]
