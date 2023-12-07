@@ -3,8 +3,7 @@ FROM golang:1.21.4 as build
 WORKDIR /apps/transactions
 
 COPY apps/transactions ./
-RUN echo -e "go 1.21.4 \n\nuse apps/transactions" > go.work
-COPY go.work.sum /go.work.sum
+
 
 
 RUN go mod tidy & go mod vendor & go build -tags lambda.norpc -o dist/apps/transactions main.go 
