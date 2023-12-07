@@ -10,7 +10,7 @@ provider:
   ecr:
     images:
       account:
-        path: ../../
+        path: ../../.
         file: apps/account/Dockerfile
 
 plugins:

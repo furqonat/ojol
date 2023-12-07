@@ -7,7 +7,7 @@ provider:
   ecr:
     images:
       transactions:
-        path: ../../
+        path: ../../.
         file: apps/transactions/Dockerfile
 
 
