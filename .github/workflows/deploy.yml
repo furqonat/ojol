@@ -52,6 +52,9 @@ jobs:
 
       - name: Install serverless
         run: npm install -g serverless
+      
+      - name: Install serverless compose 
+        run: npm install -g @serverless/compose
 
       - name: Install dependencies
         run: pnpm install
