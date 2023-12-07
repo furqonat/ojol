@@ -1,0 +1,7 @@
+services:
+  auth:
+    path: apps/auth
+  account:
+    path: apps/account
+  transactions:
+    path: apps/transactions
