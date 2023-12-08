@@ -1,11 +1,13 @@
 package controllers
 
 import (
-	misc_v1 "apps/transactions/controllers/v1/misc"
+	misc "apps/transactions/controllers/misc"
+	"apps/transactions/controllers/tsc"
 	"go.uber.org/fx"
 )
 
 // Module exported for initializing application
 var Module = fx.Options(
-	fx.Provide(misc_v1.NewMiscController),
+	fx.Provide(misc.NewMiscController),
+	fx.Provide(tsc.NewTransactionRouter),
 )

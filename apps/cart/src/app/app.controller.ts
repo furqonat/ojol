@@ -24,7 +24,7 @@ export class AppController {
   @Roles(Role.USER)
   @Get()
   async getCarts(
-    @Headers('authorization') token: string,
+    @Headers('Authorization') token: string,
     @Query() select: Prisma.cartSelect,
   ) {
     return this.appService.getCarts(token, str2obj(select))
@@ -33,7 +33,7 @@ export class AppController {
   @Roles(Role.USER)
   @Post()
   async addProductToCart(
-    @Headers('authorization') token: string,
+    @Headers('Authorization') token: string,
     @Body('productId') productId: string,
     @Body('quantity') quantity: number,
   ) {
