@@ -2,18 +2,19 @@ package utils
 
 import (
 	"context"
+	"path/filepath"
+
 	"firebase.google.com/go/auth"
 	"firebase.google.com/go/messaging"
 	"google.golang.org/api/option"
-	"path/filepath"
 
 	firebase "firebase.google.com/go"
 )
 
-func NewFirebaseApp(logger Logger) *firebase.App {
+func NewFirebaseApp(logger Logger, env Env) *firebase.App {
 	ctx := context.Background()
 
-	serviceAccountKeyFilePath, err := filepath.Abs("../../google-services.json")
+	serviceAccountKeyFilePath, err := filepath.Abs("google-services.json")
 	if err != nil {
 		logger.Panic("Unable to load serviceAccountKey.json file")
 	}
@@ -31,7 +32,7 @@ func NewFirebaseApp(logger Logger) *firebase.App {
 func NewFirebaseAuth(logger Logger, app *firebase.App) *auth.Client {
 	client, err := app.Auth(context.Background())
 	if err != nil {
-		logger.Fatalf("unable to initialized auth client")
+		logger.Fatalf("unable to initialized auth client %s", err.Error())
 	}
 	return client
 }
