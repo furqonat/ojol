@@ -19,8 +19,6 @@ func (s TscRoutes) Setup() {
 	s.logger.Info("Setting up routes")
 	tscRouter := s.handler.Gin.Group("/tsc").Use(s.rateLimitMiddleware.Handle())
 	{
-		//miscRouter.GET("/liveness", s.authMiddleware.HandleAuthWithRoles(), s.controller.GetLiveness)
-		//miscRouter.GET("/readiness", s.controller.GetReadiness)
 		tscRouter.GET("/version", s.controller.GetVersion)
 		tscRouter.POST("/", s.controller.CreateTransaction)
 		tscRouter.GET("/", s.controller.GetTransactions)
