@@ -11,7 +11,7 @@ type Database struct {
 func NewDatabase(logger Logger) Database {
 	client := db.NewClient()
 	if err := client.Prisma.Connect(); err != nil {
-		logger.Fatalf("unable connect to database")
+		logger.Fatalf("unable connect to database %s", err)
 	}
 
 	return Database{
