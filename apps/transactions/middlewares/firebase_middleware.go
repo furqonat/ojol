@@ -5,8 +5,9 @@ import (
 	"apps/transactions/utils"
 	"context"
 	"errors"
-	"firebase.google.com/go/auth"
 	"net/http"
+
+	"firebase.google.com/go/auth"
 
 	"github.com/gin-gonic/gin"
 )

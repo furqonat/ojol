@@ -2,12 +2,13 @@ package middlewares
 
 import (
 	"apps/transactions/utils"
-	"github.com/gin-gonic/gin"
-	"github.com/ulule/limiter/v3"
-	"github.com/ulule/limiter/v3/drivers/store/memory"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/ulule/limiter/v3"
+	"github.com/ulule/limiter/v3/drivers/store/memory"
 )
 
 var store = memory.NewStore()

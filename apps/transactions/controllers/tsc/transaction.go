@@ -4,9 +4,10 @@ import (
 	"apps/transactions/db"
 	"apps/transactions/services"
 	"apps/transactions/utils"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type TransactionRouter struct {
