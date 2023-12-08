@@ -1,27 +1,28 @@
-
 package routes
 
 import (
-	misc_v1 "apps/transactions/controllers/v1/misc"
+	misc "apps/transactions/controllers/misc"
+	"apps/transactions/middlewares"
 	"apps/transactions/utils"
 )
 
 // MiscRoutes struct
 type MiscRoutes struct {
-	logger         utils.Logger
-	handler        utils.RequestHandler
-	miscController misc_v1.MiscController
+	logger              utils.Logger
+	handler             utils.RequestHandler
+	miscController      misc.MiscController
+	rateLimitMiddleware middlewares.RateLimitMiddleware
+	authMiddleware      middlewares.FirebaseMiddleware
 }
 
 // Setup Misc routes
 func (s MiscRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Group("/apis/v1")
+	miscRouter := s.handler.Gin.Group("/misc").Use(s.rateLimitMiddleware.Handle())
 	{
-		api.GET("/liveness", s.miscController.GetLiveness)
-		api.GET("/readiness", s.miscController.GetReadiness)
-		api.GET("/version", s.miscController.GetVersion)
-
+		miscRouter.GET("/liveness", s.authMiddleware.HandleAuthWithRoles(), s.miscController.GetLiveness)
+		miscRouter.GET("/readiness", s.miscController.GetReadiness)
+		miscRouter.GET("/version", s.miscController.GetVersion)
 	}
 }
 
@@ -29,11 +30,15 @@ func (s MiscRoutes) Setup() {
 func NewMiscRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,
-	miscController misc_v1.MiscController,
+	miscController misc.MiscController,
+	middleware middlewares.RateLimitMiddleware,
+	authMiddleware middlewares.FirebaseMiddleware,
 ) MiscRoutes {
 	return MiscRoutes{
-		handler:        handler,
-		logger:         logger,
-		miscController: miscController,
+		handler:             handler,
+		logger:              logger,
+		miscController:      miscController,
+		rateLimitMiddleware: middleware,
+		authMiddleware:      authMiddleware,
 	}
 }

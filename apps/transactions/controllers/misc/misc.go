@@ -4,22 +4,24 @@ import (
 	"net/http"
 
 	"apps/transactions/utils"
+
 	"github.com/gin-gonic/gin"
 )
 
 // use ldflags to replace this value during build:
-// 		https://www.digitalocean.com/community/tutorials/using-ldflags-to-set-version-information-for-go-applications
+//
+//	https://www.digitalocean.com/community/tutorials/using-ldflags-to-set-version-information-for-go-applications
 const VERSION string = "development"
 
 // MiscController data type
 type MiscController struct {
-	logger          utils.Logger
+	logger utils.Logger
 }
 
 // NewMiscController creates new Misc controller
 func NewMiscController(logger utils.Logger) MiscController {
 	return MiscController{
-		logger:          logger,
+		logger: logger,
 	}
 }
 
@@ -32,6 +34,7 @@ func NewMiscController(logger utils.Logger) MiscController {
 // @Failure  500  {object}  utils.ResponseError
 // @Router   /v1/version [get]
 func (u MiscController) GetVersion(c *gin.Context) {
+
 	c.JSON(200, utils.ResponseOk{Message: VERSION})
 }
 

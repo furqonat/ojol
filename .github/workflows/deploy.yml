@@ -61,6 +61,9 @@ jobs:
 
       - name: Generate prisma schema
         run: npx prisma generate --schema=./libs/users_schema/schema.prisma
+        
+      - name: Generate prisma database for golang transaction service
+        run: npx nx run transactions:generate-db
       
       - name: Test transactions service
         run: npx nx run transactions:test

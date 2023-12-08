@@ -360,6 +360,7 @@ model order {
   id           String             @id @default(cuid())
   order_type   transaction_type
   order_status transaction_status @default(CREATED)
+  created_at   DateTime           @default(now())
   transactions transactions?
   driver       driver             @relation(fields: [driver_id], references: [id])
   customer     customer           @relation(fields: [customer_id], references: [id])
