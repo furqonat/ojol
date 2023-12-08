@@ -14,5 +14,6 @@ COPY --from=build /apps/transactions/.env ./dist/apps/.env
 COPY --from=build /apps/transactions/.env ./.env
 
 COPY google-services.json ./google-services.json
+RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
 ENTRYPOINT [ "./dist/apps/transactions" ]
