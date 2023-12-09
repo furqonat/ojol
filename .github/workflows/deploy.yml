@@ -61,16 +61,7 @@ jobs:
 
       - name: Generate prisma schema
         run: npx prisma generate --schema=./libs/users_schema/schema.prisma
-
-      - name: add commet database url on env
-        run: cd apps/transactions && sed -i -e '/^DIRECT_URL=/s/^/# /' -e '/^DATABASE_URL=/s/^/# /' .env && cd ../../
-
-      - name: Generate prisma database for golang transaction service
-        run: npx nx run transactions:generate-db
-
-      - name: remove comment database url on env
-        run: cd apps/transactions && sed -i -e '/^# DIRECT_URL=/s/^# //' -e '/^# DATABASE_URL=/s/^# //' .env && cd ../../
-
+        
       - name: Test transactions service
         run: npx nx run transactions:test
       
@@ -79,6 +70,7 @@ jobs:
 
       - name: Test account service
         run: npx nx run account:test
+
       - name: deploy all service
         run: npx serverless deploy
         env:

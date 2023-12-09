@@ -1,19 +1,22 @@
-FROM golang:1.21.4 as build
+FROM golang:1.21.5
 
-WORKDIR /apps/transactions
+COPY apps/transactions/ ./apps/transactions
 
-COPY apps/transactions ./
-COPY google-services.json ./
+COPY apps/transactions/.env ./.env
 
+COPY libs/users_schema/schema.prisma apps/transactions/schema.prisma
 
+RUN go version
+RUN cd apps/transactions && rm -r vendor
+RUN cd apps/transactions && go get .
+RUN cd apps/transactions && go get github.com/steebchen/prisma-client-go
 
+RUN sed -i '15i\generator db {\n provider ="go run github.com/steebchen/prisma-client-go" \n}'  apps/transactions/schema.prisma
+RUN sed -i '/generator client {/,/}/d' apps/transactions/schema.prisma
+RUN cd apps/transactions && go run github.com/steebchen/prisma-client-go generate --schema=schema.prisma
+RUN rm apps/transactions/schema.prisma
 
-RUN go mod tidy & go mod vendor & go build -tags lambda.norpc -o dist/apps/transactions main.go
-
-FROM public.ecr.aws/lambda/provided:al2023
-COPY --from=build /apps/transactions/dist/apps/transactions ./dist/apps/transactions
-
-COPY --from=build /apps/transactions/.env ./.env
+RUN cd apps/transactions && go mod tidy && go mod vendor && go build -tags lambda.norpc -o ../../dist/apps/transactions main.go
 
 COPY google-services.json ./google-services.json
 
