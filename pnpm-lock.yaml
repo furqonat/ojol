@@ -223,6 +223,9 @@ devDependencies:
   serverless-offline:
     specifier: ^13.3.0
     version: 13.3.0(serverless@3.37.0)
+  serverless-plugin-warmup:
+    specifier: ^8.2.1
+    version: 8.2.1
   tailwindcss:
     specifier: ^3.3.5
     version: 3.3.5(ts-node@10.9.1)
@@ -14376,6 +14379,10 @@ packages:
       - encoding
       - supports-color
       - utf-8-validate
+    dev: true
+
+  /serverless-plugin-warmup@8.2.1:
+    resolution: {integrity: sha512-bVPqK2tt3m6AVjVnjuiU/nsGtm+hukaQmVn7zx2KbKSTCwOZEkMcsqKhkKw3Y4cm/vA2Wxd+3d1lftaGKFkG/Q==}
     dev: true
 
   /serverless@3.37.0:
