@@ -4,6 +4,7 @@ import (
 	"context"
 	"path/filepath"
 
+	"cloud.google.com/go/firestore"
 	"firebase.google.com/go/auth"
 	"firebase.google.com/go/messaging"
 	"google.golang.org/api/option"
@@ -43,4 +44,12 @@ func NewFirebaseMessaging(logger Logger, app *firebase.App) *messaging.Client {
 		logger.Fatalf("unable initialized messaging")
 	}
 	return msg
+}
+
+func NewFirestoreDatabase(logger Logger, app *firebase.App) *firestore.Client {
+	firestore, err := app.Firestore((context.Background()))
+	if err != nil {
+		logger.Fatalf("Unable initialied firestore %s", err)
+	}
+	return firestore
 }

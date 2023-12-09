@@ -359,7 +359,6 @@ model driver_customer_review {
 model order {
   id           String             @id @default(cuid())
   order_type   transaction_type
-  order_status transaction_status @default(CREATED)
   created_at   DateTime           @default(now())
   transactions transactions?
   driver       driver             @relation(fields: [driver_id], references: [id])
@@ -424,6 +423,7 @@ enum transaction_status {
   SHIPPING
   DELIVERED
   DONE
+  CANCELED
 }
 
 enum payment_type {
