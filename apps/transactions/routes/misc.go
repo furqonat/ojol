@@ -12,7 +12,6 @@ type MiscRoutes struct {
 	handler             utils.RequestHandler
 	miscController      misc.MiscController
 	rateLimitMiddleware middlewares.RateLimitMiddleware
-	authMiddleware      middlewares.FirebaseMiddleware
 }
 
 // Setup Misc routes
@@ -20,7 +19,7 @@ func (s MiscRoutes) Setup() {
 	s.logger.Info("Setting up routes")
 	miscRouter := s.handler.Gin.Group("/misc").Use(s.rateLimitMiddleware.Handle())
 	{
-		miscRouter.GET("/liveness", s.authMiddleware.HandleAuthWithRoles(), s.miscController.GetLiveness)
+		miscRouter.GET("/liveness", s.miscController.GetLiveness)
 		miscRouter.GET("/readiness", s.miscController.GetReadiness)
 		miscRouter.GET("/version", s.miscController.GetVersion)
 	}
@@ -32,13 +31,11 @@ func NewMiscRoutes(
 	handler utils.RequestHandler,
 	miscController misc.MiscController,
 	middleware middlewares.RateLimitMiddleware,
-	authMiddleware middlewares.FirebaseMiddleware,
 ) MiscRoutes {
 	return MiscRoutes{
 		handler:             handler,
 		logger:              logger,
 		miscController:      miscController,
 		rateLimitMiddleware: middleware,
-		authMiddleware:      authMiddleware,
 	}
 }

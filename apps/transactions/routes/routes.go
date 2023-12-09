@@ -20,11 +20,11 @@ type Route interface {
 // NewRoutes sets up routes
 func NewRoutes(
 	miscRoutes MiscRoutes,
-	tscRouter TscRoutes,
+	trxRoutes TrxRoutes,
 ) Routes {
 	return Routes{
 		miscRoutes,
-		tscRouter,
+		trxRoutes,
 	}
 }
 

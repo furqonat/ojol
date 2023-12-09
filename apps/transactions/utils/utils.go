@@ -11,4 +11,5 @@ var Module = fx.Options(
 	fx.Provide(NewEnv),
 	fx.Provide(GetLogger),
 	fx.Provide(NewDatabase),
+	fx.Provide(NewFirestoreDatabase),
 )
