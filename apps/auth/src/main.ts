@@ -25,12 +25,12 @@ async function bootstrap() {
     optionsSuccessStatus: 200,
   })
   await app.init()
-  if (process.env.NODE_ENV === 'prodcution') {
-    return serverlessExpress.createServer(expressServer, null, [])
-  } else {
-    const port = process.env.PORT || 3333
-    await app.listen(port)
-  }
+  return serverlessExpress.createServer(expressServer, null, [])
+  // if (process.env.NODE_ENV === 'prodcution') {
+  // } else {
+  //   const port = process.env.PORT || 3333
+  //   await app.listen(port)
+  // }
 }
 function waitForServer(event: APIGatewayEvent, context: Context) {
   setImmediate(() => {
@@ -50,10 +50,8 @@ export const handler = (event: APIGatewayEvent, context: Context) => {
   }
 }
 
-console.log(process.env.NODE_ENV)
-
-if (process.env.NODE_ENV === 'production') {
-  bootstrap().then((server) => (lambdaProxy = server))
-} else {
-  bootstrap()
-}
+bootstrap().then((server) => (lambdaProxy = server))
+// if (process.env.NODE_ENV === 'production') {
+// } else {
+//   bootstrap()
+// }
