@@ -8,7 +8,7 @@ provider:
     images:
       order:
         path: ../../.
-        file: Dockerfile
+        file: apps/order/Dockerfile
 
 
 functions:
