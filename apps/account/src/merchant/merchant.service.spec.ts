@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MerchantService } from './merchant.service'
 import { FirebaseService } from '@lugo/firebase'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { ConfigService } from '@nestjs/config'
 
 describe('MerchantService', () => {
@@ -12,7 +12,7 @@ describe('MerchantService', () => {
       providers: [
         MerchantService,
         FirebaseService,
-        UsersPrismaService,
+        PrismaService,
         ConfigService,
       ],
     }).compile()

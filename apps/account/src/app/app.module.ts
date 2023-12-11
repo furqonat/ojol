@@ -1,7 +1,7 @@
 import { FirebaseModule } from '@lugo/firebase'
 import { GuardModule } from '@lugo/guard'
 import { JwtGuardModule } from '@lugo/jwtguard'
-import { UsersModule } from '@lugo/users'
+import { UsersModule } from '@lugo/prisma'
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { AdminModule } from '../admin/admin.module'

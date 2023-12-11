@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common'
 import { MerchantService } from './merchant.service'
 import { MerchantController } from './merchant.controller'
 import { FirebaseService } from '@lugo/firebase'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 
 @Module({
-  providers: [MerchantService, UsersPrismaService, FirebaseService],
+  providers: [MerchantService, PrismaService, FirebaseService],
   controllers: [MerchantController],
 })
 export class MerchantModule {}

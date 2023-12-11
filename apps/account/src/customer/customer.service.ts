@@ -3,14 +3,14 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common'
-import { Prisma, UsersPrismaService } from '@lugo/users'
+import { Prisma, PrismaService } from '@lugo/prisma'
 import { FirebaseService } from '@lugo/firebase'
 import { CustomerBasicUpdate } from '../dto/customer.dto'
 
 @Injectable()
 export class CustomerService {
   constructor(
-    private readonly prismaService: UsersPrismaService,
+    private readonly prismaService: PrismaService,
     private readonly firebase: FirebaseService,
   ) {}
 

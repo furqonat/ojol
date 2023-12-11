@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { DriverController } from './driver.controller'
 import { DriverService } from './driver.service'
 import { UnauthorizedException } from '@nestjs/common'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 
 describe('DriverController', () => {
   let controller: DriverController
@@ -17,7 +17,7 @@ describe('DriverController', () => {
       providers: [
         FirebaseService,
         ConfigService,
-        UsersPrismaService,
+        PrismaService,
         {
           provide: DriverService,
           useValue: {

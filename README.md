@@ -29,7 +29,7 @@ cd <golang>/<project> && go get .
 
 #### Generate Prisma schema for Typescript services
 ```bash
-npx prisma generate --schema ./libs/users_schema/schema.prisma
+npx prisma generate --schema ./libs/schema/schema.prisma
 ```
 
 #### Generate Prisma schema for Golang services

@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { Prisma, UsersPrismaService } from '@lugo/users'
+import { Prisma, PrismaService } from '@lugo/prisma'
 import { FirebaseService } from '@lugo/firebase'
 
 @Injectable()
 export class AppService {
   constructor(
-    private readonly prismaService: UsersPrismaService,
+    private readonly prismaService: PrismaService,
     private readonly firebaseService: FirebaseService,
   ) {}
 

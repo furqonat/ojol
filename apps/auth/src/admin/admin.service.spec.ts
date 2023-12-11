@@ -1,5 +1,5 @@
 import { BcryptService } from '@lugo/bcrypt'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { Test, TestingModule } from '@nestjs/testing'
 import { admin } from '@prisma/client/users'
 import { AdminService } from './admin.service'
@@ -32,7 +32,7 @@ describe('AdminService', () => {
           },
         },
         {
-          provide: UsersPrismaService,
+          provide: PrismaService,
           useValue: {
             admin: {
               findUnique: findUniqueMock,

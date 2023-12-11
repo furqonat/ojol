@@ -1,8 +1,7 @@
-
 package routes
 
 import (
-	misc_v1 "apps/order/controllers/v1/misc"
+	"apps/order/controllers/misc"
 	"apps/order/utils"
 )
 
@@ -10,7 +9,7 @@ import (
 type MiscRoutes struct {
 	logger         utils.Logger
 	handler        utils.RequestHandler
-	miscController misc_v1.MiscController
+	miscController misc.MiscController
 }
 
 // Setup Misc routes
@@ -29,7 +28,7 @@ func (s MiscRoutes) Setup() {
 func NewMiscRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,
-	miscController misc_v1.MiscController,
+	miscController misc.MiscController,
 ) MiscRoutes {
 	return MiscRoutes{
 		handler:        handler,

@@ -1,15 +1,25 @@
-FROM golang:1.21.4 as build
+FROM golang:1.21.5
 
-WORKDIR /apps/order
+COPY apps/order/ ./apps/order
 
-COPY apps/order .
+COPY apps/order/.env ./.env
 
+COPY libs/schema/schema.prisma apps/order/schema.prisma
 
-RUN go mod tidy & go mod vendor & go build -tags lambda.norpc -o dist/apps/order main.go 
+RUN go version
+# RUN cd apps/order && rm -r vendor
+RUN cd apps/order && go get .
+RUN cd apps/order && go get github.com/steebchen/prisma-client-go
 
-FROM public.ecr.aws/lambda/provided:al2023
-COPY --from=build /apps/order/dist/apps/order ./dist/apps/order
-COPY --from=build /apps/order/.env ./dist/apps/.env
-COPY --from=build /apps/order/.env ./.env
+RUN sed -i '15i\generator db {\n provider ="go run github.com/steebchen/prisma-client-go" \n}'  apps/order/schema.prisma
+RUN sed -i '/generator client {/,/}/d' apps/order/schema.prisma
+RUN cd apps/order && go run github.com/steebchen/prisma-client-go generate --schema=schema.prisma
+RUN rm apps/order/schema.prisma
+
+RUN cd apps/order && go mod tidy && go mod vendor && go build -tags lambda.norpc -o ../../dist/apps/order main.go
+
+COPY google-services.json ./google-services.json
+
+RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
 ENTRYPOINT [ "./dist/apps/order" ]
