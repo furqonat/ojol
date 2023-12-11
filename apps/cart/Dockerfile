@@ -16,7 +16,7 @@ COPY libs/common ./libs/common
 RUN true
 COPY libs/schema ./libs/schema
 RUN true
-COPY libs/users ./libs/users
+COPY libs/prisma ./libs/prisma
 RUN true
 COPY .eslintignore .
 RUN true

@@ -26,7 +26,6 @@ func NewTrxService(database utils.Database, logger utils.Logger, firestore *Fire
 func (trxService TrxService) CreateTransaction(ptrTrxModel *db.TransactionsModel) (*db.TransactionsModel, error) {
 	trxCreateResult, errorTrxCreateResult := trxService.database.Transactions.CreateOne(
 		db.Transactions.Type.Set(ptrTrxModel.Type),
-		db.Transactions.PaymentType.Set(ptrTrxModel.PaymentType),
 		db.Transactions.Order.Link(db.Order.ID.Equals(ptrTrxModel.OrderID)),
 		db.Transactions.Status.Set(db.TransactionStatusCreated),
 	).Exec(context.Background())
@@ -41,8 +40,11 @@ func (trxService TrxService) GetTransactions(take int, skip int) ([]db.Transacti
 	transactions, err := trxService.database.Transactions.FindMany().With(db.Transactions.Order.Fetch().With(
 		db.Order.Customer.Fetch(),
 		db.Order.Driver.Fetch(),
-		db.Order.Merchant.Fetch(),
-		db.Order.Product.Fetch(),
+		db.Order.OrderItems.Fetch().With(
+			db.OrderItem.Product.Fetch().With(
+				db.Product.Merchant.Fetch(),
+			),
+		),
 	)).Take(take).Skip(skip).OrderBy(db.Transactions.EndedAt.Order(db.SortOrderDesc)).Exec(context.Background())
 	if err != nil {
 		return nil, err
@@ -61,11 +63,11 @@ func (trxService TrxService) GetTransaction(trxId string) (*db.TransactionsModel
 func (trxService TrxService) UpdateTransaction(trxId string, ptrTrxModel *db.TransactionsModel) (*db.TransactionsModel, error) {
 	_, paymentAtIsTrue := ptrTrxModel.PaymentAt()
 
-	ptrAccepted := trxService.assignPointerIfTrue(ptrTrxModel.AcceptedAt())
-	ptrShippingAt := trxService.assignPointerIfTrue(ptrTrxModel.ShippingAt())
-	ptrDeliveredAt := trxService.assignPointerIfTrue(ptrTrxModel.DeliveredAt())
-	ptrEndedAt := trxService.assignPointerIfTrue(ptrTrxModel.EndedAt())
-	ptrPaymentAt := trxService.assignPointerIfTrue(ptrTrxModel.PaymentAt())
+	ptrAccepted := trxService.assignPtrTimeIfTrue(ptrTrxModel.AcceptedAt())
+	ptrShippingAt := trxService.assignPtrTimeIfTrue(ptrTrxModel.ShippingAt())
+	ptrDeliveredAt := trxService.assignPtrTimeIfTrue(ptrTrxModel.DeliveredAt())
+	ptrEndedAt := trxService.assignPtrTimeIfTrue(ptrTrxModel.EndedAt())
+	ptrPaymentAt := trxService.assignPtrTimeIfTrue(ptrTrxModel.PaymentAt())
 
 	// TODO: refund money to customer if transaction status is canceled
 
@@ -99,7 +101,14 @@ func (trxService TrxService) UpdateTransaction(trxId string, ptrTrxModel *db.Tra
 	return trx, nil
 }
 
-func (trxService TrxService) assignPointerIfTrue(value time.Time, condition bool) *time.Time {
+func (trxService TrxService) assignPtrTimeIfTrue(value time.Time, condition bool) *time.Time {
+	if condition {
+		return &value
+	}
+	return nil
+}
+
+func (trxService TrxService) assignPtrStringIfTrue(value string, condition bool) *string {
 	if condition {
 		return &value
 	}
@@ -107,17 +116,12 @@ func (trxService TrxService) assignPointerIfTrue(value time.Time, condition bool
 }
 
 func (trxService TrxService) createTrxOnFirestore(ptrOrderModel *db.OrderModel) error {
-	var ptrMerchantId *string
 	trx, errorTrx := ptrOrderModel.Transactions()
 	if !errorTrx {
 		return nil
 	}
-	ptrEndedAt := trxService.assignPointerIfTrue(trx.EndedAt())
-
-	orderMerchantId, okOrderMerchatId := ptrOrderModel.MerchantID()
-	if okOrderMerchatId {
-		ptrMerchantId = &orderMerchantId
-	}
+	ptrEndedAt := trxService.assignPtrTimeIfTrue(trx.EndedAt())
+	driverId := trxService.assignPtrStringIfTrue(ptrOrderModel.DriverID())
 
 	trxPaymentAt, okTrxPaymentat := trx.PaymentAt()
 
@@ -127,10 +131,9 @@ func (trxService TrxService) createTrxOnFirestore(ptrOrderModel *db.OrderModel) 
 
 	_, _, errCreateTrxFirestore := trxService.firestore.Client.Collection("transactions").Add(context.Background(), map[string]interface{}{
 		"id":           trx.ID,
-		"driver_id":    ptrOrderModel.DriverID,
+		"driver_id":    driverId,
 		"customer_id":  ptrOrderModel.CustomerID,
-		"merchant_id":  ptrMerchantId,
-		"payment_type": trx.PaymentType,
+		"payment_type": ptrOrderModel.PaymentType,
 		"payment_at":   trxPaymentAt,
 		"order_type":   ptrOrderModel.OrderType,
 		"status":       trx.Status,

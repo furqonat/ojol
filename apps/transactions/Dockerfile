@@ -2,7 +2,7 @@ FROM golang:1.21.5
 
 COPY apps/transactions/ ./apps/transactions
 
-COPY apps/transactions/.env ./.env
+COPY .env ./.env
 
 COPY libs/schema/schema.prisma apps/transactions/schema.prisma
 
