@@ -1,7 +1,7 @@
 package main
 
 import (
-	misc_v1 "apps/order/controllers/v1/misc"
+	"apps/order/controllers/misc"
 	"apps/order/utils"
 	"net/http"
 	"net/http/httptest"
@@ -17,7 +17,7 @@ func SetUpRouter() *gin.Engine {
 }
 func TestMiscVersion(t *testing.T) {
 	r := SetUpRouter()
-	miscController := misc_v1.NewMiscController(utils.GetLogger())
+	miscController := misc.NewMiscController(utils.GetLogger())
 	r.GET("/version", miscController.GetVersion)
 	req, _ := http.NewRequest("GET", "/version", nil)
 	w := httptest.NewRecorder()

@@ -27,7 +27,7 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "cp ../..//libs/users_schema/schema.prisma schema.prisma",
+          "cp ../..//libs/schema/schema.prisma schema.prisma",
           "sed -i '15i\\generator db {\\\n provider =\"go run github.com/steebchen/prisma-client-go\" \\\n}'  schema.prisma",
           "sed -i '/generator client {/,/}/d' schema.prisma",
           "go run github.com/steebchen/prisma-client-go generate --schema=schema.prisma ",

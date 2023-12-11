@@ -1,6 +1,6 @@
 import { BcryptService } from '@lugo/bcrypt'
 import { FirebaseService } from '@lugo/firebase'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtModule, JwtService } from '@nestjs/jwt'
@@ -17,7 +17,7 @@ import { AdminService } from './admin.service'
   providers: [
     AdminService,
     JwtService,
-    UsersPrismaService,
+    PrismaService,
     FirebaseService,
     ConfigService,
     BcryptService,

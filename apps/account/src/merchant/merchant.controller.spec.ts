@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { MerchantController } from './merchant.controller'
 import { MerchantService } from './merchant.service'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 
@@ -13,7 +13,7 @@ describe('MerchantController', () => {
       controllers: [MerchantController],
       providers: [
         MerchantService,
-        UsersPrismaService,
+        PrismaService,
         FirebaseService,
         ConfigService,
       ],

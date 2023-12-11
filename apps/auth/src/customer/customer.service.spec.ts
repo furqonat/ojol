@@ -4,7 +4,7 @@ import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 import { DecodedIdToken } from 'firebase-admin/auth'
 import { customer } from '@prisma/client/users'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 
 describe('CustomerService', () => {
   let service: CustomerService
@@ -31,7 +31,7 @@ describe('CustomerService', () => {
           },
         },
         {
-          provide: UsersPrismaService,
+          provide: PrismaService,
           useValue: {
             customer: {
               findUniqueOrThrow: findUniqueOrThrowMock,

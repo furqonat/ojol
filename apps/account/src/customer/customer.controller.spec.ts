@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { CustomerController } from './customer.controller'
 import { CustomerService } from './customer.service'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 import { UnauthorizedException } from '@nestjs/common'
@@ -17,7 +17,7 @@ describe('CustomerController', () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [CustomerController],
       providers: [
-        UsersPrismaService,
+        PrismaService,
         FirebaseService,
         ConfigService,
         {

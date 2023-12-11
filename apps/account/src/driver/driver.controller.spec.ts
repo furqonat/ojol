@@ -1,5 +1,5 @@
 import { FirebaseService } from '@lugo/firebase'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
@@ -19,7 +19,7 @@ describe('DriverController', () => {
       providers: [
         FirebaseService,
         ConfigService,
-        UsersPrismaService,
+        PrismaService,
         {
           provide: DriverService,
           useValue: {

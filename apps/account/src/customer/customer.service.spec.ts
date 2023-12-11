@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { CustomerService } from './customer.service'
 import { FirebaseService } from '@lugo/firebase'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { InternalServerErrorException, NotFoundException } from '@nestjs/common'
 import { UserRecord } from 'firebase-admin/auth'
 
@@ -30,7 +30,7 @@ describe('CustomerService', () => {
           },
         },
         {
-          provide: UsersPrismaService,
+          provide: PrismaService,
           useValue: {
             customer: {
               findUnique: findUniqueMock,

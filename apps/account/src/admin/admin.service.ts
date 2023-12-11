@@ -1,4 +1,4 @@
-import { Prisma, UsersPrismaService } from '@lugo/users'
+import { Prisma, PrismaService } from '@lugo/prisma'
 import {
   BadRequestException,
   Injectable,
@@ -11,7 +11,7 @@ import { BcryptService } from '@lugo/bcrypt'
 @Injectable()
 export class AdminService {
   constructor(
-    private readonly prismaService: UsersPrismaService,
+    private readonly prismaService: PrismaService,
     private readonly firebase: FirebaseService,
     private readonly bcrypt: BcryptService,
   ) {}

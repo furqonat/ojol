@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { FirebaseService } from '@lugo/firebase'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 
 @Injectable()
 export class AppService {
   constructor(
     private readonly firebase: FirebaseService,
-    private readonly prisma: UsersPrismaService,
+    private readonly prisma: PrismaService,
   ) {}
 
   async getProduct() {}

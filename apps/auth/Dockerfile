@@ -10,7 +10,7 @@ COPY libs/bcrypt ./libs/bcrypt
 RUN true
 COPY libs/guard ./libs/guard
 RUN true
-COPY libs/users_schema ./libs/users_schema
+COPY libs/schema ./libs/schema
 RUN true
 COPY libs/users ./libs/users
 RUN true
@@ -46,7 +46,7 @@ RUN npm install -g pnpm
 RUN pnpm install
 
 
-RUN npx prisma generate --schema=./libs/users_schema/schema.prisma
+RUN npx prisma generate --schema=./libs/schema/schema.prisma
 RUN true
 
 RUN npx nx run auth:build

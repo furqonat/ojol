@@ -1,5 +1,5 @@
 import { FirebaseService } from '@lugo/firebase'
-import { Prisma, UsersPrismaService } from '@lugo/users'
+import { Prisma, PrismaService } from '@lugo/prisma'
 import {
   BadRequestException,
   Injectable,
@@ -9,7 +9,7 @@ import {
 @Injectable()
 export class MerchantService {
   constructor(
-    private readonly prismaService: UsersPrismaService,
+    private readonly prismaService: PrismaService,
     private readonly firebase: FirebaseService,
   ) {}
 

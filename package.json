@@ -86,6 +86,6 @@
     "typescript": "~5.2.2"
   },
   "prisma": {
-    "seed": "ts-node libs/users_schema/seed.ts"
+    "seed": "ts-node libs/schema/seed.ts"
   }
 }

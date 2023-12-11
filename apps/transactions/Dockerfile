@@ -4,7 +4,7 @@ COPY apps/transactions/ ./apps/transactions
 
 COPY apps/transactions/.env ./.env
 
-COPY libs/users_schema/schema.prisma apps/transactions/schema.prisma
+COPY libs/schema/schema.prisma apps/transactions/schema.prisma
 
 RUN go version
 # RUN cd apps/transactions && rm -r vendor

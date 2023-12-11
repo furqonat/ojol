@@ -1,11 +1,11 @@
 import { BcryptService } from '@lugo/bcrypt'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 @Injectable()
 export class AdminService {
   constructor(
-    private readonly prismaService: UsersPrismaService,
+    private readonly prismaService: PrismaService,
     private readonly bcryptService: BcryptService,
     private readonly jwtService: JwtService,
   ) {}

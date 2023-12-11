@@ -4,7 +4,7 @@ import { GuardModule } from '@lugo/guard'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { FirebaseModule } from '@lugo/firebase'
-import { UsersModule } from '@lugo/users'
+import { UsersModule } from '@lugo/prisma'
 
 @Module({
   imports: [GuardModule, FirebaseModule, UsersModule],

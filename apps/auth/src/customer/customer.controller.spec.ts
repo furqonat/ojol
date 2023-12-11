@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { CustomerController } from './customer.controller'
 import { CustomerService } from './customer.service'
 import { UnauthorizedException } from '@nestjs/common'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 
 describe('CustomerController', () => {
   let controller: CustomerController
@@ -17,7 +17,7 @@ describe('CustomerController', () => {
       providers: [
         FirebaseService,
         ConfigService,
-        UsersPrismaService,
+        PrismaService,
         {
           provide: CustomerService,
           useValue: {

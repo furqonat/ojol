@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { AdminService } from './admin.service'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { FirebaseService } from '@lugo/firebase'
 import { ConfigService } from '@nestjs/config'
 import { BcryptService } from '@lugo/bcrypt'
@@ -16,7 +16,7 @@ describe('AdminService', () => {
         JwtService,
         AdminService,
         RolesGuard,
-        UsersPrismaService,
+        PrismaService,
         FirebaseService,
         ConfigService,
         BcryptService,

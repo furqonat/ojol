@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { MerchantService } from './merchant.service'
 import { merchant } from '@prisma/client/users'
 import { DecodedIdToken } from 'firebase-admin/auth'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 
 describe('MerchantService', () => {
   let service: MerchantService
@@ -31,7 +31,7 @@ describe('MerchantService', () => {
           },
         },
         {
-          provide: UsersPrismaService,
+          provide: PrismaService,
           useValue: {
             merchant: {
               findUniqueOrThrow: findUniqueOrThrowMock,

@@ -1,5 +1,5 @@
 import { FirebaseService } from '@lugo/firebase'
-import { UsersPrismaService } from '@lugo/users'
+import { PrismaService } from '@lugo/prisma'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import { DriverService } from './driver.service'
@@ -20,7 +20,7 @@ describe('DriverService', () => {
       providers: [
         DriverService,
         {
-          provide: UsersPrismaService,
+          provide: PrismaService,
           useValue: {
             driver: {
               findUnique: findUniqueMock,
