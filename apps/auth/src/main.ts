@@ -50,6 +50,8 @@ export const handler = (event: APIGatewayEvent, context: Context) => {
   }
 }
 
+console.log(process.env.NODE_ENV)
+
 if (process.env.NODE_ENV === 'production') {
   bootstrap().then((server) => (lambdaProxy = server))
 } else {
