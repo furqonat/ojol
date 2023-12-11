@@ -1,5 +1,6 @@
 FROM public.ecr.aws/lambda/nodejs:20
 
+
 COPY apps/account ./apps/account
 RUN true
 COPY .env ./.env
