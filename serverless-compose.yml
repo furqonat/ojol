@@ -5,5 +5,7 @@ services:
     path: apps/account
   transactions:
     path: apps/transactions
+  order:
+    path: apps/order
   cart:
     path: apps/cart
