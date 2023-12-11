@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+type OrderResponse struct {
+	total int
+	data  []db.OrderModel
+}
+
 type OrderService struct {
 	database  utils.Database
 	firestore *Firestore
@@ -34,7 +39,7 @@ func (order OrderService) GetOrder(orderId string) (*db.OrderModel, error) {
 	return getOrderResult, nil
 }
 
-func (order OrderService) GetOrders(take int, skip int) ([]db.OrderModel, error) {
+func (order OrderService) GetOrders(take int, skip int) (*OrderResponse, error) {
 
 	getOrders, errGetOrders := order.database.Order.FindMany().With(
 		db.Order.Transactions.Fetch(),
@@ -45,15 +50,22 @@ func (order OrderService) GetOrders(take int, skip int) ([]db.OrderModel, error)
 	if errGetOrders != nil {
 		return nil, errGetOrders
 	}
-	return getOrders, nil
+	totalOrders, errGetTotalOrders := order.database.Order.FindMany().Exec(context.Background())
+	if errGetTotalOrders != nil {
+		return nil, errGetOrders
+	}
+	return &OrderResponse{
+		total: len(totalOrders),
+		data:  getOrders,
+	}, nil
 }
 
-func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel) (*string, error) {
+func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel, customerId string) (*string, error) {
 
 	createOrderResult, errCreateOrder := order.database.Order.CreateOne(
 		db.Order.OrderType.Set(ptrOrderModel.OrderType),
 		db.Order.PaymentType.Set(ptrOrderModel.PaymentType),
-		db.Order.Customer.Link(db.Customer.ID.Equals(ptrOrderModel.CustomerID)),
+		db.Order.Customer.Link(db.Customer.ID.Equals(customerId)),
 		db.Order.GrossAmount.Set(ptrOrderModel.GrossAmount),
 		db.Order.NetAmount.Set(ptrOrderModel.NetAmount),
 		db.Order.TotalAmount.Set(ptrOrderModel.TotalAmount),
@@ -107,7 +119,7 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel) err
 		return errors.New("when creating new transaction you must be pay it! ")
 	}
 
-	_, _, errCreateTrxFirestore := order.firestore.Client.Collection("transactions").Add(context.Background(), map[string]interface{}{
+	_, errCreateTrxFirestore := order.firestore.Client.Collection("transactions").Doc(trx.ID).Set(context.Background(), map[string]interface{}{
 		"id":           trx.ID,
 		"driver_id":    driverId,
 		"customer_id":  ptrOrderModel.CustomerID,
