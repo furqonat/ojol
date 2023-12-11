@@ -11,7 +11,14 @@ export class CustomerService {
   ) {}
 
   async signIn(token: string) {
-    const user = await this.firebaseService.auth.verifyIdToken(token)
+    const getToken = this.extractTokenFromBearer(token)
+    if (!getToken) {
+      return {
+        message: 'ERROR',
+        token: null,
+      }
+    }
+    const user = await this.firebaseService.auth.verifyIdToken(getToken)
     const { email, name, uid, phone_number } = user
 
     const userIsExists = this.getUser(uid)
@@ -49,7 +56,7 @@ export class CustomerService {
   }
 
   private async getUser(uid: string) {
-    const user = await this.prismaService.customer.findUniqueOrThrow({
+    const user = await this.prismaService.customer.findUnique({
       where: {
         id: uid,
       },
@@ -58,5 +65,16 @@ export class CustomerService {
       return undefined
     }
     return user
+  }
+
+  private extractTokenFromBearer(bearerToken: string): string | null {
+    // Check if the string starts with "Bearer "
+    if (bearerToken.startsWith('Bearer ')) {
+      // Extract the token part after "Bearer "
+      const token = bearerToken.substring(7)
+      return token
+    } else {
+      return null // Invalid Bearer token format
+    }
   }
 }

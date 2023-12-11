@@ -25,11 +25,13 @@ async function bootstrap() {
     optionsSuccessStatus: 200,
   })
   await app.init()
-  return serverlessExpress.createServer(expressServer, null, [])
+  if (process.env.NODE_ENV === 'prodcution') {
+    return serverlessExpress.createServer(expressServer, null, [])
+  } else {
+    const port = process.env.PORT || 3333
+    await app.listen(port)
+  }
 }
-
-bootstrap().then((server) => (lambdaProxy = server))
-
 function waitForServer(event: APIGatewayEvent, context: Context) {
   setImmediate(() => {
     if (!lambdaProxy) {
@@ -46,4 +48,10 @@ export const handler = (event: APIGatewayEvent, context: Context) => {
   } else {
     waitForServer(event, context)
   }
+}
+
+if (process.env.NODE_ENV === 'production') {
+  bootstrap().then((server) => (lambdaProxy = server))
+} else {
+  bootstrap()
 }
