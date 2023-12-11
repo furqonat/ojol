@@ -1,0 +1,436 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/@prisma/client/users"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model customer {
+  id                       String                     @id @default(cuid())
+  name                     String?
+  email                    String?
+  phone                    String?
+  password                 String?
+  device_token             customer_device_token[]
+  last_sign_in             DateTime?
+  last_active              DateTime?
+  email_verified           Boolean                    @default(false)
+  phone_verified           Boolean                    @default(false)
+  avatar                   String?
+  status                   customer_status            @default(ACTIVE)
+  customer_product_review  customer_product_review[]
+  customer_merchant_review customer_merchant_review[]
+  customer_driver_review   customer_driver_review[]
+  driver_customer_review   driver_customer_review[]
+  cart                     cart?
+  order                    order[]
+  favorites                favorites[]
+}
+
+model customer_device_token {
+  id          String    @id @default(cuid())
+  token       String    @unique
+  customer    customer? @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  customer_id String?
+}
+
+enum customer_status {
+  ACTIVE
+  LOCK
+  BLOCK
+}
+
+model driver {
+  id                     String                   @id @default(cuid())
+  name                   String?
+  email                  String?
+  phone                  String?
+  password               String?
+  device_token           driver_device_token[]
+  last_sign_in           DateTime?
+  last_active            DateTime?
+  email_verified         Boolean                  @default(false)
+  phone_verified         Boolean                  @default(false)
+  avatar                 String?
+  status                 driver_status            @default(PROCESS)
+  driver_details         driver_details?
+  driver_settings        driver_settings?
+  customer_driver_review customer_driver_review[]
+  driver_customer_review driver_customer_review[]
+  order                  order[]
+}
+
+model driver_settings {
+  id             String  @id @default(cuid())
+  driver         driver? @relation(fields: [driver_id], references: [id])
+  driver_id      String  @unique
+  ride           Boolean @default(true)
+  ride_price     Int     @default(0)
+  delivery       Boolean @default(true)
+  delevery_price Int     @default(0)
+  food           Boolean @default(true)
+  food_price     Int     @default(0)
+  mart           Boolean @default(true)
+  mart_price     Int     @default(0)
+}
+
+model driver_details {
+  id            String   @id @default(cuid())
+  address       String
+  vehicle       vehicle?
+  driver        driver?  @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  driver_id     String?  @unique
+  license_image String
+  id_card_image String
+  current_lat   Float?
+  current_lng   Float?
+  badge         badge    @default(BASIC)
+}
+
+model vehicle {
+  id                   String          @id @default(cuid())
+  vehicle_type         vehicle_type
+  driver_details       driver_details? @relation(fields: [driver_details_id], references: [id], onDelete: Cascade)
+  driver_details_id    String?         @unique
+  vehicle_brand        String
+  vehicle_year         String
+  vehicle_image        String
+  vehicle_registration String
+}
+
+enum driver_status {
+  ACTIVE
+  PROCESS
+  BLOCK
+}
+
+enum vehicle_type {
+  CAR
+  BIKE
+}
+
+model driver_device_token {
+  id        String  @id @default(cuid())
+  token     String  @unique
+  driver    driver? @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  driver_id String?
+}
+
+model merchant {
+  id                       String                     @id @default(cuid())
+  name                     String?
+  email                    String?
+  phone                    String?
+  password                 String?
+  device_token             merchant_device_token[]
+  last_sign_in             DateTime?
+  last_active              DateTime?
+  email_verified           Boolean                    @default(false)
+  phone_verified           Boolean                    @default(false)
+  avatar                   String?
+  details                  merchant_details?
+  status                   merchant_status            @default(PROCESS)
+  products                 product[]
+  customer_merchant_review customer_merchant_review[]
+  order                    order[]
+}
+
+model merchant_details {
+  id             String                    @id @default(cuid())
+  merchant       merchant?                 @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+  merchant_id    String?                   @unique
+  id_card_image  String
+  address        String
+  latitude       Float?
+  longitude      Float?
+  name           String
+  images         images[]
+  badge          badge                     @default(BASIC)
+  operation_time merchant_operation_time[]
+}
+
+model merchant_operation_time {
+  id                  String            @id @default(cuid())
+  day                 String
+  status              Boolean           @default(false)
+  open_time           DateTime          @db.Time()
+  close_time          DateTime          @db.Time()
+  merchant_details    merchant_details? @relation(fields: [merchant_details_id], references: [id])
+  merchant_details_id String?
+}
+
+model images {
+  id                  String           @id @default(cuid())
+  merchant_details    merchant_details @relation(fields: [merchant_details_id], references: [id])
+  merchant_details_id String
+  link                String
+}
+
+enum badge {
+  BASIC
+  REGULAR
+  PREMIUM
+}
+
+enum merchant_status {
+  ACTIVE
+  PROCESS
+  BLOCK
+}
+
+enum merchant_type {
+  FOOD
+  MART
+}
+
+model merchant_device_token {
+  id          String    @id @default(cuid())
+  token       String    @unique
+  merchant    merchant? @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+  merchant_id String?
+}
+
+model admin {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  password     String
+  last_sign_in DateTime?
+  status       Boolean   @default(true)
+  avatar       String?
+  role         roles[]
+}
+
+model roles {
+  id    String  @id @default(cuid())
+  name  String
+  admin admin[]
+}
+
+model service_fee {
+  id           String       @id @default(cuid())
+  service_type service_type
+  percentage   Int
+  account_type badge
+}
+
+model company_balance {
+  id              String         @id @default(cuid())
+  created_at      DateTime       @default(now())
+  remark          String?
+  current_balance BigInt
+  balance_in      BigInt
+  balance_out     BigInt
+  type            balance_type
+  status          balance_status
+}
+
+model discount {
+  id              String    @id @default(cuid())
+  code            String
+  expired_at      DateTime?
+  status          Boolean   @default(true)
+  created_at      DateTime  @default(now())
+  percentage      Int?
+  max_discount    Int
+  amount          Int
+  min_transaction Int
+}
+
+model tax {
+  id          String      @id @default(cuid())
+  applied_for applied_for
+  tax_type    tax_type
+  amount      Int
+  is_percent  Boolean     @default(true)
+}
+
+enum tax_type {
+  PPH
+  PPN
+}
+
+enum applied_for {
+  USER
+  DRIVER
+  MERCHANT
+  COMPANY
+}
+
+enum balance_status {
+  PENDING
+  PROCESS
+  DONE
+}
+
+enum balance_type {
+  IN
+  OUT
+}
+
+enum service_type {
+  BIKE
+  CAR
+  FOOD
+  MART
+}
+
+model product {
+  id                      String                    @id @default(cuid())
+  merchant                merchant                  @relation(fields: [merchant_id], references: [id])
+  merchant_id             String
+  name                    String
+  description             String?
+  price                   BigInt
+  status                  Boolean                   @default(false)
+  customer_product_review customer_product_review[]
+  order                   order[]
+  favorites               favorites?                @relation(fields: [favorites_id], references: [id])
+  favorites_id            String?
+  cart_item               cart_item[]
+}
+
+model favorites {
+  id          String    @id @default(cuid())
+  product     product[]
+  customer    customer  @relation(fields: [customer_id], references: [id])
+  customer_id String
+}
+
+model customer_product_review {
+  id              String       @id @default(cuid())
+  product         product      @relation(fields: [product_id], references: [id])
+  customer        customer     @relation(fields: [customer_id], references: [id])
+  product_id      String
+  customer_id     String
+  review          String?
+  rating          Int
+  createdt_at     DateTime     @default(now())
+  transacrion     transactions @relation(fields: [transacrions_id], references: [id])
+  transacrions_id String
+}
+
+model customer_merchant_review {
+  id              String       @id @default(cuid())
+  merchant        merchant     @relation(fields: [merchant_id], references: [id])
+  customer        customer     @relation(fields: [customer_id], references: [id])
+  review          String?
+  rating          Int
+  created_at      DateTime     @default(now())
+  merchant_id     String
+  customer_id     String
+  transacrion     transactions @relation(fields: [transacrions_id], references: [id])
+  transacrions_id String
+}
+
+model customer_driver_review {
+  id              String       @id @default(cuid())
+  driver          driver       @relation(fields: [driver_id], references: [id])
+  customer        customer     @relation(fields: [customer_id], references: [id])
+  review          String?
+  rating          Int
+  created_at      DateTime     @default(now())
+  driver_id       String
+  customer_id     String
+  transacrion     transactions @relation(fields: [transacrions_id], references: [id])
+  transacrions_id String
+}
+
+model driver_customer_review {
+  id              String       @id @default(cuid())
+  driver          driver       @relation(fields: [driver_id], references: [id])
+  customer        customer     @relation(fields: [customer_id], references: [id])
+  review          String?
+  rating          Int
+  created_at      DateTime     @default(now())
+  driver_id       String
+  customer_id     String
+  transacrion     transactions @relation(fields: [transacrions_id], references: [id])
+  transacrions_id String
+}
+
+model order {
+  id           String           @id @default(cuid())
+  order_type   transaction_type
+  created_at   DateTime         @default(now())
+  transactions transactions?
+  driver       driver?          @relation(fields: [driver_id], references: [id])
+  customer     customer         @relation(fields: [customer_id], references: [id])
+  merchant     merchant?        @relation(fields: [merchant_id], references: [id])
+  product      product?         @relation(fields: [product_id], references: [id])
+  cart         cart?            @relation(fields: [cart_id], references: [id], onDelete: Cascade)
+  cart_id      String?          @unique
+  driver_id    String?
+  customer_id  String
+  merchant_id  String?
+  product_id   String?
+}
+
+model cart {
+  id          String      @id @default(cuid())
+  customer    customer    @relation(fields: [customer_id], references: [id])
+  customer_id String      @unique
+  created_at  DateTime    @default(now())
+  cart_item   cart_item[]
+  order       order?
+}
+
+model cart_item {
+  id         String   @id @default(cuid())
+  product    product? @relation(fields: [product_id], references: [id])
+  cart       cart     @relation(fields: [cart_id], references: [id])
+  quantity   Int
+  product_id String?
+  cart_id    String
+}
+
+model transactions {
+  id                       String                     @id @default(cuid())
+  type                     transaction_type
+  status                   transaction_status         @default(CREATED)
+  created_at               DateTime                   @default(now())
+  payment_at               DateTime?
+  accepted_at              DateTime?
+  shipping_at              DateTime?
+  delivered_at             DateTime?
+  ended_at                 DateTime?
+  payment_type             payment_type
+  customer_product_review  customer_product_review[]
+  customer_merchant_review customer_merchant_review[]
+  customer_driver_review   customer_driver_review[]
+  driver_customer_review   driver_customer_review[]
+  order                    order                      @relation(fields: [order_id], references: [id])
+  order_id                 String                     @unique
+}
+
+enum transaction_type {
+  FOOD
+  MART
+  CAR
+  BIKE
+  DELIVERY
+}
+
+enum transaction_status {
+  CREATED
+  WAITING_PAYMENT
+  PROCESS
+  ACCEPTED
+  SHIPPING
+  DELIVERED
+  DONE
+  CANCELED
+}
+
+enum payment_type {
+  CASH
+  DANA
+  OTHER
+}
