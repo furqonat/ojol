@@ -7,7 +7,7 @@ provider:
   ecr:
     images:
       order:
-        path: ./
+        path: ../../.
         file: Dockerfile
 
 
