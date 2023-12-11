@@ -56,7 +56,6 @@ func (ptrFrsMiddleware *FirebaseMiddleware) HandleAuthWithRoles(roles ...string)
 			}
 		}
 
-		// Attach user information to the context for further processing
 		gCtx.Set(utils.UID, token.UID)
 		gCtx.Set(utils.ROLES, token.Claims[utils.ROLES])
 		gCtx.Next()
@@ -64,8 +63,6 @@ func (ptrFrsMiddleware *FirebaseMiddleware) HandleAuthWithRoles(roles ...string)
 }
 
 func (ptrFrsMiddleware *FirebaseMiddleware) getTokenFromHeaders(c *gin.Context) (string, error) {
-	// Extract the token from the request, e.g., from headers, query parameters, or cookies
-	// For example, you can extract it from the Authorization header like this:
 	token := c.GetHeader("Authorization")
 	if token == "" {
 		return "", ErrNoToken
