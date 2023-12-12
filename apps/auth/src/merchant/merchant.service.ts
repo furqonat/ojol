@@ -18,7 +18,7 @@ export class MerchantService {
     const merchant = await this.firebaseService.auth.verifyIdToken(realToken)
     const { email, name, uid, phone_number } = merchant
 
-    const merchantIsExist = this.getMerchant(uid)
+    const merchantIsExist = await this.getMerchant(uid)
 
     if (merchantIsExist) {
       const authToken = await this.firebaseService.auth.createCustomToken(uid, {

@@ -18,7 +18,7 @@ export class CustomerService {
     const user = await this.firebaseService.auth.verifyIdToken(getToken)
     const { email, name, uid, phone_number } = user
 
-    const userIsExists = this.getUser(uid)
+    const userIsExists = await this.getUser(uid)
 
     if (userIsExists) {
       const authToken = await this.firebaseService.auth.createCustomToken(uid, {
