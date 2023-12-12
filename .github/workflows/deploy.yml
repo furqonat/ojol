@@ -27,22 +27,26 @@ jobs:
       - uses: nrwl/nx-set-shas@v3
       - run: npm install -g pnpm
       - run: npm install -g serverless
+      - run: pnpm install
+
+      - name: Generate prisma schema
+        run: npx prisma generate --schema=./libs/schema/schema.prisma
+      
+
+      - name: Test account service
+        run: npx nx run account:test
+
       - run: cd apps/account && serverless deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-southeast-3
+
   auth-service:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Go 
-        uses: actions/setup-go@v4
-        with:
-          go-version: '1.21.4'
-      - name: Display Go version
-        run: go version
       - uses: nrwl/nx-set-shas@v3
       
       - name: Install pnpm
@@ -61,15 +65,82 @@ jobs:
         run: npx prisma generate --schema=./libs/schema/schema.prisma
       
 
-      - name: Test account service
-        run: npx nx run account:test
+      - name: Test auth service
+        run: npx nx run auth:test
 
-      - name: deploy all service
+      - name: deploy auth service
         run: cd apps/auth && serverless deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-southeast-3
+  
+  cart-service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nrwl/nx-set-shas@v3
+      
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install serverless
+        run: npm install -g serverless
+      
+      - name: Install serverless compose 
+        run: npm install -g @serverless/compose
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate prisma schema
+        run: npx prisma generate --schema=./libs/schema/schema.prisma
+      
+      # TODO: cart service test
+      # - name: Test auth service
+      #   run: npx nx run auth:test
+
+      - name: deploy cart service
+        run: cd apps/cart && serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-southeast-3
+          
+  # cart-service:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: nrwl/nx-set-shas@v3
+      
+  #     - name: Install pnpm
+  #       run: npm install -g pnpm
+
+  #     - name: Install serverless
+  #       run: npm install -g serverless
+      
+  #     - name: Install serverless compose 
+  #       run: npm install -g @serverless/compose
+
+  #     - name: Install dependencies
+  #       run: pnpm install
+
+  #     - name: Generate prisma schema
+  #       run: npx prisma generate --schema=./libs/schema/schema.prisma
+      
+  #     # TODO: cart service test
+  #     # - name: Test auth service
+  #     #   run: npx nx run auth:test
+
+  #     - name: deploy cart service
+  #       run: cd apps/cart && serverless deploy
+  #       env:
+  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         AWS_REGION: ap-southeast-3
+
   order-service:
     runs-on: ubuntu-latest
 
@@ -95,15 +166,41 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Generate prisma schema
-        run: npx prisma generate --schema=./libs/schema/schema.prisma
-      
-
-      - name: Test account service
-        run: npx nx run account:test
-
       - name: deploy order service
-        run: cd apps/auth && serverless deploy
+        run: cd apps/order && serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-southeast-3
+  
+  transactions-service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go 
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.4'
+      - name: Display Go version
+        run: go version
+      - uses: nrwl/nx-set-shas@v3
+      
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install serverless
+        run: npm install -g serverless
+      
+      - name: Install serverless compose 
+        run: npm install -g @serverless/compose
+
+      - name: Install dependencies
+        run: pnpm install
+
+
+      - name: deploy transactions service
+        run: cd apps/transactions && serverless deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
