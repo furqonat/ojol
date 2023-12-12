@@ -20,21 +20,19 @@ jobs:
   #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   #         AWS_REGION: ap-southeast-3
 
-  # account-service:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0
-  #     - uses: nrwl/nx-set-shas@v3
-  #     - run: npm install -g pnpm
-  #     - run: npm install -g serverless
-  #     - run: npx serverless deploy --config apps/account/serverless.yml
-  #       env:
-  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         AWS_REGION: ap-southeast-3
-  serverless-deploy:
+  account-service:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nrwl/nx-set-shas@v3
+      - run: npm install -g pnpm
+      - run: npm install -g serverless
+      - run: cd apps/account && serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-southeast-3
+  auth-service:
     runs-on: ubuntu-latest
 
     steps:
@@ -67,7 +65,45 @@ jobs:
         run: npx nx run account:test
 
       - name: deploy all service
-        run: npx serverless deploy
+        run: cd apps/auth && serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-southeast-3
+  order-service:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go 
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.4'
+      - name: Display Go version
+        run: go version
+      - uses: nrwl/nx-set-shas@v3
+      
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install serverless
+        run: npm install -g serverless
+      
+      - name: Install serverless compose 
+        run: npm install -g @serverless/compose
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate prisma schema
+        run: npx prisma generate --schema=./libs/schema/schema.prisma
+      
+
+      - name: Test account service
+        run: npx nx run account:test
+
+      - name: deploy order service
+        run: cd apps/auth && serverless deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

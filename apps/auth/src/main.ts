@@ -1,57 +1,34 @@
-import { Server } from 'http'
-import { APIGatewayEvent, Context } from 'aws-lambda'
-import * as serverlessExpress from 'aws-serverless-express'
-import express, { Express } from 'express'
-
+import serverlessExpress from '@vendia/serverless-express'
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 
 import { AppModule } from './app/app.module'
-import { ExpressAdapter } from '@nestjs/platform-express'
 
-let lambdaProxy: Server
+import { Handler } from 'express'
+let server: Handler
 
 async function bootstrap() {
-  const expressServer: Express = express()
-  const app = await NestFactory.create(
-    AppModule,
-    new ExpressAdapter(expressServer),
-  )
-  app.useGlobalPipes(new ValidationPipe())
-  app.enableCors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    preflightContinue: false,
-    optionsSuccessStatus: 200,
+  const app = await NestFactory.create(AppModule, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      preflightContinue: false,
+      optionsSuccessStatus: 200,
+    },
   })
+  app.useGlobalPipes(new ValidationPipe({ transform: true }))
   await app.init()
-  return serverlessExpress.createServer(expressServer, null, [])
-  // if (process.env.NODE_ENV === 'prodcution') {
-  // } else {
-  //   const port = process.env.PORT || 3333
-  //   await app.listen(port)
-  // }
-}
-function waitForServer(event: APIGatewayEvent, context: Context) {
-  setImmediate(() => {
-    if (!lambdaProxy) {
-      waitForServer(event, context)
-    } else {
-      serverlessExpress.proxy(lambdaProxy, event, context)
-    }
-  })
+  const expressApp = app.getHttpAdapter().getInstance()
+  return serverlessExpress({ app: expressApp })
+  // const port = process.env.PORT || 3333
+  // await app.listen(port)
+  // Logger.log(`🚀 Application is running on: http://localhost:${port}}`)
 }
 
-export const handler = (event: APIGatewayEvent, context: Context) => {
-  if (lambdaProxy) {
-    serverlessExpress.proxy(lambdaProxy, event, context)
-  } else {
-    waitForServer(event, context)
-  }
+const handler: Handler = async (event, context, callback) => {
+  server = server ?? (await bootstrap())
+  return server(event, context, callback)
 }
 
-bootstrap().then((server) => (lambdaProxy = server))
-// if (process.env.NODE_ENV === 'production') {
-// } else {
-//   bootstrap()
-// }
+export { handler }
+// bootstrap()
