@@ -6,15 +6,19 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client/users'
 import { str2obj } from '@lugo/common'
 import { MerchantService } from './merchant.service'
+import { Role, Roles, RolesGuard } from '@lugo/guard'
 
+@UseGuards(RolesGuard)
 @Controller('merchant')
 export class MerchantController {
   constructor(private readonly merchantService: MerchantService) {}
 
+  @Roles(Role.MERCHANT)
   @Get()
   async getMerchant(
     @Headers('Authorization') token?: string,
@@ -23,6 +27,7 @@ export class MerchantController {
     return this.merchantService.getMerchant(token, str2obj(select))
   }
 
+  @Roles(Role.MERCHANT)
   @Post()
   async applyToBeMerchant(
     @Headers('Authorization') token?: string,
@@ -31,6 +36,7 @@ export class MerchantController {
     return this.merchantService.applyMerchant(token, details)
   }
 
+  @Roles(Role.MERCHANT)
   @Post('/operation')
   async createOperationTime(
     @Headers('Authorization') token?: string,
@@ -39,6 +45,7 @@ export class MerchantController {
     return this.merchantService.createOperationTime(token, data)
   }
 
+  @Roles(Role.MERCHANT)
   @Put('/operation')
   async updateOperationTime(
     @Headers('Authorization') token?: string,

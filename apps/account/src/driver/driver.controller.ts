@@ -1,3 +1,5 @@
+import { str2obj } from '@lugo/common'
+import { Role, Roles, RolesGuard } from '@lugo/guard'
 import {
   Body,
   Controller,
@@ -6,15 +8,17 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common'
-import { DriverService } from './driver.service'
 import { Prisma } from '@prisma/client/users'
-import { str2obj } from '@lugo/common'
+import { DriverService } from './driver.service'
 
+@UseGuards(RolesGuard)
 @Controller('driver')
 export class DriverController {
   constructor(private readonly driverService: DriverService) {}
 
+  @Roles(Role.DRIVER)
   @Get()
   async getDriver(
     @Headers('Authorization') token?: string,
@@ -23,6 +27,7 @@ export class DriverController {
     return this.driverService.getDriver(token, str2obj(select))
   }
 
+  @Roles(Role.DRIVER)
   @Post()
   async applyToBeDriver(
     @Headers('Authorization') token?: string,
@@ -31,6 +36,7 @@ export class DriverController {
     return this.driverService.applyDriver(token, { details: details })
   }
 
+  @Roles(Role.DRIVER)
   @Put('/setting/order')
   async updateOrderSetting(
     @Headers('Authorization') token: string,

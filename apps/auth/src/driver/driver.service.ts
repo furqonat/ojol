@@ -1,5 +1,5 @@
 import { FirebaseService } from '@lugo/firebase'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { Role } from '@lugo/guard'
 import { PrismaService } from '@lugo/prisma'
 
@@ -11,7 +11,11 @@ export class DriverService {
   ) {}
 
   async signIn(token: string) {
-    const driver = await this.firebaseService.auth.verifyIdToken(token)
+    const realToken = this.extractTokenFromBearer(token)
+    if (!realToken) {
+      throw new UnauthorizedException()
+    }
+    const driver = await this.firebaseService.auth.verifyIdToken(realToken)
     const { email, name, uid, phone_number } = driver
 
     const driverIsExist = this.getDriver(uid)
@@ -49,7 +53,7 @@ export class DriverService {
   }
 
   private async getDriver(uid: string) {
-    const driver = await this.prismaService.driver.findUniqueOrThrow({
+    const driver = await this.prismaService.driver.findUnique({
       where: {
         id: uid,
       },
@@ -58,5 +62,16 @@ export class DriverService {
       return undefined
     }
     return driver
+  }
+
+  private extractTokenFromBearer(bearerToken: string): string | null {
+    // Check if the string starts with "Bearer "
+    if (bearerToken.startsWith('Bearer ')) {
+      // Extract the token part after "Bearer "
+      const token = bearerToken.substring(7)
+      return token
+    } else {
+      return null // Invalid Bearer token format
+    }
   }
 }

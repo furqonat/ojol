@@ -1,17 +1,14 @@
+import { FirebaseModule } from '@lugo/firebase'
+import { PrismaModule } from '@lugo/prisma'
 import { Module } from '@nestjs/common'
-import { CustomerService } from './customer.service'
+import { ConfigModule } from '@nestjs/config'
 import { CustomerController } from './customer.controller'
-import { PrismaService } from '@lugo/prisma'
-import { FirebaseService } from '@lugo/firebase'
-import { ConfigService } from '@nestjs/config'
+import { CustomerService } from './customer.service'
+import { GuardModule } from '@lugo/guard'
 
 @Module({
-  providers: [
-    CustomerService,
-    PrismaService,
-    FirebaseService,
-    ConfigService,
-  ],
+  imports: [ConfigModule, FirebaseModule, PrismaModule, GuardModule],
+  providers: [CustomerService],
   controllers: [CustomerController],
 })
 export class CustomerModule {}

@@ -4,8 +4,7 @@ import { NestFactory } from '@nestjs/core'
 
 import { AppModule } from './app/app.module'
 
-import { Handler } from 'express'
-let server: Handler
+let server
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -25,7 +24,7 @@ async function bootstrap() {
   // Logger.log(`🚀 Application is running on: http://localhost:${port}}`)
 }
 
-const handler: Handler = async (event, context, callback) => {
+const handler = async (event, context, callback) => {
   server = server ?? (await bootstrap())
   return server(event, context, callback)
 }

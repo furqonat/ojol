@@ -1,7 +1,7 @@
 service: account
 provider:
   name: aws
-  runtime: nodejs20.x
+  runtime: nodejs18.x
   region: ap-southeast-1
   environment:
     GOOGLE_APPLICATION_CREDENTIALS: ./google-services.json
@@ -12,9 +12,6 @@ provider:
       account:
         path: ../../.
         file: apps/account/Dockerfile
-
-plugins:
-  - serverless-offline
 
 functions:
   app:
