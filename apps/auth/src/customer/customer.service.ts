@@ -16,14 +16,16 @@ export class CustomerService {
       throw new UnauthorizedException()
     }
     const user = await this.firebaseService.auth.verifyIdToken(getToken)
-    const { email, name, uid, phone_number } = user
 
-    const userIsExists = await this.getUser(uid)
+    const userIsExists = await this.getUser(user.uid)
 
     if (userIsExists) {
-      const authToken = await this.firebaseService.auth.createCustomToken(uid, {
-        roles: Role.USER,
-      })
+      const authToken = await this.firebaseService.auth.createCustomToken(
+        user.uid,
+        {
+          roles: Role.USER,
+        },
+      )
       return {
         message: 'OK',
         token: authToken,
@@ -31,10 +33,9 @@ export class CustomerService {
     } else {
       const userDb = await this.prismaService.customer.create({
         data: {
-          id: uid,
-          email: email,
-          phone: phone_number,
-          name: name,
+          id: user.uid,
+          email: user.email,
+          phone: user.phone_number,
         },
       })
 
