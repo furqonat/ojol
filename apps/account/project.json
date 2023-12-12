@@ -51,6 +51,14 @@
       "options": {
         "jestConfig": "apps/account/jest.config.ts"
       }
+    },
+    "offline": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "npx nx run account:serve && cd apps/account && npx sls offline --stage dev --host 0.0.0.0 --config serverless.offline.yml "
+        ]
+      }
     }
   },
   "tags": []

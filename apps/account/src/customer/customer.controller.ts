@@ -6,15 +6,19 @@ import {
   Put,
   Query,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common'
 import { CustomerBasicUpdate, CustomerQuery } from '../dto/customer.dto'
 import { CustomerService } from './customer.service'
 import { str2obj } from '@lugo/common'
+import { Role, Roles, RolesGuard } from '@lugo/guard'
 
+@UseGuards(RolesGuard)
 @Controller('customer')
 export class CustomerController {
   constructor(private readonly customerService: CustomerService) {}
 
+  @Roles(Role.USER)
   @Get()
   async getCustomer(
     @Headers('Authorization') token?: string,
@@ -27,6 +31,7 @@ export class CustomerController {
     }
   }
 
+  @Roles(Role.USER)
   @Put()
   async basicUpdateCustomer(
     @Body() data: CustomerBasicUpdate,

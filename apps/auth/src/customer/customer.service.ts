@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { Role } from '@lugo/guard'
 import { FirebaseService } from '@lugo/firebase'
 import { PrismaService } from '@lugo/prisma'
@@ -13,10 +13,7 @@ export class CustomerService {
   async signIn(token: string) {
     const getToken = this.extractTokenFromBearer(token)
     if (!getToken) {
-      return {
-        message: 'ERROR',
-        token: null,
-      }
+      throw new UnauthorizedException()
     }
     const user = await this.firebaseService.auth.verifyIdToken(getToken)
     const { email, name, uid, phone_number } = user

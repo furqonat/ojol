@@ -34,7 +34,7 @@ describe('CustomerService', () => {
           provide: PrismaService,
           useValue: {
             customer: {
-              findUniqueOrThrow: findUniqueOrThrowMock,
+              findUnique: findUniqueOrThrowMock,
               create: createMock,
             },
           },
@@ -93,7 +93,7 @@ describe('CustomerService', () => {
       createCustomTokenMock.mockReturnValue(customToken)
     })
     it('user exists in lugo database', async () => {
-      const result = await service.signIn('123456')
+      const result = await service.signIn('Bearer 123456')
       expect(result.token).toBe(customToken)
     })
   })
@@ -142,7 +142,7 @@ describe('CustomerService', () => {
       createCustomTokenMock.mockReturnValue(customToken)
     })
     it('test create user when user is not exists', async () => {
-      const result = await service.signIn('1212123')
+      const result = await service.signIn('Bearer 1212123')
       expect(result.token).toBe(`${customToken}`)
     })
   })

@@ -1,17 +1,14 @@
+import { FirebaseModule } from '@lugo/firebase'
+import { GuardModule } from '@lugo/guard'
+import { PrismaModule } from '@lugo/prisma'
 import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
 import { MerchantController } from './merchant.controller'
 import { MerchantService } from './merchant.service'
-import { PrismaService } from '@lugo/prisma'
-import { FirebaseService } from '@lugo/firebase'
-import { ConfigService } from '@nestjs/config'
 
 @Module({
+  imports: [ConfigModule, FirebaseModule, PrismaModule, GuardModule],
   controllers: [MerchantController],
-  providers: [
-    MerchantService,
-    PrismaService,
-    FirebaseService,
-    ConfigService,
-  ],
+  providers: [MerchantService],
 })
 export class MerchantModule {}

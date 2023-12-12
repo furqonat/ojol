@@ -1,11 +1,13 @@
+import { FirebaseModule } from '@lugo/firebase'
+import { PrismaModule } from '@lugo/prisma'
 import { Module } from '@nestjs/common'
-import { DriverService } from './driver.service'
+import { ConfigModule } from '@nestjs/config'
 import { DriverController } from './driver.controller'
-import { FirebaseService } from '@lugo/firebase'
-import { PrismaService } from '@lugo/prisma'
+import { DriverService } from './driver.service'
 
 @Module({
-  providers: [DriverService, FirebaseService, PrismaService],
+  imports: [ConfigModule, FirebaseModule, PrismaModule],
+  providers: [DriverService],
   controllers: [DriverController],
 })
 export class DriverModule {}

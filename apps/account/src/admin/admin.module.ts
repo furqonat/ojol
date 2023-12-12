@@ -1,11 +1,12 @@
-import { BcryptService } from '@lugo/bcrypt'
-import { FirebaseService } from '@lugo/firebase'
-import { PrismaService } from '@lugo/prisma'
+import { BcryptModule } from '@lugo/bcrypt'
+import { FirebaseModule } from '@lugo/firebase'
+import { PrismaModule } from '@lugo/prisma'
 import { Module } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
-import { JwtModule, JwtService } from '@nestjs/jwt'
+import { ConfigModule } from '@nestjs/config'
+import { JwtModule } from '@nestjs/jwt'
 import { AdminController } from './admin.controller'
 import { AdminService } from './admin.service'
+import { JwtGuardModule } from '@lugo/jwtguard'
 
 @Module({
   imports: [
@@ -13,15 +14,13 @@ import { AdminService } from './admin.service'
       secret: process.env.JWT_SECRET,
       global: true,
     }),
+    ConfigModule,
+    PrismaModule,
+    FirebaseModule,
+    BcryptModule,
+    JwtGuardModule,
   ],
-  providers: [
-    AdminService,
-    JwtService,
-    PrismaService,
-    FirebaseService,
-    ConfigService,
-    BcryptService,
-  ],
+  providers: [AdminService],
   controllers: [AdminController],
 })
 export class AdminModule {}

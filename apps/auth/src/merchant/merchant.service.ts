@@ -1,7 +1,7 @@
 import { FirebaseService } from '@lugo/firebase'
 import { Role } from '@lugo/guard'
 import { PrismaService } from '@lugo/prisma'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 
 @Injectable()
 export class MerchantService {
@@ -11,7 +11,11 @@ export class MerchantService {
   ) {}
 
   async signIn(token: string) {
-    const merchant = await this.firebaseService.auth.verifyIdToken(token)
+    const realToken = this.extractTokenFromBearer(token)
+    if (!realToken) {
+      throw new UnauthorizedException()
+    }
+    const merchant = await this.firebaseService.auth.verifyIdToken(realToken)
     const { email, name, uid, phone_number } = merchant
 
     const merchantIsExist = this.getMerchant(uid)
@@ -49,7 +53,7 @@ export class MerchantService {
   }
 
   private async getMerchant(uid: string) {
-    const merchant = await this.prismaService.merchant.findUniqueOrThrow({
+    const merchant = await this.prismaService.merchant.findUnique({
       where: {
         id: uid,
       },
@@ -58,5 +62,16 @@ export class MerchantService {
       return undefined
     }
     return merchant
+  }
+
+  private extractTokenFromBearer(bearerToken: string): string | null {
+    // Check if the string starts with "Bearer "
+    if (bearerToken.startsWith('Bearer ')) {
+      // Extract the token part after "Bearer "
+      const token = bearerToken.substring(7)
+      return token
+    } else {
+      return null // Invalid Bearer token format
+    }
   }
 }
