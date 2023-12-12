@@ -16,14 +16,16 @@ export class MerchantService {
       throw new UnauthorizedException()
     }
     const merchant = await this.firebaseService.auth.verifyIdToken(realToken)
-    const { email, name, uid, phone_number } = merchant
 
-    const merchantIsExist = await this.getMerchant(uid)
+    const merchantIsExist = await this.getMerchant(merchant.uid)
 
     if (merchantIsExist) {
-      const authToken = await this.firebaseService.auth.createCustomToken(uid, {
-        roles: Role.MERCHANT,
-      })
+      const authToken = await this.firebaseService.auth.createCustomToken(
+        merchant.uid,
+        {
+          roles: Role.MERCHANT,
+        },
+      )
       return {
         message: 'OK',
         token: authToken,
@@ -31,10 +33,9 @@ export class MerchantService {
     } else {
       const userDb = await this.prismaService.merchant.create({
         data: {
-          id: uid,
-          email: email,
-          phone: phone_number,
-          name: name,
+          id: merchant.uid,
+          email: merchant.email,
+          phone: merchant.phone_number,
         },
       })
 

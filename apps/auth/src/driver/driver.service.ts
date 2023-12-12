@@ -16,14 +16,16 @@ export class DriverService {
       throw new UnauthorizedException()
     }
     const driver = await this.firebaseService.auth.verifyIdToken(realToken)
-    const { email, name, uid, phone_number } = driver
 
-    const driverIsExist = await this.getDriver(uid)
+    const driverIsExist = await this.getDriver(driver.uid)
 
     if (driverIsExist) {
-      const authToken = await this.firebaseService.auth.createCustomToken(uid, {
-        roles: Role.DRIVER,
-      })
+      const authToken = await this.firebaseService.auth.createCustomToken(
+        driver.uid,
+        {
+          roles: Role.DRIVER,
+        },
+      )
       return {
         message: 'OK',
         token: authToken,
@@ -31,10 +33,9 @@ export class DriverService {
     } else {
       const userDb = await this.prismaService.driver.create({
         data: {
-          id: uid,
-          email: email,
-          phone: phone_number,
-          name: name,
+          id: driver.uid,
+          email: driver.email,
+          phone: driver.phone_number,
         },
       })
 
