@@ -18,7 +18,7 @@ export class DriverService {
     const driver = await this.firebaseService.auth.verifyIdToken(realToken)
     const { email, name, uid, phone_number } = driver
 
-    const driverIsExist = this.getDriver(uid)
+    const driverIsExist = await this.getDriver(uid)
 
     if (driverIsExist) {
       const authToken = await this.firebaseService.auth.createCustomToken(uid, {
