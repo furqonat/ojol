@@ -12,10 +12,10 @@ import (
 
 type OrderController struct {
 	logger  utils.Logger
-	service services.OrderService
+	service *services.OrderService
 }
 
-func NewOrderController(logger utils.Logger, service services.OrderService) OrderController {
+func NewOrderController(logger utils.Logger, service *services.OrderService) OrderController {
 	return OrderController{
 		logger:  logger,
 		service: service,
