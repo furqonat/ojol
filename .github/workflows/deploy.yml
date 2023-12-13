@@ -54,9 +54,6 @@ jobs:
 
       - name: Install serverless
         run: npm install -g serverless
-      
-      - name: Install serverless compose 
-        run: npm install -g @serverless/compose
 
       - name: Install dependencies
         run: pnpm install
@@ -88,9 +85,6 @@ jobs:
       - name: Install serverless
         run: npm install -g serverless
       
-      - name: Install serverless compose 
-        run: npm install -g @serverless/compose
-
       - name: Install dependencies
         run: pnpm install
 
@@ -108,38 +102,35 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-southeast-3
           
-  # cart-service:
-  #   runs-on: ubuntu-latest
+  product-service:
+    runs-on: ubuntu-latest
 
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: nrwl/nx-set-shas@v3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nrwl/nx-set-shas@v3
       
-  #     - name: Install pnpm
-  #       run: npm install -g pnpm
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-  #     - name: Install serverless
-  #       run: npm install -g serverless
+      - name: Install serverless
+        run: npm install -g serverless
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Generate prisma schema
+        run: npx prisma generate --schema=./libs/schema/schema.prisma
       
-  #     - name: Install serverless compose 
-  #       run: npm install -g @serverless/compose
+      # TODO: cart service test
+      # - name: Test auth service
+      #   run: npx nx run auth:test
 
-  #     - name: Install dependencies
-  #       run: pnpm install
-
-  #     - name: Generate prisma schema
-  #       run: npx prisma generate --schema=./libs/schema/schema.prisma
-      
-  #     # TODO: cart service test
-  #     # - name: Test auth service
-  #     #   run: npx nx run auth:test
-
-  #     - name: deploy cart service
-  #       run: cd apps/cart && serverless deploy
-  #       env:
-  #         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         AWS_REGION: ap-southeast-3
+      - name: deploy product service
+        run: cd apps/product && serverless deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-southeast-3
 
   order-service:
     runs-on: ubuntu-latest
