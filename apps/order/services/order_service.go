@@ -19,8 +19,8 @@ type OrderService struct {
 	firestore Firestore
 }
 
-func NewOrderService(database utils.Database, firestore Firestore) OrderService {
-	return OrderService{
+func NewOrderService(database utils.Database, firestore Firestore) *OrderService {
+	return &OrderService{
 		database:  database,
 		firestore: firestore,
 	}
