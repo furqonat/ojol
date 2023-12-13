@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { Role } from '@lugo/guard'
 import { FirebaseService } from '@lugo/firebase'
 import { PrismaService } from '@lugo/prisma'
@@ -15,41 +19,45 @@ export class CustomerService {
     if (!getToken) {
       throw new UnauthorizedException()
     }
-    const user = await this.firebaseService.auth.verifyIdToken(getToken)
+    try {
+      const user = await this.firebaseService.auth.verifyIdToken(getToken)
 
-    const userIsExists = await this.getUser(user.uid)
+      const userIsExists = await this.getUser(user.uid)
 
-    if (userIsExists) {
-      const authToken = await this.firebaseService.auth.createCustomToken(
-        user.uid,
-        {
-          roles: Role.USER,
-        },
-      )
-      return {
-        message: 'OK',
-        token: authToken,
+      if (userIsExists) {
+        const authToken = await this.firebaseService.auth.createCustomToken(
+          user.uid,
+          {
+            roles: Role.USER,
+          },
+        )
+        return {
+          message: 'OK',
+          token: authToken,
+        }
+      } else {
+        const userDb = await this.prismaService.customer.create({
+          data: {
+            id: user.uid,
+            email: user.email,
+            phone: user.phone_number,
+          },
+        })
+
+        const authToken = await this.firebaseService.auth.createCustomToken(
+          userDb.id,
+          {
+            roles: Role.USER,
+          },
+        )
+
+        return {
+          message: 'OK',
+          token: authToken,
+        }
       }
-    } else {
-      const userDb = await this.prismaService.customer.create({
-        data: {
-          id: user.uid,
-          email: user.email,
-          phone: user.phone_number,
-        },
-      })
-
-      const authToken = await this.firebaseService.auth.createCustomToken(
-        userDb.id,
-        {
-          roles: Role.USER,
-        },
-      )
-
-      return {
-        message: 'OK',
-        token: authToken,
-      }
+    } catch (e) {
+      throw new InternalServerErrorException({ message: e })
     }
   }
 
