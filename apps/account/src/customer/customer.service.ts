@@ -36,6 +36,8 @@ export class CustomerService {
         id: true,
         name: true,
         avatar: true,
+        email: true,
+        phone: true,
       })
       await this.prismaService.customer.update({
         where: {
@@ -44,11 +46,15 @@ export class CustomerService {
         data: {
           name: data.name ?? customer.name,
           avatar: data.avatar ?? customer.avatar,
+          email: data.email ?? customer.email,
+          phone: data.phoneNumber ?? customer.phone,
         },
       })
       await this.firebase.auth.updateUser(decodeToken.uid, {
         displayName: data?.name ?? customer.name,
         photoURL: data?.avatar ?? customer.avatar,
+        phoneNumber: data?.phoneNumber ?? customer.phone,
+        email: data?.email ?? customer.email,
       })
       return {
         message: 'OK',
