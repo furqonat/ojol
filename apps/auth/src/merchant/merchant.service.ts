@@ -1,7 +1,11 @@
 import { FirebaseService } from '@lugo/firebase'
 import { Role } from '@lugo/guard'
 import { PrismaService } from '@lugo/prisma'
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common'
 
 @Injectable()
 export class MerchantService {
@@ -15,41 +19,45 @@ export class MerchantService {
     if (!realToken) {
       throw new UnauthorizedException()
     }
-    const merchant = await this.firebaseService.auth.verifyIdToken(realToken)
+    try {
+      const merchant = await this.firebaseService.auth.verifyIdToken(realToken)
 
-    const merchantIsExist = await this.getMerchant(merchant.uid)
+      const merchantIsExist = await this.getMerchant(merchant.uid)
 
-    if (merchantIsExist) {
-      const authToken = await this.firebaseService.auth.createCustomToken(
-        merchant.uid,
-        {
-          roles: Role.MERCHANT,
-        },
-      )
-      return {
-        message: 'OK',
-        token: authToken,
+      if (merchantIsExist) {
+        const authToken = await this.firebaseService.auth.createCustomToken(
+          merchant.uid,
+          {
+            roles: Role.MERCHANT,
+          },
+        )
+        return {
+          message: 'OK',
+          token: authToken,
+        }
+      } else {
+        const userDb = await this.prismaService.merchant.create({
+          data: {
+            id: merchant.uid,
+            email: merchant.email,
+            phone: merchant.phone_number,
+          },
+        })
+
+        const authToken = await this.firebaseService.auth.createCustomToken(
+          userDb.id,
+          {
+            roles: Role.MERCHANT,
+          },
+        )
+
+        return {
+          message: 'OK',
+          token: authToken,
+        }
       }
-    } else {
-      const userDb = await this.prismaService.merchant.create({
-        data: {
-          id: merchant.uid,
-          email: merchant.email,
-          phone: merchant.phone_number,
-        },
-      })
-
-      const authToken = await this.firebaseService.auth.createCustomToken(
-        userDb.id,
-        {
-          roles: Role.MERCHANT,
-        },
-      )
-
-      return {
-        message: 'OK',
-        token: authToken,
-      }
+    } catch (e) {
+      throw new InternalServerErrorException({ message: e })
     }
   }
 

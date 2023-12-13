@@ -1,5 +1,9 @@
 import { FirebaseService } from '@lugo/firebase'
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { Role } from '@lugo/guard'
 import { PrismaService } from '@lugo/prisma'
 
@@ -15,41 +19,45 @@ export class DriverService {
     if (!realToken) {
       throw new UnauthorizedException()
     }
-    const driver = await this.firebaseService.auth.verifyIdToken(realToken)
+    try {
+      const driver = await this.firebaseService.auth.verifyIdToken(realToken)
 
-    const driverIsExist = await this.getDriver(driver.uid)
+      const driverIsExist = await this.getDriver(driver.uid)
 
-    if (driverIsExist) {
-      const authToken = await this.firebaseService.auth.createCustomToken(
-        driver.uid,
-        {
-          roles: Role.DRIVER,
-        },
-      )
-      return {
-        message: 'OK',
-        token: authToken,
+      if (driverIsExist) {
+        const authToken = await this.firebaseService.auth.createCustomToken(
+          driver.uid,
+          {
+            roles: Role.DRIVER,
+          },
+        )
+        return {
+          message: 'OK',
+          token: authToken,
+        }
+      } else {
+        const userDb = await this.prismaService.driver.create({
+          data: {
+            id: driver.uid,
+            email: driver.email,
+            phone: driver.phone_number,
+          },
+        })
+
+        const authToken = await this.firebaseService.auth.createCustomToken(
+          userDb.id,
+          {
+            roles: Role.DRIVER,
+          },
+        )
+
+        return {
+          message: 'OK',
+          token: authToken,
+        }
       }
-    } else {
-      const userDb = await this.prismaService.driver.create({
-        data: {
-          id: driver.uid,
-          email: driver.email,
-          phone: driver.phone_number,
-        },
-      })
-
-      const authToken = await this.firebaseService.auth.createCustomToken(
-        userDb.id,
-        {
-          roles: Role.DRIVER,
-        },
-      )
-
-      return {
-        message: 'OK',
-        token: authToken,
-      }
+    } catch (e) {
+      throw new InternalServerErrorException({ message: e })
     }
   }
 
