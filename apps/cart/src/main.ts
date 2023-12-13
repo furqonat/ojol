@@ -16,6 +16,7 @@ async function bootstrap() {
       preflightContinue: false,
       optionsSuccessStatus: 200,
     },
+    logger: ['error'],
   })
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
   await app.init()

@@ -17,9 +17,9 @@ export const option: NextAuthOptions = {
         if (!credentials) {
           return null
         }
-        console.log(`${process.env.NEXT_PUBLIC_DEV_BASE_URL}/dev/admin`)
+        console.log(`${process.env.NEXT_PUBLIC_PROD_BASE_URL}/auth/admin`)
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_DEV_BASE_URL}/dev/admin`,
+          `${process.env.NEXT_PUBLIC_PROD_BASE_URL}auth/admin`,
           {
             method: 'POST',
             headers: {
