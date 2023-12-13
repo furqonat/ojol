@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 
 export function AddAdmin() {
   const dialogRef = useRef<HTMLDialogElement>(null)
@@ -14,6 +14,19 @@ export function AddAdmin() {
   function handleOnCreateAdmin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
   }
+
+  useEffect(() => {
+    fetch(
+      'http://localhost:3000/dev/admin/clpqfo57a0000ktpqf6vaqi1j?name=true&email=true',
+      {
+        headers: {
+          Authorization: `Bearer ${data?.user.token}`,
+        },
+      },
+    )
+      .then((e) => e.json())
+      .then(console.log)
+  }, [data?.user.token])
 
   return (
     <div>

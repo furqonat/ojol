@@ -31,7 +31,9 @@ export class RolesGuard implements CanActivate {
       return false
     }
     try {
-      const userDecode = await this.jwtService.verifyAsync(token)
+      const userDecode = await this.jwtService.verifyAsync(token, {
+        secret: process.env['JWT_SECRET'] as string,
+      })
       const roles = userDecode['role'] as
         | [{ id: string; name: string }]
         | null
