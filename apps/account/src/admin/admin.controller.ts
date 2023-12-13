@@ -18,8 +18,8 @@ import { str2obj } from '@lugo/common'
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Get()
   @Roles(Role.ADMIN, Role.SUPERADMIN)
+  @Get()
   async getAdmins(
     @Query('take') take?: number,
     @Query('skip') skip?: number,

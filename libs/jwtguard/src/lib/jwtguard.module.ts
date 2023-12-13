@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common'
-import { APP_GUARD } from '@nestjs/core'
 import { JwtService } from '@nestjs/jwt'
 import { RolesGuard } from './roles.guard'
 import { ConfigModule } from '@nestjs/config'
+
+const JWT_GUARD = 'JWT_GUARD'
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { ConfigModule } from '@nestjs/config'
   controllers: [],
   providers: [
     {
-      provide: APP_GUARD,
+      provide: JWT_GUARD,
       useClass: RolesGuard,
     },
     JwtService,

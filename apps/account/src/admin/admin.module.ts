@@ -10,11 +10,11 @@ import { JwtGuardModule } from '@lugo/jwtguard'
 
 @Module({
   imports: [
+    ConfigModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       global: true,
     }),
-    ConfigModule,
     PrismaModule,
     FirebaseModule,
     BcryptModule,

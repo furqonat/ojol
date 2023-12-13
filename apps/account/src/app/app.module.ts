@@ -10,10 +10,10 @@ import { MerchantModule } from '../merchant/merchant.module'
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AdminModule,
     CustomerModule,
     DriverModule,
     MerchantModule,
-    AdminModule,
   ],
   controllers: [],
   providers: [],
