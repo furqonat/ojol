@@ -12,10 +12,10 @@ import (
 type TrxService struct {
 	database  utils.Database
 	logger    utils.Logger
-	firestore *Firestore
+	firestore Firestore
 }
 
-func NewTrxService(database utils.Database, logger utils.Logger, firestore *Firestore) *TrxService {
+func NewTrxService(database utils.Database, logger utils.Logger, firestore Firestore) *TrxService {
 	return &TrxService{
 		database:  database,
 		logger:    logger,

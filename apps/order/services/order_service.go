@@ -16,10 +16,10 @@ type OrderResponse struct {
 
 type OrderService struct {
 	database  utils.Database
-	firestore *Firestore
+	firestore Firestore
 }
 
-func NewOrderService(database utils.Database, firestore *Firestore) OrderService {
+func NewOrderService(database utils.Database, firestore Firestore) OrderService {
 	return OrderService{
 		database:  database,
 		firestore: firestore,

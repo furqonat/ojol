@@ -7,6 +7,6 @@ import (
 // Module exports services present
 var Module = fx.Options(
 	fx.Provide(NewFirebaseAuth),
-	fx.Provide(NewTrxService),
 	fx.Provide(NewFirestore),
+	fx.Provide(NewTrxService),
 )
