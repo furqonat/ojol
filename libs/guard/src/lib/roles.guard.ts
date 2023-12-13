@@ -2,7 +2,9 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  InternalServerErrorException,
   Logger,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { Role } from './roles.enum'
@@ -22,7 +24,6 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ])
-    Logger.log('Required roles', `${requiredRoles}`)
     if (!requiredRoles) {
       return true
     }
@@ -33,14 +34,20 @@ export class RolesGuard implements CanActivate {
     }
     try {
       const userDecode = await this.firebase.auth?.verifyIdToken(token)
-      return requiredRoles.includes(userDecode['roles'])
+      const rolesValid = requiredRoles.includes(userDecode['roles'])
+      if (rolesValid) {
+        request['uid'] = userDecode.uid
+        return rolesValid
+      } else {
+        throw new UnauthorizedException()
+      }
     } catch (error) {
       Logger.error(
         'Did you forgot initialize Firebase Admin SDK?',
         error,
         'RolesGuard',
       )
-      return false
+      throw new InternalServerErrorException(error)
     }
   }
 

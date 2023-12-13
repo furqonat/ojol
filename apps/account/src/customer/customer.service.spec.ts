@@ -49,32 +49,28 @@ describe('CustomerService', () => {
   })
 
   describe('get customer without select', () => {
-    const decodeToken = { uid: '12345' }
-    const token = '123412345131a'
+    const uid = '12345'
     const customer = {
       id: '12345',
     }
 
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(decodeToken)
       findUniqueMock.mockReturnValue(customer)
     })
 
     it('test get user with token and without select', async () => {
-      const result = await service.getCustomer(token)
+      const result = await service.getCustomer(uid)
       expect(result.id).toBe(customer.id)
     })
   })
 
   describe('get customer with select prompt', () => {
-    const decodeToken = { uid: '12345' }
-    const token = '1wefaffaas'
+    const token = '12345'
     const customer = {
       id: '12345',
       name: 'test user',
     }
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(decodeToken)
       findUniqueMock.mockReturnValue(customer)
     })
 
@@ -86,7 +82,6 @@ describe('CustomerService', () => {
 
   describe('get customer and return not found', () => {
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(undefined)
       findUniqueMock.mockReturnValue(undefined)
     })
     it('get user but return not found', async () => {
@@ -99,7 +94,6 @@ describe('CustomerService', () => {
   })
 
   describe('basic update users and return OK', () => {
-    const decodeToken = { uid: '12345' }
     const token = '12345'
     const customer = {
       id: '12345',
@@ -116,7 +110,6 @@ describe('CustomerService', () => {
       photoURL: 'https://sample.com',
     }
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(decodeToken)
       findUniqueMock.mockReturnValue(customer)
       updateMock.mockReturnValue(updateCustomer)
       updateUserMock.mockReturnValue(updateUser)

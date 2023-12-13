@@ -1,20 +1,15 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { Prisma, PrismaService } from '@lugo/prisma'
-import { FirebaseService } from '@lugo/firebase'
 
 @Injectable()
 export class AppService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly firebaseService: FirebaseService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async getCarts(token: string, select: Prisma.cartSelect) {
+  async getCarts(customerId: string, select: Prisma.cartSelect) {
     try {
-      const decodeToken = await this.firebaseService.auth.verifyIdToken(token)
       const carts = this.prismaService.cart.findMany({
         where: {
-          customer_id: decodeToken.uid,
+          customer_id: customerId,
         },
         select: select ? select : { id: true, cart_item: true },
       })
@@ -24,12 +19,15 @@ export class AppService {
     }
   }
 
-  async addProductToCart(token: string, productId: string, quantity: number) {
+  async addProductToCart(
+    customerId: string,
+    productId: string,
+    quantity: number,
+  ) {
     try {
-      const decodeToken = await this.firebaseService.auth.verifyIdToken(token)
       const cartExists = await this.prismaService.cart.findUnique({
         where: {
-          customer_id: decodeToken.uid,
+          customer_id: customerId,
         },
       })
       if (quantity < 1) {
@@ -58,7 +56,7 @@ export class AppService {
       } else {
         await this.prismaService.cart.create({
           data: {
-            customer_id: decodeToken.uid,
+            customer_id: customerId,
             cart_item: {
               create: {
                 product_id: productId,

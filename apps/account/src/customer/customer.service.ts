@@ -14,12 +14,11 @@ export class CustomerService {
     private readonly firebase: FirebaseService,
   ) {}
 
-  async getCustomer(token: string, select?: Prisma.customerSelect) {
+  async getCustomer(customerId: string, select?: Prisma.customerSelect) {
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
       const customer = await this.prismaService.customer.findUnique({
         where: {
-          id: decodeToken.uid,
+          id: customerId,
         },
         select: select ? select : { id: true },
       })
@@ -29,10 +28,9 @@ export class CustomerService {
     }
   }
 
-  async basicUpdate(token: string, data: CustomerBasicUpdate) {
+  async basicUpdate(customerId: string, data: CustomerBasicUpdate) {
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
-      const customer = await this.getCustomer(token, {
+      const customer = await this.getCustomer(customerId, {
         id: true,
         name: true,
         avatar: true,
@@ -41,7 +39,7 @@ export class CustomerService {
       })
       await this.prismaService.customer.update({
         where: {
-          id: decodeToken.uid,
+          id: customerId,
         },
         data: {
           name: data.name ?? customer.name,
@@ -50,7 +48,7 @@ export class CustomerService {
           phone: data.phoneNumber ?? customer.phone,
         },
       })
-      await this.firebase.auth.updateUser(decodeToken.uid, {
+      await this.firebase.auth.updateUser(customerId, {
         displayName: data?.name ?? customer.name,
         photoURL: data?.avatar ?? customer.avatar,
         phoneNumber: data?.phoneNumber ?? customer.phone,
@@ -58,7 +56,7 @@ export class CustomerService {
       })
       return {
         message: 'OK',
-        res: decodeToken.uid,
+        res: customerId,
       }
     } catch (e) {
       throw new InternalServerErrorException()

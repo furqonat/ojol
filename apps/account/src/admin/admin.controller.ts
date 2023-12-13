@@ -41,8 +41,8 @@ export class AdminController {
     return this.adminService.createAmin(data, roleId)
   }
 
-  @Get('customer')
   @Roles(Role.ADMIN, Role.SUPERADMIN)
+  @Get('customer')
   async getCustomers(
     @Query('take') take?: number,
     @Query('skip') skip?: number,
@@ -57,14 +57,14 @@ export class AdminController {
     })
   }
 
-  @Delete(':id')
   @Roles(Role.SUPERADMIN)
+  @Delete(':id')
   async deleteAdmin(@Param('id') adminId: string) {
     return this.adminService.deleteAdmin(adminId)
   }
 
-  @Get(':id')
   @Roles(Role.ADMIN, Role.SUPERADMIN)
+  @Get(':id')
   async getAdmin(
     @Param('id') adminId: string,
     @Query() select?: Prisma.adminSelect,

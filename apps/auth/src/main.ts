@@ -1,10 +1,12 @@
-import serverlessExpress from '@vendia/serverless-express'
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 
+import serverlessExpress from '@vendia/serverless-express'
+import { Handler, Callback, Context } from 'aws-lambda'
 import { AppModule } from './app/app.module'
+import { ReplaySubject, firstValueFrom } from 'rxjs'
 
-let server
+const serverSubject = new ReplaySubject<Handler>()
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -19,15 +21,15 @@ async function bootstrap() {
   await app.init()
   const expressApp = app.getHttpAdapter().getInstance()
   return serverlessExpress({ app: expressApp })
-  // const port = process.env.PORT || 3333
-  // await app.listen(port)
-  // Logger.log(`🚀 Application is running on: http://localhost:${port}}`)
 }
 
-const handler = async (event, context, callback) => {
-  server = server ?? (await bootstrap())
+bootstrap().then((server) => serverSubject.next(server))
+
+export const handler: Handler = async (
+  event: unknown,
+  context: Context,
+  callback: Callback,
+) => {
+  const server = await firstValueFrom(serverSubject)
   return server(event, context, callback)
 }
-
-export { handler }
-// bootstrap()

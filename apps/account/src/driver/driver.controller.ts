@@ -4,10 +4,10 @@ import {
   Body,
   Controller,
   Get,
-  Headers,
   Post,
   Put,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client/users'
@@ -21,36 +21,36 @@ export class DriverController {
   @Roles(Role.DRIVER)
   @Get()
   async getDriver(
-    @Headers('Authorization') token?: string,
+    @Request() req?: { uid?: string },
     @Query() select?: Prisma.driverSelect,
   ) {
-    return this.driverService.getDriver(token, str2obj(select))
+    return this.driverService.getDriver(req.uid, str2obj(select))
   }
 
   @Roles(Role.DRIVER)
   @Post()
   async applyToBeDriver(
-    @Headers('Authorization') token?: string,
+    @Request() req?: { uid?: string },
     @Body() details?: Prisma.driver_detailsCreateInput,
   ) {
-    return this.driverService.applyDriver(token, { details: details })
+    return this.driverService.applyDriver(req.uid, { details: details })
   }
 
   @Roles(Role.DRIVER)
   @Put()
   async updateApplyDriver(
-    @Headers('Authorization') token: string,
+    @Request() token: { uid?: string },
     @Body() data: Prisma.driver_detailsUpdateInput,
   ) {
-    return this.driverService.updateDriverDetail(token, data)
+    return this.driverService.updateDriverDetail(token.uid, data)
   }
 
   @Roles(Role.DRIVER)
   @Put('/setting/order')
   async updateOrderSetting(
-    @Headers('Authorization') token: string,
+    @Request() token: { uid?: string },
     @Body() data: Prisma.driver_settingsUpdateInput,
   ) {
-    return this.driverService.updateOrderSetting(token, data)
+    return this.driverService.updateOrderSetting(token.uid, data)
   }
 }

@@ -3,11 +3,11 @@ import {
   Controller,
   Delete,
   Get,
-  Headers,
   Param,
   Post,
   Put,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common'
 
@@ -24,20 +24,20 @@ export class AppController {
   @Roles(Role.USER)
   @Get()
   async getCarts(
-    @Headers('Authorization') token: string,
     @Query() select: Prisma.cartSelect,
+    @Request() req?: { uid?: string },
   ) {
-    return this.appService.getCarts(token, str2obj(select))
+    return this.appService.getCarts(req?.uid, str2obj(select))
   }
 
   @Roles(Role.USER)
   @Post()
   async addProductToCart(
-    @Headers('Authorization') token: string,
     @Body('productId') productId: string,
     @Body('quantity') quantity: number,
+    @Request() req?: { uid?: string },
   ) {
-    return this.appService.addProductToCart(token, productId, quantity)
+    return this.appService.addProductToCart(req?.uid, productId, quantity)
   }
 
   @Roles(Role.USER)

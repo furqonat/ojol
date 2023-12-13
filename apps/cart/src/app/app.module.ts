@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common'
 
 import { GuardModule } from '@lugo/guard'
+import { PrismaModule } from '@lugo/prisma'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { FirebaseModule } from '@lugo/firebase'
-import { PrismaModule } from '@lugo/prisma'
 
 @Module({
-  imports: [GuardModule, FirebaseModule, PrismaModule],
+  imports: [GuardModule, PrismaModule],
   controllers: [AppController],
   providers: [AppService],
 })
