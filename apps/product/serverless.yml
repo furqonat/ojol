@@ -1,18 +1,24 @@
-service: auth
+service: product
 provider:
   name: aws
-  runtime: nodejs18.x
+  runtime: nodejs20.x
   region: ap-southeast-1
   environment:
-    GOOGLE_APPLICATION_CREDENTIALS: ../../google-services.json
+    GOOGLE_APPLICATION_CREDENTIALS: ./google-services.json
     JWT_SECRET: auth-secret-1234
 
-plugins:
-  - serverless-offline
+  ecr:
+    images:
+      product:
+        path: ../../.
+        file: apps/product/Dockerfile
+
 
 functions:
   app:
-    handler: ../../dist/apps/auth/main.handler
+    image:
+      name: product
+    timeout: 30
     events:
       - http:
           method: any

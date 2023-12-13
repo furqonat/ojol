@@ -1,4 +1,4 @@
-service: auth
+service: product
 provider:
   name: aws
   runtime: nodejs18.x
@@ -12,7 +12,7 @@ plugins:
 
 functions:
   app:
-    handler: ../../dist/apps/auth/main.handler
+    handler: ../../dist/apps/product/main.handler
     events:
       - http:
           method: any

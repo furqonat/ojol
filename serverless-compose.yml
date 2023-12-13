@@ -1,11 +1,13 @@
 services:
   auth:
     path: apps/auth
-  # account:
-  #   path: apps/account
-  # transactions:
-  #   path: apps/transactions
-  # order:
-  #   path: apps/order
-  # cart:
-  #   path: apps/cart
+  account:
+    path: apps/account
+  transactions:
+    path: apps/transactions
+  order:
+    path: apps/order
+  cart:
+    path: apps/cart
+  product:
+    path: apps/product

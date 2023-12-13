@@ -36,4 +36,13 @@ export class AppService {
       },
     })
   }
+
+  async updateProduct(productId: string, data: Prisma.productUpdateInput) {
+    return this.prisma.product.update({
+      where: {
+        id: productId,
+      },
+      data: data,
+    })
+  }
 }
