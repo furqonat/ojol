@@ -15,13 +15,10 @@ type OrderRoutes struct {
 // Setup Misc routes
 func (s OrderRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	// api := s.handler.Gin.Group("/apis/v1")
-	// {
-	// 	api.GET("/liveness", s.miscController.GetLiveness)
-	// 	api.GET("/readiness", s.miscController.GetReadiness)
-	// 	api.GET("/version", s.miscController.GetVersion)
-
-	// }
+	api := s.handler.Gin.Group("/order")
+	{
+		api.GET("/", s.orderController.GetOrders)
+	}
 }
 
 // NewMiscRoutes creates new Misc controller
