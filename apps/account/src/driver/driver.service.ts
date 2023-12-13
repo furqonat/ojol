@@ -3,6 +3,7 @@ import { Prisma, PrismaService } from '@lugo/prisma'
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common'
 
@@ -43,7 +44,7 @@ export class DriverService {
         },
       })
       if (alreadyApply) {
-        throw new BadRequestException({ message: 'allready apply for driver' })
+        throw new BadRequestException({ message: 'already apply for driver' })
       }
       const createDetail = await this.prismaService.driver.update({
         where: {
@@ -67,6 +68,27 @@ export class DriverService {
         message: 'Unexpected error',
         error: e,
       })
+    }
+  }
+
+  async updateDriverDetail(
+    token: string,
+    options: Prisma.driver_detailsUpdateInput,
+  ) {
+    try {
+      const decodeToken = await this.firebase.auth.verifyIdToken(token)
+      const driver = await this.prismaService.driver_details.update({
+        where: {
+          driver_id: decodeToken.uid,
+        },
+        data: options,
+      })
+      return {
+        message: 'OK',
+        res: driver.id,
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(e)
     }
   }
 

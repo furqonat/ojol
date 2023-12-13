@@ -37,6 +37,15 @@ export class DriverController {
   }
 
   @Roles(Role.DRIVER)
+  @Put()
+  async updateApplyDriver(
+    @Headers('Authorization') token: string,
+    @Body() data: Prisma.driver_detailsUpdateInput,
+  ) {
+    return this.driverService.updateDriverDetail(token, data)
+  }
+
+  @Roles(Role.DRIVER)
   @Put('/setting/order')
   async updateOrderSetting(
     @Headers('Authorization') token: string,
