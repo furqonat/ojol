@@ -60,11 +60,11 @@ func (controller OrderController) GetOrders(ctx *gin.Context) {
 		skip = 0
 	}
 
-	orders, err := controller.service.GetOrders(take, skip)
+	orders, total, err := controller.service.GetOrders(take, skip)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, orders)
+	ctx.JSON(http.StatusOK, gin.H{"data": orders, "total": total})
 }
