@@ -9,11 +9,6 @@ import (
 	"time"
 )
 
-type OrderResponse struct {
-	total int
-	data  []db.OrderModel
-}
-
 type OrderService struct {
 	database  utils.Database
 	firestore Firestore
@@ -39,7 +34,7 @@ func (order OrderService) GetOrder(orderId string) (*db.OrderModel, error) {
 	return getOrderResult, nil
 }
 
-func (order OrderService) GetOrders(take int, skip int) (*OrderResponse, error) {
+func (order OrderService) GetOrders(take int, skip int) ([]db.OrderModel, int, error) {
 
 	getOrders, errGetOrders := order.database.Order.FindMany().With(
 		db.Order.Transactions.Fetch(),
@@ -48,16 +43,13 @@ func (order OrderService) GetOrders(take int, skip int) (*OrderResponse, error) 
 		db.Order.OrderItems.Fetch(),
 	).Take(take).Skip(skip).Exec(context.Background())
 	if errGetOrders != nil {
-		return nil, errGetOrders
+		return nil, 0, errGetOrders
 	}
 	totalOrders, errGetTotalOrders := order.database.Order.FindMany().Exec(context.Background())
 	if errGetTotalOrders != nil {
-		return nil, errGetOrders
+		return nil, 0, errGetOrders
 	}
-	return &OrderResponse{
-		total: len(totalOrders),
-		data:  getOrders,
-	}, nil
+	return getOrders, len(totalOrders), nil
 }
 
 func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel, customerId string) (*string, error) {
