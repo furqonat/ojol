@@ -1,13 +1,9 @@
-import { Injectable } from '@nestjs/common'
-import { FirebaseService } from '@lugo/firebase'
 import { Prisma, PrismaService } from '@lugo/prisma'
+import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class AppService {
-  constructor(
-    private readonly firebase: FirebaseService,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async getProduct(productId: string, select: Prisma.productSelect) {
     return this.prisma.product.findUnique({
@@ -22,6 +18,22 @@ export class AppService {
       select: select ? select : { id: true, name: true },
       take: take ? Number(take) : 10,
       skip: skip ? Number(skip) : 0,
+    })
+  }
+
+  async createProduct(
+    merchantId: string,
+    data: Omit<Prisma.productCreateInput, 'merchant'>,
+  ) {
+    return this.prisma.product.create({
+      data: {
+        ...data,
+        merchant: {
+          connect: {
+            id: merchantId,
+          },
+        },
+      },
     })
   }
 }
