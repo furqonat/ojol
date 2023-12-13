@@ -44,7 +44,7 @@ describe('DriverController', () => {
     })
 
     it('test get driver without select', async () => {
-      const result = await controller.getDriver('321')
+      const result = await controller.getDriver({ uid: '123456' })
       expect(result.id).toBe(driver.id)
     })
   })
@@ -56,10 +56,13 @@ describe('DriverController', () => {
     })
 
     it('test get driver with select', async () => {
-      const result = await controller.getDriver('13213', {
-        id: true,
-        name: true,
-      })
+      const result = await controller.getDriver(
+        { uid: '123456' },
+        {
+          id: true,
+          name: true,
+        },
+      )
       expect(result.id).toBe(driver.id)
       expect(result.name).toBe(driver.name)
     })
@@ -72,7 +75,7 @@ describe('DriverController', () => {
 
     it('test get driver and return not found', async () => {
       try {
-        await controller.getDriver('3212', { name: true })
+        await controller.getDriver({ uid: '' }, { name: true })
       } catch (e) {
         expect(e).toBeInstanceOf(NotFoundException)
       }
@@ -89,11 +92,14 @@ describe('DriverController', () => {
     })
 
     it('test apply driver and return OK', async () => {
-      const result = await controller.applyToBeDriver('321', {
-        address: '',
-        license_image: '',
-        id_card_image: '',
-      })
+      const result = await controller.applyToBeDriver(
+        { uid: '1231' },
+        {
+          address: '',
+          license_image: '',
+          id_card_image: '',
+        },
+      )
       expect(result.res).toBe(response.res)
       expect(result.message).toBe(response.message)
     })
@@ -106,11 +112,14 @@ describe('DriverController', () => {
 
     it('test apply driver and return bad request', async () => {
       try {
-        controller.applyToBeDriver('32121', {
-          address: '',
-          license_image: '',
-          id_card_image: '',
-        })
+        controller.applyToBeDriver(
+          { uid: '12312' },
+          {
+            address: '',
+            license_image: '',
+            id_card_image: '',
+          },
+        )
       } catch (e) {
         expect(e).toBeInstanceOf(BadRequestException)
       }

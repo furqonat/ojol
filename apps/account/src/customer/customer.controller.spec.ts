@@ -1,10 +1,10 @@
+import { FirebaseService } from '@lugo/firebase'
+import { PrismaService } from '@lugo/prisma'
+import { UnauthorizedException } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import { CustomerController } from './customer.controller'
 import { CustomerService } from './customer.service'
-import { PrismaService } from '@lugo/prisma'
-import { FirebaseService } from '@lugo/firebase'
-import { ConfigService } from '@nestjs/config'
-import { UnauthorizedException } from '@nestjs/common'
 
 describe('CustomerController', () => {
   let controller: CustomerController
@@ -46,7 +46,7 @@ describe('CustomerController', () => {
     })
 
     it('test get custumer without parameters', async () => {
-      const result = await controller.getCustomer('12345')
+      const result = await controller.getCustomer({ uid: '12345' })
       expect(result.id).toBe(customer.id)
       expect(result.name).toBe(undefined)
     })
@@ -61,10 +61,13 @@ describe('CustomerController', () => {
     })
 
     it('test get custumer with parameters', async () => {
-      const result = await controller.getCustomer('12345', {
-        name: true,
-        id: true,
-      })
+      const result = await controller.getCustomer(
+        { uid: '12345' },
+        {
+          name: true,
+          id: true,
+        },
+      )
       expect(result.id).toBe(customer.id)
       expect(result.name).toBe(customer.name)
     })
@@ -93,7 +96,7 @@ describe('CustomerController', () => {
     it('test update basic return OK', async () => {
       const result = await controller.basicUpdateCustomer(
         { name: '1234', avatar: 'https://sample.com' },
-        '12345',
+        { uid: '12345' },
       )
       expect(result.message).toBe(response.message)
       expect(result.res).toBe(response.res)

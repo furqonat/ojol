@@ -1,4 +1,3 @@
-import { FirebaseService } from '@lugo/firebase'
 import { PrismaService } from '@lugo/prisma'
 import { BadRequestException, NotFoundException } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
@@ -9,13 +8,11 @@ describe('DriverService', () => {
   let findUniqueMock: jest.Mock
   let findUniqueMockDetails: jest.Mock
   let updateMock: jest.Mock
-  let verifyIdTokenMock: jest.Mock
 
   beforeEach(async () => {
     findUniqueMock = jest.fn()
     findUniqueMockDetails = jest.fn()
     updateMock = jest.fn()
-    verifyIdTokenMock = jest.fn()
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         DriverService,
@@ -31,14 +28,6 @@ describe('DriverService', () => {
             },
           },
         },
-        {
-          provide: FirebaseService,
-          useValue: {
-            auth: {
-              verifyIdToken: verifyIdTokenMock,
-            },
-          },
-        },
       ],
     }).compile()
 
@@ -50,13 +39,11 @@ describe('DriverService', () => {
   })
 
   describe('get driver without select', () => {
-    const token = '12345'
-    const decodeToken = { uid: '123456789' }
+    const token = '123456789'
     const driver = {
       id: '123456789',
     }
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(decodeToken)
       findUniqueMock.mockReturnValue(driver)
     })
 
@@ -67,14 +54,12 @@ describe('DriverService', () => {
   })
 
   describe('get driver with select', () => {
-    const token = '12345'
-    const decodeToken = { uid: '123456789' }
+    const token = '123456789'
     const driver = {
       id: '123456789',
       name: 'ahmad',
     }
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(decodeToken)
       findUniqueMock.mockReturnValue(driver)
     })
 
@@ -87,7 +72,6 @@ describe('DriverService', () => {
 
   describe('get driver and return not found exception', () => {
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(undefined)
       findUniqueMock.mockReturnValue(undefined)
     })
 
@@ -101,7 +85,6 @@ describe('DriverService', () => {
   })
 
   describe('apply driver and return ok', () => {
-    const decodeToken = { uid: '123456' }
     const update = {
       id: '123456',
       driver_details: {
@@ -109,7 +92,6 @@ describe('DriverService', () => {
       },
     }
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(decodeToken)
       updateMock.mockReturnValue(update)
       findUniqueMockDetails.mockReturnValue(undefined)
     })
@@ -128,12 +110,10 @@ describe('DriverService', () => {
   })
 
   describe('apply driver and return bad request', () => {
-    const decodeToken = { uid: '1234567' }
     const driver_details = {
       id: '12345543',
     }
     beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(decodeToken)
       findUniqueMockDetails.mockReturnValue(driver_details)
     })
 
@@ -153,10 +133,6 @@ describe('DriverService', () => {
   })
 
   describe('apply driver and return driver not found', () => {
-    beforeEach(() => {
-      verifyIdTokenMock.mockReturnValue(undefined)
-    })
-
     it('test driver and return driver not found', async () => {
       try {
         await service.applyDriver('123456', {

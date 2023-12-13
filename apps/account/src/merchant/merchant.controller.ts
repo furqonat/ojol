@@ -2,11 +2,12 @@ import {
   Body,
   Controller,
   Get,
-  Headers,
   Post,
   Put,
   Query,
+  Request,
   UseGuards,
+  Param,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client/users'
 import { str2obj } from '@lugo/common'
@@ -21,36 +22,36 @@ export class MerchantController {
   @Roles(Role.MERCHANT)
   @Get()
   async getMerchant(
-    @Headers('Authorization') token?: string,
+    @Request() token?: { uid?: string },
     @Query() select?: Prisma.merchantSelect,
   ) {
-    return this.merchantService.getMerchant(token, str2obj(select))
+    return this.merchantService.getMerchant(token.uid, str2obj(select))
   }
 
   @Roles(Role.MERCHANT)
   @Post()
   async applyToBeMerchant(
-    @Headers('Authorization') token?: string,
+    @Request() token?: { uid?: string },
     @Body() details?: Prisma.merchant_detailsCreateInput,
   ) {
-    return this.merchantService.applyMerchant(token, details)
+    return this.merchantService.applyMerchant(token.uid, details)
   }
 
   @Roles(Role.MERCHANT)
   @Post('/operation')
   async createOperationTime(
-    @Headers('Authorization') token?: string,
+    @Request() token?: { uid?: string },
     @Body() data?: Prisma.merchant_operation_timeCreateInput,
   ) {
-    return this.merchantService.createOperationTime(token, data)
+    return this.merchantService.createOperationTime(token.uid, data)
   }
 
   @Roles(Role.MERCHANT)
-  @Put('/operation')
+  @Put('/operation/:id')
   async updateOperationTime(
-    @Headers('Authorization') token?: string,
+    @Param('id') opId: string,
     @Body() data?: Prisma.merchant_operation_timeUpdateInput,
   ) {
-    return this.merchantService.updateOperationTime(token, data)
+    return this.merchantService.updateOperationTime(opId, data)
   }
 }

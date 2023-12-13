@@ -1,4 +1,3 @@
-import { FirebaseService } from '@lugo/firebase'
 import { Prisma, PrismaService } from '@lugo/prisma'
 import {
   BadRequestException,
@@ -9,17 +8,13 @@ import {
 
 @Injectable()
 export class DriverService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly firebase: FirebaseService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async getDriver(token: string, select?: Prisma.driverSelect) {
+  async getDriver(driverId: string, select?: Prisma.driverSelect) {
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
       const driver = await this.prismaService.driver.findUnique({
         where: {
-          id: decodeToken.uid,
+          id: driverId,
         },
         select: select ? select : { id: true },
       })
@@ -30,17 +25,16 @@ export class DriverService {
   }
 
   async applyDriver(
-    token: string,
+    driverId: string,
     options: {
       details: Prisma.driver_detailsCreateInput
     },
   ) {
     const { details } = options
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
       const alreadyApply = await this.prismaService.driver_details.findUnique({
         where: {
-          driver_id: decodeToken.uid,
+          driver_id: driverId,
         },
       })
       if (alreadyApply) {
@@ -48,7 +42,7 @@ export class DriverService {
       }
       const createDetail = await this.prismaService.driver.update({
         where: {
-          id: decodeToken.id,
+          id: driverId,
         },
         data: {
           driver_details: {
@@ -72,14 +66,13 @@ export class DriverService {
   }
 
   async updateDriverDetail(
-    token: string,
+    driverId: string,
     options: Prisma.driver_detailsUpdateInput,
   ) {
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
       const driver = await this.prismaService.driver_details.update({
         where: {
-          driver_id: decodeToken.uid,
+          driver_id: driverId,
         },
         data: options,
       })
@@ -93,14 +86,13 @@ export class DriverService {
   }
 
   async updateOrderSetting(
-    token: string,
+    driverId: string,
     data: Prisma.driver_settingsUpdateInput,
   ) {
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
       const driver = await this.prismaService.driver_settings.update({
         where: {
-          driver_id: decodeToken.uid,
+          driver_id: driverId,
         },
         data: data,
       })

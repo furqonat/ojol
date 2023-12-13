@@ -1,4 +1,3 @@
-import { FirebaseService } from '@lugo/firebase'
 import { Prisma, PrismaService } from '@lugo/prisma'
 import {
   BadRequestException,
@@ -8,17 +7,13 @@ import {
 
 @Injectable()
 export class MerchantService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly firebase: FirebaseService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async getMerchant(token: string, select: Prisma.merchantSelect) {
+  async getMerchant(merchantId: string, select: Prisma.merchantSelect) {
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
       const merchant = await this.prismaService.merchant.findUnique({
         where: {
-          id: decodeToken.uid,
+          id: merchantId,
         },
         select: select ? select : { id: true },
       })
@@ -29,15 +24,14 @@ export class MerchantService {
   }
 
   async applyMerchant(
-    token: string,
+    merchantId: string,
     details: Prisma.merchant_detailsCreateInput,
   ) {
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
       const alreadyApply = await this.prismaService.merchant_details.findUnique(
         {
           where: {
-            merchant_id: decodeToken.uid,
+            merchant_id: merchantId,
           },
         },
       )
@@ -46,7 +40,7 @@ export class MerchantService {
       }
       const merchant = await this.prismaService.merchant.update({
         where: {
-          id: decodeToken.uid,
+          id: merchantId,
         },
         data: {
           details: {
@@ -71,17 +65,16 @@ export class MerchantService {
   }
 
   async createOperationTime(
-    token: string,
+    merchantId: string,
     data: Omit<
       Prisma.merchant_operation_timeCreateInput,
       'id' | 'merchant_details'
     >,
   ) {
     try {
-      const decodeToken = await this.firebase.auth.verifyIdToken(token)
       const merchant = await this.prismaService.merchant.findUnique({
         where: {
-          id: decodeToken.uid,
+          id: merchantId,
         },
         select: {
           details: {
