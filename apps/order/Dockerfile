@@ -20,4 +20,4 @@ COPY google-services.json ./google-services.json
 
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
-ENTRYPOINT [ "./order" ]
+ENTRYPOINT [ "./dist/apps/order" ]
