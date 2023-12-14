@@ -133,7 +133,7 @@ jobs:
           AWS_REGION: ap-southeast-3
 
   order-service:
-    runs-on: ubuntu-latest
+    runs-on: fedora-latest
 
     steps:
       - uses: actions/checkout@v4
