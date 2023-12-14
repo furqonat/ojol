@@ -1,4 +1,4 @@
-service: order_v1
+service: order
 provider:
   name: aws
   runtime: go1.x
@@ -8,15 +8,15 @@ provider:
     images:
       order:
         path: ../../.
-        file: apps/order_v1/Dockerfile
+        file: apps/order/Dockerfile
 
 
 functions:
   app:
     image:
-      name: order_v1
+      name: order
       command:
-        - dist/apps/order_v1
+        - dist/apps/order
     timeout: 30
     events:
       - http:
