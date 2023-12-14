@@ -9,7 +9,7 @@ import (
 type MiscRoutes struct {
 	logger         utils.Logger
 	handler        utils.RequestHandler
-	miscController misc.MiscController
+	miscController misc_v1.MiscController
 }
 
 // Setup Misc routes
@@ -28,7 +28,7 @@ func (s MiscRoutes) Setup() {
 func NewMiscRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,
-	miscController misc.MiscController,
+	miscController misc_v1.MiscController,
 ) MiscRoutes {
 	return MiscRoutes{
 		handler:        handler,

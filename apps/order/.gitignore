@@ -1,3 +1,5 @@
 vendor
 .idea
 *.http
+.env
+google-services.json

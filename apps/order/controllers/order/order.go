@@ -1,4 +1,4 @@
-package order
+package order_v1
 
 import (
 	"apps/order/db"
@@ -34,7 +34,7 @@ func (controller OrderController) CreateOrder(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Bad request", "error": errCreateOrder.Error()})
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfuly create order", "res": createOrder})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully create order", "res": createOrder})
 
 }
 
@@ -59,6 +59,8 @@ func (controller OrderController) GetOrders(ctx *gin.Context) {
 	if errSkip != nil {
 		skip = 0
 	}
+
+	controller.logger.Info(take, skip, "Run it")
 
 	orders, total, err := controller.service.GetOrders(take, skip)
 	if err != nil {

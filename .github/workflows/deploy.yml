@@ -151,11 +151,12 @@ jobs:
       - name: Install serverless
         run: npm install -g serverless
       
-      - name: Install serverless compose 
-        run: npm install -g @serverless/compose
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Build order services
+        run: npx nx run order:build
 
       - name: deploy order service
         run: cd apps/order && serverless deploy
