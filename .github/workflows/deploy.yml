@@ -155,11 +155,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Generate db
-        run: npx nx run order:generate-db
+      # - name: Generate db
+      #   run: npx nx run order:generate-db
 
-      - name: Build order services
-        run: npx nx run order:build
+      # - name: Build order services
+      #   run: npx nx run order:build
 
       - name: deploy order service
         run: cd apps/order && serverless deploy
