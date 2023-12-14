@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lambda/provided:al2023
+FROM golang:1.21.4
 COPY dist/apps/order ./order
 COPY google-services.json ./google-services.json
 
