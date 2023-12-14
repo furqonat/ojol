@@ -5,11 +5,11 @@ import (
 	"apps/order/utils"
 )
 
-// MiscRoutes struct
+// OrderRoutes struct
 type OrderRoutes struct {
 	logger          utils.Logger
 	handler         utils.RequestHandler
-	orderController order.OrderController
+	orderController order_v1.OrderController
 }
 
 // Setup Misc routes
@@ -21,11 +21,11 @@ func (s OrderRoutes) Setup() {
 	}
 }
 
-// NewMiscRoutes creates new Misc controller
+// NewOrderRoutes creates new Misc controller
 func NewOrderRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,
-	orderController order.OrderController,
+	orderController order_v1.OrderController,
 ) OrderRoutes {
 	return OrderRoutes{
 		handler:         handler,

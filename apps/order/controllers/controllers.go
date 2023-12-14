@@ -9,6 +9,6 @@ import (
 
 // Module exported for initializing application
 var Module = fx.Options(
-	fx.Provide(misc.NewMiscController),
-	fx.Provide(order.NewOrderController),
+	fx.Provide(misc_v1.NewMiscController),
+	fx.Provide(order_v1.NewOrderController),
 )

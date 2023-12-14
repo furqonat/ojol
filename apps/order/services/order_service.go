@@ -37,9 +37,6 @@ func (order OrderService) GetOrder(orderId string) (*db.OrderModel, error) {
 func (order OrderService) GetOrders(take int, skip int) ([]db.OrderModel, int, error) {
 
 	getOrders, errGetOrders := order.database.Order.FindMany().With(
-		db.Order.Transactions.Fetch(),
-		db.Order.Customer.Fetch(),
-		db.Order.Driver.Fetch(),
 		db.Order.OrderItems.Fetch(),
 	).Take(take).Skip(skip).Exec(context.Background())
 	if errGetOrders != nil {
@@ -105,9 +102,9 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel) err
 	ptrEndedAt := order.assignPtrTimeIfTrue(trx.EndedAt())
 	driverId := order.assignPtrStringIfTrue(ptrOrderModel.DriverID())
 
-	trxPaymentAt, okTrxPaymentat := trx.PaymentAt()
+	trxPaymentAt, okTrxPaymentAt := trx.PaymentAt()
 
-	if !okTrxPaymentat {
+	if !okTrxPaymentAt {
 		return errors.New("when creating new transaction you must be pay it! ")
 	}
 
