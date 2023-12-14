@@ -7,7 +7,6 @@ COPY .env ./.env
 COPY libs/schema/schema.prisma apps/order/schema.prisma
 
 RUN go version
-RUN cd apps/order && rm -r vendor
 RUN cd apps/order && go get .
 RUN cd apps/order && go get github.com/steebchen/prisma-client-go
 
