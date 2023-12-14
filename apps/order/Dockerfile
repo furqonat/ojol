@@ -15,7 +15,7 @@ RUN sed -i '15i\generator db {\n provider ="go run github.com/steebchen/prisma-c
 RUN sed -i '/generator client {/,/}/d' apps/order/schema.prisma
 RUN cd apps/order && go run github.com/steebchen/prisma-client-go generate --schema=schema.prisma
 RUN rm apps/order/schema.prisma
-RUN cd apps/transactions && go mod tidy && go mod vendor && go build -tags lambda.norpc -o ../../dist/apps/transactions main.go
+RUN cd apps/prder && go mod tidy && go mod vendor && go build -tags lambda.norpc -o ../../dist/apps/prder main.go
 
 COPY google-services.json ./google-services.json
 

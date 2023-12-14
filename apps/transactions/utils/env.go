@@ -6,13 +6,15 @@ import (
 
 // Env has environment stored
 type Env struct {
-	ServerPort  string `mapstructure:"SERVER_PORT"`
-	Environment string `mapstructure:"ENV"`
-	DBUsername  string `mapstructure:"DB_USERNAME"`
-	DBPassword  string `mapstructure:"DB_PASSWORD"`
-	DBHost      string `mapstructure:"DB_HOST"`
-	DBPort      string `mapstructure:"DB_PORT"`
-	DBName      string `mapstructure:"DB_NAME"`
+	ServerPort     string `mapstructure:"SERVER_PORT"`
+	Environment    string `mapstructure:"ENV"`
+	SANBOX_URL     string `mapstructure:"SANBOX_URL"`
+	PRODUCTION_URL string `mapstructure:"PRODUCTION_URL"`
+	MERCHANT_ID    string `mapstructure:"MERCHANT_ID"`
+	CLIENT_ID      string `mapstructure:"CLIENT_ID"`
+	CLIENT_SECRET  string `mapstructure:"CLIENT_SECRET"`
+	PUBLIC_KEY     string `mapstructure:"PUBLIC_KEY"`
+	SECRET_KEY     string `mapstructure:"SECRET_KEY"`
 }
 
 // NewEnv creates a new environment
