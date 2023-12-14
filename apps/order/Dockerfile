@@ -1,8 +1,5 @@
-FROM golang:1.21.4
-COPY dist/apps/order ./order
-COPY google-services.json ./google-services.json
+FROM golang:1.21.5
 
-RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 COPY apps/order/ ./apps/order
 
 COPY .env ./.env
@@ -18,6 +15,10 @@ RUN sed -i '15i\generator db {\n provider ="go run github.com/steebchen/prisma-c
 RUN sed -i '/generator client {/,/}/d' apps/order/schema.prisma
 RUN cd apps/order && go run github.com/steebchen/prisma-client-go generate --schema=schema.prisma
 RUN rm apps/order/schema.prisma
+RUN cd apps/transactions && go mod tidy && go mod vendor && go build -tags lambda.norpc -o ../../dist/apps/transactions main.go
 
+COPY google-services.json ./google-services.json
+
+RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 
 ENTRYPOINT [ "./order" ]
