@@ -1,10 +1,11 @@
 package main
 
 import (
-    "github.com/joho/godotenv"
-	"go.uber.org/fx"
-	"apps/order/utils"
 	"apps/order/bootstrap"
+	"apps/order/utils"
+
+	"github.com/joho/godotenv"
+	"go.uber.org/fx"
 )
 
 func main() {

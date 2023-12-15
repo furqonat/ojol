@@ -1,23 +1,27 @@
 package routes
 
 import (
-	"apps/order/controllers/order"
+	order "apps/order/controllers/order"
+	"apps/order/middlewares"
 	"apps/order/utils"
 )
 
 // OrderRoutes struct
 type OrderRoutes struct {
-	logger          utils.Logger
-	handler         utils.RequestHandler
-	orderController order_v1.OrderController
+	logger              utils.Logger
+	handler             utils.RequestHandler
+	rateLimitMiddleware middlewares.RateLimitMiddleware
+	orderController     order.OrderController
 }
 
 // Setup Misc routes
 func (s OrderRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	orderApi := s.handler.Gin.Group("/order")
+	orderApi := s.handler.Gin.Group("/order").Use(s.rateLimitMiddleware.Handle())
 	{
 		orderApi.GET("/", s.orderController.GetOrders)
+		orderApi.POST("/", s.orderController.CreateOrder)
+		orderApi.GET("/:id", s.orderController.GetOrder)
 	}
 }
 
@@ -25,11 +29,13 @@ func (s OrderRoutes) Setup() {
 func NewOrderRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,
-	orderController order_v1.OrderController,
+	rateLimitMiddleware middlewares.RateLimitMiddleware,
+	orderController order.OrderController,
 ) OrderRoutes {
 	return OrderRoutes{
-		handler:         handler,
-		logger:          logger,
-		orderController: orderController,
+		handler:             handler,
+		logger:              logger,
+		rateLimitMiddleware: rateLimitMiddleware,
+		orderController:     orderController,
 	}
 }
