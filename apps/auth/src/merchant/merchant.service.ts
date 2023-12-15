@@ -25,15 +25,12 @@ export class MerchantService {
       const merchantIsExist = await this.getMerchant(merchant.uid)
 
       if (merchantIsExist) {
-        const authToken = await this.firebaseService.auth.createCustomToken(
-          merchant.uid,
-          {
-            roles: Role.MERCHANT,
-          },
-        )
+        await this.firebaseService.auth.setCustomUserClaims(merchant.uid, {
+          roles: Role.MERCHANT,
+        })
         return {
           message: 'OK',
-          token: authToken,
+          token: realToken,
         }
       } else {
         const userDb = await this.prismaService.merchant.create({
@@ -44,16 +41,13 @@ export class MerchantService {
           },
         })
 
-        const authToken = await this.firebaseService.auth.createCustomToken(
-          userDb.id,
-          {
-            roles: Role.MERCHANT,
-          },
-        )
+        await this.firebaseService.auth.setCustomUserClaims(userDb.id, {
+          roles: Role.MERCHANT,
+        })
 
         return {
           message: 'OK',
-          token: authToken,
+          token: realToken,
         }
       }
     } catch (e) {

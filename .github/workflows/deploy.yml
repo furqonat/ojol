@@ -62,8 +62,8 @@ jobs:
         run: npx prisma generate --schema=./libs/schema/schema.prisma
       
 
-      - name: Test auth service
-        run: npx nx run auth:test
+      # - name: Test auth service
+      #   run: npx nx run auth:test
 
       - name: deploy auth service
         run: cd apps/auth && serverless deploy

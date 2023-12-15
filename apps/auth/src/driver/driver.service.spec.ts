@@ -9,13 +9,13 @@ import { PrismaService } from '@lugo/prisma'
 describe('DriverService', () => {
   let service: DriverService
   let verifyIdTokenMock: jest.Mock
-  let createCustomTokenMock: jest.Mock
+  let setCustomClaimsMock: jest.Mock
   let findUniqueOrThrowMock: jest.Mock
   let createMock: jest.Mock
 
   beforeEach(async () => {
     verifyIdTokenMock = jest.fn()
-    createCustomTokenMock = jest.fn()
+    setCustomClaimsMock = jest.fn()
     findUniqueOrThrowMock = jest.fn()
     createMock = jest.fn()
     const module: TestingModule = await Test.createTestingModule({
@@ -26,7 +26,7 @@ describe('DriverService', () => {
           useValue: {
             auth: {
               verifyIdToken: verifyIdTokenMock,
-              createCustomToken: createCustomTokenMock,
+              setCustomClaims: setCustomClaimsMock,
             },
           },
         },
@@ -90,7 +90,7 @@ describe('DriverService', () => {
       }
       verifyIdTokenMock.mockReturnValue(user)
       findUniqueOrThrowMock.mockReturnValue(drivers)
-      createCustomTokenMock.mockReturnValue(customToken)
+      setCustomClaimsMock.mockReturnValue(customToken)
     })
     it('user exists in lugo database', async () => {
       const result = await service.signIn('Bearer 123456')
@@ -139,7 +139,7 @@ describe('DriverService', () => {
       verifyIdTokenMock.mockReturnValue(user)
       findUniqueOrThrowMock.mockReturnValue(undefined)
       createMock.mockReturnValue(drivers)
-      createCustomTokenMock.mockReturnValue(customToken)
+      setCustomClaimsMock.mockReturnValue(customToken)
     })
     it('test create user when user is not exists', async () => {
       const result = await service.signIn('Bearer 1212123')
