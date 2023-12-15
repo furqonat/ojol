@@ -25,15 +25,12 @@ export class DriverService {
       const driverIsExist = await this.getDriver(driver.uid)
 
       if (driverIsExist) {
-        const authToken = await this.firebaseService.auth.createCustomToken(
-          driver.uid,
-          {
-            roles: Role.DRIVER,
-          },
-        )
+        await this.firebaseService.auth.setCustomUserClaims(driver.uid, {
+          roles: Role.DRIVER,
+        })
         return {
           message: 'OK',
-          token: authToken,
+          token: realToken,
         }
       } else {
         const userDb = await this.prismaService.driver.create({
@@ -44,16 +41,13 @@ export class DriverService {
           },
         })
 
-        const authToken = await this.firebaseService.auth.createCustomToken(
-          userDb.id,
-          {
-            roles: Role.DRIVER,
-          },
-        )
+        await this.firebaseService.auth.setCustomUserClaims(userDb.id, {
+          roles: Role.DRIVER,
+        })
 
         return {
           message: 'OK',
-          token: authToken,
+          token: realToken,
         }
       }
     } catch (e) {
