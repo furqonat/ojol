@@ -217,6 +217,12 @@ devDependencies:
   prisma:
     specifier: ^5.6.0
     version: 5.6.0
+  serverless-go-build:
+    specifier: ^0.0.6
+    version: 0.0.6
+  serverless-go-plugin:
+    specifier: ^2.2.0
+    version: 2.2.0
   serverless-offline:
     specifier: ^13.3.0
     version: 13.3.0(serverless@3.37.0)
@@ -6587,6 +6593,14 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
+  /aggregate-error@3.1.0:
+    resolution: {integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==}
+    engines: {node: '>=8'}
+    dependencies:
+      clean-stack: 2.2.0
+      indent-string: 4.0.0
+    dev: true
+
   /ajv-formats@2.1.1(ajv@8.12.0):
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
     peerDependencies:
@@ -7618,6 +7632,11 @@ packages:
       '@types/validator': 13.11.6
       libphonenumber-js: 1.10.49
       validator: 13.11.0
+
+  /clean-stack@2.2.0:
+    resolution: {integrity: sha512-4diC9HaTE+KRAMWhDhrGOECgWZxoevMc5TlkObMqNSsVU62PYzXZ/SMTjzyGAFF1YusgxGcSWTEXBhp0CPwQ1A==}
+    engines: {node: '>=6'}
+    dev: true
 
   /cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
@@ -10704,6 +10723,11 @@ packages:
     engines: {node: '>=0.8.19'}
     dev: true
 
+  /indent-string@4.0.0:
+    resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
+    engines: {node: '>=8'}
+    dev: true
+
   /inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     dependencies:
@@ -13328,6 +13352,13 @@ packages:
       p-limit: 4.0.0
     dev: true
 
+  /p-map@3.0.0:
+    resolution: {integrity: sha512-d3qXVTF/s+W+CdJ5A29wywV2n8CQQYahlgz2bFiA+4eVNJbHJodPZ+/gXwPGh0bOqA+j8S+6+ckmvLGPk1QpxQ==}
+    engines: {node: '>=8'}
+    dependencies:
+      aggregate-error: 3.1.0
+    dev: true
+
   /p-memoize@7.1.1:
     resolution: {integrity: sha512-DZ/bONJILHkQ721hSr/E9wMz5Am/OTJ9P6LhLFo2Tu+jL8044tgc9LwHO8g4PiaYePnlVVRAJcKmgy8J9MVFrA==}
     engines: {node: '>=14.16'}
@@ -14038,6 +14069,11 @@ packages:
   /pretty-format@3.8.0:
     resolution: {integrity: sha512-WuxUnVtlWL1OfZFQFuqvnvs6MiAGk9UNsBostyBOB0Is9wb5uRESevA6rnl/rkksXaGX3GzZhPup5d6Vp1nFew==}
     dev: false
+
+  /pretty-hrtime@1.0.3:
+    resolution: {integrity: sha512-66hKPCr+72mlfiSjlEB1+45IjXSqvVAIy6mocupoww4tBFE9R9IhwwUGoI4G++Tc9Aq+2rxOt0RFU6gPcrte0A==}
+    engines: {node: '>= 0.8'}
+    dev: true
 
   /prisma@5.6.0:
     resolution: {integrity: sha512-EEaccku4ZGshdr2cthYHhf7iyvCcXqwJDvnoQRAJg5ge2Tzpv0e2BaMCp+CbbDUwoVTzwgOap9Zp+d4jFa2O9A==}
@@ -14765,6 +14801,24 @@ packages:
       send: 0.18.0
     transitivePeerDependencies:
       - supports-color
+
+  /serverless-go-build@0.0.6:
+    resolution: {integrity: sha512-BEqfFSFr2ZiYVS2CRuhoJARKIAc87IODMzRqktyaUFJ4riFsMoZRS33Z0cP/gSXJYoyVa3TtJjF8cK6Q+mnPag==}
+    dependencies:
+      bluebird: 3.7.2
+      chalk: 2.4.2
+      mkdirp: 0.5.6
+    dev: true
+
+  /serverless-go-plugin@2.2.0:
+    resolution: {integrity: sha512-JRhNFFye8AWfhV3+q3iMGN9tTjnAXCIOljsZdQ1zgCFh0i/8Rf6GQb2HjsBwLLYf+++ywFGv63HCYadRE20pEg==}
+    dependencies:
+      adm-zip: 0.5.10
+      chalk: 2.4.2
+      lodash.merge: 4.6.2
+      p-map: 3.0.0
+      pretty-hrtime: 1.0.3
+    dev: true
 
   /serverless-offline@13.3.0(serverless@3.37.0):
     resolution: {integrity: sha512-LrEFPSxovpB9jPVzy4crPimTTlkloEKfqn+Uy39MbPbStQOzgOQPwucdkZRrHUyYmaLTcTyVlxDeUkSm5HJ6Mg==}

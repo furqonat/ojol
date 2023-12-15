@@ -23,8 +23,8 @@ func NewOrderController(logger utils.Logger, service *services.OrderService) Ord
 }
 
 func (controller OrderController) CreateOrder(ctx *gin.Context) {
-	customerId := ctx.GetString(utils.UID)
 	orderModel := db.OrderModel{}
+	customerId := ctx.GetString(utils.UID)
 	if err := ctx.BindJSON(&orderModel); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Error", "error": err.Error()})
 		return
@@ -59,8 +59,6 @@ func (controller OrderController) GetOrders(ctx *gin.Context) {
 	if errSkip != nil {
 		skip = 0
 	}
-
-	controller.logger.Info(take, skip, "Run it")
 
 	orders, total, err := controller.service.GetOrders(take, skip)
 	if err != nil {

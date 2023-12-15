@@ -44,3 +44,4 @@ Thumbs.db
 .next
 *.http
 .serverless
+.env.local

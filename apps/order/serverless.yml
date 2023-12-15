@@ -15,8 +15,6 @@ functions:
   app:
     image:
       name: order
-      command:
-        - dist/apps/order
     timeout: 30
     events:
       - http:

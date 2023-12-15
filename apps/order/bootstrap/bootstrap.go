@@ -10,6 +10,7 @@ import (
 	"apps/order/utils"
 
 	"github.com/apex/gateway"
+
 	"go.uber.org/fx"
 )
 
