@@ -52,6 +52,18 @@ export class AppController {
   ) {
     return this.appService.updateProduct(productId, data)
   }
+  @Roles(Role.USER)
+  @Get('/favorite/:id')
+  async addOrDeleteProductFromFavorite(
+    @Param('id') productId: string,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.appService.addOrDeleteProductToFavotites(req.uid, productId)
+    } else {
+      throw new UnauthorizedException()
+    }
+  }
 
   @Roles(Role.MERCHANT, Role.USER)
   @Get('/:id')

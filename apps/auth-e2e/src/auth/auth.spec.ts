@@ -6,16 +6,7 @@ import {
   getIdToken,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-
-const firebaseConfig = {
-  apiKey: process.env.API_KEY,
-  authDomain: process.env.AUTH_DOMAIN,
-  projectId: process.env.PROJECT_ID,
-  storageBucket: process.env.STORAGE_BUCKET,
-  messagingSenderId: process.env.MESSAGING_SENDER_ID,
-  appId: process.env.APP_ID,
-  measurementId: process.env.MEASUREMENT_ID,
-}
+import { getFirebaseConfig } from '@lugo/firebase-e2e'
 
 describe('Test Autentication Api', () => {
   let customerCred: UserCredential
@@ -23,30 +14,24 @@ describe('Test Autentication Api', () => {
   let merchantCred: UserCredential
 
   beforeAll(async () => {
-    const app = initializeApp(firebaseConfig)
-    const emailCustomer = 'test@example.com'
-    const passwordCustomer = 'password123'
-    const emailDriver = 'testdriver@example.com'
-    const passwordDriver = 'password123'
-    const emailMerch = 'testmerch@example.com'
-    const passwordMerch = 'password1234'
+    const app = initializeApp(getFirebaseConfig())
 
     const auth = getAuth(app)
 
     const userCredential = await signInWithEmailAndPassword(
       auth,
-      emailCustomer,
-      passwordCustomer,
+      process.env.EMAILCUSTOMER,
+      process.env.PASSWORDCUSTOMER,
     )
     const driverCredential = await signInWithEmailAndPassword(
       auth,
-      emailDriver,
-      passwordDriver,
+      process.env.EMAILDRIVER,
+      process.env.PASSWORDDRIVER,
     )
     const merchantCredential = await signInWithEmailAndPassword(
       auth,
-      emailMerch,
-      passwordMerch,
+      process.env.TEST_EMAIL_MERCH,
+      process.env.TEST_PSW_MERCH,
     )
     customerCred = userCredential
     driverCred = driverCredential

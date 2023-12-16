@@ -6,8 +6,18 @@ export function str2obj(input?: unknown) {
     return undefined
   }
   return input
-    ? JSON.parse(JSON.stringify(input), (key, value) =>
-        value === 'true' || value === 'false' ? value === 'true' : value,
-      )
+    ? JSON.parse(JSON.stringify(input), (key, value) => {
+        if (value === 'true' || value === 'false') {
+          return value == 'true'
+        } else if (
+          typeof value === 'string' &&
+          key !== '' &&
+          value.startsWith('{')
+        ) {
+          return eval('(' + value + ')')
+        } else {
+          return value
+        }
+      })
     : undefined
 }

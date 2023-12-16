@@ -144,6 +144,7 @@ model merchant {
   avatar         String?
   details        merchant_details?
   status         merchant_status         @default(PROCESS)
+  type           merchant_type           @default(FOOD)
   products       product[]
 }
 
@@ -299,21 +300,33 @@ model product {
   merchant                merchant                  @relation(fields: [merchant_id], references: [id])
   merchant_id             String
   name                    String
+  image                   String?
   description             String?
   price                   BigInt
+  product_type            merchant_type             @default(FOOD)
   status                  Boolean                   @default(true)
+  category                category[]
   favorites               favorites[]
   cart_item               cart_item[]
   order_item              order_item[]
   customer_product_review customer_product_review[]
 }
 
+model category {
+  id         String   @id @default(cuid())
+  product    product? @relation(fields: [product_id], references: [id])
+  product_id String?
+  name       String
+  created_at DateTime @default(now())
+}
+
 model favorites {
-  id          String   @id @default(cuid())
   product     product  @relation(fields: [product_id], references: [id])
   product_id  String
   customer    customer @relation(fields: [customer_id], references: [id])
   customer_id String
+
+  @@id([product_id, customer_id])
 }
 
 model customer_product_review {
