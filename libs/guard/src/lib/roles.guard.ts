@@ -1,16 +1,14 @@
+import { FirebaseService } from '@lugo/firebase'
 import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  InternalServerErrorException,
-  Logger,
   UnauthorizedException,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { Role } from './roles.enum'
 import { Request } from 'express'
 import { ROLE_KEY } from './roles.decorator'
-import { FirebaseService } from '@lugo/firebase'
+import { Role } from './roles.enum'
 
 @Injectable()
 export class RolesGuard implements CanActivate {
@@ -32,22 +30,13 @@ export class RolesGuard implements CanActivate {
     if (!token) {
       return false
     }
-    try {
-      const userDecode = await this.firebase.auth?.verifyIdToken(token)
-      const rolesValid = requiredRoles.includes(userDecode['roles'])
-      if (rolesValid) {
-        request['uid'] = userDecode.uid
-        return rolesValid
-      } else {
-        throw new UnauthorizedException()
-      }
-    } catch (error) {
-      Logger.error(
-        'Did you forgot initialize Firebase Admin SDK?',
-        error,
-        'RolesGuard',
-      )
-      throw new InternalServerErrorException(error)
+    const userDecode = await this.firebase.auth?.verifyIdToken(token)
+    const rolesValid = requiredRoles.includes(userDecode['roles'])
+    if (rolesValid) {
+      request['uid'] = userDecode.uid
+      return rolesValid
+    } else {
+      throw new UnauthorizedException()
     }
   }
 

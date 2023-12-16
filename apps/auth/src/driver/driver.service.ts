@@ -13,7 +13,6 @@ export class DriverService {
     private readonly prismaService: PrismaService,
     private readonly firebaseService: FirebaseService,
   ) {}
-
   async signIn(token: string) {
     const realToken = this.extractTokenFromBearer(token)
     if (!realToken) {
