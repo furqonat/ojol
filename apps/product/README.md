@@ -68,13 +68,17 @@ By default response produk hanya akan menampilakan output `id` dan `name` dari p
 
 ### Query parameter produk
 
-| Query         | Type      | Description               |
-| ------------- | --------- | ------------------------- |
-| `id`          | `boolean` | Id produk                 |
-| `name`        | `boolean` | nama produk               |
-| `description` | `boolean` | deskripsi produk          |
-| `price`       | `boolean` | harga produk              |
-| `_count`      | `object`  | total relationship produk |
+| Query         | Type      | Description                                      |
+| ------------- | --------- | ------------------------------------------------ |
+| `id`          | `boolean` | Id produk                                        |
+| `name`        | `boolean` | nama produk                                      |
+| `description` | `boolean` | deskripsi produk                                 |
+| `price`       | `boolean` | harga produk                                     |
+| `_count`      | `object`  | total relationship produk                        |
+| `query`       | `string`  | keyword yang digunakan untuk mencari produk      |
+| `type`        | `enum`    | type product `FOOD` atau `MART` default = `FOOD` |
+| `category`    | `string`  | category produk                                  |
+| `merchant_id` | `string`  | mendapatkan produk dari merchant id              |
 
 ### Query parameter `_count`
 
@@ -110,7 +114,7 @@ Api ini hanya digunakan untuk aplikasi customer
 ### Contoh request
 
 ```http
-POST https://api.gentatechnology.com/product/favorite/<product_id>
+GET https://api.gentatechnology.com/product/favorite/<product_id>
 Content-Type: application/json
 Authorization: Bearer .....
 ```

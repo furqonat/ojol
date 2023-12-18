@@ -29,12 +29,12 @@ func (controller OrderController) CreateOrder(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Error", "error": err.Error()})
 		return
 	}
-	createOrder, errCreateOrder := controller.service.CreateOrder(&orderModel, customerId)
+	createOrder, dana, errCreateOrder := controller.service.CreateOrder(&orderModel, customerId)
 	if errCreateOrder != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Bad request", "error": errCreateOrder.Error()})
 		return
 	}
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully create order", "res": createOrder})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully create order", "dana": dana, "res": createOrder})
 
 }
 
