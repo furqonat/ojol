@@ -1,23 +1,22 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  Param,
   Post,
   Put,
   Query,
   Request,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common'
 
-import { AppService } from './app.service'
+import { str2obj } from '@lugo/common'
 import { Role, Roles, RolesGuard } from '@lugo/guard'
 import { Prisma } from '@prisma/client/users'
-import { str2obj } from '@lugo/common'
+import { AppService } from './app.service'
 
 @UseGuards(RolesGuard)
-@Controller()
+@Controller('cart')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
@@ -43,15 +42,18 @@ export class AppController {
   @Roles(Role.USER)
   @Put()
   async updateProductFromCart(
-    @Body('cartItemId') cartItemId: string,
+    @Body('productId') productId: string,
     @Body('quantity') quantity: number,
+    @Request() req?: { uid?: string },
   ) {
-    return this.appService.updateProductFromCart(cartItemId, quantity)
-  }
-
-  @Roles(Role.USER)
-  @Delete('/:id')
-  async deleteProductFromCart(@Param('id') cartItemId: string) {
-    return this.appService.deleteProductFromCart(cartItemId)
+    if (req?.uid) {
+      return this.appService.updateProductFromCart(
+        req?.uid,
+        productId,
+        quantity,
+      )
+    } else {
+      throw new UnauthorizedException()
+    }
   }
 }

@@ -42,11 +42,12 @@ describe('Test e2e product services', () => {
     it('should return status ok using merchant cred', async () => {
       const token = await getIdToken(merchCred.user)
       const res = await axios.get<{ status: number }>(
-        `/product?id=true&name=true&_count={select: {customer_product_review: true}}`,
+        `/dev/product?id=true&name=true&_count={select: {customer_product_review: true}}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
       )
+      console.info(token)
       console.info(res.data)
       expect(res.status).toBe(HttpStatusCode.Ok)
     })
@@ -54,7 +55,7 @@ describe('Test e2e product services', () => {
   describe('GET /product', () => {
     it('should return status ok using customer cred', async () => {
       const token = await getIdToken(cusCred.user)
-      const res = await axios.get(`/product`, {
+      const res = await axios.get(`/product/`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
