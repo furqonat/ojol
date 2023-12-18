@@ -10,8 +10,9 @@ import (
 )
 
 type OrderService struct {
-	database  utils.Database
-	firestore Firestore
+	database    utils.Database
+	firestore   Firestore
+	danaService DanaService
 }
 
 func NewOrderService(database utils.Database, firestore Firestore) *OrderService {
@@ -49,7 +50,7 @@ func (order OrderService) GetOrders(take int, skip int) ([]db.OrderModel, int, e
 	return getOrders, len(totalOrders), nil
 }
 
-func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel, customerId string) (*string, error) {
+func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel, customerId string) (*string, map[string]interface{}, error) {
 
 	createOrderResult, errCreateOrder := order.database.Order.CreateOne(
 		db.Order.OrderType.Set(ptrOrderModel.OrderType),
@@ -62,8 +63,9 @@ func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel, customerId s
 	).Exec(context.Background())
 
 	if errCreateOrder != nil {
-		return nil, errCreateOrder
+		return nil, map[string]interface{}{}, errCreateOrder
 	}
+	createOrderResult.OrderItems()
 	_, errCreateTrx := order.database.Transactions.CreateOne(
 		db.Transactions.Type.Set(createOrderResult.OrderType),
 		db.Transactions.Order.Link(db.Order.ID.Equals(createOrderResult.ID)),
@@ -72,12 +74,31 @@ func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel, customerId s
 	errCreateTrxFirestore := order.createTrxOnFirestore(createOrderResult)
 
 	if errCreateTrxFirestore != nil {
-		return nil, errCreateTrxFirestore
+		return nil, map[string]interface{}{}, errCreateTrxFirestore
 	}
 	if errCreateTrx != nil {
-		return nil, errCreateTrx
+		return nil, map[string]interface{}{}, errCreateTrx
 	}
-	return &createOrderResult.ID, nil
+	currentTime := time.Now()
+
+	// Add 1 hour to the current time
+	oneHourLater := currentTime.Add(time.Hour)
+
+	formattedTime := oneHourLater.Format("2006-01-02T15:04:05-07:00")
+
+	data := order.danaService.CreateNewOrder(
+		formattedTime,
+		"transactionType",
+		fmt.Sprintf("Order:%s", ptrOrderModel.OrderType),
+		createOrderResult.ID,
+		"",
+		ptrOrderModel.TotalAmount,
+		"riskObjectId",
+		"riskObjectCode",
+		"riskObjectOperator",
+		"",
+	)
+	return &createOrderResult.ID, data, nil
 }
 
 func (order OrderService) assignPtrStringIfTrue(value string, condition bool) *string {
@@ -108,7 +129,7 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel) err
 		return errors.New("when creating new transaction you must be pay it! ")
 	}
 
-	_, errCreateTrxFirestore := order.firestore.Client.Collection("transactions").Doc(trx.ID).Set(context.Background(), map[string]interface{}{
+	_, errCreateTrxFirestore := order.firestore.Client.Collection("transactions").Doc(ptrOrderModel.ID).Set(context.Background(), map[string]interface{}{
 		"id":           trx.ID,
 		"driver_id":    driverId,
 		"customer_id":  ptrOrderModel.CustomerID,

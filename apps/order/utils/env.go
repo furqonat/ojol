@@ -6,8 +6,18 @@ import (
 
 // Env has environment stored
 type Env struct {
-	ServerPort  string `mapstructure:"SERVER_PORT"`
-	Environment string `mapstructure:"ENV"`
+	ServerPort                 string `mapstructure:"SERVER_PORT"`
+	Environment                string `mapstructure:"ENV"`
+	IsProduction               bool   `mapstructure:"IS_PRODUCTION"`
+	PrivateKey                 string `mapstructure:"PRIVATE_KEY"`
+	ProdAPIURL                 string `mapstructure:"PROD_API_URL"`
+	DevAPIURL                  string `mapstructure:"DEV_API_URL"`
+	ClientID                   string `mapstructure:"CLIENT_ID"`
+	ClientSecret               string `mapstructure:"CLIENT_SECRET"`
+	MerchantID                 string `mapstructure:"MERCHANT_ID"`
+	MerchantMCC                string `mapstructure:"MERCHANT_MCC"`
+	AcquirementPayReturnURL    string `mapstructure:"PAY_RETURN_URL"`
+	AcquirementNotificationURL string `mapstructure:"NOTIFICATION_URL"`
 }
 
 // NewEnv creates a new environment

@@ -12,4 +12,5 @@ var Module = fx.Options(
 	fx.Provide(NewFirebaseMessaging),
 	fx.Provide(NewFirestoreDatabase),
 	fx.Provide(NewDatabase),
+	fx.Provide(NewDanaApi),
 )

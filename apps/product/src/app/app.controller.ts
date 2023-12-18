@@ -26,9 +26,21 @@ export class AppController {
   async getProducts(
     @Query('take') take: number,
     @Query('skip') skip: number,
+    @Query('query') query: string,
+    @Query('type') type: 'FOOD' | 'MART' = 'FOOD',
+    @Query('category') category: string,
+    @Query('merchant_id') merchantId: string,
     @Query() select: Prisma.productSelect,
   ) {
-    return this.appService.getProducts(take, skip, str2obj(select))
+    return this.appService.getProducts(
+      take,
+      skip,
+      str2obj(select),
+      type,
+      category,
+      query,
+      merchantId,
+    )
   }
 
   @Roles(Role.MERCHANT)
@@ -42,6 +54,17 @@ export class AppController {
     } else {
       throw new UnauthorizedException({ message: 'Please provide the token' })
     }
+  }
+
+  @Roles(Role.USER)
+  @Get('/merchants')
+  async getMerchants(
+    @Query('take') take: number,
+    @Query('skip') skip: number,
+    @Query('type') type: 'FOOD' | 'MART',
+    @Query() select: Prisma.merchantSelect,
+  ) {
+    return this.appService.getMerchants(take, skip, type, str2obj(select))
   }
 
   @Roles(Role.MERCHANT)

@@ -42,7 +42,7 @@ describe('Test e2e product services', () => {
     it('should return status ok using merchant cred', async () => {
       const token = await getIdToken(merchCred.user)
       const res = await axios.get<{ status: number }>(
-        `/dev/product?id=true&name=true&_count={select: {customer_product_review: true}}`,
+        `/dev/product/clqaw9d6e0000147xme8oyujm?id=true&name=true&_count={select: {customer_product_review: true}}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
