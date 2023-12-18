@@ -125,3 +125,7 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel) err
 	}
 	return nil
 }
+
+func (order OrderService) findNearlyAndGoodDriver() {
+
+}

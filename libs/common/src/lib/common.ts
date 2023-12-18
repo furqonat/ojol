@@ -21,3 +21,12 @@ export function str2obj(input?: unknown) {
       })
     : undefined
 }
+
+export function toJson(input?: unknown) {
+  return JSON.parse(
+    JSON.stringify(
+      input,
+      (key, value) => (typeof value === 'bigint' ? value.toString() : value), // return everything else unchanged
+    ),
+  )
+}

@@ -7,13 +7,37 @@ export class AppService {
 
   async getCarts(customerId: string, select: Prisma.cartSelect) {
     try {
-      const carts = this.prismaService.cart.findMany({
+      const carts = await this.prismaService.cart.findFirst({
         where: {
           customer_id: customerId,
         },
-        select: select ? select : { id: true, cart_item: true },
+        select: select
+          ? select
+          : {
+              id: true,
+              cart_item: {
+                include: {
+                  product: true,
+                },
+              },
+            },
       })
-      return carts
+      const cartCount = await this.prismaService.cart_item.findMany({
+        where: {
+          cart: {
+            customer_id: customerId,
+          },
+        },
+        select: {
+          quantity: true,
+        },
+      })
+      return {
+        data: carts,
+        total: cartCount
+          .map((item) => item.quantity)
+          .reduce((a, b) => a + b, 0),
+      }
     } catch (e) {
       throw new BadRequestException(e)
     }
@@ -36,6 +60,21 @@ export class AppService {
         })
       }
       if (cartExists) {
+        const item = await this.prismaService.cart_item.findFirst({
+          where: {
+            cart: {
+              customer_id: customerId,
+            },
+            product_id: productId,
+          },
+        })
+        if (item) {
+          return await this.updateProductFromCart(
+            customerId,
+            productId,
+            item.quantity + quantity,
+          )
+        }
         await this.prismaService.cart.update({
           where: {
             id: cartExists.id,
@@ -75,21 +114,33 @@ export class AppService {
     }
   }
 
-  async updateProductFromCart(cartItemId: string, quantity: number) {
+  async updateProductFromCart(
+    customerId: string,
+    productId: string,
+    quantity: number,
+  ) {
+    const cartItem = await this.prismaService.cart_item.findFirst({
+      where: {
+        cart: {
+          customer_id: customerId,
+        },
+        product_id: productId,
+      },
+    })
     if (quantity < 1) {
-      const cartItem = await this.prismaService.cart_item.delete({
+      const cart = await this.prismaService.cart_item.delete({
         where: {
-          id: cartItemId,
+          id: cartItem.id,
         },
       })
       return {
         message: 'OK',
-        res: cartItem.id,
+        res: cart.id,
       }
     } else {
-      const cartItem = await this.prismaService.cart_item.update({
+      const cart = await this.prismaService.cart_item.update({
         where: {
-          id: cartItemId,
+          id: cartItem.id,
         },
         data: {
           quantity: quantity,
@@ -97,7 +148,7 @@ export class AppService {
       })
       return {
         message: 'OK',
-        res: cartItem.id,
+        res: cart.id,
       }
     }
   }

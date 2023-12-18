@@ -302,7 +302,7 @@ model product {
   name                    String
   image                   String?
   description             String?
-  price                   BigInt
+  price                   Int
   product_type            merchant_type             @default(FOOD)
   status                  Boolean                   @default(true)
   category                category[]
