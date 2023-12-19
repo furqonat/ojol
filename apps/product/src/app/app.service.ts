@@ -107,6 +107,7 @@ export class AppService {
     const merchants = await this.prisma.merchant.findMany({
       where: {
         type: type ?? 'FOOD',
+        status: 'ACTIVE',
       },
       select: select ?? {
         id: true,

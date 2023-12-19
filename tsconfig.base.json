@@ -10,23 +10,51 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@auth/*": ["apps/auth/src/app/*"],
-      "@lugo/bcrypt": ["libs/bcrypt/src/index.ts"],
-      "@lugo/common": ["libs/common/src/index.ts"],
-      "@lugo/firebase": ["libs/firebase/src/index.ts"],
-      "@lugo/firebase-e2e": ["libs/firebase-e2e/src/index.ts"],
-      "@lugo/guard": ["libs/guard/src/index.ts"],
-      "@lugo/jwtguard": ["libs/jwtguard/src/index.ts"],
-      "@lugo/management/*": ["apps/management/*"],
-      "@lugo/password": ["libs/password/src/index.ts"],
-      "@lugo/prisma": ["libs/prisma/src/index.ts"],
-      "@lugo/prisma-auth": ["libs/prisma-auth/src/index.ts"]
+      "@auth/*": [
+        "apps/auth/src/app/*"
+      ],
+      "@lugo/bcrypt": [
+        "libs/bcrypt/src/index.ts"
+      ],
+      "@lugo/common": [
+        "libs/common/src/index.ts"
+      ],
+      "@lugo/firebase": [
+        "libs/firebase/src/index.ts"
+      ],
+      "@lugo/firebase-e2e": [
+        "libs/firebase-e2e/src/index.ts"
+      ],
+      "@lugo/guard": [
+        "libs/guard/src/index.ts"
+      ],
+      "@lugo/jwtguard": [
+        "libs/jwtguard/src/index.ts"
+      ],
+      "@lugo/management/*": [
+        "apps/management/*"
+      ],
+      "@lugo/password": [
+        "libs/password/src/index.ts"
+      ],
+      "@lugo/prisma": [
+        "libs/prisma/src/index.ts"
+      ],
+      "@lugo/prisma-auth": [
+        "libs/prisma-auth/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

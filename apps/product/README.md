@@ -128,6 +128,20 @@ Authorization: Bearer .....
 }
 ```
 
+## Mendapatkan Merchants
+
+Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari aplikasi merchant semua request akan di tolak.
+
+### Table Query Menambahkan Produk
+
+| Body          | Type      | Description      |
+| ------------- | --------- | ---------------- |
+| `name`        | `string`  | nama produk      |
+| `image`       | `string`  | gambar produk    |
+
+### Contoh Request menambahkan produk dengan kategori yang sudah ada
+
+
 ## Menambahkan produk (Merchant only)
 
 Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari aplikasi merchant semua request akan di tolak.

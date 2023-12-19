@@ -8,7 +8,6 @@ import (
 type Env struct {
 	ServerPort                 string `mapstructure:"SERVER_PORT"`
 	Environment                string `mapstructure:"ENV"`
-	IsProduction               bool   `mapstructure:"IS_PRODUCTION"`
 	PrivateKey                 string `mapstructure:"PRIVATE_KEY"`
 	ProdAPIURL                 string `mapstructure:"PROD_API_URL"`
 	DevAPIURL                  string `mapstructure:"DEV_API_URL"`
