@@ -387,6 +387,7 @@ model order {
   net_amount    Int
   total_amount  Int
   shipping_cost Int
+  weight_cost   Int              @default(0)
   order_items   order_item[]
 }
 
@@ -395,7 +396,7 @@ model order_item {
   product    product @relation(fields: [product_id], references: [id])
   product_id String
   quantity   Int
-  order      order?  @relation(fields: [order_id], references: [id])
+  order      order?  @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id   String?
 }
 

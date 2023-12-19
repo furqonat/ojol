@@ -4,6 +4,7 @@ import "go.uber.org/fx"
 
 // Module exports dependency
 var Module = fx.Options(
+	fx.Provide(NewDanaApi),
 	fx.Provide(NewRequestHandler),
 	fx.Provide(NewEnv),
 	fx.Provide(GetLogger),
@@ -12,5 +13,4 @@ var Module = fx.Options(
 	fx.Provide(NewFirebaseMessaging),
 	fx.Provide(NewFirestoreDatabase),
 	fx.Provide(NewDatabase),
-	fx.Provide(NewDanaApi),
 )

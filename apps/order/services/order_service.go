@@ -15,6 +15,16 @@ type OrderService struct {
 	danaService DanaService
 }
 
+type CreateOrderType struct {
+	db.OrderModel
+	Inner
+}
+
+type Inner struct {
+	ProductId *string `json:"product_id,omitempty"`
+	Quantity  *int    `json:"quantity,omitempty"`
+}
+
 func NewOrderService(database utils.Database, firestore Firestore) *OrderService {
 	return &OrderService{
 		database:  database,
@@ -22,35 +32,15 @@ func NewOrderService(database utils.Database, firestore Firestore) *OrderService
 	}
 }
 
-func (order OrderService) GetOrder(orderId string) (*db.OrderModel, error) {
-	getOrderResult, errorGetOrderResult := order.database.Order.FindUnique(
-		db.Order.ID.Equals(orderId),
-	).With(
-		db.Order.OrderItems.Fetch(),
-	).Exec(context.Background())
-
-	if errorGetOrderResult != nil {
-		return nil, errorGetOrderResult
-	}
-	return getOrderResult, nil
+func (order OrderService) deleteOrder(orderId string) (*db.OrderModel, error) {
+	return order.database.Order.FindUnique(db.Order.ID.Equals(orderId)).Delete().Exec(context.Background())
 }
 
-func (order OrderService) GetOrders(take int, skip int) ([]db.OrderModel, int, error) {
-
-	getOrders, errGetOrders := order.database.Order.FindMany().With(
-		db.Order.OrderItems.Fetch(),
-	).Take(take).Skip(skip).Exec(context.Background())
-	if errGetOrders != nil {
-		return nil, 0, errGetOrders
-	}
-	totalOrders, errGetTotalOrders := order.database.Order.FindMany().Exec(context.Background())
-	if errGetTotalOrders != nil {
-		return nil, 0, errGetOrders
-	}
-	return getOrders, len(totalOrders), nil
+func (order OrderService) deleteTrx(orderId string) (*db.TransactionsModel, error) {
+	return order.database.Transactions.FindUnique(db.Transactions.ID.Equals(orderId)).Delete().Exec(context.Background())
 }
 
-func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel, customerId string) (*string, map[string]interface{}, error) {
+func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId string) (*string, map[string]interface{}, error) {
 
 	createOrderResult, errCreateOrder := order.database.Order.CreateOne(
 		db.Order.OrderType.Set(ptrOrderModel.OrderType),
@@ -65,40 +55,80 @@ func (order OrderService) CreateOrder(ptrOrderModel *db.OrderModel, customerId s
 	if errCreateOrder != nil {
 		return nil, map[string]interface{}{}, errCreateOrder
 	}
-	createOrderResult.OrderItems()
-	_, errCreateTrx := order.database.Transactions.CreateOne(
+
+	if ptrOrderModel.OrderType == db.TransactionTypeFood || ptrOrderModel.OrderType == db.TransactionTypeMart {
+		if ptrOrderModel.ProductId == nil {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, map[string]interface{}{}, errors.New("product id not found")
+		}
+
+		if ptrOrderModel.Quantity != nil && *ptrOrderModel.Quantity == 0 {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, map[string]interface{}{}, errors.New("quantity must be greater than 0")
+		}
+
+		if ptrOrderModel.Quantity == nil {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, map[string]interface{}{}, errors.New("please provide quantity")
+		}
+		_, errCreateOrderItem := order.database.OrderItem.CreateOne(
+			db.OrderItem.Product.Link(db.Product.ID.EqualsIfPresent(ptrOrderModel.ProductId)),
+			db.OrderItem.Quantity.SetIfPresent(ptrOrderModel.Quantity),
+			db.OrderItem.Order.Link(db.Order.ID.Equals(createOrderResult.ID)),
+		).Exec(context.Background())
+
+		if errCreateOrderItem != nil {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, map[string]interface{}{}, errCreateOrderItem
+		}
+	}
+	trx, errCreateTrx := order.database.Transactions.CreateOne(
 		db.Transactions.Type.Set(createOrderResult.OrderType),
 		db.Transactions.Order.Link(db.Order.ID.Equals(createOrderResult.ID)),
 	).Exec(context.Background())
 
-	errCreateTrxFirestore := order.createTrxOnFirestore(createOrderResult)
-
-	if errCreateTrxFirestore != nil {
-		return nil, map[string]interface{}{}, errCreateTrxFirestore
-	}
 	if errCreateTrx != nil {
+		order.deleteOrder(createOrderResult.ID)
 		return nil, map[string]interface{}{}, errCreateTrx
 	}
-	currentTime := time.Now()
 
-	// Add 1 hour to the current time
-	oneHourLater := currentTime.Add(time.Hour)
+	errCreateTrxFirestore := order.createTrxOnFirestore(createOrderResult, trx)
 
-	formattedTime := oneHourLater.Format("2006-01-02T15:04:05-07:00")
+	if errCreateTrxFirestore != nil {
+		order.deleteTrx(trx.ID)
+		order.deleteOrder(createOrderResult.ID)
+		return nil, map[string]interface{}{}, errCreateTrxFirestore
+	}
+	if ptrOrderModel.PaymentType == db.PaymentTypeDana {
+		currentTime := time.Now()
 
-	data := order.danaService.CreateNewOrder(
-		formattedTime,
-		"transactionType",
-		fmt.Sprintf("Order:%s", ptrOrderModel.OrderType),
-		createOrderResult.ID,
-		"",
-		ptrOrderModel.TotalAmount,
-		"riskObjectId",
-		"riskObjectCode",
-		"riskObjectOperator",
-		"",
-	)
-	return &createOrderResult.ID, data, nil
+		// Add 1 hour to the current time
+		oneHourLater := currentTime.Add(time.Hour)
+
+		formattedTime := oneHourLater.Format(utils.DanaDateFormat)
+
+		data, errDana := order.danaService.CreateNewOrder(
+			formattedTime,
+			"transactionType",
+			fmt.Sprintf("Order:%s", ptrOrderModel.OrderType),
+			createOrderResult.ID,
+			ptrOrderModel.TotalAmount,
+			"riskObjectId",
+			"riskObjectCode",
+			"riskObjectOperator",
+			"",
+		)
+		if errDana != nil {
+			order.deleteTrx(trx.ID)
+			order.deleteOrder(createOrderResult.ID)
+			return nil, map[string]interface{}{}, errDana
+		} else {
+			return &createOrderResult.ID, data, nil
+		}
+	} else {
+		return &createOrderResult.ID, map[string]interface{}{}, nil
+
+	}
 }
 
 func (order OrderService) assignPtrStringIfTrue(value string, condition bool) *string {
@@ -115,30 +145,21 @@ func (order OrderService) assignPtrTimeIfTrue(value time.Time, condition bool) *
 	return nil
 }
 
-func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel) error {
-	trx, errorTrx := ptrOrderModel.Transactions()
-	if !errorTrx {
-		return nil
-	}
-	ptrEndedAt := order.assignPtrTimeIfTrue(trx.EndedAt())
+func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel, ptrTrxModel *db.TransactionsModel) error {
+
+	ptrEndedAt := order.assignPtrTimeIfTrue(ptrTrxModel.EndedAt())
 	driverId := order.assignPtrStringIfTrue(ptrOrderModel.DriverID())
 
-	trxPaymentAt, okTrxPaymentAt := trx.PaymentAt()
-
-	if !okTrxPaymentAt {
-		return errors.New("when creating new transaction you must be pay it! ")
-	}
-
 	_, errCreateTrxFirestore := order.firestore.Client.Collection("transactions").Doc(ptrOrderModel.ID).Set(context.Background(), map[string]interface{}{
-		"id":           trx.ID,
+		"id":           ptrTrxModel.ID,
 		"driver_id":    driverId,
 		"customer_id":  ptrOrderModel.CustomerID,
 		"payment_type": ptrOrderModel.PaymentType,
-		"payment_at":   trxPaymentAt,
-		"order_type":   ptrOrderModel.OrderType,
-		"status":       trx.Status,
-		"created_at":   trx.CreatedAt,
-		"ended_at":     ptrEndedAt,
+		// "payment_at":   trxPaymentAt,
+		"order_type": ptrOrderModel.OrderType,
+		"status":     ptrTrxModel.Status,
+		"created_at": ptrTrxModel.CreatedAt,
+		"ended_at":   ptrEndedAt,
 	})
 	if errCreateTrxFirestore != nil {
 		errorMsg := fmt.Sprintf("unable to create transaction in firestore: %s", errCreateTrxFirestore.Error())
