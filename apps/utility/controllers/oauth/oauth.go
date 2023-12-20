@@ -1,13 +1,15 @@
 package oauth
 
 import (
+	"apps/utility/services"
 	"apps/utility/utils"
 
 	"github.com/gin-gonic/gin"
 )
 
 type OAuth struct {
-	logger utils.Logger
+	logger  utils.Logger
+	service services.OAuthService
 }
 
 func NewOAuthController(logger utils.Logger) OAuth {

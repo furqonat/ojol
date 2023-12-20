@@ -50,9 +50,9 @@ func (dana Dana) New(url string, payloadObject map[string]interface{}) ([]byte, 
 	jsonPayload := dana.composeRequest(payloadObject)
 
 	client := &http.Client{}
-	req, err := http.NewRequest("POST", dana.GetApiURL()+url, bytes.NewBuffer([]byte(jsonPayload)))
-	if err != nil {
-		return []byte{}, err
+	req, errReq := http.NewRequest("POST", dana.GetApiURL()+url, bytes.NewBuffer([]byte(jsonPayload)))
+	if errReq != nil {
+		return []byte{}, errReq
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -60,11 +60,12 @@ func (dana Dana) New(url string, payloadObject map[string]interface{}) ([]byte, 
 	req.Header.Set("X-DANA-SDK", "Go")
 	req.Header.Set("X-DANA-SDK-VERSION", "1.0")
 
-	resp, err := client.Do(req)
-	if err != nil {
+	resp, errClient := client.Do(req)
+	if errClient != nil {
 		errMsg := fmt.Sprintf("Error : %s %s", dana.GetApiURL(), url)
 		return []byte{}, errors.New(errMsg)
 	}
+
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
@@ -72,9 +73,9 @@ func (dana Dana) New(url string, payloadObject map[string]interface{}) ([]byte, 
 		}
 	}(resp.Body)
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return []byte{}, err
+	body, errIO := io.ReadAll(resp.Body)
+	if errIO != nil {
+		return []byte{}, errIO
 	}
 
 	return body, nil
@@ -126,27 +127,4 @@ func (dana Dana) GenerateSignature(data, privateKey string) string {
 	}
 
 	return base64.StdEncoding.EncodeToString(signature)
-}
-
-func (dana Dana) IsResponseSuccess(response map[string]interface{}) (map[string]interface{}, bool) {
-	if response == nil {
-		return nil, false
-	}
-
-	body, exists := response["response"].(map[string]interface{})["body"].(map[string]interface{})
-	if !exists {
-		return nil, false
-	}
-
-	resultInfo, exists := body["resultInfo"].(map[string]interface{})
-	if !exists {
-		return nil, false
-	}
-
-	resultCode, exists := resultInfo["resultCode"].(string)
-	if !exists {
-		return nil, false
-	}
-
-	return resultInfo, resultCode == "SUCCESS"
 }

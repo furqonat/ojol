@@ -36,3 +36,18 @@ func (controller OrderController) CreateOrder(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Successfully create order", "dana": dana, "res": createOrder})
 
 }
+
+func (controller OrderController) CancelOrder(ctx *gin.Context) {
+	orderId := ctx.Param("id")
+
+	result, err := controller.service.CancelOrder(orderId)
+
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": err.Error()})
+		ctx.Abort()
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Success", "res": result.MerchantTransId})
+
+}

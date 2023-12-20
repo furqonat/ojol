@@ -2,6 +2,7 @@ package services
 
 import (
 	"apps/order/utils"
+	"encoding/json"
 	"errors"
 	"fmt"
 )
@@ -18,7 +19,7 @@ func NewDanaService(dana utils.DanaApi, logger utils.Logger) DanaService {
 	}
 }
 
-func (dana DanaService) CreateNewOrder(expiryTime, transactionType, title, orderID string, amountInCent int, riskObjectID, riskObjectCode, riskObjectOperator, accessToken string) (map[string]interface{}, error) {
+func (dana DanaService) CreateNewOrder(expiryTime, transactionType, title, orderID string, amountInCent int, riskObjectID, riskObjectCode, riskObjectOperator, accessToken string) (*utils.CreateOrder, error) {
 	timestam := dana.danaApi.GetDateNow()
 	guid := dana.danaApi.GenerateGUID()
 
@@ -98,21 +99,53 @@ func (dana DanaService) CreateNewOrder(expiryTime, transactionType, title, order
 	response, err := dana.danaApi.New("/dana/acquiring/order/createOrder.htm", requestData)
 
 	if err != nil {
-		return map[string]interface{}{}, err
+		return nil, err
 	}
 
-	resultInfo, isSuccess := dana.danaApi.IsResponseSuccess(response)
-
-	if isSuccess {
-		acquirementID := response["response"].(map[string]interface{})["body"].(map[string]interface{})["acquirementId"].(string)
-		checkoutURL := response["response"].(map[string]interface{})["body"].(map[string]interface{})["checkoutUrl"].(string)
-
-		return map[string]interface{}{
-			"acquirementId": acquirementID,
-			"checkoutUrl":   checkoutURL,
-			"resultInfo":    resultInfo,
-		}, nil
+	result := utils.Result[utils.CreateOrder]{}
+	errParse := json.Unmarshal(response, &result)
+	if errParse != nil {
+		return nil, errParse
 	}
-	errMsg := fmt.Sprintf("error create dana api notif=%s, pay=%s, %s", timestam, guid, response["response"])
-	return response["response"].(map[string]interface{})["body"].(map[string]interface{}), errors.New(errMsg)
+
+	if result.Response.Body.ResultInfo.ResultCode != "SUCCESS" {
+		return nil, errors.New("unable create order")
+	}
+
+	return &result.Response.Body, nil
+
+}
+
+func (dana DanaService) CancelOrder(orderId string, reason string) (*utils.CancelOrder, error) {
+	timestam := dana.danaApi.GetDateNow()
+	guid := dana.danaApi.GenerateGUID()
+	requestData := map[string]interface{}{
+		"head": map[string]interface{}{
+			"version":      "2.0",
+			"function":     "dana.acquiring.order.cancel",
+			"clientId":     utils.ClientID,
+			"clientSecret": utils.ClientSecret,
+			"reqTime":      timestam,
+			"reqMsgId":     guid,
+			"reserve":      "{}",
+		},
+		"body": map[string]interface{}{
+			"merchantId":      utils.MerchantID,
+			"merchantTransId": orderId,
+			"cancelReason":    reason,
+		},
+	}
+	response, errResp := dana.danaApi.New("/dana/acquiring/order/cancel.htm", requestData)
+
+	if errResp != nil {
+		return nil, errResp
+	}
+
+	result := utils.Result[utils.CancelOrder]{}
+
+	errParse := json.Unmarshal(response, &result)
+	if errParse != nil {
+		return nil, errParse
+	}
+	return &result.Response.Body, nil
 }

@@ -12,7 +12,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 )
@@ -46,13 +46,13 @@ func (dana DanaApi) GenerateGUID() string {
 	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:])
 }
 
-func (dana DanaApi) New(url string, payloadObject map[string]interface{}) (map[string]interface{}, error) {
+func (dana DanaApi) New(url string, payloadObject map[string]interface{}) ([]byte, error) {
 	jsonPayload := dana.composeRequest(payloadObject)
 
 	client := &http.Client{}
 	req, err := http.NewRequest("POST", dana.GetAPIURL()+url, bytes.NewBuffer([]byte(jsonPayload)))
 	if err != nil {
-		return map[string]interface{}{}, err
+		return []byte{}, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -63,22 +63,16 @@ func (dana DanaApi) New(url string, payloadObject map[string]interface{}) (map[s
 	resp, err := client.Do(req)
 	if err != nil {
 		errMsg := fmt.Sprintf("Error : %s %s", dana.GetAPIURL(), url)
-		return map[string]interface{}{}, errors.New(errMsg)
+		return []byte{}, errors.New(errMsg)
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return map[string]interface{}{}, err
+		return []byte{}, err
 	}
 
-	var response map[string]interface{}
-	err = json.Unmarshal(body, &response)
-	if err != nil {
-		return map[string]interface{}{}, err
-	}
-
-	return response, nil
+	return body, nil
 }
 
 func (dana DanaApi) GetAPIURL() string {

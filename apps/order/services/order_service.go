@@ -40,7 +40,7 @@ func (order OrderService) deleteTrx(orderId string) (*db.TransactionsModel, erro
 	return order.database.Transactions.FindUnique(db.Transactions.ID.Equals(orderId)).Delete().Exec(context.Background())
 }
 
-func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId string) (*string, map[string]interface{}, error) {
+func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId string) (*string, *utils.CreateOrder, error) {
 
 	createOrderResult, errCreateOrder := order.database.Order.CreateOne(
 		db.Order.OrderType.Set(ptrOrderModel.OrderType),
@@ -53,23 +53,23 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 	).Exec(context.Background())
 
 	if errCreateOrder != nil {
-		return nil, map[string]interface{}{}, errCreateOrder
+		return nil, nil, errCreateOrder
 	}
 
 	if ptrOrderModel.OrderType == db.TransactionTypeFood || ptrOrderModel.OrderType == db.TransactionTypeMart {
 		if ptrOrderModel.ProductId == nil {
 			order.deleteOrder(createOrderResult.ID)
-			return nil, map[string]interface{}{}, errors.New("product id not found")
+			return nil, nil, errors.New("product id not found")
 		}
 
 		if ptrOrderModel.Quantity != nil && *ptrOrderModel.Quantity == 0 {
 			order.deleteOrder(createOrderResult.ID)
-			return nil, map[string]interface{}{}, errors.New("quantity must be greater than 0")
+			return nil, nil, errors.New("quantity must be greater than 0")
 		}
 
 		if ptrOrderModel.Quantity == nil {
 			order.deleteOrder(createOrderResult.ID)
-			return nil, map[string]interface{}{}, errors.New("please provide quantity")
+			return nil, nil, errors.New("please provide quantity")
 		}
 		_, errCreateOrderItem := order.database.OrderItem.CreateOne(
 			db.OrderItem.Product.Link(db.Product.ID.EqualsIfPresent(ptrOrderModel.ProductId)),
@@ -79,7 +79,7 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 
 		if errCreateOrderItem != nil {
 			order.deleteOrder(createOrderResult.ID)
-			return nil, map[string]interface{}{}, errCreateOrderItem
+			return nil, nil, errCreateOrderItem
 		}
 	}
 	trx, errCreateTrx := order.database.Transactions.CreateOne(
@@ -88,8 +88,11 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 	).Exec(context.Background())
 
 	if errCreateTrx != nil {
-		order.deleteOrder(createOrderResult.ID)
-		return nil, map[string]interface{}{}, errCreateTrx
+		_, err := order.deleteOrder(createOrderResult.ID)
+		if err != nil {
+			return nil, nil, err
+		}
+		return nil, nil, errCreateTrx
 	}
 
 	errCreateTrxFirestore := order.createTrxOnFirestore(createOrderResult, trx)
@@ -97,7 +100,7 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 	if errCreateTrxFirestore != nil {
 		order.deleteTrx(trx.ID)
 		order.deleteOrder(createOrderResult.ID)
-		return nil, map[string]interface{}{}, errCreateTrxFirestore
+		return nil, nil, errCreateTrxFirestore
 	}
 	if ptrOrderModel.PaymentType == db.PaymentTypeDana {
 		currentTime := time.Now()
@@ -121,14 +124,19 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 		if errDana != nil {
 			order.deleteTrx(trx.ID)
 			order.deleteOrder(createOrderResult.ID)
-			return nil, map[string]interface{}{}, errDana
+			return nil, nil, errDana
 		} else {
 			return &createOrderResult.ID, data, nil
 		}
 	} else {
-		return &createOrderResult.ID, map[string]interface{}{}, nil
+		return &createOrderResult.ID, nil, nil
 
 	}
+}
+
+func (order OrderService) CancelOrder(orderId string) (*utils.CancelOrder, error) {
+	const reason = "not getting driver"
+	return order.danaService.CancelOrder(orderId, reason)
 }
 
 func (order OrderService) assignPtrStringIfTrue(value string, condition bool) *string {

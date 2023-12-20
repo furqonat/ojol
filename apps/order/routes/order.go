@@ -21,6 +21,7 @@ func (s OrderRoutes) Setup() {
 	orderApi := s.handler.Gin.Group("/order").Use(s.rateLimitMiddleware.Handle())
 	{
 		orderApi.POST("/", s.authMiddleware.HandleAuthWithRoles(utils.USER), s.orderController.CreateOrder)
+		orderApi.PUT("/:id", s.authMiddleware.HandleAuthWithRoles(utils.USER, utils.MERCHANT), s.orderController.CancelOrder)
 	}
 }
 
