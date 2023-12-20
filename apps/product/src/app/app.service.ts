@@ -204,4 +204,68 @@ export class AppService {
       }
     }
   }
+
+  async getCategories(take?: number, skip?: number) {
+    const categories = await this.prisma.category.findMany({
+      take: take ? Number(take) : 20,
+      skip: skip ? Number(skip) : 0,
+      select: {
+        name: true,
+        id: true,
+      },
+    })
+    const total = await this.prisma.category.count()
+    return {
+      data: categories,
+      total: total,
+    }
+  }
+
+  async createCategory(name: string) {
+    const categoryExist = await this.prisma.category.findMany({
+      where: {
+        name: {
+          equals: this.capitalizeEachWord(name),
+        },
+      },
+    })
+    if (categoryExist.length > 0) {
+      return {
+        message: 'ALREADY EXIST',
+        res: this.capitalizeEachWord(name),
+      }
+    }
+    const category = await this.prisma.category.create({
+      data: {
+        name: this.capitalizeEachWord(name),
+      },
+    })
+    return {
+      res: category.id,
+      message: 'OK',
+    }
+  }
+
+  capitalizeEachWord(inputString: string): string {
+    // Split the input string into an array of words
+    const words: string[] = inputString.split(' ')
+
+    // Capitalize the first letter of each word
+    const capitalizedWords: string[] = words.map((word) =>
+      this.capitalizeFirstLetter(word),
+    )
+
+    // Join the words back into a single string
+    return capitalizedWords.join(' ')
+  }
+
+  capitalizeFirstLetter(inputString: string): string {
+    // Check if the input string is not empty
+    if (inputString.length === 0) {
+      return inputString
+    }
+
+    // Capitalize the first letter and concatenate the rest of the string
+    return inputString.charAt(0).toUpperCase() + inputString.slice(1)
+  }
 }

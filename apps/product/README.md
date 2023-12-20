@@ -243,3 +243,68 @@ Authorization: Bearer .....
   "res": ".."
 }
 ```
+
+## Membuat Kategori Baru
+
+Berikut adalah cara membuat kategori baru
+
+### Table Body
+
+| Body   | Type     | Description   |
+| ------ | -------- | ------------- |
+| `name` | `string` | nama kategori |
+
+```http
+POST https://api.gentatechnology.com/product/product/category/
+Content-Type: application/json
+Authorization: Bearer .....
+
+{
+  "name": "Nasi Goreng"
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": ".."
+}
+```
+
+## Mendpatkan Kategori
+
+Berikut adalah cara membuat kategori baru
+
+### Table Body
+
+| Body   | Type  | Description                   |
+| ------ | ----- | ----------------------------- |
+| `take` | `int` | jumlah output yang didapatkan |
+| `skip` | `int` | jumlah output yang dilewatkan |
+
+```http
+GET https://api.gentatechnology.com/product/product/categories?take=10&skip=0
+Content-Type: application/json
+Authorization: Bearer .....
+
+```
+
+### Contoh Response
+
+```json
+{
+  "data": [
+    {
+      "name": "...",
+      "id": "..."
+    }
+     {
+      "name": "...",
+      "id": "..."
+    }
+  ],
+  "total": 10
+}
+```
