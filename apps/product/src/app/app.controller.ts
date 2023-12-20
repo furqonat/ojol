@@ -1,5 +1,6 @@
 import { Role, Roles, RolesGuard } from '@lugo/guard'
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -87,7 +88,20 @@ export class AppController {
       throw new UnauthorizedException()
     }
   }
+  @Roles(Role.MERCHANT, Role.USER)
+  @Get('/categories')
+  async getCategories(@Query('take') take = 20, @Query('skip') skip = 0) {
+    return this.appService.getCategories(take, skip)
+  }
 
+  @Roles(Role.MERCHANT, Role.USER)
+  @Get('/category')
+  async createCategories(@Body('name') name: string) {
+    if (!name) {
+      throw new BadRequestException()
+    }
+    return this.appService.createCategory(name)
+  }
   @Roles(Role.MERCHANT, Role.USER)
   @Get('/:id')
   async getProduct(
