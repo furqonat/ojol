@@ -28,7 +28,7 @@ export class AppController {
     @Query('skip') skip: number,
     @Query('query') query: string,
     @Query('type') type: 'FOOD' | 'MART' = 'FOOD',
-    @Query('category') category: string,
+    @Query('filter') filter: string,
     @Query('merchant_id') merchantId: string,
     @Query() select: Prisma.productSelect,
   ) {
@@ -37,7 +37,7 @@ export class AppController {
       skip,
       str2obj(select),
       type,
-      category,
+      filter,
       query,
       merchantId,
     )
