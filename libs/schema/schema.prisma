@@ -31,6 +31,19 @@ model customer {
   cart                    cart?
   order                   order[]
   favorites               favorites[]
+  dana_token              dana_token[]
+}
+
+model dana_token {
+  id            String   @id @default(cuid())
+  customer_id   String
+  customer      customer @relation(references: [id], fields: [customer_id], onDelete: Cascade)
+  access_token  String
+  expires_in    DateTime
+  refresh_token String
+  re_expires_in DateTime
+  token_status  String
+  dana_user_id  String
 }
 
 model customer_device_token {
