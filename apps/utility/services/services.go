@@ -6,5 +6,8 @@ import (
 
 // Module exports services present
 var Module = fx.Options(
-// fx.Provide()
+	fx.Provide(NewOauthService),
+	fx.Provide(NewDanaService),
+	fx.Provide(NewFirebaseAuth),
+	fx.Provide(NewFirestore),
 )
