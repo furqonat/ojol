@@ -11,6 +11,6 @@ var Module = fx.Options(
 	fx.Provide(NewFirebaseAuth),
 	fx.Provide(NewFirebaseMessaging),
 	fx.Provide(NewFirestoreDatabase),
-	// fx.Provide(NewDatabase),
+	fx.Provide(NewDatabase),
 	fx.Provide(NewDana),
 )
