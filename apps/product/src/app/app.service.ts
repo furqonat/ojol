@@ -18,7 +18,7 @@ export class AppService {
     skip: number,
     select?: Prisma.productSelect,
     type?: 'FOOD' | 'MART',
-    category?: string,
+    filter?: string,
     query?: string,
     merchantId?: string,
   ) {
@@ -26,11 +26,11 @@ export class AppService {
       where: {
         status: true,
         product_type: type ?? 'FOOD',
-        category: category
+        category: filter
           ? {
               some: {
                 name: {
-                  contains: category ?? undefined,
+                  contains: filter ?? undefined,
                 },
               },
             }
@@ -67,7 +67,7 @@ export class AppService {
         category: {
           some: {
             name: {
-              contains: category ?? undefined,
+              contains: filter ?? undefined,
             },
           },
         },

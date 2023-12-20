@@ -68,17 +68,18 @@ By default response produk hanya akan menampilakan output `id` dan `name` dari p
 
 ### Query parameter produk
 
-| Query         | Type      | Description                                      |
-| ------------- | --------- | ------------------------------------------------ |
-| `id`          | `boolean` | Id produk                                        |
-| `name`        | `boolean` | nama produk                                      |
-| `description` | `boolean` | deskripsi produk                                 |
-| `price`       | `boolean` | harga produk                                     |
-| `_count`      | `object`  | total relationship produk                        |
-| `query`       | `string`  | keyword yang digunakan untuk mencari produk      |
-| `type`        | `enum`    | type product `FOOD` atau `MART` default = `FOOD` |
-| `category`    | `string`  | category produk                                  |
-| `merchant_id` | `string`  | mendapatkan produk dari merchant id              |
+| Query         | Type                  | Description                                      |
+| ------------- | --------------------- | ------------------------------------------------ |
+| `id`          | `boolean`             | Id produk                                        |
+| `name`        | `boolean`             | nama produk                                      |
+| `description` | `boolean`             | deskripsi produk                                 |
+| `price`       | `boolean`             | harga produk                                     |
+| `_count`      | `object`              | total relationship produk                        |
+| `query`       | `string`              | keyword yang digunakan untuk mencari produk      |
+| `type`        | `enum`                | type product `FOOD` atau `MART` default = `FOOD` |
+| `category`    | `object` or `boolean` | category produk                                  |
+| `merchant_id` | `string`              | mendapatkan produk dari merchant id              |
+| `filter`      | `string`              | category produk                                  |
 
 ### Query parameter `_count`
 
@@ -134,13 +135,12 @@ Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari apli
 
 ### Table Query Menambahkan Produk
 
-| Body          | Type      | Description      |
-| ------------- | --------- | ---------------- |
-| `name`        | `string`  | nama produk      |
-| `image`       | `string`  | gambar produk    |
+| Body    | Type     | Description   |
+| ------- | -------- | ------------- |
+| `name`  | `string` | nama produk   |
+| `image` | `string` | gambar produk |
 
 ### Contoh Request menambahkan produk dengan kategori yang sudah ada
-
 
 ## Menambahkan produk (Merchant only)
 
