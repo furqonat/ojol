@@ -14,9 +14,10 @@ type LugoController struct {
 	service services.LugoService
 }
 
-func NewLugoController(logger utils.Logger) LugoController {
+func NewLugoController(logger utils.Logger, service services.LugoService) LugoController {
 	return LugoController{
-		logger: logger,
+		logger:  logger,
+		service: service,
 	}
 }
 

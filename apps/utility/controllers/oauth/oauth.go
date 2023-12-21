@@ -17,9 +17,10 @@ type AccessTokenBody struct {
 	AccessToken string `json:"access_token"`
 }
 
-func NewOAuthController(logger utils.Logger) OAuthController {
+func NewOAuthController(logger utils.Logger, service services.OAuthService) OAuthController {
 	return OAuthController{
-		logger: logger,
+		logger:  logger,
+		service: service,
 	}
 }
 
