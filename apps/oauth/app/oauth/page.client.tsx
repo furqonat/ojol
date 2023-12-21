@@ -8,30 +8,28 @@ export function OAuthClient() {
   const queryParams = useSearchParams()
 
   const authCode = queryParams.get('auth_code')
-  //   const [_, setIsLoading] = useState(true)
+  const state = queryParams.get('state')
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
-    if (authCode) {
+    if (authCode && state) {
       dialogRef.current?.showModal()
-      //   fetch('/callback', {
-      //     method: 'POST',
-      //     body: JSON.stringify({ authCode: authCode }),
-      //   })
-      //     .then((resp) => resp.json())
-      //     .then(() => {
-      //       setIsLoading(false)
-      //       dialogRef.current?.close()
-      //     })
-      //     .catch(() => {
-      //       setIsLoading(false)
-      //       dialogRef.current?.close()
-      //     })
-      // }
+      fetch('/callback', {
+        method: 'POST',
+        body: JSON.stringify({ authCode: authCode, state: state }),
+      })
+        .then((resp) => resp.json())
+        .then(() => {
+          dialogRef.current?.close()
+          router.push('/oauth/success')
+        })
+        .catch(() => {
+          dialogRef.current?.close()
+        })
     } else {
       router.push('/')
     }
-  }, [authCode, router])
+  }, [authCode, router, state])
 
   return (
     <main>

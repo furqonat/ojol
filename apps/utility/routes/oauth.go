@@ -1,15 +1,15 @@
 package routes
 
 import (
-	"apps/order/middlewares"
 	"apps/utility/controllers/oauth"
+	"apps/utility/middlewares"
 	"apps/utility/utils"
 )
 
 type OAuthRoutes struct {
 	logger         utils.Logger
 	handler        utils.RequestHandler
-	controller     oauth.OAuth
+	controller     oauth.OAuthController
 	rateLimit      middlewares.RateLimitMiddleware
 	authMiddleware middlewares.FirebaseMiddleware
 }
@@ -27,7 +27,7 @@ func (s OAuthRoutes) Setup() {
 func NewOAuthRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,
-	controller oauth.OAuth,
+	controller oauth.OAuthController,
 	rateLimit middlewares.RateLimitMiddleware,
 	authMiddleware middlewares.FirebaseMiddleware,
 ) OAuthRoutes {

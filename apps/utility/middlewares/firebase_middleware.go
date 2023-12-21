@@ -1,8 +1,8 @@
 package middlewares
 
 import (
-	"apps/order/services"
-	"apps/order/utils"
+	"apps/utility/services"
+	"apps/utility/utils"
 	"context"
 	"errors"
 	"net/http"
@@ -18,11 +18,11 @@ var (
 )
 
 type FirebaseMiddleware struct {
-	client services.FirebaseAuth
+	client *services.FirebaseAuth
 	logger utils.Logger
 }
 
-func NewFirebaseMiddleware(frsAuth services.FirebaseAuth, logger utils.Logger) FirebaseMiddleware {
+func NewFirebaseMiddleware(frsAuth *services.FirebaseAuth, logger utils.Logger) FirebaseMiddleware {
 	return FirebaseMiddleware{
 		client: frsAuth,
 		logger: logger,
