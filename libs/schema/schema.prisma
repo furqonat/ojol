@@ -240,6 +240,12 @@ model service_fee {
   account_type badge
 }
 
+model services {
+  id           String       @id @default(cuid())
+  enable       Boolean      @default(true)
+  service_type service_type
+}
+
 model company_balance {
   id              String         @id @default(cuid())
   created_at      DateTime       @default(now())
@@ -306,6 +312,7 @@ enum service_type {
   CAR
   FOOD
   MART
+  DELIVERY
 }
 
 model product {
@@ -402,6 +409,7 @@ model order {
   shipping_cost Int
   weight_cost   Int              @default(0)
   order_items   order_item[]
+  version       Int              @default(1)
 }
 
 model order_item {

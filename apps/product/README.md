@@ -8,7 +8,28 @@ Api ini hanya bisa digunakan untuk merchant dan pengguna.
 https://api.gentatechnology.com/product
 ```
 
-## Medapatkan semua produk
+## Daftar isi
+
+- [Mendapatkan Semua Produk](#mendapatkan-semua-produk)
+  - [Query Parameter Produk](#query-parameter-produk)
+  - [Query Parameter `_count`](#query-parameter-_count)
+- [Mendapatkan Detail Produk](#mendapatkan-detail-produk)
+  - [Query Parameter Produk](#query-parameter-produk-1)
+  - [Query Parameter `_count`](#query-parameter-_count-1)
+- [Menambahkan atau menghapus produk dari favorite](#menambahkan-atau-menghapus-produk-ke-favorite-customer-only)
+- [Mendapatkan Merchants](#mendapatkan-merchants)
+  - [Table Query Merchant](#table-query-merchant)
+  - [Table Query Merchant Detail](#table-query-details)
+- [Menambahkan Produk](#menambahkan-produk-merchant-only)
+  - [Table Body Produk](#table-body-menambahkan-produk)
+- [Edit Produk](#edit-produk-merchant-only)
+  - [Table Body Edit Produk](#table-body-edit-produk)
+- [Membuat Kategori Baru](#membuat-kategori-baru)
+  - [Table Body Kategori](#table-body-menambahkan-kategori)
+- [Mendapatkan kategori](#mendpatkan-kategori)
+  - [Table Query Kategori](#table-query-kategori)
+
+## Mendapatkan semua produk
 
 By default response produk hanya akan menampilakan output `id` dan `name` dari produk, tetapi kita tetap bisa untuk mendapatkan detail dari produk seperti nama merchant dan lainnya.
 
@@ -62,7 +83,7 @@ Authorization: Bearer .....
 }
 ```
 
-## Medapatkan detail produk
+## Mendapatkan detail produk
 
 By default response produk hanya akan menampilakan output `id` dan `name` dari produk, tetapi kita tetap bisa untuk mendapatkan detail dari produk seperti nama merchant dan lainnya.
 
@@ -133,14 +154,44 @@ Authorization: Bearer .....
 
 Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari aplikasi merchant semua request akan di tolak.
 
-### Table Query Menambahkan Produk
+### Table Query Merchant
 
-| Body    | Type     | Description   |
-| ------- | -------- | ------------- |
-| `name`  | `string` | nama produk   |
-| `image` | `string` | gambar produk |
+| Body      | Type               | Description                      |
+| --------- | ------------------ | -------------------------------- |
+| `id`      | `boolean`          | id merchant                      |
+| `avatar`  | `boolean`          | gambar merchant                  |
+| `type`    | `boolean`          | type merchant `FOOD` atau `MART` |
+| `details` | `boolean` `object` | detail merchant                  |
 
-### Contoh Request menambahkan produk dengan kategori yang sudah ada
+### Table Query `details`
+
+| Body             | Type      | Description          |
+| ---------------- | --------- | -------------------- |
+| `address`        | `boolean` | alamat merchant      |
+| `name`           | `boolean` | nama toko merchant   |
+| `images`         | `boolean` | gambar toko merchant |
+| `operation_time` | `boolean` | jam buka merchant    |
+
+### Contoh Request
+
+```http
+GET https://api.gentatechnology.com/product/merchant?id=true&details={select: {address: true, name: true, images: true}}
+Content-Type: application/json
+Authorization: Bearer .....
+```
+
+### Contoh Response
+
+```json
+{
+  "id": "...",
+  "details": {
+    "address": "...",
+    "name": "...",
+    "images": ["...", "..."]
+  }
+}
+```
 
 ## Menambahkan produk (Merchant only)
 
@@ -210,7 +261,7 @@ Authorization: Bearer .....
 
 Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari aplikasi merchant semua request akan di tolak.
 
-### Table Body Menambahkan Produk
+### Table Body Edit Produk
 
 | Body          | Type      | Description      |
 | ------------- | --------- | ---------------- |
@@ -248,7 +299,7 @@ Authorization: Bearer .....
 
 Berikut adalah cara membuat kategori baru
 
-### Table Body
+### Table Body Menambahkan Kategori
 
 | Body   | Type     | Description   |
 | ------ | -------- | ------------- |
@@ -277,7 +328,7 @@ Authorization: Bearer .....
 
 Berikut adalah cara membuat kategori baru
 
-### Table Body
+### Table Query Kategori
 
 | Body   | Type  | Description                   |
 | ------ | ----- | ----------------------------- |
