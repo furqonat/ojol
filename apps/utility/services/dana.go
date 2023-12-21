@@ -20,7 +20,7 @@ func NewDanaService(dana utils.Dana, logger utils.Logger) DanaService {
 	}
 }
 
-func (dana DanaService) GenerateSignInUrl() string {
+func (dana DanaService) GenerateSignInUrl(state string) string {
 	guid := dana.danaApi.GenerateGUID()
 
 	uri := fmt.Sprintf("%s/d/portal/oauth?clientId=%s&scopes=%s&requestId=%s&state=%s&terminalType=%s&redirectUrl=%s",
@@ -28,7 +28,7 @@ func (dana DanaService) GenerateSignInUrl() string {
 		utils.ClientID,
 		utils.OAuthScope,
 		guid,
-		dana.danaApi.GenerateGUID(),
+		state,
 		utils.TerminalType,
 		url.QueryEscape(utils.OAuthRedirectURL),
 	)

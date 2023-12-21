@@ -176,6 +176,12 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel, ptr
 	return nil
 }
 
-func (order OrderService) findNearlyAndGoodDriver() {
-
+func (order OrderService) findNearlyAndGoodDriver(orderId string, customerLat float64, customerLng float64) {
+	// driver, err := order.database.Driver.FindMany(
+	// 	db.Driver.Status.Equals(db.DriverStatusActive),
+	// 	db.Driver.DriverDetails.Where(db.DriverDetails.CurrentLat.Equals(0.0)),
+	// ).With(
+	// 	db.Driver.DriverSettings.Fetch(),
+	// ).Exec(context.Background())
+	// order.database.Prisma.QueryRaw(``)
 }

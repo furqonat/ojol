@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"apps/utility/controllers/lugo"
 	"apps/utility/controllers/oauth"
 	misc_v1 "apps/utility/controllers/v1/misc"
 
@@ -11,4 +12,5 @@ import (
 var Module = fx.Options(
 	fx.Provide(misc_v1.NewMiscController),
 	fx.Provide(oauth.NewOAuthController),
+	fx.Provide(lugo.NewLugoController),
 )
