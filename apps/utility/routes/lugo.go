@@ -15,7 +15,7 @@ type LugoRoutes struct {
 // Setup Misc routes
 func (s LugoRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Group("/lugo/services")
+	api := s.handler.Gin.Group("/utility/services")
 	{
 		api.GET("/", s.controller.GetAvaliableService)
 		api.GET("/all", s.controller.GetServices)
