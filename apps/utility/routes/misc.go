@@ -1,4 +1,3 @@
-
 package routes
 
 import (
@@ -16,7 +15,7 @@ type MiscRoutes struct {
 // Setup Misc routes
 func (s MiscRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Group("/apis/v1")
+	api := s.handler.Gin.Group("/utility/v1")
 	{
 		api.GET("/liveness", s.miscController.GetLiveness)
 		api.GET("/readiness", s.miscController.GetReadiness)
