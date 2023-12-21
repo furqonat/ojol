@@ -88,6 +88,13 @@ func (dana Dana) GetApiURL() string {
 	return SandboxAPIURL
 }
 
+func (dana Dana) GetWebURL() string {
+	if IsProduction {
+		return "https://m.dana.id"
+	}
+	return "https://m.sandbox.dana.id"
+}
+
 func (dana Dana) composeRequest(requestData map[string]interface{}) string {
 	requestDataText, err := json.Marshal(requestData)
 	if err != nil {

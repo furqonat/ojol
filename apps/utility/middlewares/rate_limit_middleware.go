@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"apps/order/utils"
+	"apps/utility/utils"
 	"net/http"
 	"strconv"
 	"time"

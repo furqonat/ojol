@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type OAuth struct {
+type OAuthController struct {
 	logger  utils.Logger
 	service services.OAuthService
 }
@@ -17,20 +17,20 @@ type AccessTokenBody struct {
 	AccessToken string `json:"access_token"`
 }
 
-func NewOAuthController(logger utils.Logger) OAuth {
-	return OAuth{
+func NewOAuthController(logger utils.Logger) OAuthController {
+	return OAuthController{
 		logger: logger,
 	}
 }
 
-func (auth OAuth) GenerateSignIn(ctx *gin.Context) {
+func (auth OAuthController) GenerateSignIn(ctx *gin.Context) {
 	customerId := ctx.GetString(utils.UID)
 	url := auth.service.GenerateSignUrl(customerId)
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK", "signInUrl": url})
 }
 
-func (auth OAuth) ApplyAccessToken(ctx *gin.Context) {
+func (auth OAuthController) ApplyAccessToken(ctx *gin.Context) {
 	customerId := ctx.Query("customerId")
 	acsTkn := AccessTokenBody{}
 	if err := ctx.BindJSON(&acsTkn); err != nil {
@@ -50,7 +50,7 @@ func (auth OAuth) ApplyAccessToken(ctx *gin.Context) {
 
 }
 
-func (auth OAuth) GetDanaProfile(ctx *gin.Context) {
+func (auth OAuthController) GetDanaProfile(ctx *gin.Context) {
 	customerId := ctx.GetString(utils.UID)
 
 	profile, errProfile := auth.service.GetDanaProfile(customerId)

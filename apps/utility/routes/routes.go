@@ -22,10 +22,12 @@ type Route interface {
 func NewRoutes(
 	miscRoutes MiscRoutes,
 	lugoRoutes LugoRoutes,
+	oauthRoutes OAuthRoutes,
 ) Routes {
 	return Routes{
 		miscRoutes,
 		lugoRoutes,
+		oauthRoutes,
 	}
 }
 
