@@ -78,6 +78,7 @@ model driver {
   customer_driver_review customer_driver_review[]
   driver_customer_review driver_customer_review[]
   order                  order[]
+  order_rejected         order_rejected[]
 }
 
 model driver_settings {
@@ -92,19 +93,21 @@ model driver_settings {
   food_price     Int     @default(0)
   mart           Boolean @default(true)
   mart_price     Int     @default(0)
+  auto_bid       Boolean @default(true)
 }
 
 model driver_details {
-  id            String   @id @default(cuid())
+  id            String       @id @default(cuid())
   address       String
   vehicle       vehicle?
-  driver        driver?  @relation(fields: [driver_id], references: [id], onDelete: Cascade)
-  driver_id     String?  @unique
+  driver        driver?      @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  driver_id     String?      @unique
   license_image String
   id_card_image String
   current_lat   Float?
   current_lng   Float?
-  badge         badge    @default(BASIC)
+  badge         badge        @default(BASIC)
+  driver_type   vehicle_type
 }
 
 model driver_wallet {
@@ -389,28 +392,37 @@ model driver_customer_review {
 }
 
 model order {
-  id            String           @id @default(cuid())
-  order_type    service_type
-  order_status  order_status     @default(CREATED)
-  payment_type  payment_type
-  created_at    DateTime         @default(now())
-  transactions  transactions?
-  driver        driver?          @relation(fields: [driver_id], references: [id])
-  driver_id     String?
-  customer      customer         @relation(fields: [customer_id], references: [id])
-  customer_id   String
-  discount      discount?        @relation(fields: [discount_id], references: [id])
-  discount_id   String?
-  tax           tax?             @relation(fields: [tax_id], references: [id])
-  tax_id        String?
-  gross_amount  Int
-  net_amount    Int
-  total_amount  Int
-  shipping_cost Int
-  weight_cost   Int              @default(0)
-  order_items   order_item[]
-  version       Int              @default(1)
-  order_detail  order_detail?
+  id             String           @id @default(cuid())
+  order_type     service_type
+  order_status   order_status     @default(CREATED)
+  payment_type   payment_type
+  created_at     DateTime         @default(now())
+  transactions   transactions?
+  driver         driver?          @relation(fields: [driver_id], references: [id])
+  driver_id      String?
+  customer       customer         @relation(fields: [customer_id], references: [id])
+  customer_id    String
+  discount       discount?        @relation(fields: [discount_id], references: [id])
+  discount_id    String?
+  tax            tax?             @relation(fields: [tax_id], references: [id])
+  tax_id         String?
+  gross_amount   Int
+  net_amount     Int
+  total_amount   Int
+  shipping_cost  Int
+  weight_cost    Int              @default(0)
+  order_items    order_item[]
+  version        Int              @default(1)
+  order_detail   order_detail?
+  order_rejected order_rejected[]
+}
+
+model order_rejected {
+  id        String  @id @default(cuid())
+  order     order?  @relation(fields: [order_id], references: [id], onDelete: Cascade)
+  driver    driver? @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  order_id  String?
+  driver_id String?
 }
 
 model order_detail {
@@ -477,7 +489,6 @@ model transaction_detail {
   acquirement_id    String
   merchant_trans_id String
 }
-
 
 enum order_status {
   CREATED

@@ -32,7 +32,17 @@ Authorization: Bearer ....
         "quantity": 1,
         "product_id": 'clq7m09gj0001dev6y4kcvpvp',
       }
-    ]
+    ],
+    "location": {
+      "latitude": -6.1231,
+      "longitude": 112.1231,
+      "address": "....",
+    },
+    "destination": {
+      "latitude": -6.1231,
+      "longitude": 112.1231,
+      "address": "....",
+    }
 
 }
 ```
@@ -52,6 +62,16 @@ Authorization: Bearer ....
     "net_amount": 100000,
     "total_amount": 150000,
     "shipping_cost": 50000,
+    "location": {
+      "latitude": -6.1231,
+      "longitude": 112.1231,
+      "address": "....",
+    },
+    "destination": {
+      "latitude": -6.1231,
+      "longitude": 112.1231,
+      "address": "....",
+    }
 
 }
 ```
@@ -71,7 +91,17 @@ Authorization: Bearer ....
     "net_amount": 100000,
     "total_amount": 150000,
     "shipping_cost": 50000,
-    "weight": 1
+    "weight": 1,
+    "location": {
+      "latitude": -6.1231,
+      "longitude": 112.1231,
+      "address": "....",
+    },
+    "destination": {
+      "latitude": -6.1231,
+      "longitude": 112.1231,
+      "address": "....",
+    }
 
 }
 ```
