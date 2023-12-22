@@ -27,8 +27,12 @@ Authorization: Bearer ....
     "net_amount": 100000,
     "total_amount": 150000,
     "shipping_cost": 50000,
-    "quantity": 1,
-    "product_id": 'clq7m09gj0001dev6y4kcvpvp',
+    "product": [
+      {
+        "quantity": 1,
+        "product_id": 'clq7m09gj0001dev6y4kcvpvp',
+      }
+    ]
 
 }
 ```
@@ -78,10 +82,7 @@ Authorization: Bearer ....
 {
   "message": "Successfully create order",
   "res": "...",
-  "dana": {
-    "resultInfo": {
-      // rest of result
-    },
+  "detail": {
     "merchantTransId": "....",
     "acquirementId": "....",
     "checkoutUrl": "...."
@@ -103,21 +104,27 @@ Authorization: Bearer ....
 | `total_amount`  | `int`    | total shipping cost `+` net amount                            |
 | `weight`        | `int`    | berat barang dalam kg, hanya digunakan untuk order `DELIVERY` |
 
-
 ## Cancel Order
+
 Berikut adalah cara melakukan pembatalan order
 
 ### Contoh Request
+
 ```http
-POST https://api.gentatechnology.com/order/<order_id>
+PUT https://api.gentatechnology.com/order/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
+
+{
+  "reason": "Tidak menerima Driver"
+}
 ```
+
 ### Contoh Response
 
 ```json
 {
   "message": "Success",
-  "res": "...",
+  "res": "..."
 }
 ```

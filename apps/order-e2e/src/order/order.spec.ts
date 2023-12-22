@@ -28,8 +28,12 @@ describe('Test Autentication Api', () => {
           net_amount: 100000,
           total_amount: 150000,
           shipping_cost: 50000,
-          quantity: 1,
-          product_id: 'clq7m09gj0001dev6y4kcvpvp',
+          product: [
+            {
+              quantity: 1,
+              product_id: 'clq7m09gj0001dev6y4kcvpvp',
+            },
+          ],
         },
         {
           headers: {
