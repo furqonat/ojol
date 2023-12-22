@@ -7,6 +7,8 @@ import (
 	"errors"
 	"fmt"
 	"time"
+
+	"cloud.google.com/go/firestore"
 )
 
 type OrderService struct {
@@ -17,12 +19,27 @@ type OrderService struct {
 
 type CreateOrderType struct {
 	db.OrderModel
-	Inner
+	Product     []Inner  `json:"product,omitempty"`
+	Location    Location `json:"location,omitempty"`
+	Destination Location `json:"destination,omitempty"`
 }
 
 type Inner struct {
 	ProductId *string `json:"product_id,omitempty"`
 	Quantity  *int    `json:"quantity,omitempty"`
+}
+
+type Location struct {
+	Address   string  `json:"address"`
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+}
+
+type QueryRawNearly struct {
+	DriverID        string  `json:"driver_id"`
+	DriverLatitude  float64 `json:"driver_lat"`
+	DriverLongitude float64 `json:"driver_lon"`
+	Distance        float64 `json:"distance"`
 }
 
 func NewOrderService(database utils.Database, firestore Firestore) *OrderService {
@@ -40,7 +57,38 @@ func (order OrderService) deleteTrx(orderId string) (*db.TransactionsModel, erro
 	return order.database.Transactions.FindUnique(db.Transactions.ID.Equals(orderId)).Delete().Exec(context.Background())
 }
 
-func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId string) (*string, *utils.CreateOrder, error) {
+func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId string) (*string, *db.TransactionDetailModel, error) {
+
+	orderExists, err := order.database.Order.FindMany(
+		db.Order.CustomerID.Equals(customerId),
+		db.Order.OrderStatus.NotIn([]db.OrderStatus{
+			db.OrderStatusDone,
+			db.OrderStatusCanceled,
+			db.OrderStatusExpired,
+		}),
+		db.Order.OrderType.Equals(ptrOrderModel.OrderType),
+	).Take(1).Exec(context.Background())
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if len(orderExists) > 0 {
+		orderDb, errOrder := order.database.Order.FindUnique(db.Order.ID.Equals(orderExists[0].ID)).With(db.Order.Transactions.Fetch().With(db.Transactions.Detail.Fetch())).Exec(context.Background())
+		if errOrder != nil {
+			return nil, nil, errOrder
+		}
+		trx, okTrx := orderDb.Transactions()
+		if !okTrx {
+			return nil, nil, errors.New("unable fetch transactions")
+		}
+		detail, okDetail := trx.Detail()
+		if !okDetail {
+			return nil, nil, errors.New("unable fetch transactions detail")
+		}
+
+		return &trx.OrderID, detail, nil
+	}
 
 	createOrderResult, errCreateOrder := order.database.Order.CreateOne(
 		db.Order.OrderType.Set(ptrOrderModel.OrderType),
@@ -56,31 +104,47 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 		return nil, nil, errCreateOrder
 	}
 
-	if ptrOrderModel.OrderType == db.TransactionTypeFood || ptrOrderModel.OrderType == db.TransactionTypeMart {
-		if ptrOrderModel.ProductId == nil {
-			order.deleteOrder(createOrderResult.ID)
-			return nil, nil, errors.New("product id not found")
-		}
+	if ptrOrderModel.OrderType == db.ServiceTypeFood || ptrOrderModel.OrderType == db.ServiceTypeMart {
+		for _, product := range ptrOrderModel.Product {
 
-		if ptrOrderModel.Quantity != nil && *ptrOrderModel.Quantity == 0 {
-			order.deleteOrder(createOrderResult.ID)
-			return nil, nil, errors.New("quantity must be greater than 0")
-		}
+			if product.ProductId == nil {
+				order.deleteOrder(createOrderResult.ID)
+				return nil, nil, errors.New("product id not found")
+			}
 
-		if ptrOrderModel.Quantity == nil {
-			order.deleteOrder(createOrderResult.ID)
-			return nil, nil, errors.New("please provide quantity")
-		}
-		_, errCreateOrderItem := order.database.OrderItem.CreateOne(
-			db.OrderItem.Product.Link(db.Product.ID.EqualsIfPresent(ptrOrderModel.ProductId)),
-			db.OrderItem.Quantity.SetIfPresent(ptrOrderModel.Quantity),
-			db.OrderItem.Order.Link(db.Order.ID.Equals(createOrderResult.ID)),
-		).Exec(context.Background())
+			if product.Quantity != nil && *product.Quantity == 0 {
+				order.deleteOrder(createOrderResult.ID)
+				return nil, nil, errors.New("quantity must be greater than 0")
+			}
 
-		if errCreateOrderItem != nil {
-			order.deleteOrder(createOrderResult.ID)
-			return nil, nil, errCreateOrderItem
+			if product.Quantity == nil {
+				order.deleteOrder(createOrderResult.ID)
+				return nil, nil, errors.New("please provide quantity")
+			}
+			_, errCreateOrderItem := order.database.OrderItem.CreateOne(
+				db.OrderItem.Product.Link(db.Product.ID.EqualsIfPresent(product.ProductId)),
+				db.OrderItem.Quantity.SetIfPresent(product.Quantity),
+				db.OrderItem.Order.Link(db.Order.ID.Equals(createOrderResult.ID)),
+			).Exec(context.Background())
+
+			if errCreateOrderItem != nil {
+				order.deleteOrder(createOrderResult.ID)
+				return nil, nil, errCreateOrderItem
+			}
 		}
+	}
+	_, errCreateOrderDetail := order.database.OrderDetail.CreateOne(
+		db.OrderDetail.Order.Link(db.Order.ID.Equals(createOrderResult.ID)),
+		db.OrderDetail.Latitude.Set(ptrOrderModel.Location.Longitude),
+		db.OrderDetail.Longitude.Set(ptrOrderModel.Location.Longitude),
+		db.OrderDetail.Address.Set(ptrOrderModel.Location.Address),
+		db.OrderDetail.DstLatitude.Set(ptrOrderModel.Destination.Latitude),
+		db.OrderDetail.DstLongitude.Set(ptrOrderModel.Destination.Longitude),
+		db.OrderDetail.DstAddress.Set(ptrOrderModel.Destination.Address),
+	).Exec(context.Background())
+	if errCreateOrderDetail != nil {
+		order.deleteOrder(createOrderResult.ID)
+		return nil, nil, errCreateOrderDetail
 	}
 	trx, errCreateTrx := order.database.Transactions.CreateOne(
 		db.Transactions.Type.Set(createOrderResult.OrderType),
@@ -125,18 +189,62 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 			order.deleteTrx(trx.ID)
 			order.deleteOrder(createOrderResult.ID)
 			return nil, nil, errDana
-		} else {
-			return &createOrderResult.ID, data, nil
 		}
+		createTrxDetail, errCreateTrxDetail := order.database.TransactionDetail.CreateOne(
+			db.TransactionDetail.Transactions.Link(db.Transactions.ID.Equals(trx.ID)),
+			db.TransactionDetail.CheckoutURL.Set(data.CheckoutUrl),
+			db.TransactionDetail.AcquirementID.Set(data.AcquirementId),
+			db.TransactionDetail.MerchantTransID.Set(data.MerchantTransId),
+		).Exec(context.Background())
+		if errCreateTrxDetail != nil {
+			return nil, nil, errCreateTrxDetail
+		}
+		return &createOrderResult.ID, createTrxDetail, nil
 	} else {
 		return &createOrderResult.ID, nil, nil
 
 	}
 }
 
-func (order OrderService) CancelOrder(orderId string) (*utils.CancelOrder, error) {
-	const reason = "not getting driver"
-	return order.danaService.CancelOrder(orderId, reason)
+func (order OrderService) CancelOrder(orderId string, reason string) (*string, error) {
+	_, err := order.danaService.CancelOrder(orderId, reason)
+	if err != nil {
+		return nil, err
+	}
+	orderDb, errOrder := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).With(
+		db.Order.Transactions.Fetch(),
+	).Update(
+		db.Order.OrderStatus.Set(db.OrderStatusCanceled),
+	).Exec(context.Background())
+	if errOrder != nil {
+		return nil, errOrder
+	}
+	trx, okTrx := orderDb.Transactions()
+
+	if !okTrx {
+		return nil, errors.New("unable fetch transactions")
+	}
+	_, errUpdateTrx := order.database.Transactions.FindUnique(
+		db.Transactions.ID.Equals(trx.ID),
+	).Update(
+		db.Transactions.Status.Set(db.TransactionStatusCanceled),
+	).Exec(context.Background())
+
+	if errUpdateTrx != nil {
+		return nil, errUpdateTrx
+	}
+	_, er := order.firestore.Client.Collection("transactions").Doc(orderId).Update(context.Background(), []firestore.Update{
+		{
+			Path:  "status",
+			Value: db.OrderStatusCanceled,
+		},
+	})
+	if er != nil {
+		return nil, er
+	}
+	return &trx.ID, nil
 }
 
 func (order OrderService) assignPtrStringIfTrue(value string, condition bool) *string {
@@ -163,11 +271,11 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel, ptr
 		"driver_id":    driverId,
 		"customer_id":  ptrOrderModel.CustomerID,
 		"payment_type": ptrOrderModel.PaymentType,
-		// "payment_at":   trxPaymentAt,
-		"order_type": ptrOrderModel.OrderType,
-		"status":     ptrTrxModel.Status,
-		"created_at": ptrTrxModel.CreatedAt,
-		"ended_at":   ptrEndedAt,
+		"payment_at":   nil,
+		"order_type":   ptrOrderModel.OrderType,
+		"status":       ptrTrxModel.Status,
+		"created_at":   ptrTrxModel.CreatedAt,
+		"ended_at":     ptrEndedAt,
 	})
 	if errCreateTrxFirestore != nil {
 		errorMsg := fmt.Sprintf("unable to create transaction in firestore: %s", errCreateTrxFirestore.Error())
@@ -176,12 +284,61 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel, ptr
 	return nil
 }
 
-func (order OrderService) findNearlyAndGoodDriver(orderId string, customerLat float64, customerLng float64) {
-	// driver, err := order.database.Driver.FindMany(
-	// 	db.Driver.Status.Equals(db.DriverStatusActive),
-	// 	db.Driver.DriverDetails.Where(db.DriverDetails.CurrentLat.Equals(0.0)),
-	// ).With(
-	// 	db.Driver.DriverSettings.Fetch(),
-	// ).Exec(context.Background())
-	// order.database.Prisma.QueryRaw(``)
+func (order OrderService) FindGoodAndNearlyDriver(orderId string, latitude, longitude float64) error {
+	orderDb, err := order.database.Order.FindUnique(db.Order.ID.Equals(orderId)).Exec(context.Background())
+	if err != nil {
+		return err
+	}
+	query := fmt.Sprintf(`
+	SELECT
+  	  driver_details.driver_id,
+  	  current_lat AS driver_lat,
+  	  current_lng AS driver_lon,
+  	  ST_DistanceSphere(
+  	    ST_SetSRID(ST_MakePoint(current_lng::FLOAT, current_lat::FLOAT), 4326),
+  	    ST_SetSRID(ST_MakePoint(%f, %f), 4326)
+  	  ) AS distance
+	FROM
+	  driver_details
+	JOIN driver
+	  ON driver.id = driver_details.driver_id
+	JOIN driver_wallet
+	  ON driver.id = driver_wallet.driver_id
+	JOIN driver_settings
+	  ON driver.id = driver_settings.driver_id
+	WHERE driver_wallet.balance > %d
+	 %s
+	ORDER BY
+	  distance
+	LIMIT 1
+	`,
+		longitude,
+		latitude,
+		orderDb.TotalAmount,
+		order.driverSettings(orderDb.OrderType, orderDb.TotalAmount),
+	)
+	res := QueryRawNearly{}
+	errQuery := order.database.Prisma.QueryRaw(query).Exec(context.Background(), &res)
+	if errQuery != nil {
+		return errQuery
+	}
+
+	return nil
+}
+
+func (order OrderService) driverSettings(orderType db.ServiceType, price int) string {
+	if orderType == db.ServiceTypeBike {
+		return fmt.Sprintf("AND driver_settings.ride_price <= %d AND driver_settings.ride = TRUE", price)
+	}
+	if orderType == db.ServiceTypeDelivery {
+		return fmt.Sprintf("AND driver_settings.delivery_price <= %d AND driver_settings.delivery = TRUE", price)
+	}
+	if orderType == db.ServiceTypeFood {
+		return fmt.Sprintf("AND driver_settings.food_price <= %d AND driver_settings.food = TRUE", price)
+	}
+	if orderType == db.ServiceTypeMart {
+		return fmt.Sprintf("AND driver_settings.mart_price <= %d AND driver_settings.mart = TRUE", price)
+	} else {
+		return ""
+	}
 }

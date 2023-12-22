@@ -87,7 +87,7 @@ model driver_settings {
   ride           Boolean @default(true)
   ride_price     Int     @default(0)
   delivery       Boolean @default(true)
-  delevery_price Int     @default(0)
+  delivery_price Int     @default(0)
   food           Boolean @default(true)
   food_price     Int     @default(0)
   mart           Boolean @default(true)
@@ -390,7 +390,7 @@ model driver_customer_review {
 
 model order {
   id            String           @id @default(cuid())
-  order_type    transaction_type
+  order_type    service_type
   order_status  order_status     @default(CREATED)
   payment_type  payment_type
   created_at    DateTime         @default(now())
@@ -410,6 +410,19 @@ model order {
   weight_cost   Int              @default(0)
   order_items   order_item[]
   version       Int              @default(1)
+  order_detail  order_detail?
+}
+
+model order_detail {
+  id            String @id @default(cuid())
+  order_id      String @unique
+  order         order  @relation(references: [id], fields: [order_id], onDelete: Cascade)
+  latitude      Float
+  longitude     Float
+  address       String
+  dst_latitude  Float
+  dst_longitude Float
+  dst_address   String
 }
 
 model order_item {
@@ -440,7 +453,7 @@ model cart_item {
 
 model transactions {
   id                      String                    @id @default(cuid())
-  type                    transaction_type
+  type                    service_type
   status                  transaction_status        @default(CREATED)
   created_at              DateTime                  @default(now())
   payment_at              DateTime?
@@ -451,17 +464,20 @@ model transactions {
   customer_product_review customer_product_review[]
   customer_driver_review  customer_driver_review[]
   driver_customer_review  driver_customer_review[]
-  order                   order                     @relation(fields: [order_id], references: [id])
+  order                   order                     @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id                String                    @unique
+  detail                  transaction_detail?
 }
 
-enum transaction_type {
-  FOOD
-  MART
-  CAR
-  BIKE
-  DELIVERY
+model transaction_detail {
+  id                String       @id @default(cuid())
+  transactions_id   String       @unique
+  transactions      transactions @relation(fields: [transactions_id], references: [id], onDelete: Cascade)
+  checkout_url      String
+  acquirement_id    String
+  merchant_trans_id String
 }
+
 
 enum order_status {
   CREATED
@@ -470,9 +486,11 @@ enum order_status {
   CANCELED
   PROCESS
   ACCEPTED
+  DRIVER_CLOSE
   SHIPPING
   DELIVERED
   DONE
+  EXPIRED
 }
 
 enum transaction_status {
@@ -481,6 +499,8 @@ enum transaction_status {
   PAID
   REFUND
   DONE
+  CANCELED
+  EXPIRED
 }
 
 enum payment_type {
