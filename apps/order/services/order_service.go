@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -289,25 +290,44 @@ func (order OrderService) FindGoodAndNearlyDriver(orderId string, latitude, long
 	if err != nil {
 		return err
 	}
+	rejectedOrder, errRejectedOrder := order.database.OrderRejected.FindMany(
+		db.OrderRejected.OrderID.Equals(orderId),
+	).Exec(context.Background())
+	if errRejectedOrder != nil {
+		return errRejectedOrder
+	}
+	var disableDriverId []string
+	for _, rejected := range rejectedOrder {
+		driverId, okDriverId := rejected.DriverID()
+		if okDriverId {
+			disableDriverId = append(disableDriverId, driverId)
+		}
+	}
 	query := fmt.Sprintf(`
-	SELECT
-  	  driver_details.driver_id,
-  	  current_lat AS driver_lat,
-  	  current_lng AS driver_lon,
-  	  ST_DistanceSphere(
-  	    ST_SetSRID(ST_MakePoint(current_lng::FLOAT, current_lat::FLOAT), 4326),
-  	    ST_SetSRID(ST_MakePoint(%f, %f), 4326)
-  	  ) AS distance
-	FROM
-	  driver_details
-	JOIN driver
-	  ON driver.id = driver_details.driver_id
-	JOIN driver_wallet
-	  ON driver.id = driver_wallet.driver_id
-	JOIN driver_settings
-	  ON driver.id = driver_settings.driver_id
-	WHERE driver_wallet.balance > %d
-	 %s
+	SELECT *
+	FROM (
+		SELECT
+  		  driver_details.driver_id,
+  		  current_lat AS driver_lat,
+  		  current_lng AS driver_lon,
+  		  ST_DistanceSphere(
+  		    ST_SetSRID(ST_MakePoint(current_lng::FLOAT, current_lat::FLOAT), 4326),
+  		    ST_SetSRID(ST_MakePoint(%f, %f), 4326)
+  		  ) AS distance
+		FROM
+		  driver_details
+		JOIN driver
+		  ON driver.id = driver_details.driver_id
+		JOIN driver_wallet
+		  ON driver.id = driver_wallet.driver_id
+		JOIN driver_settings
+		  ON driver.id = driver_settings.driver_id
+		WHERE driver_wallet.balance > %d
+		AND driver.status = 'ACTIVE'
+		 %s
+		 %s
+	) AS subquery
+	WHERE distance < 15000 
 	ORDER BY
 	  distance
 	LIMIT 1
@@ -316,6 +336,7 @@ func (order OrderService) FindGoodAndNearlyDriver(orderId string, latitude, long
 		latitude,
 		orderDb.TotalAmount,
 		order.driverSettings(orderDb.OrderType, orderDb.TotalAmount),
+		order.rejectedDriver(disableDriverId),
 	)
 	res := QueryRawNearly{}
 	errQuery := order.database.Prisma.QueryRaw(query).Exec(context.Background(), &res)
@@ -341,4 +362,14 @@ func (order OrderService) driverSettings(orderType db.ServiceType, price int) st
 	} else {
 		return ""
 	}
+}
+
+func (order OrderService) rejectedDriver(driverIds []string) string {
+	if len(driverIds) < 2 {
+		return fmt.Sprintf("AND driver.id NOT IN ('%s')", driverIds[0])
+	}
+	if len(driverIds) > 1 {
+		return fmt.Sprintf("AND driver.id NOT IN ('%s')", strings.Join(driverIds, "','"))
+	}
+	return ""
 }

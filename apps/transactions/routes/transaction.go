@@ -20,7 +20,7 @@ func (trxRoutes TrxRoutes) Setup() {
 	trxApi := trxRoutes.handler.Gin.Group("/trx").Use(trxRoutes.rateLimitMiddleware.Handle())
 	{
 		trxApi.PUT("/:id", trxRoutes.controller.UpdateTransaction)
-		trxApi.POST("/", trxRoutes.controller.FinishOrder)
+		trxApi.Any("/finish", trxRoutes.controller.FinishOrder)
 	}
 }
 
