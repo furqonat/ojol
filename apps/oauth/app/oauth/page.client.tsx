@@ -14,7 +14,7 @@ export function OAuthClient() {
   useEffect(() => {
     if (authCode && state) {
       dialogRef.current?.showModal()
-      fetch('/callback', {
+      fetch('/api/callback', {
         method: 'POST',
         body: JSON.stringify({ authCode: authCode, state: state }),
       })

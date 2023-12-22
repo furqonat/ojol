@@ -47,10 +47,11 @@ func (dana DanaService) ApplyAccessToken(authCode string) (*utils.ApplyToken, er
 			"clientSecret": utils.ClientSecret,
 			"reqTime":      timestamp,
 			"reqMsgId":     guid,
+			"accessToken":  "",
 			"reserve":      "{}",
 		},
 		"body": map[string]interface{}{
-			"grandType": "AUTHORIZATION_CODE",
+			"grantType": "AUTHORIZATION_CODE",
 			"authCode":  authCode,
 		},
 	}

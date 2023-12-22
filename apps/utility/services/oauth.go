@@ -35,10 +35,10 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 		return nil, errReExpr
 	}
 	ava, errT := auth.database.DanaToken.FindFirst(db.DanaToken.CustomerID.Equals(customerId)).Exec(context.Background())
-	if errT != nil {
-		return nil, errT
-	}
-	if ava != nil {
+	// if errT != nil {
+	// 	return nil, errT
+	// }
+	if errT == nil {
 		tkn, errTkn := auth.database.DanaToken.FindUnique(
 			db.DanaToken.ID.Equals(ava.ID),
 		).Update(
@@ -50,8 +50,11 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 			db.DanaToken.DanaUserID.Set(resp.UserInfo.PublicUserId),
 		).Exec(context.Background())
 		if errTkn != nil {
+			auth.logger.Info(errTkn)
+
 			return nil, errTkn
 		}
+		auth.logger.Info(tkn)
 
 		return &tkn.ID, nil
 	}
@@ -65,8 +68,12 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 		db.DanaToken.DanaUserID.Set(resp.UserInfo.PublicUserId),
 	).Exec(context.Background())
 	if errDanaToken != nil {
+		auth.logger.Info(errDanaToken)
+
 		return nil, errDanaToken
 	}
+
+	auth.logger.Info(dbToken)
 
 	return &dbToken.ID, nil
 }
@@ -75,7 +82,7 @@ func (auth OAuthService) GenerateSignUrl(customerId string) string {
 	return auth.dana.GenerateSignInUrl(customerId)
 }
 
-func (auth OAuthService) GetDanaProfile(customerId string) (*utils.UserProfile, error) {
+func (auth OAuthService) GetDanaProfile(customerId string) ([]utils.UserResourcesInfo, error) {
 	customer, err := auth.database.Customer.FindUnique(
 		db.Customer.ID.Equals(customerId),
 	).With(
@@ -85,10 +92,11 @@ func (auth OAuthService) GetDanaProfile(customerId string) (*utils.UserProfile, 
 		return nil, err
 	}
 	danaToken := customer.DanaToken()[0]
+	auth.logger.Info(danaToken)
 	dana, errDana := auth.dana.GetUserProfile(danaToken.AccessToken)
-
 	if errDana != nil {
+		auth.logger.Info(err)
 		return nil, errDana
 	}
-	return dana, nil
+	return dana.UserResourcesInfo, nil
 }

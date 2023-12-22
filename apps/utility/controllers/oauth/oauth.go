@@ -35,13 +35,15 @@ func (auth OAuthController) ApplyAccessToken(ctx *gin.Context) {
 	customerId := ctx.Query("customerId")
 	acsTkn := AccessTokenBody{}
 	if err := ctx.BindJSON(&acsTkn); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "missing access token"})
+		auth.logger.Info(err.Error())
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "missing access token: " + err.Error()})
 		ctx.Abort()
 		return
 	}
 	token, errTkn := auth.service.ApplyAccessToken(acsTkn.AccessToken, customerId)
 
 	if errTkn != nil {
+		auth.logger.Info(errTkn.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal error " + errTkn.Error()})
 		ctx.Abort()
 		return
@@ -60,5 +62,5 @@ func (auth OAuthController) GetDanaProfile(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	ctx.JSON(http.StatusOK, profile.UserResourcesInfo)
+	ctx.JSON(http.StatusOK, profile)
 }
