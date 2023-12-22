@@ -17,7 +17,7 @@ type ApplyToken struct {
 
 type UserProfile struct {
 	ResultInfo        ResultInfo          `json:"resultInfo"`
-	UserResourcesInfo []UserResourcesInfo `json:"userResourcesInfos"`
+	UserResourcesInfo []UserResourcesInfo `json:"userResourceInfos"`
 }
 
 type CreateOrder struct {

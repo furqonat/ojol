@@ -18,7 +18,7 @@ describe('Test Autentication Api', () => {
 
   describe('GET /lugo/services/', () => {
     it('Test Create Order from user', async () => {
-      const resp = await axios.get('/lugo/services/')
+      const resp = await axios.get('/utility/services/')
       console.info(resp.data)
       expect(resp.status).toBe(HttpStatusCode.Ok)
     })
@@ -26,14 +26,24 @@ describe('Test Autentication Api', () => {
   describe('POST /oauth/', () => {
     it('test apply token', async () => {
       const userId = cusCred.user.uid
-      const resp = await axios.post(`/oauth?customerId=${userId}`, {
-        access_token: 'adasdasda',
+      const resp = await axios.post(`/utility/oauth?customerId=${userId}`, {
+        access_token: '3G7i3fcOr6l3AN6oJaRJfpiPnga5P5jbS8Er2000',
       })
       expect(resp.status).toBe(HttpStatusCode.Ok)
     })
     it('test generate signIn url', async () => {
       const token = await getIdToken(cusCred.user)
-      const resp = await axios.get('/oauth/', {
+      const resp = await axios.get('/utility/oauth/', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      console.info(resp.data)
+      expect(resp.status).toBe(HttpStatusCode.Ok)
+    })
+    it('test get dana profile', async () => {
+      const token = await getIdToken(cusCred.user)
+      const resp = await axios.get('/utility/oauth/profile/', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
