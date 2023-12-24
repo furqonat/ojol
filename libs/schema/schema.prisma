@@ -18,7 +18,7 @@ model customer {
   email                   String?
   phone                   String?
   password                String?
-  device_token            customer_device_token[]
+  device_token            customer_device_token?
   last_sign_in            DateTime?
   last_active             DateTime?
   email_verified          Boolean                   @default(false)
@@ -50,7 +50,7 @@ model customer_device_token {
   id          String    @id @default(cuid())
   token       String    @unique
   customer    customer? @relation(fields: [customer_id], references: [id], onDelete: Cascade)
-  customer_id String?
+  customer_id String?   @unique
 }
 
 enum customer_status {
@@ -65,7 +65,7 @@ model driver {
   email                  String?
   phone                  String?
   password               String?
-  device_token           driver_device_token[]
+  device_token           driver_device_token?
   last_sign_in           DateTime?
   last_active            DateTime?
   email_verified         Boolean                  @default(false)
@@ -79,6 +79,7 @@ model driver {
   driver_customer_review driver_customer_review[]
   order                  order[]
   order_rejected         order_rejected[]
+  is_online              Boolean                  @default(false)
 }
 
 model driver_settings {
@@ -141,26 +142,26 @@ enum vehicle_type {
 
 model driver_device_token {
   id        String  @id @default(cuid())
-  token     String  @unique
+  token     String
   driver    driver? @relation(fields: [driver_id], references: [id], onDelete: Cascade)
-  driver_id String?
+  driver_id String? @unique
 }
 
 model merchant {
-  id             String                  @id @default(cuid())
+  id             String                 @id @default(cuid())
   name           String?
   email          String?
   phone          String?
   password       String?
-  device_token   merchant_device_token[]
+  device_token   merchant_device_token?
   last_sign_in   DateTime?
   last_active    DateTime?
-  email_verified Boolean                 @default(false)
-  phone_verified Boolean                 @default(false)
+  email_verified Boolean                @default(false)
+  phone_verified Boolean                @default(false)
   avatar         String?
   details        merchant_details?
-  status         merchant_status         @default(PROCESS)
-  type           merchant_type           @default(FOOD)
+  status         merchant_status        @default(PROCESS)
+  type           merchant_type          @default(FOOD)
   products       product[]
 }
 
@@ -216,7 +217,7 @@ model merchant_device_token {
   id          String    @id @default(cuid())
   token       String    @unique
   merchant    merchant? @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
-  merchant_id String?
+  merchant_id String?   @unique
 }
 
 model admin {
@@ -413,6 +414,7 @@ model order {
   weight_cost    Int              @default(0)
   order_items    order_item[]
   version        Int              @default(1)
+  showable       Boolean          @default(false)
   order_detail   order_detail?
   order_rejected order_rejected[]
 }
@@ -492,16 +494,12 @@ model transaction_detail {
 
 enum order_status {
   CREATED
-  WAITING_PAYMENT
-  PAID
-  CANCELED
-  PROCESS
-  ACCEPTED
+  FIND_DRIVER
+  DRIVER_OTW
   DRIVER_CLOSE
-  SHIPPING
-  DELIVERED
+  OTW
   DONE
-  EXPIRED
+  CANCELED
 }
 
 enum transaction_status {
