@@ -4,6 +4,7 @@ import (
 	"apps/order/services"
 	"apps/order/utils"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +16,11 @@ type OrderController struct {
 
 type CancelOrder struct {
 	Raseon string `json:"reason"`
+}
+
+type FindDriver struct {
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
 }
 
 func NewOrderController(logger utils.Logger, service *services.OrderService) OrderController {
@@ -59,4 +65,81 @@ func (controller OrderController) CancelOrder(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "Success", "res": result})
 
+}
+
+func (order OrderController) FindDriver(ctx *gin.Context) {
+	body := FindDriver{}
+	orderId := ctx.Param("orderId")
+	if err := ctx.BindJSON(&body); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Bad request", "error": err.Error()})
+		ctx.Abort()
+		return
+	}
+	errFindDriver := order.service.FindGoodAndNearlyDriver(orderId, body.Latitude, body.Longitude)
+	if errFindDriver != nil {
+		order.logger.Info(errFindDriver.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "server error request", "error": errFindDriver.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
+func (order OrderController) FindOrders(ctx *gin.Context) {
+	takeQuery := ctx.Query("take")
+	skipQuery := ctx.Query("skip")
+	take, errConv := strconv.Atoi(takeQuery)
+	if errConv != nil {
+		take = 20
+	}
+	skip, errSkip := strconv.Atoi(skipQuery)
+	if errSkip != nil {
+		skip = 0
+	}
+	orders, total, errGetOrders := order.service.GetAvaliableOrder(take, skip)
+
+	if errGetOrders != nil {
+		order.logger.Infof("unable get order %s", errGetOrders.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": errGetOrders.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": orders, "total": total})
+}
+
+func (order OrderController) DriverSignOnOrder(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+	driverId := ctx.GetString(utils.UID)
+
+	if err := order.service.DriverSignOnOrder(orderId, driverId); err != nil {
+		order.logger.Infof(err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+
+}
+
+func (order OrderController) DriverRejectOrder(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+	driverId := ctx.GetString(utils.UID)
+	if err := order.service.DriverRejectOrder(orderId, driverId); err != nil {
+		order.logger.Info("error: %s", err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
+func (order OrderController) DriverAccpetOrder(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+	driverId := ctx.GetString(utils.UID)
+	if err := order.service.DriverAcceptOrder(orderId, driverId); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }

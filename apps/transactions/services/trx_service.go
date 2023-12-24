@@ -124,23 +124,14 @@ func (trxService TrxService) ExpiredTrxOnFirestore(paymentAt *time.Time, orderId
 }
 
 func (trxService TrxService) assignTrxStatus(status utils.AcquirementStatus) db.TransactionStatus {
-	if status == utils.INIT {
-		return db.TransactionStatusCreated
-	}
 	if status == utils.CLOSED {
-		return db.TransactionStatusCreated
+		return db.TransactionStatusExpired
 	}
 	if status == utils.CANCELLED {
 		return db.TransactionStatusCanceled
 	}
 	if status == utils.SUCCESS {
 		return db.TransactionStatusPaid
-	}
-	if status == utils.MERCHANTACCEPT {
-		return db.TransactionStatusProcess
-	}
-	if status == utils.PAYING {
-		return db.TransactionStatusProcess
 	}
 	return db.TransactionStatusProcess
 }
@@ -150,7 +141,7 @@ func (trxService TrxService) assignOrderStatus(status utils.AcquirementStatus) d
 		return db.OrderStatusDone
 	}
 	if status == utils.SUCCESS {
-		return db.OrderStatusPaid
+		return db.OrderStatusFindDriver
 	}
 	return db.OrderStatusCreated
 }
