@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   Get,
+  Post,
   Put,
   Query,
   Request,
@@ -42,5 +43,16 @@ export class CustomerController {
     } else {
       throw new UnauthorizedException()
     }
+  }
+  @Roles(Role.USER)
+  @Post('/token')
+  async addOrEditDeviceToken(
+    @Body('token') token: string,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.customerService.saveDeviceToken(req.uid, token)
+    }
+    throw new UnauthorizedException()
   }
 }

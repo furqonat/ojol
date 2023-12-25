@@ -8,6 +8,7 @@ import {
   Put,
   Query,
   Request,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client/users'
@@ -43,6 +44,18 @@ export class DriverController {
     @Body() data: Prisma.driver_detailsUpdateInput,
   ) {
     return this.driverService.updateDriverDetail(token.uid, data)
+  }
+
+  @Roles(Role.DRIVER)
+  @Post('/token')
+  async addOrEditDeviceToken(
+    @Body('token') token: string,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.driverService.saveDeviceToken(req.uid, token)
+    }
+    throw new UnauthorizedException()
   }
 
   @Roles(Role.DRIVER)

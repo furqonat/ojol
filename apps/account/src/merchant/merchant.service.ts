@@ -25,7 +25,7 @@ export class MerchantService {
 
   async applyMerchant(
     merchantId: string,
-    details: Prisma.merchant_detailsCreateInput,
+    details: Prisma.merchant_detailsUpdateOneWithoutMerchantNestedInput,
   ) {
     try {
       const alreadyApply = await this.prismaService.merchant_details.findUnique(
@@ -35,8 +35,11 @@ export class MerchantService {
           },
         },
       )
-      if (alreadyApply) {
+      if (alreadyApply && details?.create) {
         throw new BadRequestException({ message: 'merchant already apply' })
+      }
+      if (alreadyApply && details?.delete) {
+        throw new BadRequestException({ message: 'cannot deleted' })
       }
       const merchant = await this.prismaService.merchant.update({
         where: {
@@ -44,7 +47,18 @@ export class MerchantService {
         },
         data: {
           details: {
-            create: details,
+            update: {
+              images: {
+                update: {
+                  where: {
+                    id: '',
+                  },
+                  data: {
+                    link: '',
+                  },
+                },
+              },
+            },
           },
         },
         select: {
@@ -64,12 +78,9 @@ export class MerchantService {
     }
   }
 
-  async createOperationTime(
+  async createOrUpdateOperationTime(
     merchantId: string,
-    data: Omit<
-      Prisma.merchant_operation_timeCreateInput,
-      'id' | 'merchant_details'
-    >,
+    data: Prisma.merchant_operation_timeUpdateManyWithoutMerchant_detailsNestedInput,
   ) {
     try {
       const merchant = await this.prismaService.merchant.findUnique({
@@ -90,9 +101,7 @@ export class MerchantService {
             id: merchant.details.id,
           },
           data: {
-            operation_time: {
-              create: data,
-            },
+            operation_time: data,
           },
         })
         return {
@@ -120,6 +129,41 @@ export class MerchantService {
     return {
       message: 'OK',
       res: res,
+    }
+  }
+
+  async saveDeviceToken(merchantId: string, token: string) {
+    const deviceTokenExist =
+      await this.prismaService.merchant_device_token.findUnique({
+        where: {
+          merchant_id: merchantId,
+        },
+      })
+    if (deviceTokenExist) {
+      const deviceToken = await this.prismaService.merchant_device_token.update(
+        {
+          where: {
+            merchant_id: merchantId,
+          },
+          data: {
+            token: token,
+          },
+        },
+      )
+      return {
+        message: 'OK',
+        res: deviceToken.id,
+      }
+    }
+    const deviceToken = await this.prismaService.merchant_device_token.create({
+      data: {
+        token: token,
+        merchant_id: merchantId,
+      },
+    })
+    return {
+      message: 'OK',
+      res: deviceToken.id,
     }
   }
 }

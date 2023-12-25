@@ -8,6 +8,7 @@ import {
   Request,
   UseGuards,
   Param,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client/users'
 import { str2obj } from '@lugo/common'
@@ -32,7 +33,8 @@ export class MerchantController {
   @Post()
   async applyToBeMerchant(
     @Request() token?: { uid?: string },
-    @Body() details?: Prisma.merchant_detailsCreateInput,
+    @Body()
+    details?: Prisma.merchant_detailsUpdateOneWithoutMerchantNestedInput,
   ) {
     return this.merchantService.applyMerchant(token.uid, details)
   }
@@ -41,9 +43,22 @@ export class MerchantController {
   @Post('/operation')
   async createOperationTime(
     @Request() token?: { uid?: string },
-    @Body() data?: Prisma.merchant_operation_timeCreateInput,
+    @Body()
+    data?: Prisma.merchant_operation_timeUpdateManyWithoutMerchant_detailsNestedInput,
   ) {
-    return this.merchantService.createOperationTime(token.uid, data)
+    return this.merchantService.createOrUpdateOperationTime(token.uid, data)
+  }
+
+  @Roles(Role.MERCHANT)
+  @Post('/token')
+  async addOrEditDeviceToken(
+    @Body('token') token: string,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.merchantService.saveDeviceToken(req.uid, token)
+    }
+    throw new UnauthorizedException()
   }
 
   @Roles(Role.MERCHANT)

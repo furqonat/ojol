@@ -77,6 +77,31 @@ Content-Type: application/json
 | `avatar` | `boolean` | Mendapatkan avatar user        |
 | `status` | `boolean` | Mendapatkan status pengguna    |
 
+## Simpan Device Token
+
+Api ini digunakan untuk menyimpan device token firebase ke database. Device token digunakan untuk mengirim push notifikasi ke hp
+
+### Contoh Request
+
+```http
+GET https://api.gentatechnology.com/customer/token
+Authorization: Bearer .....
+Content-Type: application/json
+
+{
+  "token": "...."
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
 ## Update Akun Dasar Customer
 
 Berikut adalah cara untuk update dasar akun customer
@@ -179,11 +204,16 @@ Content-Type: application/json
     "id_card_image": "...",
     "vehicle": {
         "update": {
-            "vehicle_type": "...", # BIKE or CAR,
-            "vehicle_brand": "...",
-            "vehicle_year": "...",
-            "vehicle_image": "...",
-            "vehicle_registration": "..." # plat nomor
+           "data": {
+              "vehicle_type": "...", # BIKE or CAR,
+              "vehicle_brand": "...",
+              "vehicle_year": "...",
+              "vehicle_image": "...",
+              "vehicle_registration": "..." # plat nomor
+           },
+           "where": {
+              "driver_details_id": "..."
+           }
         }
     }
 }
@@ -211,3 +241,188 @@ Content-Type: application/json
 | `vehicle_year`         | `string` | Tahun kendaraan yang digunakan driver                                                 |
 | `vehicle_image`        | `string` | link gambar kendaraan yang digunakan driver                                           |
 | `vehicle_registration` | `string` | plat nomor kendaraan                                                                  |
+
+## Mendaftarkan diri sebagai Merchant
+
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+
+### Contoh Request
+
+```http
+POST https://api.gentatechnology.com/account/merchant
+Authorization: Bearer ....
+Content-Type: application/json
+
+{
+  "create": {
+    "id_card_image": "...",
+    "address": "...",
+    "latitude": 0.01213,
+    "longitude": 11.1231231,
+    "name": "...",
+    "images": {
+      "createMany": {
+        "data": [
+          {
+            "link": "...."
+          },
+          {
+            "link": "...."
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
+### Table body daftar menjadi merchant
+
+| Body            | Type     | Description                             |
+| --------------- | -------- | --------------------------------------- |
+| `create`        | `object` | Json object apply merchant              |
+| `address`       | `string` | Alamat lengkap merchant                 |
+| `id_card_image` | `string` | link foto ktp merchant                  |
+| `latitude`      | `float`  | titik koordinat latitude toko merchant  |
+| `longitude`     | `float`  | titik koordinat longitude toko merchant |
+| `name`          | `string` | nama toko merchant                      |
+| `images`        | `object` | kumpulan foto toko merchant             |
+
+## Update diri sebagai Merchant
+
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+
+### Contoh Request
+
+```http
+POST https://api.gentatechnology.com/account/merchant
+Authorization: Bearer ....
+Content-Type: application/json
+
+{
+  "update": {
+    "id_card_image": "...",
+    "address": "...",
+    "latitude": 0.01213,
+    "longitude": 11.1231231,
+    "name": "...",
+    "images": {
+      "update": {
+        "where": {
+          "id": "..." // images id
+        },
+        "data": {
+          "link": "..."
+        }
+      }
+    }
+  }
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
+### Table body update menjadi merchant
+
+| Body            | Type     | Description                             |
+| --------------- | -------- | --------------------------------------- |
+| `update`        | `object` | Json object update apply merchant       |
+| `address`       | `string` | Alamat lengkap merchant                 |
+| `id_card_image` | `string` | link foto ktp merchant                  |
+| `latitude`      | `float`  | titik koordinat latitude toko merchant  |
+| `longitude`     | `float`  | titik koordinat longitude toko merchant |
+| `name`          | `string` | nama toko merchant                      |
+| `images`        | `object` | kumpulan foto toko merchant             |
+
+## Membuat jam operasional Merchant
+
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+
+### Contoh Request
+
+```http
+POST https://api.gentatechnology.com/account/merchant/operation
+Authorization: Bearer ....
+Content-Type: application/json
+
+{
+  "create": {
+    "day": "...",
+    "status": true,
+    "open_time": "...", // date time iso string
+    "close_time": "..." // date time iso string
+  }
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
+### Table body update menjadi merchant
+
+| Body         | Type      | Description                                 |
+| ------------ | --------- | ------------------------------------------- |
+| `create`     | `object`  | Json object create merchant jam operasional |
+| `day`        | `string`  | hari merchant beroperasi                    |
+| `status`     | `boolean` | status beroperasi                           |
+| `open_time`  | `string`  | jam buka merchant                           |
+| `close_tome` | `string`  | jam tutup merchant                          |
+
+## Membuat jam operasional Merchant
+
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+
+### Contoh Request
+
+```http
+PUT https://api.gentatechnology.com/account/merchant/operation/<operational_id>
+Authorization: Bearer ....
+Content-Type: application/json
+
+{
+  "day": "...",
+  "status": true,
+  "open_time": "...", // date time iso string
+  "close_time": "..." // date time iso string
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
+### Table body update menjadi merchant
+
+| Body         | Type      | Description              |
+| ------------ | --------- | ------------------------ |
+| `day`        | `string`  | hari merchant beroperasi |
+| `status`     | `boolean` | status beroperasi        |
+| `open_time`  | `string`  | jam buka merchant        |
+| `close_tome` | `string`  | jam tutup merchant       |
