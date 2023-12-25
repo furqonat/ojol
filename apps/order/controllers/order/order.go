@@ -143,3 +143,48 @@ func (order OrderController) DriverAccpetOrder(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
+
+func (order OrderController) MerchantAcceptOrder(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+	if err := order.service.MerchantAcceptOrder(orderId); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
+func (order OrderController) MerchantRejectOrder(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+	if err := order.service.MerchantRejectOrder(orderId); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
+func (order OrderController) MerchantGetOrders(ctx *gin.Context) {
+	merchantId := ctx.GetString(utils.UID)
+
+	takeQuery := ctx.Query("take")
+	skipQuery := ctx.Query("skip")
+	take, errConv := strconv.Atoi(takeQuery)
+	if errConv != nil {
+		take = 20
+	}
+	skip, errSkip := strconv.Atoi(skipQuery)
+	if errSkip != nil {
+		skip = 0
+	}
+
+	orders, errGetOrder := order.service.GetAvaliableOrderForMerchant(merchantId, take, skip)
+
+	if errGetOrder != nil {
+		order.logger.Infof("unable get order %s", errGetOrder.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": errGetOrder.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": orders})
+}
