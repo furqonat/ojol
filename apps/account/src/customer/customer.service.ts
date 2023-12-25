@@ -63,7 +63,38 @@ export class CustomerService {
     }
   }
 
-  //   async emailUpdate(token: string, email: string) {
-  //     const decodeToken = await this.firebase.auth.verifyIdToken(token)
-  //   }
+  async saveDeviceToken(customerId: string, token: string) {
+    const deviceTokenExist =
+      await this.prismaService.customer_device_token.findUnique({
+        where: {
+          customer_id: customerId,
+        },
+      })
+    if (deviceTokenExist) {
+      const deviceToken = await this.prismaService.customer_device_token.update(
+        {
+          where: {
+            customer_id: customerId,
+          },
+          data: {
+            token: token,
+          },
+        },
+      )
+      return {
+        message: 'OK',
+        res: deviceToken.id,
+      }
+    }
+    const deviceToken = await this.prismaService.customer_device_token.create({
+      data: {
+        token: token,
+        customer_id: customerId,
+      },
+    })
+    return {
+      message: 'OK',
+      res: deviceToken.id,
+    }
+  }
 }

@@ -104,4 +104,37 @@ export class DriverService {
       throw new BadRequestException({ message: 'Bad Request' })
     }
   }
+
+  async saveDeviceToken(driverId: string, token: string) {
+    const deviceTokenExist =
+      await this.prismaService.driver_device_token.findUnique({
+        where: {
+          driver_id: driverId,
+        },
+      })
+    if (deviceTokenExist) {
+      const deviceToken = await this.prismaService.driver_device_token.update({
+        where: {
+          driver_id: driverId,
+        },
+        data: {
+          token: token,
+        },
+      })
+      return {
+        message: 'OK',
+        res: deviceToken.id,
+      }
+    }
+    const deviceToken = await this.prismaService.driver_device_token.create({
+      data: {
+        token: token,
+        driver_id: driverId,
+      },
+    })
+    return {
+      message: 'OK',
+      res: deviceToken.id,
+    }
+  }
 }

@@ -107,6 +107,18 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 	}
 
 	if ptrOrderModel.OrderType == db.ServiceTypeFood || ptrOrderModel.OrderType == db.ServiceTypeMart {
+		prod, errProd := order.database.Product.FindUnique(
+			db.Product.ID.Equals(*ptrOrderModel.Product[0].ProductId),
+		).Exec(context.Background())
+		if errProd != nil {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errProd
+		}
+
+		if err := order.sendMessageToMerchant(prod.MerchantID, "Pesanan Baru!", "segera siapkan pesanan nya sebelum driver datang!"); err != nil {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("unable send message to merchant")
+		}
 		for _, product := range ptrOrderModel.Product {
 
 			if product.ProductId == nil {
