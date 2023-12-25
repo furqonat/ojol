@@ -52,7 +52,7 @@ func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]
 		isExpired = &datetime
 	}
 
-	orderStatus := trxService.assignOrderStatus(data.Request.Body.AcquirementStatus)
+	orderStatus := trxService.assignOrderStatus(data.Request.Body.AcquirementStatus, order)
 
 	_, errUpdateOrder := trxService.database.Order.FindUnique(
 		db.Order.ID.Equals(order.ID),
@@ -136,11 +136,14 @@ func (trxService TrxService) assignTrxStatus(status utils.AcquirementStatus) db.
 	return db.TransactionStatusProcess
 }
 
-func (trxService TrxService) assignOrderStatus(status utils.AcquirementStatus) db.OrderStatus {
+func (trxService TrxService) assignOrderStatus(status utils.AcquirementStatus, order *db.OrderModel) db.OrderStatus {
 	if status == utils.CLOSED {
 		return db.OrderStatusDone
 	}
 	if status == utils.SUCCESS {
+		if order.OrderType == db.ServiceTypeFood || order.OrderType == db.ServiceTypeMart {
+			return db.OrderStatusWaitingMerchant
+		}
 		return db.OrderStatusFindDriver
 	}
 	return db.OrderStatusCreated

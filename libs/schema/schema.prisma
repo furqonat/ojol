@@ -494,12 +494,14 @@ model transaction_detail {
 
 enum order_status {
   CREATED
+  WAITING_MERCHANT // only apply on mert and food
   FIND_DRIVER
   DRIVER_OTW
   DRIVER_CLOSE
   OTW
   DONE
   CANCELED
+  EXPIRED
 }
 
 enum transaction_status {
