@@ -1,31 +1,106 @@
 'use client'
 
+import { UrlService } from '../../services/url.service'
 import { useSession } from 'next-auth/react'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import Select from 'react-select'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+type OptionValue = {
+  label: string
+  value: string
+}
 
 export function AddAdmin() {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const { data } = useSession()
-  console.log(data?.user?.role)
+  const [options, setOptions] = useState<OptionValue[]>([])
+
+  const [loading, setLoading] = useState(false)
+  const [roleId, setRoleId] = useState('')
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
   function handleOpenModal() {
     dialogRef.current?.showModal()
   }
 
+  function handleCloseModal() {
+    dialogRef.current?.close()
+  }
+
+  function handleChangeName(e: React.ChangeEvent<HTMLInputElement>) {
+    setName(e.target.value)
+  }
+  function handleChangeEmail(e: React.ChangeEvent<HTMLInputElement>) {
+    setEmail(e.target.value)
+  }
+  function handleChangePassword(e: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(e.target.value)
+  }
+
   function handleOnCreateAdmin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setLoading(true)
+    if (!roleId) {
+      setLoading(false)
+      if (!toast.isActive('roleId')) {
+        toast.error('Role id must filled', {
+          toastId: 'roleId',
+        })
+      }
+      return
+    }
+    const body = {
+      name: name,
+      email: email,
+      password: password,
+      roleId: roleId,
+    }
+    fetch(`${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/`, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: {
+        Authorization: `Bearer ${data?.user.token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((e) => e.json())
+      .then((e) => {
+        setLoading(false)
+        window.location.reload()
+      })
+      .catch((e) => {
+        setLoading(false)
+        if (!toast.isActive('error-create-admin')) {
+          toast.error(`unable create admin ${e.toString()}`, {
+            toastId: 'error-create-admin',
+          })
+        }
+      })
   }
 
   useEffect(() => {
-    fetch(
-      'http://localhost:3000/dev/admin/clpqfo57a0000ktpqf6vaqi1j?name=true&email=true',
-      {
+    if (data?.user.token) {
+      const url = new UrlService(
+        `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/roles`,
+      )
+      fetch(url.build(), {
         headers: {
           Authorization: `Bearer ${data?.user.token}`,
         },
-      },
-    )
-      .then((e) => e.json())
-      .then(console.log)
+      })
+        .then((e) => e.json())
+        .then((e) => {
+          const value = e.map((item: { name: string; id: string }) => ({
+            value: item.id,
+            label: item.name,
+          }))
+          setOptions(value)
+        })
+    }
   }, [data?.user.token])
 
   return (
@@ -42,8 +117,11 @@ export function AddAdmin() {
                 <span className="label-text-alt">Name</span>
               </div>
               <input
+                required={true}
                 type="text"
-                placeholder="Type here"
+                value={name}
+                onChange={handleChangeName}
+                placeholder="Admin Name"
                 className="input input-bordered w-full input-sm"
               />
             </label>
@@ -52,9 +130,12 @@ export function AddAdmin() {
                 <span className="label-text-alt">Email</span>
               </div>
               <input
+                value={email}
+                onChange={handleChangeEmail}
                 type={'email'}
+                autoComplete={'one-time-code'}
                 required={true}
-                placeholder="Type here"
+                placeholder="Admin email"
                 className="input input-bordered w-full input-sm"
               />
             </label>
@@ -63,17 +144,44 @@ export function AddAdmin() {
                 <span className="label-text-alt">Password</span>
               </div>
               <input
+                value={password}
+                onChange={handleChangePassword}
+                required={true}
+                autoComplete={'one-time-code'}
                 type="password"
-                placeholder="Type here"
+                placeholder="Admin Password"
                 className="input input-bordered w-full input-sm"
               />
             </label>
+            <label className={'form-control w-full'}>
+              <div className="label">
+                <span className="label-text-alt">Role</span>
+              </div>
+              <Select
+                options={options}
+                onChange={(e) => setRoleId(e?.value ?? '')}
+              />
+            </label>
+            <div className={'flex flex-row-reverse mt-4 gap-5'}>
+              <button className={'btn btn-sm btn-primary'}>
+                {loading ? <span className={'loading loading-dots'} /> : null}
+                OK
+              </button>
+              <button
+                type="button"
+                className={'btn btn-sm'}
+                onClick={handleCloseModal}
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>
       </dialog>
+      <ToastContainer />
     </div>
   )
 }

@@ -1,4 +1,10 @@
+import { Metadata } from 'next'
 import { AddAdmin } from './add.admin'
+import { Admin } from './admin'
+
+export const metadata: Metadata = {
+  title: 'Admin | Lugo management',
+}
 
 export default function AdminPage() {
   return (
@@ -7,10 +13,13 @@ export default function AdminPage() {
         <div className={'flex flex-row gap-2 items-center'}>
           <div className={'flex-1'}>
             <h2 className={'text-xl md:text-2xl lg:text-3xl font-semibold'}>
-              Dashboard
+              Admin
             </h2>
           </div>
           <AddAdmin />
+        </div>
+        <div className={'flex flex-col'}>
+          <Admin />
         </div>
       </section>
     </main>

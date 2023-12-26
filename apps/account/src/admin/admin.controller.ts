@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common'
@@ -12,6 +13,7 @@ import { AdminService } from './admin.service'
 import { Role, Roles, RolesGuard } from '@lugo/jwtguard'
 import { Prisma } from '@prisma/client/users'
 import { str2obj } from '@lugo/common'
+import { CreateAdminDTO } from '../dto/admin.dto'
 
 @UseGuards(RolesGuard)
 @Controller('admin')
@@ -31,14 +33,16 @@ export class AdminController {
       str2obj(select),
     )
   }
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
+  @Get('roles')
+  async getRoles() {
+    return this.adminService.getRoles()
+  }
 
   @Post()
   @Roles(Role.SUPERADMIN)
-  async createAdmin(
-    @Body() data: Prisma.adminCreateInput,
-    @Body('roleId') roleId: string,
-  ) {
-    return this.adminService.createAmin(data, roleId)
+  async createAdmin(@Body() data: CreateAdminDTO) {
+    return this.adminService.createAmin(data, data.roleId)
   }
 
   @Roles(Role.ADMIN, Role.SUPERADMIN)
@@ -70,5 +74,14 @@ export class AdminController {
     @Query() select?: Prisma.adminSelect,
   ) {
     return this.adminService.getAdmin(adminId, str2obj(select))
+  }
+
+  @Put('"id')
+  @Roles(Role.SUPERADMIN, Role.ADMIN)
+  async updateAdmin(
+    @Param('id') adminId: string,
+    @Body() data: Prisma.adminUpdateInput,
+  ) {
+    return this.adminService.updateAdmin(adminId, data)
   }
 }

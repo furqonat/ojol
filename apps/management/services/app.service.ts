@@ -1,3 +1,4 @@
+import { Session } from 'next-auth'
 import { UrlService } from './url.service'
 
 export class AppService {
@@ -13,4 +14,11 @@ export class AppService {
     }
     return await response.json()
   }
+}
+
+export function isSuperAdmin(session: Session | null) {
+  if (session?.user.role.at(0)?.name == 'SUPERADMIN') {
+    return true
+  }
+  return false
 }

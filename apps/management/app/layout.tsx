@@ -1,9 +1,9 @@
 import { PageProvider } from '../provider'
 import './global.css'
 
-import { Poppins } from 'next/font/google'
+import { Open_Sans } from 'next/font/google'
 
-const poppins = Poppins({ weight: '400', subsets: ['latin'] })
+const openSans = Open_Sans({ weight: '400', subsets: ['latin'] })
 
 export const metadata = {
   title: 'Welcome to management lugo',
@@ -17,7 +17,7 @@ type LayoutType = {
 export default function RootLayout({ children }: LayoutType) {
   return (
     <html lang={'en'} data-theme={'light'}>
-      <body className={poppins.className}>
+      <body className={openSans.className}>
         <PageProvider>{children}</PageProvider>
       </body>
     </html>

@@ -6,6 +6,9 @@ import (
 	"fmt"
 )
 
+type FinishOrder struct {
+}
+
 func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
 	query := fmt.Sprintf(`
 	UPDATE "order"
@@ -79,3 +82,26 @@ func (order OrderService) DriverAcceptOrder(orderId, driverId string) error {
 	}
 	return nil
 }
+
+func (order OrderService) ShippingOrder(orderId string) error {
+	orderDb, errGetOrderDb := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Exec(context.Background())
+	if errGetOrderDb != nil {
+		return errGetOrderDb
+	}
+	if orderDb.OrderStatus == db.OrderStatusDriverOtw || orderDb.OrderStatus == db.OrderStatusDriverClose {
+		_, errUpdateOrder := order.database.Order.FindUnique(
+			db.Order.ID.Equals(orderId),
+		).Update(
+			db.Order.OrderStatus.Set(db.OrderStatusOtw),
+		).Exec(context.Background())
+		if errUpdateOrder != nil {
+			return errUpdateOrder
+		}
+		return nil
+	}
+	return nil
+}
+
+func (order OrderService) FinishOrder(orderId string, data *FinishOrder) {}

@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { AdminQueryDTO } from '../dto/admin.dto'
+import { AdminQueryDTO, CreateAdminDTO } from '../dto/admin.dto'
 import { FirebaseService } from '@lugo/firebase'
 import { BcryptService } from '@lugo/bcrypt'
 
@@ -37,14 +37,12 @@ export class AdminService {
     })
   }
 
-  async createAmin(
-    data: Omit<Prisma.adminCreateInput, 'role'>,
-    roleId: string,
-  ) {
+  async createAmin(data: CreateAdminDTO, roleId: string) {
     try {
       const admin = await this.prismaService.admin.create({
         data: {
-          ...data,
+          name: data.name,
+          email: data.email,
           role: {
             connect: {
               id: roleId,
@@ -58,7 +56,7 @@ export class AdminService {
         res: admin.id,
       }
     } catch (e) {
-      throw new BadRequestException(e)
+      throw new BadRequestException({ message: e.toString() })
     }
   }
 
@@ -66,6 +64,24 @@ export class AdminService {
     return this.prismaService.admin.delete({
       where: {
         id: id,
+      },
+    })
+  }
+
+  async updateAdmin(id: string, data: Prisma.adminUpdateInput) {
+    return this.prismaService.admin.update({
+      where: {
+        id: id,
+      },
+      data: data,
+    })
+  }
+
+  async getRoles() {
+    return this.prismaService.roles.findMany({
+      select: {
+        id: true,
+        name: true,
       },
     })
   }
