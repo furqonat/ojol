@@ -12,7 +12,7 @@ export function PageProvider({ children }: ProviderType) {
   const pathname = usePathname()
   return (
     <SessionProvider>
-      <div>
+      <div className={'overflow-hidden'}>
         {!pathname.startsWith('/auth') ? (
           <div className={'flex max-h-screen'}>
             <div
@@ -22,7 +22,7 @@ export function PageProvider({ children }: ProviderType) {
             >
               <Sidebar />
             </div>
-            <div className={'flex flex-col flex-1'}>
+            <div className={'flex flex-col flex-1 overflow-y-scroll'}>
               <Navbar />
               {children}
             </div>

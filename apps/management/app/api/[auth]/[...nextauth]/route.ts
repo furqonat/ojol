@@ -2,7 +2,7 @@ import { NextAuthOptions } from 'next-auth'
 import NextAuth from 'next-auth/next'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-export const option: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
@@ -76,5 +76,5 @@ export const option: NextAuthOptions = {
   },
   debug: process.env.NODE_ENV !== 'production',
 }
-const handler = NextAuth(option)
+const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST }
