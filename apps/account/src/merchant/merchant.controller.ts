@@ -69,4 +69,16 @@ export class MerchantController {
   ) {
     return this.merchantService.updateOperationTime(opId, data)
   }
+
+  @Roles(Role.MERCHANT)
+  @Put('/:id')
+  async updateMerchant(
+    @Body() data: Prisma.merchantUpdateInput,
+    @Request() req?: { uid?: string },
+  ) {
+    if (!req?.uid) {
+      throw new UnauthorizedException()
+    }
+    return this.merchantService.updateMerchat(req.uid, data)
+  }
 }

@@ -242,6 +242,146 @@ Content-Type: application/json
 | `vehicle_image`        | `string` | link gambar kendaraan yang digunakan driver                                           |
 | `vehicle_registration` | `string` | plat nomor kendaraan                                                                  |
 
+# Update Titik Koordinat Driver
+
+Api ini hanya bisa digunakan di aplikasi `Lugo Driver`
+
+### Contoh Request
+
+```http
+PUT https://api.gentatechnology.com/account/driver/setting/coordinate
+Authorization: Bearer ....
+Content-Type: application/json
+
+{
+  "latitude": -6.0131,
+  "longitude": 106.1312
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
+### Table Body Update Koordinat Driver
+
+| Body        | Type    | Description      |
+| ----------- | ------- | ---------------- |
+| `latitude`  | `float` | driver latitude  |
+| `longitude` | `float` | driver longitude |
+
+# Update Min Price transaksi driver
+
+Api ini hanya bisa digunakan di aplikasi `Lugo Driver`
+
+### Contoh Request
+
+```http
+PUT https://api.gentatechnology.com/account/driver/setting/order
+Authorization: Bearer ....
+Content-Type: application/json
+
+{
+  "ride": true,
+  "ride_price": 100000
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
+### Table Body Update Min Price Transaction Driver
+
+| Body             | Type      | Description        |
+| ---------------- | --------- | ------------------ |
+| `ride`           | `boolean` | lugo service       |
+| `ride_price`     | `int`     | min price ride     |
+| `delivery`       | `boolean` | lugo service       |
+| `delivery_price` | `int`     | min price delivery |
+| `food`           | `boolean` | lugo service       |
+| `food_price`     | `int`     | min price food     |
+| `mart`           | `boolean` | lugo service       |
+| `mart_price`     | `int`     | min price mart     |
+
+# Update Driver Setting
+
+Api ini hanya bisa digunakan di aplikasi `Lugo Driver`
+
+### Contoh Request
+
+```http
+PUT https://api.gentatechnology.com/account/driver/setting
+Authorization: Bearer ....
+Content-Type: application/json
+
+{
+  "isOnline": true,
+  "autoBid": true
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
+### Table Body Update Min Price Transaction Driver
+
+| Body       | Type      | Description                                       |
+| ---------- | --------- | ------------------------------------------------- |
+| `autoBid`  | `boolean` | menerima order secara otomatis                    |
+| `isOnline` | `boolean` | jika `true` maka driver siap untuk menerima order |
+
+## Update Merchant
+
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+
+### Contoh Request
+
+```http
+PUT https://api.gentatechnology.com/account/merchant/<merchant_id>
+Authorization: Bearer ....
+Content-Type: application/json
+
+{
+  "is_open": true,
+}
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK",
+  "res": "..."
+}
+```
+
+### Table body update merchant
+
+| Body      | Type      | Description                            |
+| --------- | --------- | -------------------------------------- |
+| `name`    | `string`  | Nama Merchant Bukan Nama toko merchant  |
+| `email`   | `string`  | email login merchant                   |
+| `phone`   | `string`  | nomor telepon merchant                 |
+| `avatar`  | `string`  | link gambar avatar merchant bukan toko |
+| `is_open` | `boolean` | toko merchant buka atau tutup          |
+
 ## Mendaftarkan diri sebagai Merchant
 
 Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
