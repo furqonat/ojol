@@ -11,3 +11,5 @@ services:
     path: apps/cart
   product:
     path: apps/product
+  gate:
+    path: apps/gate

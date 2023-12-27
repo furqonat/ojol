@@ -8,6 +8,24 @@ import { AdminQueryDTO, CreateAdminDTO } from '../dto/admin.dto'
 import { FirebaseService } from '@lugo/firebase'
 import { BcryptService } from '@lugo/bcrypt'
 
+const today = new Date()
+const startOfDay = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate(),
+)
+const endOfDay = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate() + 1,
+)
+
+const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1)
+
+const startOfYear = new Date(today.getFullYear(), 0, 1)
+const endOfYear = new Date(today.getFullYear() + 1, 0, 1)
+
 @Injectable()
 export class AdminService {
   constructor(
@@ -105,18 +123,60 @@ export class AdminService {
     skip?: number
     query?: string
     select?: Prisma.customerSelect
+    createdIn?: 'day' | 'month' | 'year'
   }) {
-    const { take = 20, skip = 0, query, select } = options
-    return this.prismaService.customer.findMany({
+    const { take = 20, skip = 0, query, select, createdIn } = options
+
+    const customers = await this.prismaService.customer.findMany({
       where: {
         name: query ? { contains: query } : undefined,
+        created_at: createdIn
+          ? {
+              gte:
+                createdIn === 'day'
+                  ? startOfDay
+                  : createdIn === 'month'
+                    ? startOfMonth
+                    : startOfYear,
+              lt:
+                createdIn === 'day'
+                  ? endOfDay
+                  : createdIn === 'month'
+                    ? endOfMonth
+                    : endOfYear,
+            }
+          : undefined,
       },
       select: select ? select : { id: true },
       take: take ? Number(take) : 10,
       skip: skip ? Number(skip) : 0,
     })
+    const total = await this.prismaService.customer.count({
+      where: {
+        name: query ? { contains: query } : undefined,
+        created_at: createdIn
+          ? {
+              gte:
+                createdIn === 'day'
+                  ? startOfDay
+                  : createdIn === 'month'
+                    ? startOfMonth
+                    : startOfYear,
+              lt:
+                createdIn === 'day'
+                  ? endOfDay
+                  : createdIn === 'month'
+                    ? endOfMonth
+                    : endOfYear,
+            }
+          : undefined,
+      },
+    })
+    return {
+      data: customers,
+      total: total,
+    }
   }
-
   async updateCustomer(id: string, data: Prisma.customerUpdateInput) {
     return this.prismaService.customer.update({
       where: {
@@ -144,15 +204,86 @@ export class AdminService {
     take?: number
     skip?: number
     select?: Prisma.driverSelect
-    where: Prisma.driverWhereInput
+    isOnline?: boolean
+    status?: Prisma.Enumdriver_statusFilter
+    query?: string
+    orderBy?: 'name' | 'order'
+    createdIn?: 'day' | 'month' | 'year'
   }) {
-    const { take, select, skip, where } = options
-    return this.prismaService.driver.findMany({
-      where: where,
-      select: select,
-      take: Number(take),
-      skip: Number(skip),
+    const { take, select, skip, isOnline, status, query, orderBy, createdIn } =
+      options
+    const drivers = await this.prismaService.driver.findMany({
+      where: {
+        is_online: isOnline ?? undefined,
+        status: status ?? undefined,
+        name: query
+          ? {
+              contains: query,
+            }
+          : undefined,
+        created_at: createdIn
+          ? {
+              gte:
+                createdIn === 'day'
+                  ? startOfDay
+                  : createdIn === 'month'
+                    ? startOfMonth
+                    : startOfYear,
+              lt:
+                createdIn === 'day'
+                  ? endOfDay
+                  : createdIn === 'month'
+                    ? endOfMonth
+                    : endOfYear,
+            }
+          : undefined,
+      },
+      select: select ? select : { id: true },
+      take: take ? Number(take) : 20,
+      skip: skip ? Number(skip) : 0,
+      orderBy: orderBy
+        ? orderBy == 'order'
+          ? {
+              order: {
+                _count: 'desc',
+              },
+            }
+          : {
+              name: 'desc',
+            }
+        : undefined,
     })
+    const total = await this.prismaService.driver.findMany({
+      where: {
+        is_online: isOnline ?? undefined,
+        status: status ?? undefined,
+        name: query
+          ? {
+              contains: query,
+            }
+          : undefined,
+        created_at: createdIn
+          ? {
+              gte:
+                createdIn === 'day'
+                  ? startOfDay
+                  : createdIn === 'month'
+                    ? startOfMonth
+                    : startOfYear,
+              lt:
+                createdIn === 'day'
+                  ? endOfDay
+                  : createdIn === 'month'
+                    ? endOfMonth
+                    : endOfYear,
+            }
+          : undefined,
+      },
+    })
+    return {
+      data: drivers,
+      total: total,
+    }
   }
 
   async updateDriver(id: string, data: Prisma.driverUpdateInput) {
@@ -182,15 +313,85 @@ export class AdminService {
     take?: number
     skip?: number
     select?: Prisma.merchantSelect
-    where: Prisma.merchantWhereInput
+    query?: string
+    type?: Prisma.Enummerchant_typeFilter
+    status?: Prisma.Enummerchant_statusFilter
+    orderBy?: 'name' | 'active'
+    createdIn?: 'day' | 'month' | 'year'
   }) {
-    const { take, select, skip, where } = options
-    return this.prismaService.merchant.findMany({
-      where: where,
+    const { take, select, skip, query, type, status, orderBy, createdIn } =
+      options
+    const merchants = await this.prismaService.merchant.findMany({
+      where: {
+        type: type ?? undefined,
+        status: status ?? undefined,
+        name: query
+          ? {
+              contains: query,
+            }
+          : undefined,
+        created_at: createdIn
+          ? {
+              gte:
+                createdIn === 'day'
+                  ? startOfDay
+                  : createdIn === 'month'
+                    ? startOfMonth
+                    : startOfYear,
+              lt:
+                createdIn === 'day'
+                  ? endOfDay
+                  : createdIn === 'month'
+                    ? endOfMonth
+                    : endOfYear,
+            }
+          : undefined,
+      },
       select: select,
-      take: Number(take),
-      skip: Number(skip),
+      take: take ? Number(take) : 20,
+      skip: skip ? Number(skip) : 0,
+      orderBy: orderBy
+        ? orderBy === 'active'
+          ? {
+              last_active: 'desc',
+            }
+          : {
+              name: 'desc',
+            }
+        : undefined,
     })
+    const total = await this.prismaService.merchant.count({
+      where: {
+        type: type ?? undefined,
+        status: status ?? undefined,
+        name: query
+          ? {
+              contains: query,
+            }
+          : undefined,
+        created_at: createdIn
+          ? {
+              gte:
+                createdIn === 'day'
+                  ? startOfDay
+                  : createdIn === 'month'
+                    ? startOfMonth
+                    : startOfYear,
+              lt:
+                createdIn === 'day'
+                  ? endOfDay
+                  : createdIn === 'month'
+                    ? endOfMonth
+                    : endOfYear,
+            }
+          : undefined,
+      },
+    })
+
+    return {
+      data: merchants,
+      total: total,
+    }
   }
 
   async updateMerchant(id: string, data: Prisma.merchantUpdateInput) {

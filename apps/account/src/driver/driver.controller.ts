@@ -59,11 +59,43 @@ export class DriverController {
   }
 
   @Roles(Role.DRIVER)
+  @Put('/setting')
+  async updateDriverSetting(
+    @Body() data: { isOnline: boolean; autoBid: boolean },
+    @Request() token?: { uid?: string },
+  ) {
+    if (!token?.uid) {
+      throw new UnauthorizedException()
+    }
+    return this.driverService.updateDriverSettings(
+      token.uid,
+      data.autoBid,
+      data.isOnline,
+    )
+  }
+
+  @Roles(Role.DRIVER)
   @Put('/setting/order')
   async updateOrderSetting(
     @Request() token: { uid?: string },
     @Body() data: Prisma.driver_settingsUpdateInput,
   ) {
     return this.driverService.updateOrderSetting(token.uid, data)
+  }
+
+  @Roles(Role.DRIVER)
+  @Put('/setting/coordinate')
+  async updateDriverCoordinate(
+    @Body() data: { latitude: number; longitude: number },
+    @Request() token?: { uid?: string },
+  ) {
+    if (!token?.uid) {
+      throw new UnauthorizedException()
+    }
+    return this.driverService.updateCurrentLatLon(
+      token.uid,
+      data.latitude,
+      data.longitude,
+    )
   }
 }

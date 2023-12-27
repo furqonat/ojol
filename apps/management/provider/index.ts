@@ -1,1 +1,1 @@
-export * from './pageProvider'
+export * from './page.provider'

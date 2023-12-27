@@ -2,4 +2,4 @@ go 1.21.4
 
 use apps/transactions
 use apps/order
-use apps/utility
+use apps/gate

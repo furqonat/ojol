@@ -21,6 +21,7 @@ model customer {
   device_token            customer_device_token?
   last_sign_in            DateTime?
   last_active             DateTime?
+  created_at              DateTime                  @default(now())
   email_verified          Boolean                   @default(false)
   phone_verified          Boolean                   @default(false)
   avatar                  String?
@@ -68,6 +69,7 @@ model driver {
   device_token           driver_device_token?
   last_sign_in           DateTime?
   last_active            DateTime?
+  created_at             DateTime                 @default(now())
   email_verified         Boolean                  @default(false)
   phone_verified         Boolean                  @default(false)
   avatar                 String?
@@ -80,6 +82,16 @@ model driver {
   order                  order[]
   order_rejected         order_rejected[]
   is_online              Boolean                  @default(false)
+  referal                referal?                 @relation(fields: [referal_id], references: [id], onDelete: SetNull)
+  referal_id             String?
+}
+
+model referal {
+  id       String   @id @default(cuid())
+  driver   driver[]
+  admin    admin    @relation(references: [id], fields: [admin_id], onDelete: Cascade)
+  admin_id String   @unique
+  ref      String
 }
 
 model driver_settings {
@@ -156,9 +168,11 @@ model merchant {
   device_token   merchant_device_token?
   last_sign_in   DateTime?
   last_active    DateTime?
+  created_at     DateTime               @default(now())
   email_verified Boolean                @default(false)
   phone_verified Boolean                @default(false)
   avatar         String?
+  is_open        Boolean                @default(false)
   details        merchant_details?
   status         merchant_status        @default(PROCESS)
   type           merchant_type          @default(FOOD)
@@ -229,6 +243,7 @@ model admin {
   status       Boolean   @default(true)
   avatar       String?
   role         roles[]
+  referal      referal?
 }
 
 model roles {
@@ -248,6 +263,7 @@ model services {
   id           String       @id @default(cuid())
   enable       Boolean      @default(true)
   service_type service_type
+  price_in_km  Int          @default(0)
 }
 
 model company_balance {

@@ -166,4 +166,18 @@ export class MerchantService {
       res: deviceToken.id,
     }
   }
+
+  async updateMerchat(merchantId: string, data: Prisma.merchantUpdateInput) {
+    const merchant = await this.prismaService.merchant.update({
+      where: {
+        id: merchantId,
+      },
+      data: data,
+    })
+
+    return {
+      message: 'OK',
+      res: merchant.id,
+    }
+  }
 }

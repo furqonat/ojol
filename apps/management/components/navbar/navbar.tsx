@@ -40,7 +40,7 @@ export function Navbar(props: NavbarProps) {
               </svg>
             </label>
           </div>
-          <div className="drawer-side">
+          <div className="drawer-side z-[99]">
             <label
               htmlFor="my-drawer"
               aria-label="close sidebar"
