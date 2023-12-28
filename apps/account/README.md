@@ -149,19 +149,22 @@ Authorization: Bearer ....
 Content-Type: application/json
 
 {
-    "address": "...",
-    "license_image": "...",
-    "id_card_image": "...",
-    "vehicle": {
-        "create": {
-            "vehicle_type": "...", // BIKE or CAR,
-            "vehicle_brand": "...",
-            "vehicle_year": "...",
-            "vehicle_image": "...",
-            "vehicle_registration": "...", // FOTO stnk
-            "vehicle_rn": "..." // plat nomor
-        }
-    }
+    "details": {
+      "address": "...",
+      "license_image": "...",
+      "id_card_image": "...",
+      "vehicle": {
+          "create": {
+              "vehicle_type": "...", // BIKE or CAR,
+              "vehicle_brand": "...",
+              "vehicle_year": "...",
+              "vehicle_image": "...",
+              "vehicle_registration": "...", // FOTO stnk
+              "vehicle_rn": "..." // plat nomor
+          }
+      }
+    },
+    "referal": "..."
 }
 ```
 
@@ -377,7 +380,7 @@ Content-Type: application/json
 
 | Body      | Type      | Description                            |
 | --------- | --------- | -------------------------------------- |
-| `name`    | `string`  | Nama Merchant Bukan Nama toko merchant  |
+| `name`    | `string`  | Nama Merchant Bukan Nama toko merchant |
 | `email`   | `string`  | email login merchant                   |
 | `phone`   | `string`  | nomor telepon merchant                 |
 | `avatar`  | `string`  | link gambar avatar merchant bukan toko |

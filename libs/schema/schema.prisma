@@ -91,7 +91,7 @@ model referal {
   driver   driver[]
   admin    admin    @relation(references: [id], fields: [admin_id], onDelete: Cascade)
   admin_id String   @unique
-  ref      String
+  ref      String   @unique
 }
 
 model driver_settings {
