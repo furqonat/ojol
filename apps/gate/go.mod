@@ -18,7 +18,12 @@ require (
 	go.uber.org/zap v1.26.0
 )
 
-require gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+require (
+	github.com/chenzhuoyu/iasm v0.9.0 // indirect
+	github.com/gin-contrib/cors v1.5.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.0 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+)
 
 require (
 	cloud.google.com/go v0.110.7 // indirect

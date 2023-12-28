@@ -2,38 +2,44 @@ package routes
 
 import (
 	"apps/gate/controllers/lugo"
+	"apps/gate/middlewares"
 	"apps/gate/utils"
 )
 
-// MiscRoutes struct
 type LugoRoutes struct {
 	logger     utils.Logger
 	handler    utils.RequestHandler
-	controller lugo.LugoController
+	controller lugo.Controller
+	middleware middlewares.FirebaseMiddleware
+	rateLimit  middlewares.RateLimitMiddleware
 }
 
-// Setup Misc routes
 func (s LugoRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Group("/gate/services")
+	api := s.handler.Gin.Group("/gate").Use(
+		s.rateLimit.Handle(),
+	).Use(
+		s.middleware.HandleAuthWithRoles(utils.USER, utils.DRIVER, utils.MERCHANT),
+	)
 	{
-		api.GET("/", s.controller.GetAvaliableService)
-		api.GET("/all", s.controller.GetServices)
-		api.PUT("/:id", s.controller.UpdateService)
-		api.POST("/", s.controller.CreateService)
-		api.DELETE("/:id", s.controller.DeleteService)
+		api.GET("/services", s.controller.GetAvailableService)
+		api.GET("/fee", s.controller.GetTrxFee)
+		api.GET("/fee", s.controller.GetPriceInKm)
 	}
 }
 
-// NewMiscRoutes creates new Misc controller
 func NewLugoRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,
-	controller lugo.LugoController,
+	controller lugo.Controller,
+	middleware middlewares.FirebaseMiddleware,
+	rateLimit middlewares.RateLimitMiddleware,
 ) LugoRoutes {
 	return LugoRoutes{
 		handler:    handler,
 		logger:     logger,
 		controller: controller,
+		middleware: middleware,
+		rateLimit:  rateLimit,
 	}
 }

@@ -154,11 +154,12 @@ Content-Type: application/json
     "id_card_image": "...",
     "vehicle": {
         "create": {
-            "vehicle_type": "...", # BIKE or CAR,
+            "vehicle_type": "...", // BIKE or CAR,
             "vehicle_brand": "...",
             "vehicle_year": "...",
             "vehicle_image": "...",
-            "vehicle_registration": "..." # plat nomor
+            "vehicle_registration": "...", // FOTO stnk
+            "vehicle_rn": "..." // plat nomor
         }
     }
 }

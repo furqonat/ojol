@@ -9,39 +9,39 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type LugoController struct {
+type Controller struct {
 	logger  utils.Logger
 	service services.LugoService
 }
 
-func NewLugoController(logger utils.Logger, service services.LugoService) LugoController {
-	return LugoController{
+func NewLugoController(logger utils.Logger, service services.LugoService) Controller {
+	return Controller{
 		logger:  logger,
 		service: service,
 	}
 }
 
-func (lugo LugoController) GetAvaliableService(ctx *gin.Context) {
-	services, err := lugo.service.GetAvaliableService()
+func (c Controller) GetAvailableService(ctx *gin.Context) {
+	availableService, err := c.service.GetAvaliableService()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error " + err.Error()})
 		ctx.Abort()
 		return
 	}
-	ctx.JSON(http.StatusOK, services)
+	ctx.JSON(http.StatusOK, availableService)
 }
 
-func (lugo LugoController) GetServices(ctx *gin.Context) {
-	services, err := lugo.service.GetServices()
+func (c Controller) GetServices(ctx *gin.Context) {
+	getServices, err := c.service.GetServices()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error " + err.Error()})
 		ctx.Abort()
 		return
 	}
-	ctx.JSON(http.StatusOK, services)
+	ctx.JSON(http.StatusOK, getServices)
 }
 
-func (lugo LugoController) UpdateService(ctx *gin.Context) {
+func (c Controller) UpdateService(ctx *gin.Context) {
 	mdl := db.ServicesModel{}
 	serviceId := ctx.Param("id")
 	if err := ctx.BindJSON(&mdl); err != nil {
@@ -49,7 +49,7 @@ func (lugo LugoController) UpdateService(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	serviceID, err := lugo.service.UpdateService(serviceId, &mdl)
+	serviceID, err := c.service.UpdateService(serviceId, &mdl)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error " + err.Error()})
 		ctx.Abort()
@@ -58,14 +58,14 @@ func (lugo LugoController) UpdateService(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, serviceID)
 }
 
-func (lugo LugoController) CreateService(ctx *gin.Context) {
+func (c Controller) CreateService(ctx *gin.Context) {
 	mdl := db.ServicesModel{}
 	if err := ctx.BindJSON(&mdl); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal Server Error : " + err.Error()})
 		ctx.Abort()
 		return
 	}
-	serviceID, err := lugo.service.CreateNewService(&mdl)
+	serviceID, err := c.service.CreateNewService(&mdl)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error " + err.Error()})
 		ctx.Abort()
@@ -74,13 +74,13 @@ func (lugo LugoController) CreateService(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, serviceID)
 }
 
-func (lugo LugoController) DeleteService(ctx *gin.Context) {
+func (c Controller) DeleteService(ctx *gin.Context) {
 	serviceId := ctx.Param("id")
-	services, err := lugo.service.DeleteService(serviceId)
+	service, err := c.service.DeleteService(serviceId)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error " + err.Error()})
 		ctx.Abort()
 		return
 	}
-	ctx.JSON(http.StatusOK, services)
+	ctx.JSON(http.StatusOK, service)
 }
