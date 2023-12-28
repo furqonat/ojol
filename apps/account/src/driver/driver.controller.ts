@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client/users'
 import { DriverService } from './driver.service'
+import { ApplyDriver } from '../dto/driver.dto'
 
 @UseGuards(RolesGuard)
 @Controller('driver')
@@ -32,9 +33,12 @@ export class DriverController {
   @Post()
   async applyToBeDriver(
     @Request() req?: { uid?: string },
-    @Body() details?: Prisma.driver_detailsCreateInput,
+    @Body() details?: ApplyDriver,
   ) {
-    return this.driverService.applyDriver(req.uid, { details: details })
+    return this.driverService.applyDriver(req.uid, {
+      details: details.details,
+      referal: details.referal,
+    })
   }
 
   @Roles(Role.DRIVER)
