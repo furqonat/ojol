@@ -189,7 +189,8 @@ Content-Type: application/json
 | `vehicle_brand`        | `string` | Model kendaraan yang digunakan driver. Contoh Honda Jazz, Toyota dan lain-lain |
 | `vehicle_year`         | `string` | Tahun kendaraan yang digunakan driver                                          |
 | `vehicle_image`        | `string` | link gambar kendaraan yang digunakan driver                                    |
-| `vehicle_registration` | `string` | plat nomor kendaraan                                                           |
+| `vehicle_registration` | `string` | foto stnk kendaraan                                                            |
+| `vehicle_rn`           | `string` | plat nomor kendaraan                                                           |
 
 # Update Pendaftar Diri Sebagai Driver
 
