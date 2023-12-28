@@ -139,6 +139,7 @@ model vehicle {
   vehicle_year         String
   vehicle_image        String
   vehicle_registration String
+  vehicle_rn           String
 }
 
 enum driver_status {

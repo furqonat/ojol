@@ -11,4 +11,5 @@ var Module = fx.Options(
 	fx.Provide(NewFirebaseAuth),
 	fx.Provide(NewFirestore),
 	fx.Provide(NewLogoService),
+	fx.Provide(NewJWTService),
 )

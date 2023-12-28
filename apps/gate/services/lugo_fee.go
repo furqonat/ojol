@@ -26,14 +26,14 @@ func (lugo LugoService) CreateTrxFee(service *db.ServiceFeeModel) (*string, erro
 	return &fee.ID, nil
 }
 
-func (lugo LugoService) PriceInKM(disntance float64, serviceType db.ServiceType) (*int, error) {
+func (lugo LugoService) PriceInKM(distance float64, serviceType db.ServiceType) (*int, error) {
 	price, errPrice := lugo.db.Services.FindFirst(
 		db.Services.ServiceType.Equals(serviceType),
 	).Exec(context.Background())
 	if errPrice != nil {
 		return nil, errPrice
 	}
-	value := price.PriceInKm * int(math.Ceil(disntance))
+	value := price.PriceInKm * int(math.Ceil(distance))
 
 	return &value, nil
 }

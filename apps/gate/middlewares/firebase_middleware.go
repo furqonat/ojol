@@ -29,18 +29,18 @@ func NewFirebaseMiddleware(frsAuth *services.FirebaseAuth, logger utils.Logger) 
 	}
 }
 
-func (ptrFrsMiddleware FirebaseMiddleware) HandleAuthWithRoles(roles ...string) gin.HandlerFunc {
+func (frs FirebaseMiddleware) HandleAuthWithRoles(roles ...string) gin.HandlerFunc {
 	return func(gCtx *gin.Context) {
-		idToken, err := ptrFrsMiddleware.getTokenFromHeaders(gCtx)
+		idToken, err := frs.getTokenFromHeaders(gCtx)
 		if err != nil {
 			gCtx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
 			gCtx.Abort()
 			return
 		}
 
-		token, err := ptrFrsMiddleware.client.VerifyIDToken(context.Background(), idToken)
+		token, err := frs.client.VerifyIDToken(context.Background(), idToken)
 		if err != nil {
-			ptrFrsMiddleware.logger.Info(gin.H{"message": "Unauthorized", "error": err.Error()})
+			frs.logger.Info(gin.H{"message": "Unauthorized", "error": err.Error()})
 			gCtx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized", "error": err.Error()})
 			gCtx.Abort()
 			return
@@ -53,7 +53,7 @@ func (ptrFrsMiddleware FirebaseMiddleware) HandleAuthWithRoles(roles ...string) 
 		}
 
 		if len(roles) > 0 {
-			if ok := ptrFrsMiddleware.checkRoleIsValid(roles, token); !ok {
+			if ok := frs.checkRoleIsValid(roles, token); !ok {
 				gCtx.JSON(http.StatusForbidden, gin.H{"message": "Invalid user roles"})
 				gCtx.Abort()
 				return
@@ -66,7 +66,7 @@ func (ptrFrsMiddleware FirebaseMiddleware) HandleAuthWithRoles(roles ...string) 
 	}
 }
 
-func (ptrFrsMiddleware FirebaseMiddleware) getTokenFromHeaders(c *gin.Context) (string, error) {
+func (frs FirebaseMiddleware) getTokenFromHeaders(c *gin.Context) (string, error) {
 	bearer := c.GetHeader("Authorization")
 	if bearer == "" {
 		return "", ErrNoToken
@@ -75,7 +75,7 @@ func (ptrFrsMiddleware FirebaseMiddleware) getTokenFromHeaders(c *gin.Context) (
 	return token, nil
 }
 
-func (ptrFrsMiddleware FirebaseMiddleware) checkRoleIsValid(roles []string, token *auth.Token) bool {
+func (frs FirebaseMiddleware) checkRoleIsValid(roles []string, token *auth.Token) bool {
 	for _, val := range roles {
 		if token.Claims[utils.ROLES] == val {
 			return true
