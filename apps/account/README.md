@@ -68,14 +68,28 @@ Content-Type: application/json
 
 ### Table Query Parameter
 
-| Query    | Type      | Description                    |
-| -------- | --------- | ------------------------------ |
-| `id`     | `boolean` | Mendapatkan user id            |
-| `name`   | `boolean` | Mendapatkan nama user          |
-| `email`  | `boolean` | Mendapatkan email user         |
-| `phone`  | `boolean` | Mendapatkan nomor telepon user |
-| `avatar` | `boolean` | Mendapatkan avatar user        |
-| `status` | `boolean` | Mendapatkan status pengguna    |
+| Query            | Type                  | Description                                    |
+| ---------------- | --------------------- | ---------------------------------------------- |
+| `id`             | `boolean`             | Mendapatkan user id                            |
+| `name`           | `boolean`             | Mendapatkan nama user                          |
+| `email`          | `boolean`             | Mendapatkan email user                         |
+| `phone`          | `boolean`             | Mendapatkan nomor telepon user                 |
+| `avatar`         | `boolean`             | Mendapatkan avatar user                        |
+| `status`         | `boolean`             | Mendapatkan status pengguna                    |
+| `driver_details` | `boolean` or `object` | mendapatkan driver detail (hanya untuk driver) |
+
+### Table Query Parameter `driver_details`
+
+| Query           | Type      | Description                         |
+| --------------- | --------- | ----------------------------------- |
+| `id`            | `boolean` | Mendapatkan user id                 |
+| `adrress`       | `boolean` | Mendapatkan alamat user             |
+| `vehicle`       | `boolean` | Mendapatkan detail kendaraan driver |
+| `driver_id`     | `boolean` | Mendapatkan id driver               |
+| `license_image` | `boolean` | Mendapatkan gambar `SIM`            |
+| `id_card_image` | `boolean` | Mendapatkan gamnar `KTP`            |
+| `badge`         | `boolean` | Mendapatkan badge driver            |
+| `driver_type`   | `boolean` | Mendapatkan detail type driver      |
 
 ## Simpan Device Token
 
@@ -164,7 +178,8 @@ Content-Type: application/json
           }
       }
     },
-    "referal": "..."
+    "referal": "...",
+    "name": "..."
 }
 ```
 
@@ -181,6 +196,7 @@ Content-Type: application/json
 
 | Body                   | Type     | Description                                                                    |
 | ---------------------- | -------- | ------------------------------------------------------------------------------ |
+| `name`                 | `string` | Nama driver                                                                    |
 | `address`              | `string` | Alamat lengkap driver                                                          |
 | `license_image`        | `string` | link gambar `SIM` driver                                                       |
 | `id_card_image`        | `string` | link gambar `KTP` driver                                                       |

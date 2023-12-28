@@ -10,4 +10,5 @@ export class AdminQueryDTO {
 
 export interface CreateAdminDTO extends Omit<Prisma.adminCreateInput, 'role'> {
   roleId: string
+  ref?: string
 }

@@ -55,7 +55,7 @@ export class AdminService {
     })
   }
 
-  async createAmin(data: CreateAdminDTO, roleId: string) {
+  async createAmin(data: CreateAdminDTO) {
     try {
       const admin = await this.prismaService.admin.create({
         data: {
@@ -63,10 +63,17 @@ export class AdminService {
           email: data.email,
           role: {
             connect: {
-              id: roleId,
+              id: data.roleId,
             },
           },
           password: await this.bcrypt.generateHashPassword(data.password),
+          referal: data.ref
+            ? {
+                create: {
+                  ref: data.ref,
+                },
+              }
+            : undefined,
         },
       })
       return {

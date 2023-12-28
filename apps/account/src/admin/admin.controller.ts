@@ -42,7 +42,7 @@ export class AdminController {
   @Post()
   @Roles(Role.SUPERADMIN)
   async createAdmin(@Body() data: CreateAdminDTO) {
-    return this.adminService.createAmin(data, data.roleId)
+    return this.adminService.createAmin(data)
   }
 
   @Roles(Role.ADMIN, Role.SUPERADMIN)
