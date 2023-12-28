@@ -33,9 +33,10 @@ export class DriverService {
     options: {
       details: Prisma.driver_detailsCreateInput
       referal: string
+      name: string
     },
   ) {
-    const { details, referal } = options
+    const { details, referal, name } = options
     try {
       const ref = await this.prismaService.referal.findUnique({
         where: {
@@ -55,6 +56,7 @@ export class DriverService {
           id: driverId,
         },
         data: {
+          name: name,
           driver_details: {
             create: details,
           },

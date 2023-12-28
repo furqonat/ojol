@@ -1,11 +1,12 @@
 'use client'
 
-import { UrlService } from '../../services/url.service'
+import { uniqueStringAndNumber } from '../../services/app.service'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useRef, useState } from 'react'
 import Select from 'react-select'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { UrlService } from '../../services/url.service'
 
 type OptionValue = {
   label: string
@@ -19,6 +20,7 @@ export function AddAdmin() {
 
   const [loading, setLoading] = useState(false)
   const [roleId, setRoleId] = useState('')
+  const [roleName, setRoleName] = useState('')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -53,11 +55,22 @@ export function AddAdmin() {
       }
       return
     }
-    const body = {
-      name: name,
-      email: email,
-      password: password,
-      roleId: roleId,
+    let body
+    if (roleName === 'KORLAP' || roleName === 'KORCAP') {
+      body = {
+        name: name,
+        email: email,
+        password: password,
+        roleId: roleId,
+        ref: uniqueStringAndNumber(12),
+      }
+    } else {
+      body = {
+        name: name,
+        email: email,
+        password: password,
+        roleId: roleId,
+      }
     }
     fetch(`${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/`, {
       method: 'POST',
@@ -68,7 +81,7 @@ export function AddAdmin() {
       },
     })
       .then((e) => e.json())
-      .then((e) => {
+      .then((_) => {
         setLoading(false)
         window.location.reload()
       })
@@ -159,7 +172,10 @@ export function AddAdmin() {
               </div>
               <Select
                 options={options}
-                onChange={(e) => setRoleId(e?.value ?? '')}
+                onChange={(e) => {
+                  setRoleName(e?.label ?? '')
+                  setRoleId(e?.value ?? '')
+                }}
               />
             </label>
             <div className={'flex flex-row-reverse mt-4 gap-5'}>

@@ -16,8 +16,8 @@ type ManagementRoutes struct {
 
 func (s ManagementRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Group("/gate").Use(
-		s.cors.Cors(),
+	s.handler.Gin.NoRoute(s.cors.Cors())
+	api := s.handler.Gin.Group("/gate/portal").Use(s.cors.Cors()).Use(
 		s.middleware.HandleAuthWithRoles(utils.SUPERADMIN, utils.ADMIN),
 	)
 	{
@@ -27,8 +27,10 @@ func (s ManagementRoutes) Setup() {
 		api.PUT("/services/:id", s.controller.UpdateService)
 		api.DELETE("/services/:id", s.controller.DeleteService)
 		api.GET("/fee", s.controller.GetTrxFee)
+
 		api.POST("/fee", s.controller.CreateTrxFee)
-		api.GET("/fee", s.controller.GetPriceInKm)
+		api.GET("/fee/distance", s.controller.GetPriceInKm)
+
 		api.POST("/tax", s.controller.CreateTax)
 		api.PUT("/tax", s.controller.UpdateTax)
 	}
