@@ -188,3 +188,15 @@ func (order OrderController) MerchantGetOrders(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": orders})
 }
+
+func (order OrderController) GetOrder(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+	getOrder, err := order.service.GetOrder(orderId)
+	if err != nil {
+		order.logger.Infof("unable get order %s", err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, getOrder)
+}

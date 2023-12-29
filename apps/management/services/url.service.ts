@@ -17,6 +17,10 @@ export class UrlService {
   }
 
   public build(): string {
-    return `${this.baseUrl}?${this._query}`
+    if (this._query.length > 0) {
+      return `${this.baseUrl}?${this._query}`
+    } else {
+      return this.baseUrl
+    }
   }
 }

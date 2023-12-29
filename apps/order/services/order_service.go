@@ -261,6 +261,19 @@ func (order OrderService) CancelOrder(orderId string, reason string) (*string, e
 	return &trx.ID, nil
 }
 
+func (order OrderService) GetOrder(orderId string) (*db.OrderModel, error) {
+	getOrder, err := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).With(
+		db.Order.OrderDetail.Fetch(),
+		db.Order.OrderItems.Fetch(),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return getOrder, nil
+}
+
 func (order OrderService) GetAvaliableOrder(take, skip int) ([]db.OrderModel, int, error) {
 	orders, errGetOrders := order.database.Order.FindMany(
 		db.Order.Showable.Equals(true),
@@ -375,6 +388,10 @@ func (order OrderService) FindGoodAndNearlyDriver(orderId string, latitude, long
 				"message": "Klik untuk mendapatkan detail",
 			},
 			Token: deviceToken.Token,
+		}
+		errFrs := order.CreateOrderForDriver(driver.ID, orderId)
+		if errFrs != nil {
+			return errFrs
 		}
 		if _, err := order.messaging.Send(context.Background(), message); err != nil {
 			return err

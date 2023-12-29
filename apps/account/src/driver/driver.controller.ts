@@ -38,6 +38,7 @@ export class DriverController {
     return this.driverService.applyDriver(req.uid, {
       details: details.details,
       referal: details.referal,
+      name: details.name,
     })
   }
 

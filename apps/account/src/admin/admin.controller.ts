@@ -63,6 +63,24 @@ export class AdminController {
     })
   }
 
+  @Roles(Role.ADMIN, Role.SUPERADMIN)
+  @Get('transactions')
+  async getTransactions(
+    @Query('take') take?: number,
+    @Query('skip') skip?: number,
+    @Query('query') query?: string,
+    @Query('createdIn') createdIn?: 'day' | 'month' | 'year',
+    @Query() select?: Prisma.customerSelect,
+  ) {
+    return this.adminService.getTransactions({
+      take: take,
+      skip: skip,
+      query: query,
+      select: str2obj(select),
+      createdIn: createdIn,
+    })
+  }
+
   @Roles(Role.SUPERADMIN, Role.ADMIN)
   @Get('driver')
   async getDrivers(
@@ -72,8 +90,8 @@ export class AdminController {
     @Query('online') online?: boolean,
     @Query('type') type?: Prisma.Enumdriver_statusFilter,
     @Query('orderBy') orderBy?: 'name' | 'order',
-    @Query() select?: Prisma.driverSelect,
     @Query('createdIn') createdIn?: 'day' | 'month' | 'year',
+    @Query() select?: Prisma.driverSelect,
   ) {
     return this.adminService.getDrivers({
       take: take,
@@ -81,7 +99,7 @@ export class AdminController {
       query: query,
       isOnline: online,
       status: type,
-      select: select,
+      select: str2obj(select),
       orderBy: orderBy,
       createdIn: createdIn,
     })
@@ -96,8 +114,8 @@ export class AdminController {
     @Query('mType') type?: Prisma.Enummerchant_typeFilter,
     @Query('mStatus') status?: Prisma.Enummerchant_statusFilter,
     @Query('orderBy') orderby?: 'name' | 'active',
-    @Query() select?: Prisma.merchantSelect,
     @Query('createdIn') createdIn?: 'day' | 'month' | 'year',
+    @Query() select?: Prisma.merchantSelect,
   ) {
     return this.adminService.getMerchants({
       take: take,
@@ -106,7 +124,7 @@ export class AdminController {
       type: type,
       status: status,
       orderBy: orderby,
-      select: select,
+      select: str2obj(select),
       createdIn: createdIn,
     })
   }

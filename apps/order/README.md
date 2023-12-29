@@ -414,3 +414,25 @@ Authorization: Bearer ....
   "message": "OK"
 }
 ```
+
+
+
+## Mendapatkan Detail Order
+Berikut adalah contoh mendapatkan detail order
+
+### Contoh Request
+
+```http
+GET https://api.gentatechnology.com/order/<order_id>
+Content-Type: application/json
+Authorization: Bearer ....
+
+```
+
+### Contoh Response
+
+```json
+{
+  "...."
+}
+```

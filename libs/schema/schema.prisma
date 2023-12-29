@@ -63,8 +63,8 @@ enum customer_status {
 model driver {
   id                     String                   @id @default(cuid())
   name                   String?
-  email                  String?
-  phone                  String?
+  email                  String?                  @unique
+  phone                  String?                  @unique
   password               String?
   device_token           driver_device_token?
   last_sign_in           DateTime?

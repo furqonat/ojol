@@ -33,6 +33,7 @@ func (s OrderRoutes) Setup() {
 		orderApi.GET("/merchant/", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.orderController.MerchantGetOrders)
 
 		orderApi.PUT("/:id", s.authMiddleware.HandleAuthWithRoles(utils.USER, utils.MERCHANT), s.orderController.CancelOrder)
+		orderApi.GET("/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER, utils.MERCHANT, utils.USER), s.orderController.GetOrder)
 	}
 }
 
