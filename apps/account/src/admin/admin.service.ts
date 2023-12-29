@@ -1,3 +1,5 @@
+import { BcryptService } from '@lugo/bcrypt'
+import { FirebaseService } from '@lugo/firebase'
 import { Prisma, PrismaService } from '@lugo/prisma'
 import {
   BadRequestException,
@@ -5,8 +7,6 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { AdminQueryDTO, CreateAdminDTO } from '../dto/admin.dto'
-import { FirebaseService } from '@lugo/firebase'
-import { BcryptService } from '@lugo/bcrypt'
 
 const today = new Date()
 const startOfDay = new Date(
@@ -129,11 +129,10 @@ export class AdminService {
     take?: number
     skip?: number
     query?: string
-    select?: Prisma.customerSelect
     createdIn?: 'day' | 'month' | 'year'
+    select?: Prisma.customerSelect
   }) {
     const { take = 20, skip = 0, query, select, createdIn } = options
-
     const customers = await this.prismaService.customer.findMany({
       where: {
         name: query ? { contains: query } : undefined,
@@ -184,6 +183,66 @@ export class AdminService {
       total: total,
     }
   }
+
+  async getTransactions(options: {
+    take?: number
+    skip?: number
+    query?: string
+    createdIn?: 'day' | 'month' | 'year'
+    select?: Prisma.transactionsSelect
+  }) {
+    const { take = 20, skip = 0, query, select, createdIn } = options
+
+    const transactions = await this.prismaService.transactions.findMany({
+      where: {
+        id: query ? { contains: query } : undefined,
+        created_at: createdIn
+          ? {
+              gte:
+                createdIn === 'day'
+                  ? startOfDay
+                  : createdIn === 'month'
+                    ? startOfMonth
+                    : startOfYear,
+              lt:
+                createdIn === 'day'
+                  ? endOfDay
+                  : createdIn === 'month'
+                    ? endOfMonth
+                    : endOfYear,
+            }
+          : undefined,
+      },
+      select: select ? select : { id: true },
+      take: take ? Number(take) : 10,
+      skip: skip ? Number(skip) : 0,
+    })
+    const total = await this.prismaService.transactions.count({
+      where: {
+        id: query ? { contains: query } : undefined,
+        created_at: createdIn
+          ? {
+              gte:
+                createdIn === 'day'
+                  ? startOfDay
+                  : createdIn === 'month'
+                    ? startOfMonth
+                    : startOfYear,
+              lt:
+                createdIn === 'day'
+                  ? endOfDay
+                  : createdIn === 'month'
+                    ? endOfMonth
+                    : endOfYear,
+            }
+          : undefined,
+      },
+    })
+    return {
+      data: transactions,
+      total: total,
+    }
+  }
   async updateCustomer(id: string, data: Prisma.customerUpdateInput) {
     return this.prismaService.customer.update({
       where: {
@@ -210,12 +269,12 @@ export class AdminService {
   async getDrivers(options: {
     take?: number
     skip?: number
-    select?: Prisma.driverSelect
     isOnline?: boolean
-    status?: Prisma.Enumdriver_statusFilter
+    createdIn?: 'day' | 'month' | 'year'
     query?: string
     orderBy?: 'name' | 'order'
-    createdIn?: 'day' | 'month' | 'year'
+    status?: Prisma.Enumdriver_statusFilter
+    select?: Prisma.driverSelect
   }) {
     const { take, select, skip, isOnline, status, query, orderBy, createdIn } =
       options
@@ -260,7 +319,7 @@ export class AdminService {
             }
         : undefined,
     })
-    const total = await this.prismaService.driver.findMany({
+    const total = await this.prismaService.driver.count({
       where: {
         is_online: isOnline ?? undefined,
         status: status ?? undefined,
@@ -319,12 +378,12 @@ export class AdminService {
   async getMerchants(options: {
     take?: number
     skip?: number
-    select?: Prisma.merchantSelect
+    orderBy?: 'name' | 'active'
+    createdIn?: 'day' | 'month' | 'year'
     query?: string
     type?: Prisma.Enummerchant_typeFilter
     status?: Prisma.Enummerchant_statusFilter
-    orderBy?: 'name' | 'active'
-    createdIn?: 'day' | 'month' | 'year'
+    select?: Prisma.merchantSelect
   }) {
     const { take, select, skip, query, type, status, orderBy, createdIn } =
       options
@@ -471,80 +530,5 @@ export class AdminService {
         driver: dCount,
       },
     }
-  }
-
-  async applyDriver(driverId: string) {
-    const device_tokens = await this.prismaService.driver_device_token.findMany(
-      {
-        where: {
-          driver_id: driverId,
-        },
-      },
-    )
-    const driver = await this.prismaService.driver.update({
-      where: {
-        id: driverId,
-      },
-      data: {
-        status: 'ACTIVE',
-      },
-    })
-    const notification = {
-      title: 'Permintaan menjadi driver lugo',
-      body: `Selamat ${driver.name} kamu telah di setujui oleh lugo untuk menjadi driver`,
-    }
-    await this.firebase.messaging.sendEachForMulticast({
-      notification: notification,
-      android: {
-        notification: notification,
-        priority: 'high',
-      },
-      apns: {
-        payload: {
-          aps: {
-            alert: notification,
-          },
-        },
-      },
-      tokens: device_tokens.map((it) => it.token),
-    })
-    return { message: 'OK' }
-  }
-
-  async applyMerchant(merchantId: string) {
-    const device_tokens =
-      await this.prismaService.merchant_device_token.findMany({
-        where: {
-          merchant_id: merchantId,
-        },
-      })
-    const merchant = await this.prismaService.merchant.update({
-      where: {
-        id: merchantId,
-      },
-      data: {
-        status: 'ACTIVE',
-      },
-    })
-    const notification = {
-      title: 'Permintaan menjadi merchant lugo',
-      body: `Selamat ${merchant.name} kamu telah di setujui oleh lugo untuk menjadi merchant`,
-    }
-    await this.firebase.messaging.sendEachForMulticast({
-      notification: notification,
-      android: {
-        notification: notification,
-        priority: 'high',
-      },
-      apns: {
-        payload: {
-          aps: {
-            alert: notification,
-          },
-        },
-      },
-      tokens: device_tokens.map((it) => it.token),
-    })
-    return { message: 'OK' }
   }
 }

@@ -56,6 +56,10 @@ func (order OrderService) DriverRejectOrder(orderId string, driverId string) err
 	if errUpdateOrder != nil {
 		return errUpdateOrder
 	}
+	errF := order.DeleteOrderForDriver(driverId, orderId)
+	if errF != nil {
+		return errF
+	}
 	if errCreteOrderReject != nil {
 		return errCreteOrderReject
 	}
@@ -76,6 +80,10 @@ func (order OrderService) DriverAcceptOrder(orderId, driverId string) error {
 	err := order.assignDriverOnFirestore(driverId, orderId)
 	if err != nil {
 		return err
+	}
+	errF := order.DeleteOrderForDriver(driverId, orderId)
+	if errF != nil {
+		return errF
 	}
 	if err := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusDriverOtw)); err != nil {
 		return err

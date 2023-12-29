@@ -45,22 +45,7 @@ export class MerchantService {
         where: {
           id: merchantId,
         },
-        data: {
-          details: {
-            update: {
-              images: {
-                update: {
-                  where: {
-                    id: '',
-                  },
-                  data: {
-                    link: '',
-                  },
-                },
-              },
-            },
-          },
-        },
+        data: details,
         select: {
           details: {
             select: {

@@ -135,3 +135,22 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel, ptr
 	}
 	return nil
 }
+
+func (order OrderService) CreateOrderForDriver(driverId, orderId string) error {
+	_, err := order.firestore.Client.Collection("order").Doc(driverId).Set(context.Background(), map[string]interface{}{
+		"orderId": orderId,
+	})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (order OrderService) DeleteOrderForDriver(driverId, orderId string) error {
+	_, err := order.firestore.Client.Collection("order").Doc(driverId).Delete(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
+}
