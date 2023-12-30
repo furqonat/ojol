@@ -64,13 +64,16 @@ export class AppService {
       where: {
         status: true,
         product_type: type ?? 'FOOD',
-        category: {
-          some: {
-            name: {
-              contains: filter ?? undefined,
-            },
-          },
-        },
+        category: filter
+          ? {
+              some: {
+                name: {
+                  contains: filter ?? undefined,
+                },
+              },
+            }
+          : undefined,
+        merchant_id: merchantId ?? undefined,
         OR: query
           ? [
               {

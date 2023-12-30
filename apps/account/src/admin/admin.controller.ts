@@ -23,10 +23,10 @@ export class AdminController {
   @Roles(Role.ADMIN, Role.SUPERADMIN)
   @Get()
   async getAdmins(
-    @Query('take') take?: number,
-    @Query('skip') skip?: number,
-    @Query('query') query?: string,
-    @Query() select?: Prisma.adminSelect,
+    @Query('take') take: number,
+    @Query('skip') skip: number,
+    @Query('query') query: string,
+    @Query() select: Prisma.adminSelect,
   ) {
     return this.adminService.getAdmins(
       { take: take, skip: skip, query: query },
@@ -48,85 +48,94 @@ export class AdminController {
   @Roles(Role.ADMIN, Role.SUPERADMIN)
   @Get('customer')
   async getCustomers(
-    @Query('take') take?: number,
-    @Query('skip') skip?: number,
-    @Query('query') query?: string,
-    @Query('createdIn') createdIn?: 'day' | 'month' | 'year',
-    @Query() select?: Prisma.customerSelect,
+    @Query('take') take: number,
+    @Query('skip') skip: number,
+    @Query('query') query: string,
+    @Query('createdIn') createdIn: 'day' | 'month' | 'year',
+    @Query() select: Prisma.customerSelect,
   ) {
-    return this.adminService.getCustomers({
-      take: take,
-      skip: skip,
-      query: query,
-      select: str2obj(select),
-      createdIn: createdIn,
-    })
+    return this.adminService.getCustomers(
+      take,
+      skip,
+      str2obj(select),
+      query,
+      createdIn,
+    )
   }
 
   @Roles(Role.ADMIN, Role.SUPERADMIN)
   @Get('transactions')
   async getTransactions(
-    @Query('take') take?: number,
-    @Query('skip') skip?: number,
-    @Query('query') query?: string,
-    @Query('createdIn') createdIn?: 'day' | 'month' | 'year',
-    @Query() select?: Prisma.customerSelect,
+    @Query('take') take: number,
+    @Query('skip') skip: number,
+    @Query('query') query: string,
+    @Query('createdIn') createdIn: 'day' | 'month' | 'year',
+    @Query() select: Prisma.customerSelect,
   ) {
-    return this.adminService.getTransactions({
-      take: take,
-      skip: skip,
-      query: query,
-      select: str2obj(select),
-      createdIn: createdIn,
-    })
+    return this.adminService.getTransactions(
+      take,
+      skip,
+      query,
+      createdIn,
+      str2obj(select),
+    )
   }
 
   @Roles(Role.SUPERADMIN, Role.ADMIN)
   @Get('driver')
   async getDrivers(
-    @Query('take') take?: number,
-    @Query('skip') skip?: number,
-    @Query('query') query?: string,
-    @Query('online') online?: boolean,
-    @Query('type') type?: Prisma.Enumdriver_statusFilter,
-    @Query('orderBy') orderBy?: 'name' | 'order',
-    @Query('createdIn') createdIn?: 'day' | 'month' | 'year',
-    @Query() select?: Prisma.driverSelect,
+    @Query('take') take: number,
+    @Query('skip') skip: number,
+    @Query('query') query: string,
+    @Query('online') online: boolean,
+    @Query('type') type: Prisma.Enumdriver_statusFilter,
+    @Query('orderBy') orderBy: 'name' | 'order',
+    @Query('createdIn') createdIn: 'day' | 'month' | 'year',
+    @Query() select: Prisma.driverSelect,
   ) {
-    return this.adminService.getDrivers({
-      take: take,
-      skip: skip,
-      query: query,
-      isOnline: online,
-      status: type,
-      select: str2obj(select),
-      orderBy: orderBy,
-      createdIn: createdIn,
-    })
+    return this.adminService.getDrivers(
+      take,
+      skip,
+      online,
+      createdIn,
+      query,
+      orderBy,
+      type,
+      str2obj(select),
+    )
   }
 
   @Roles(Role.SUPERADMIN, Role.ADMIN)
   @Get('merchant')
   async getMerchants(
-    @Query('take') take?: number,
-    @Query('skip') skip?: number,
-    @Query('query') query?: string,
-    @Query('mType') type?: Prisma.Enummerchant_typeFilter,
-    @Query('mStatus') status?: Prisma.Enummerchant_statusFilter,
-    @Query('orderBy') orderby?: 'name' | 'active',
-    @Query('createdIn') createdIn?: 'day' | 'month' | 'year',
-    @Query() select?: Prisma.merchantSelect,
+    @Query('take') take: number,
+    @Query('skip') skip: number,
+    @Query('query') query: string,
+    @Query('mType') type: Prisma.Enummerchant_typeFilter,
+    @Query('mStatus') status: Prisma.Enummerchant_statusFilter,
+    @Query('orderBy') orderby: 'name' | 'active',
+    @Query('createdIn') createdIn: 'day' | 'month' | 'year',
+    @Query() select: Prisma.merchantSelect,
   ) {
-    return this.adminService.getMerchants({
-      take: take,
-      skip: skip,
-      query: query,
-      type: type,
-      status: status,
-      orderBy: orderby,
-      select: str2obj(select),
-      createdIn: createdIn,
-    })
+    return this.adminService.getMerchants(
+      take,
+      skip,
+      orderby,
+      createdIn,
+      query,
+      type,
+      status,
+      str2obj(select),
+    )
+  }
+
+  @Roles(Role.SUPERADMIN, Role.ADMIN)
+  @Get('/registration')
+  async getRegistration(
+    @Query('take') take: number,
+    @Query('skip') skip: number,
+  ) {
+    return this.adminService.getRegistrations(take, skip)
   }
 
   @Roles(Role.ADMIN, Role.SUPERADMIN)
@@ -169,7 +178,7 @@ export class AdminController {
   @Get('merchant/:id')
   async getMerchant(
     @Param('id') merchantId: string,
-    @Query() select?: Prisma.merchantSelect,
+    @Query() select: Prisma.merchantSelect,
   ) {
     return this.adminService.getMerchant(merchantId, select)
   }
@@ -192,7 +201,7 @@ export class AdminController {
   @Get(':id')
   async getAdmin(
     @Param('id') adminId: string,
-    @Query() select?: Prisma.adminSelect,
+    @Query() select: Prisma.adminSelect,
   ) {
     return this.adminService.getAdmin(adminId, str2obj(select))
   }

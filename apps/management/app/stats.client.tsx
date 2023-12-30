@@ -1,8 +1,8 @@
 'use client'
 
+import { useSession } from 'next-auth/react'
 import { useCallback, useEffect, useState } from 'react'
 import { UrlService } from '../services'
-import { useSession } from 'next-auth/react'
 
 type StatsProp = {
   filter?: 'day' | 'month' | 'year' | ''
@@ -20,13 +20,13 @@ export function Stats(props: StatsProp) {
 
   const fetchTotal = useCallback(async () => {
     if (data?.user.token) {
-      const baseUrl = process.env.NEXT_PUBLIC_DEV_BASE_URL + '/dev/admin/'
+      const baseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL + 'account/admin/'
       const endpoints = ['customer', 'driver', 'merchant', 'transactions']
 
       const requests = endpoints.map((endpoint) => {
         const url = new UrlService(`${baseUrl}${endpoint}/`)
           .addQuery('createdIn', props.filter)
-          .addQuery('take', '10')
+          .addQuery('id', 'true')
         return fetch(url.build(), {
           headers: {
             Authorization: `Bearer ${data.user.token}`,

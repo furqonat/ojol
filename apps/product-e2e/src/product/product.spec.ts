@@ -55,10 +55,13 @@ describe('Test e2e product services', () => {
   describe('GET /product', () => {
     it('should return status ok using customer cred', async () => {
       const token = await getIdToken(cusCred.user)
-      const res = await axios.get(`/product/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-
+      const res = await axios.get(
+        `/dev/product/?id=true&name=true&merchant_id=hXhO1KgeehbkVpl9PL2w4r34pQX2`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      )
+      console.info(res.data)
       expect(res.status).toBe(HttpStatusCode.Ok)
     })
   })
