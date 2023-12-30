@@ -125,14 +125,13 @@ export class AdminService {
     }
   }
 
-  async getCustomers(options: {
-    take?: number
-    skip?: number
-    query?: string
-    createdIn?: 'day' | 'month' | 'year'
-    select?: Prisma.customerSelect
-  }) {
-    const { take = 20, skip = 0, query, select, createdIn } = options
+  async getCustomers(
+    take: number,
+    skip: number,
+    select?: Prisma.customerSelect,
+    query?: string,
+    createdIn?: 'day' | 'month' | 'year',
+  ) {
     const customers = await this.prismaService.customer.findMany({
       where: {
         name: query ? { contains: query } : undefined,
@@ -184,15 +183,13 @@ export class AdminService {
     }
   }
 
-  async getTransactions(options: {
-    take?: number
-    skip?: number
-    query?: string
-    createdIn?: 'day' | 'month' | 'year'
-    select?: Prisma.transactionsSelect
-  }) {
-    const { take = 20, skip = 0, query, select, createdIn } = options
-
+  async getTransactions(
+    take?: number,
+    skip?: number,
+    query?: string,
+    createdIn?: 'day' | 'month' | 'year',
+    select?: Prisma.transactionsSelect,
+  ) {
     const transactions = await this.prismaService.transactions.findMany({
       where: {
         id: query ? { contains: query } : undefined,
@@ -266,18 +263,16 @@ export class AdminService {
     }
   }
 
-  async getDrivers(options: {
-    take?: number
-    skip?: number
-    isOnline?: boolean
-    createdIn?: 'day' | 'month' | 'year'
-    query?: string
-    orderBy?: 'name' | 'order'
-    status?: Prisma.Enumdriver_statusFilter
-    select?: Prisma.driverSelect
-  }) {
-    const { take, select, skip, isOnline, status, query, orderBy, createdIn } =
-      options
+  async getDrivers(
+    take?: number,
+    skip?: number,
+    isOnline?: boolean,
+    createdIn?: 'day' | 'month' | 'year',
+    query?: string,
+    orderBy?: 'name' | 'order',
+    status?: Prisma.Enumdriver_statusFilter,
+    select?: Prisma.driverSelect,
+  ) {
     const drivers = await this.prismaService.driver.findMany({
       where: {
         is_online: isOnline ?? undefined,
@@ -375,18 +370,16 @@ export class AdminService {
     }
   }
 
-  async getMerchants(options: {
-    take?: number
-    skip?: number
-    orderBy?: 'name' | 'active'
-    createdIn?: 'day' | 'month' | 'year'
-    query?: string
-    type?: Prisma.Enummerchant_typeFilter
-    status?: Prisma.Enummerchant_statusFilter
-    select?: Prisma.merchantSelect
-  }) {
-    const { take, select, skip, query, type, status, orderBy, createdIn } =
-      options
+  async getMerchants(
+    take?: number,
+    skip?: number,
+    orderBy?: 'name' | 'active',
+    createdIn?: 'day' | 'month' | 'year',
+    query?: string,
+    type?: Prisma.Enummerchant_typeFilter,
+    status?: Prisma.Enummerchant_statusFilter,
+    select?: Prisma.merchantSelect,
+  ) {
     const merchants = await this.prismaService.merchant.findMany({
       where: {
         type: type ?? undefined,
@@ -482,6 +475,7 @@ export class AdminService {
         phone_verified: true,
         status: true,
         details: true,
+        name: true,
       },
       take: take ? Number(take) : 20,
       skip: skip ? Number(skip) : 0,
@@ -499,11 +493,18 @@ export class AdminService {
       select: {
         id: true,
         email: true,
+        name: true,
         email_verified: true,
         phone: true,
         phone_verified: true,
         status: true,
-        driver_details: true,
+        driver_details: {
+          include: {
+            vehicle: true,
+          },
+        },
+        driver_settings: true,
+        driver_wallet: true,
       },
       take: take ? Number(take) : 20,
       skip: skip ? Number(skip) : 0,
