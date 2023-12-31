@@ -145,6 +145,7 @@ model vehicle {
 enum driver_status {
   ACTIVE
   PROCESS
+  REJECT
   BLOCK
 }
 
@@ -176,7 +177,7 @@ model merchant {
   is_open        Boolean                @default(false)
   details        merchant_details?
   status         merchant_status        @default(PROCESS)
-  type           merchant_type          @default(FOOD)
+  type           merchant_type
   products       product[]
 }
 
@@ -220,6 +221,7 @@ enum badge {
 enum merchant_status {
   ACTIVE
   PROCESS
+  REJECT
   BLOCK
 }
 

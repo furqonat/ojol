@@ -7,6 +7,8 @@ var Module = fx.Options(
 	fx.Provide(NewMiddlewares),
 	fx.Provide(NewFirebaseMiddleware),
 	fx.Provide(NewRateLimitMiddleware),
+	fx.Provide(NewJWTMiddleware),
+	fx.Provide(NewCorsMiddleware),
 )
 
 // IMiddleware middleware interface

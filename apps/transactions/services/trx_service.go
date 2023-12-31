@@ -24,6 +24,50 @@ func NewTrxService(database utils.Database, logger utils.Logger, firestore Fires
 	}
 }
 
+func (trx TrxService) GetTrx(trxId string) (*db.TransactionsModel, error) {
+	transaction, err := trx.database.Transactions.FindUnique(
+		db.Transactions.ID.Equals(trxId),
+	).With(
+		db.Transactions.Order.Fetch().With(
+			db.Order.Customer.Fetch(),
+			db.Order.Driver.Fetch(),
+			db.Order.OrderDetail.Fetch(),
+			db.Order.OrderItems.Fetch().With(
+				db.OrderItem.Product.Fetch().With(
+					db.Product.Merchant.Fetch(),
+				),
+			),
+		),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return transaction, nil
+}
+
+func (trx TrxService) GetTrxs(take, skip int) ([]db.TransactionsModel, int, error) {
+	transaction, err := trx.database.Transactions.FindMany().With(
+		db.Transactions.Order.Fetch().With(
+			db.Order.Customer.Fetch(),
+			db.Order.Driver.Fetch(),
+			db.Order.OrderDetail.Fetch(),
+			db.Order.OrderItems.Fetch().With(
+				db.OrderItem.Product.Fetch().With(
+					db.Product.Merchant.Fetch(),
+				),
+			),
+		),
+	).Take(take).Skip(skip).Exec(context.Background())
+	total, errTotal := trx.database.TransactionDetail.FindMany().Exec(context.Background())
+	if err != nil {
+		return nil, 0, err
+	}
+	if errTotal != nil {
+		return nil, 0, errTotal
+	}
+	return transaction, len(total), nil
+}
+
 func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]) error {
 	order, errOrder := trxService.database.Order.FindUnique(
 		db.Order.ID.Equals(data.Request.Body.MerchantTransId),
