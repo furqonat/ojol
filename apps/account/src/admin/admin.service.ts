@@ -474,8 +474,13 @@ export class AdminService {
         phone: true,
         phone_verified: true,
         status: true,
-        details: true,
+        details: {
+          include: {
+            images: true,
+          },
+        },
         name: true,
+        type: true,
       },
       take: take ? Number(take) : 20,
       skip: skip ? Number(skip) : 0,

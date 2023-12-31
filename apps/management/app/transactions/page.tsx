@@ -1,3 +1,9 @@
+import { Metadata } from 'next'
+import { Transactions } from './transactions.client'
+
+export const metadata: Metadata = {
+  title: 'Lugo | Transactions',
+}
 export default function TransactionsPage() {
   return (
     <main className={'container py-6 px-4 md:px-0'}>
@@ -10,7 +16,7 @@ export default function TransactionsPage() {
           </div>
           <div></div>
         </div>
-        {/* <Registration /> */}
+        <Transactions />
       </section>
     </main>
   )

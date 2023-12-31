@@ -116,8 +116,9 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 		}
 
 		if err := order.sendMessageToMerchant(prod.MerchantID, "Pesanan Baru!", "segera siapkan pesanan nya sebelum driver datang!"); err != nil {
-			order.deleteOrder(createOrderResult.ID)
-			return nil, nil, errors.New("unable send message to merchant")
+			// order.deleteOrder(createOrderResult.ID)
+			// return nil, nil, errors.New("unable send message to merchant")
+			fmt.Printf("Unable send message to merchant %s", err.Error())
 		}
 		for _, product := range ptrOrderModel.Product {
 
@@ -267,6 +268,7 @@ func (order OrderService) GetOrder(orderId string) (*db.OrderModel, error) {
 	).With(
 		db.Order.OrderDetail.Fetch(),
 		db.Order.OrderItems.Fetch(),
+		db.Order.Customer.Fetch(),
 	).Exec(context.Background())
 	if err != nil {
 		return nil, err

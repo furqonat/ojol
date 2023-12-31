@@ -11,4 +11,5 @@ var Module = fx.Options(
 	fx.Provide(NewFirebaseMessaging),
 	fx.Provide(NewOrderService),
 	fx.Provide(NewDanaService),
+	fx.Provide(NewJWTService),
 )
