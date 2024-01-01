@@ -1,3 +1,5 @@
+import { Promotion } from './promotion.client'
+
 export default function PromotionPage() {
   return (
     <main className={'container py-6 px-4 md:px-0'}>
@@ -10,7 +12,7 @@ export default function PromotionPage() {
           </div>
           <div></div>
         </div>
-        {/* <Registration /> */}
+        <Promotion />
       </section>
     </main>
   )

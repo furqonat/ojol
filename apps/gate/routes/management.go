@@ -33,6 +33,16 @@ func (s ManagementRoutes) Setup() {
 
 		api.POST("/tax", s.controller.CreateTax)
 		api.PUT("/tax", s.controller.UpdateTax)
+
+		api.POST("/settings", s.controller.CreateSetting)
+		api.PUT("/settings/:id", s.controller.UpdateSetting)
+		api.GET("/settings", s.controller.GetSettings)
+		api.GET("/settings/:id", s.controller.GetSetting)
+
+		api.POST("/banner", s.controller.CreateBanner)
+		api.PUT("/banner/:id", s.controller.UpdateBanner)
+		api.GET("/banner", s.controller.GetBanners)
+		api.GET("/banner/:id", s.controller.GetBanner)
 	}
 }
 
