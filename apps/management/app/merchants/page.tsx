@@ -1,3 +1,5 @@
+import { Merchants } from './merchants.client'
+
 export default function MerchantsPage() {
   return (
     <main className={'container py-6 px-4 md:px-0'}>
@@ -10,7 +12,7 @@ export default function MerchantsPage() {
           </div>
           <div></div>
         </div>
-        {/* <Registration /> */}
+        <Merchants />
       </section>
     </main>
   )
