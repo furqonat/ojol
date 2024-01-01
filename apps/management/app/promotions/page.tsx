@@ -5,7 +5,7 @@ export default function PromotionPage() {
         <div className={'flex flex-row gap-2 items-center'}>
           <div className={'flex-1'}>
             <h2 className={'text-xl md:text-2xl lg:text-3xl font-semibold'}>
-              Promos
+              Promotions
             </h2>
           </div>
           <div></div>
