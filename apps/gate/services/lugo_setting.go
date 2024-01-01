@@ -122,7 +122,7 @@ func (lugo LugoService) GetBanner(id string) (*db.BannerModel, error) {
 }
 
 func (lugo LugoService) GetBanners(take, skip int) ([]db.BannerModel, error) {
-	banners, err := lugo.db.Banner.FindMany().Take(take).Skip(skip).Exec(context.Background())
+	banners, err := lugo.db.Banner.FindMany().With(db.Banner.Images.Fetch()).Take(take).Skip(skip).Exec(context.Background())
 	if err != nil {
 		return nil, err
 	}

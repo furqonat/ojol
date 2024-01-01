@@ -556,6 +556,7 @@ model banner {
   url         String?
   description String?
   status      Boolean         @default(false)
+  for_app     Boolean         @default(true) // true -> customer false -> merchant
 }
 
 model banner_images {
