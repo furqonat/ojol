@@ -47,7 +47,6 @@ export function Driver() {
     fetchDriver().then()
   }, [fetchDriver])
 
-  console.log('hi +', drivers)
   return (
     <section>
       <section className={'mt-5'}>
