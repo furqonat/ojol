@@ -548,3 +548,24 @@ model settings {
   created_at DateTime    @default(now())
   sk_for     applied_for
 }
+
+model banner {
+  id          String          @id @default(cuid())
+  position    position        @default(TOP)
+  images      banner_images[]
+  url         String?
+  description String?
+  status      Boolean         @default(false)
+}
+
+model banner_images {
+  id        String  @id @default(cuid())
+  link      String
+  banner    banner? @relation(fields: [banner_id], references: [id])
+  banner_id String?
+}
+
+enum position {
+  TOP
+  BOTTOM
+}
