@@ -7,10 +7,12 @@ export default function PromotionPage() {
         <div className={'flex flex-row gap-2 items-center'}>
           <div className={'flex-1'}>
             <h2 className={'text-xl md:text-2xl lg:text-3xl font-semibold'}>
-              Promotions
+              Promotions Baner
             </h2>
           </div>
-          <div></div>
+          <div>
+            <button className={'btn'}>Add New</button>
+          </div>
         </div>
         <Promotion />
       </section>
