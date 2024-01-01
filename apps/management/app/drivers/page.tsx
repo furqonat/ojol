@@ -1,3 +1,5 @@
+import { Driver } from './driver.client'
+
 export default function DriversPage() {
   return (
     <main className={'container py-6 px-4 md:px-0'}>
@@ -11,6 +13,7 @@ export default function DriversPage() {
           <div></div>
         </div>
         {/* <Registration /> */}
+        <Driver />
       </section>
     </main>
   )
