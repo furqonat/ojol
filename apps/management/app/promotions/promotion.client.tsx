@@ -1,12 +1,18 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { Prisma, banner } from '@prisma/client/users'
+import { Prisma, banner, banner_images } from '@prisma/client/users'
 import { useSession } from 'next-auth/react'
-import { useEffect, useRef, useState } from 'react'
-import Select from 'react-select'
+import React, { useEffect, useRef, useState } from 'react'
+import Select, { SingleValue } from 'react-select'
+import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
+
+type Banner = banner & {
+  images: banner_images[] | null | undefined
+}
 
 export function Promotion() {
-  const [banners, setBanners] = useState<banner[]>([])
+  const [banners, setBanners] = useState<Banner[]>([])
   const { data } = useSession()
 
   useEffect(() => {
@@ -44,37 +50,110 @@ export function Promotion() {
   )
 }
 
-function UpdateBanner(props: { data: banner }) {
+type ImageBody = {
+  link: string
+}
+
+type UpdateBannerBody = Prisma.bannerUpdateInput & {
+  img?: ImageBody[]
+}
+
+function UpdateBanner(props: { data: Banner }) {
+  console.log(props.data)
   const { data } = useSession()
   const dialogRef = useRef<HTMLDialogElement>(null)
-  const [status, setStatus] = useState(false)
-  const [position, setPosition] = useState<'TOP' | 'BOTTOM'>(
-    props.data.position,
-  )
+  const [status, setStatus] = useState(props.data.for_app ?? false)
+  const [url, setUrl] = useState(props.data?.url ?? '')
+  const [description, setDescription] = useState(props.data?.description ?? '')
+  const [position, setPosition] = useState<
+    SingleValue<{
+      value: 'TOP' | 'BOTTOM'
+      label: string
+    }>
+  >({
+    value: props.data.position,
+    label: props.data.position,
+  })
+  const [files, setFiles] = useState<File[]>([])
 
-  function handleOnSave(e: React.MouseEvent<HTMLDivElement>) {
+  async function handleOnSave(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault()
-    const url = process.env.NEXT_PUBLIC_PROD_BASE_URL + `gate/portal/banner`
-    const body: Prisma.bannerCreateInput = {
-      position: position,
-      for_app: status,
+    const url =
+      process.env.NEXT_PUBLIC_PROD_BASE_URL +
+      `gate/portal/banner/${props.data.id}`
+    let body: UpdateBannerBody
+    if (files) {
+      const imgBody: ImageBody[] = []
+      for (const file of files) {
+        const storage = getStorage()
+        const imgRef = ref(storage, `public/${file.name}`)
+        const refUrl = await uploadBytes(imgRef, file)
+        const downloadUrl = await getDownloadURL(refUrl.ref)
+        imgBody.push({ link: downloadUrl })
+      }
+      body = {
+        position: position?.value,
+        for_app: status,
+        url: url,
+        description: description,
+        img: imgBody,
+      }
+      const resp = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${data?.user?.token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      if (resp.ok) {
+        dialogRef?.current?.close()
+        window.location.reload()
+      }
+    } else {
+      body = {
+        position: position?.value,
+        for_app: status,
+        url: url,
+        description: description,
+      }
+      const resp = await fetch(url, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${data?.user?.token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      if (resp.ok) {
+        dialogRef?.current?.close()
+        window.location.reload()
+      }
     }
-    fetch(url, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${data?.user?.token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    }).then((e) => {
-      dialogRef.current?.close()
-    })
   }
 
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
     setStatus(checked)
   }
+
+  function handleChangeUrl(e: React.ChangeEvent<HTMLInputElement>) {
+    const { value } = e.target
+    setUrl(value)
+  }
+  function handleChangeDescription(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    const { value } = e.target
+    setDescription(value)
+  }
+
+  function handleChangeFiles(e: React.ChangeEvent<HTMLInputElement>) {
+    const { files } = e.target
+    if (files) {
+      setFiles(files as unknown as File[])
+    }
+  }
+
+  console.log(files)
 
   return (
     <>
@@ -107,26 +186,81 @@ function UpdateBanner(props: { data: banner }) {
                   <span className="label-text-alt">Position</span>
                 </div>
                 <Select
+                  placeholder={'banner position'}
                   value={position}
-                  options={['BOTTOM', 'TOP']}
-                  onChange={(e) => setPosition(e as 'TOP' | 'BOTTOM')}
+                  options={[
+                    {
+                      value: 'TOP',
+                      label: 'TOP',
+                    },
+                    {
+                      value: 'BOTTOM',
+                      label: 'BOTTOM',
+                    },
+                  ]}
+                  onChange={(e) => setPosition(e)}
                 />
               </label>
               <label className="form-control w-full">
                 <div className="label">
-                  <span className="label-text-alt">For Customer App</span>
+                  <span className="label-text-alt">Url</span>
                 </div>
                 <input
-                  type="checkbox"
-                  className="toggle"
-                  checked={status}
-                  onChange={handleChangeToggle}
+                  placeholder={'website url eg: https://lugo.com'}
+                  type="text"
+                  className="input input-bordered"
+                  value={url}
+                  onChange={handleChangeUrl}
                 />
+              </label>
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text-alt">Description</span>
+                </div>
+                <textarea
+                  placeholder={'description banner'}
+                  className={'textarea textarea-bordered'}
+                  value={description}
+                  onChange={handleChangeDescription}
+                />
+              </label>
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text-alt">Used For</span>
+                </div>
+                <div className={'flex w-full'}>
+                  <span className={'flex-1'}>Customer Application?</span>
+                  <input
+                    type="checkbox"
+                    className="toggle"
+                    checked={status}
+                    onChange={handleChangeToggle}
+                  />
+                </div>
+              </label>
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text-alt">Image</span>
+                </div>
+                <input
+                  placeholder={'chose image'}
+                  type="file"
+                  multiple={true}
+                  className="file-input w-full max-w-xs"
+                  onChange={handleChangeFiles}
+                />
+                {props.data?.images ? (
+                  <>
+                    {props.data?.images.map((item) => {
+                      return <img key={item.id} alt={item.id} src={item.link} />
+                    })}
+                  </>
+                ) : null}
               </label>
             </div>
           </div>
           <div className="modal-action">
-            <form method="dialog">
+            <form method="dialog" className={'flex gap-6'}>
               <div className="btn btn-primary" onClick={handleOnSave}>
                 Save
               </div>

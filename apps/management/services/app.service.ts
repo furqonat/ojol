@@ -17,7 +17,20 @@ export class AppService {
 }
 
 export function isSuperAdmin(session: Session | null) {
-  if (session?.user.role.at(0)?.name == 'SUPERADMIN') {
+  if (
+    session?.user.role.at(0)?.name == 'SUPERADMIN' ||
+    session?.user.role.at(0)?.name == 'ADMIN'
+  ) {
+    return true
+  }
+  return false
+}
+
+export function isKorcapOrKorlap(session: Session | null) {
+  if (
+    session?.user.role.at(0)?.name == 'KORLAP' ||
+    session?.user.role.at(0)?.name == 'KORCAP'
+  ) {
     return true
   }
   return false

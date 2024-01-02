@@ -84,6 +84,7 @@ model driver {
   is_online              Boolean                  @default(false)
   referal                referal?                 @relation(fields: [referal_id], references: [id], onDelete: SetNull)
   referal_id             String?
+  driver_trx             driver_trx[]
 }
 
 model referal {
@@ -128,6 +129,37 @@ model driver_wallet {
   balance   Int     @default(0)
   driver    driver? @relation(references: [id], fields: [driver_id], onDelete: Cascade)
   driver_id String? @unique
+}
+
+model driver_trx {
+  id         String     @id @default(cuid())
+  trx_type   trx_type
+  created_at DateTime   @default(now())
+  payment_at DateTime?
+  status     trx_status @default(CREATED)
+  driver     driver     @relation(fields: [driver_id], references: [id])
+  driver_id  String
+}
+
+model merchant_trx {
+  id          String     @id @default(cuid())
+  trx_type    trx_type
+  created_at  DateTime   @default(now())
+  payment_at  DateTime?
+  status      trx_status @default(CREATED)
+  merchant    merchant   @relation(fields: [merchant_id], references: [id])
+  merchant_id String
+}
+
+enum trx_status {
+  CREATED
+  PROCESS
+  SUCCESS
+}
+
+enum trx_type {
+  TOPUP
+  WITHDRAW
 }
 
 model vehicle {
@@ -179,6 +211,7 @@ model merchant {
   status         merchant_status        @default(PROCESS)
   type           merchant_type
   products       product[]
+  merchant_trx   merchant_trx[]
 }
 
 model merchant_details {
