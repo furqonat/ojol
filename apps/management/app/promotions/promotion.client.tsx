@@ -48,7 +48,9 @@ function UpdateBanner(props: { data: banner }) {
   const { data } = useSession()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [status, setStatus] = useState(false)
-  const [position, setPosition] = useState<'TOP' | 'BOTTOM'>(props.data.position)
+  const [position, setPosition] = useState<'TOP' | 'BOTTOM'>(
+    props.data.position,
+  )
 
   function handleOnSave(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault()
