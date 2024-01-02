@@ -20,17 +20,26 @@ export function GoogleMap({ children }: { children?: React.ReactNode }) {
     )) as google.maps.MapsLibrary
 
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        currentMap = new Map(mapRef.current as HTMLElement, {
-          center: {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          },
-          zoom: 10,
-          disableDefaultUI: true,
-        })
-        setMap(currentMap)
-      })
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          currentMap = new Map(mapRef.current as HTMLElement, {
+            center: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            },
+            zoom: 10,
+            disableDefaultUI: true,
+          })
+          setMap(currentMap)
+        },
+        () => {
+          currentMap = new Map(mapRef.current as HTMLElement, {
+            center: { lat: -6.327630415744252, lng: 106.45266467541946 },
+            zoom: 10,
+            disableDefaultUI: true,
+          })
+        },
+      )
     } else {
       currentMap = new Map(mapRef.current as HTMLElement, {
         center: { lat: -6.327630415744252, lng: 106.45266467541946 },
