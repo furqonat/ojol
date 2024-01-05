@@ -37,6 +37,12 @@ export class DriverService {
             id: driver.uid,
             email: driver.email,
             phone: driver.phone_number,
+            driver_wallet: {
+              create: {},
+            },
+            driver_settings: {
+              create: {},
+            },
           },
         })
 

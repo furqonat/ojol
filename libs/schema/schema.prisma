@@ -137,7 +137,7 @@ model driver_trx {
   created_at DateTime   @default(now())
   payment_at DateTime?
   status     trx_status @default(CREATED)
-  driver     driver     @relation(fields: [driver_id], references: [id])
+  driver     driver     @relation(fields: [driver_id], references: [id], onDelete: Cascade)
   driver_id  String
 }
 
@@ -147,8 +147,15 @@ model merchant_trx {
   created_at  DateTime   @default(now())
   payment_at  DateTime?
   status      trx_status @default(CREATED)
-  merchant    merchant   @relation(fields: [merchant_id], references: [id])
+  merchant    merchant   @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
   merchant_id String
+}
+
+model merchant_wallet {
+  id          String   @id @default(cuid())
+  balance     Int      @default(0)
+  merchant    merchant @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+  merchant_id String   @unique
 }
 
 enum trx_status {
@@ -194,24 +201,25 @@ model driver_device_token {
 }
 
 model merchant {
-  id             String                 @id @default(cuid())
-  name           String?
-  email          String?
-  phone          String?
-  password       String?
-  device_token   merchant_device_token?
-  last_sign_in   DateTime?
-  last_active    DateTime?
-  created_at     DateTime               @default(now())
-  email_verified Boolean                @default(false)
-  phone_verified Boolean                @default(false)
-  avatar         String?
-  is_open        Boolean                @default(false)
-  details        merchant_details?
-  status         merchant_status        @default(PROCESS)
-  type           merchant_type
-  products       product[]
-  merchant_trx   merchant_trx[]
+  id              String                 @id @default(cuid())
+  name            String?
+  email           String?
+  phone           String?
+  password        String?
+  device_token    merchant_device_token?
+  last_sign_in    DateTime?
+  last_active     DateTime?
+  created_at      DateTime               @default(now())
+  email_verified  Boolean                @default(false)
+  phone_verified  Boolean                @default(false)
+  avatar          String?
+  is_open         Boolean                @default(false)
+  details         merchant_details?
+  status          merchant_status        @default(PROCESS)
+  type            merchant_type
+  products        product[]
+  merchant_trx    merchant_trx[]
+  merchant_wallet merchant_wallet?
 }
 
 model merchant_details {

@@ -38,6 +38,21 @@ func (lugo LugoService) PriceInKM(distance float64, serviceType db.ServiceType) 
 	return &value, nil
 }
 
+func (lugo LugoService) UpdateTrxFee(feeId string, model *db.ServiceFeeModel) (*string, error) {
+	fee, err := lugo.db.ServiceFee.FindUnique(
+		db.ServiceFee.ID.Equals(feeId),
+	).Update(
+		db.ServiceFee.AccountType.Set(model.AccountType),
+		db.ServiceFee.ServiceType.Set(model.ServiceType),
+		db.ServiceFee.Percentage.Set(model.Percentage),
+	).Exec(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+	return &fee.ID, nil
+}
+
 func (lugo LugoService) UpdateService(serviceId string, ptrServiceModel *db.ServicesModel) (*string, error) {
 	service, err := lugo.db.Services.FindUnique(
 		db.Services.ID.Equals(serviceId),

@@ -17,7 +17,6 @@ const authOptions: NextAuthOptions = {
         if (!credentials) {
           return null
         }
-        console.log(`${process.env.NEXT_PUBLIC_PROD_BASE_URL}/auth/admin`)
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_PROD_BASE_URL}auth/admin`,
           {
@@ -31,9 +30,7 @@ const authOptions: NextAuthOptions = {
             }),
           },
         )
-        console.log(response)
         const user = await response.json()
-        console.log(user)
         if (!user) {
           return null
         }

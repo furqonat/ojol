@@ -14,7 +14,7 @@ export class MerchantService {
     private readonly firebaseService: FirebaseService,
   ) {}
 
-  async signIn(token: string) {
+  async signIn(token: string, type: 'FOOD' | 'MART') {
     const realToken = this.extractTokenFromBearer(token)
     if (!realToken) {
       throw new UnauthorizedException()
@@ -38,6 +38,10 @@ export class MerchantService {
             id: merchant.uid,
             email: merchant.email,
             phone: merchant.phone_number,
+            type: type,
+            merchant_wallet: {
+              create: {},
+            },
           },
         })
 

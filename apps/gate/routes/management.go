@@ -29,10 +29,12 @@ func (s ManagementRoutes) Setup() {
 		api.GET("/fee", s.controller.GetTrxFee)
 
 		api.POST("/fee", s.controller.CreateTrxFee)
+		api.PUT("/fee/:id", s.controller.UpdateTrxFee)
+
 		api.GET("/fee/distance", s.controller.GetPriceInKm)
 
 		api.POST("/tax", s.controller.CreateTax)
-		api.PUT("/tax", s.controller.UpdateTax)
+		api.PUT("/tax/:taxId", s.controller.UpdateTax)
 
 		api.POST("/settings", s.controller.CreateSetting)
 		api.PUT("/settings/:id", s.controller.UpdateSetting)
