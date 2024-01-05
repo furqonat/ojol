@@ -1,4 +1,6 @@
-FROM public.ecr.aws/lambda/nodejs:18
+FROM node:20
+
+WORKDIR /account
 
 
 COPY apps/account ./apps/account
@@ -59,4 +61,4 @@ RUN npx nx run account:build
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 RUN export JWT_SECRET=auth-secret-1234
 
-CMD ["dist/apps/account/main.handler"]
+CMD ["node", "dist/apps/account/main.js"]
