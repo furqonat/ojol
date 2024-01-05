@@ -9,8 +9,6 @@ import (
 	"apps/order/services"
 	"apps/order/utils"
 
-	"github.com/apex/gateway"
-
 	"go.uber.org/fx"
 )
 
@@ -41,18 +39,18 @@ func bootstrap(
 				routes.Setup()
 				host := "0.0.0.0"
 
-				if env.Environment == "development" {
-					host = "127.0.0.1"
-					err := handler.Gin.Run(host + ":" + env.ServerPort)
-					if err != nil {
-						return
-					}
-				} else {
-					err := gateway.ListenAndServe(host, handler.Gin)
-					if err != nil {
-						return
-					}
+				// if env.Environment == "development" {
+				// 	host = "127.0.0.1"
+				err := handler.Gin.Run(host + ":" + env.ServerPort)
+				if err != nil {
+					return
 				}
+				// } else {
+				// 	err := gateway.ListenAndServe(host, handler.Gin)
+				// 	if err != nil {
+				// 		return
+				// 	}
+				// }
 			}()
 			return nil
 		},

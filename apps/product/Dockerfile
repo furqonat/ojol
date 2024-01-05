@@ -1,4 +1,6 @@
-FROM public.ecr.aws/lambda/nodejs:20
+FROM node:20
+
+WORKDIR /product
 
 COPY apps/product ./apps/product
 RUN true
@@ -58,4 +60,4 @@ RUN npx nx run product:build
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 RUN export JWT_SECRET=auth-secret-1234
 
-CMD ["dist/apps/product/main.handler"]
+CMD ["node", "dist/apps/product/main.js"]
