@@ -1,4 +1,6 @@
-FROM public.ecr.aws/lambda/nodejs:20
+FROM node:20
+
+WORKDIR /apps
 
 COPY apps/auth ./apps/auth
 RUN true
@@ -28,8 +30,6 @@ COPY jest.config.ts .
 RUN true
 COPY jest.config.ts .
 RUN true
-COPY nx.json .
-RUN true
 COPY google-services.json .
 
 RUN true
@@ -37,16 +37,21 @@ COPY package.json .
 RUN true
 COPY tsconfig.base.json .
 RUN true
-RUN true
 COPY pnpm-lock.yaml .
+
 RUN true
-
+RUN sed -i '/"@nx\/cypress": "17.1.3",/d' package.json
+RUN true
+RUN sed -i '/"cypress": "^13.0.0",/d' package.json
+RUN true
 RUN npm install -g pnpm
-
+RUN true
 RUN pnpm install
-
-
+RUN true
+RUN true
 RUN npx prisma generate --schema=./libs/schema/schema.prisma
+RUN true
+COPY nx.json .
 RUN true
 
 RUN npx nx run auth:build
@@ -55,4 +60,4 @@ RUN npx nx run auth:build
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 RUN export JWT_SECRET=auth-secret-1234
 
-CMD ["dist/apps/auth/main.handler"]
+CMD ["node", "dist/apps/auth/main.js"]

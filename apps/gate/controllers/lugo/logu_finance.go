@@ -2,8 +2,9 @@ package lugo
 
 import (
 	"apps/gate/db"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type PriceInKM struct {
@@ -41,6 +42,23 @@ func (c Controller) CreateTrxFee(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "res": service})
+}
+
+func (c Controller) UpdateTrxFee(ctx *gin.Context) {
+	feeId := ctx.Param("id")
+	model := db.ServiceFeeModel{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	fee, err := c.service.UpdateTrxFee(feeId, &model)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK", "res": fee})
 }
 
 func (c Controller) GetPriceInKm(ctx *gin.Context) {

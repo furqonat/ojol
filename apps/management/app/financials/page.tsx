@@ -1,3 +1,5 @@
+import { ServiceFee } from './service.fee'
+
 export default function FinancialPage() {
   return (
     <main className={'container py-6 px-4 md:px-0'}>
@@ -100,6 +102,7 @@ export default function FinancialPage() {
             </div>
           </div>
         </section>
+        <ServiceFee />
       </section>
     </main>
   )
