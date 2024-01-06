@@ -5,7 +5,7 @@ Api ini hanya bisa digunakan untuk merchant dan pengguna.
 ## Base Url
 
 ```bash
-https://api.gentatechnology.com/product
+https://product.gentatechnology.com
 ```
 
 ## Daftar isi
@@ -53,7 +53,7 @@ By default response produk hanya akan menampilakan output `id` dan `name` dari p
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/product/?id=true&name=true&_count={select: {customer_product_review: true}}
+GET https://product.gentatechnology.com/?id=true&name=true&_count={select: {customer_product_review: true}}
 Content-Type: application/json
 Authorization: Bearer .....
 ```
@@ -112,7 +112,7 @@ By default response produk hanya akan menampilakan output `id` dan `name` dari p
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/product/<product_id>?id=true&name=true&_count={select: {customer_product_review: true}}
+GET https://product.gentatechnology.com/<product_id>?id=true&name=true&_count={select: {customer_product_review: true}}
 Content-Type: application/json
 Authorization: Bearer .....
 ```
@@ -136,7 +136,7 @@ Api ini hanya digunakan untuk aplikasi customer
 ### Contoh request
 
 ```http
-GET https://api.gentatechnology.com/product/favorite/<product_id>
+GET https://product.gentatechnology.com/favorite/<product_id>
 Content-Type: application/json
 Authorization: Bearer .....
 ```
@@ -175,7 +175,7 @@ Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari apli
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/product/merchant?id=true&details={select: {address: true, name: true, images: true}}
+GET https://product.gentatechnology.com/merchant?id=true&details={select: {address: true, name: true, images: true}}
 Content-Type: application/json
 Authorization: Bearer .....
 ```
@@ -211,7 +211,7 @@ Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari apli
 ### Contoh Request menambahkan produk dengan kategori yang sudah ada
 
 ```http
-POST https://api.gentatechnology.com/product/
+POST https://product.gentatechnology.com/
 Content-Type: application/json
 Authorization: Bearer .....
 
@@ -231,7 +231,7 @@ Authorization: Bearer .....
 ### Contoh Request menambahkan produk dengan kategori yang belum ada
 
 ```http
-POST https://api.gentatechnology.com/product/
+POST https://product.gentatechnology.com/
 Content-Type: application/json
 Authorization: Bearer .....
 
@@ -274,7 +274,7 @@ Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari apli
 ### Contoh Request menambahkan produk dengan kategori yang sudah ada
 
 ```http
-POST https://api.gentatechnology.com/product/
+POST https://product.gentatechnology.com/
 Content-Type: application/json
 Authorization: Bearer .....
 
@@ -306,7 +306,7 @@ Berikut adalah cara membuat kategori baru
 | `name` | `string` | nama kategori |
 
 ```http
-POST https://api.gentatechnology.com/product/product/category/
+POST https://product.gentatechnology.com/category/
 Content-Type: application/json
 Authorization: Bearer .....
 
@@ -336,7 +336,7 @@ Berikut adalah cara membuat kategori baru
 | `skip` | `int` | jumlah output yang dilewatkan |
 
 ```http
-GET https://api.gentatechnology.com/product/product/categories?take=10&skip=0
+GET https://product.gentatechnology.com/categories?take=10&skip=0
 Content-Type: application/json
 Authorization: Bearer .....
 

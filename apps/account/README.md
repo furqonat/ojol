@@ -9,19 +9,19 @@ Api ini menggunakan domain yang sama dengan domain auth api tetapi menggunakan p
 ### Base url customer
 
 ```bash
-https://api.gentatechnology.com/account/customer
+https://account.gentatechnology.com/customer
 ```
 
 ### Base url driver
 
 ```bash
-https://api.gentatechnology.com/account/driver
+https://account.gentatechnology.com/driver
 ```
 
 ### Base url merchant
 
 ```bash
-https://api.gentatechnology.com/account/merchant
+https://account.gentatechnology.com/merchant
 ```
 
 ## Mendapatkan Akun
@@ -31,7 +31,7 @@ Untuk mendapatkan akun by default api akan menampilkan result `id` saja pada res
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/account/customer
+GET https://account.gentatechnology.com/customer
 Authorization: Bearer .....
 Content-Type: application/json
 ```
@@ -51,7 +51,7 @@ Untuk mendapatkan detail pengguna api account menggunakan query parameter pada u
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/account/customer?id=true&name=true&email=true
+GET https://account.gentatechnology.com/customer?id=true&name=true&email=true
 Authorization: Bearer .....
 Content-Type: application/json
 ```
@@ -98,7 +98,7 @@ Api ini digunakan untuk menyimpan device token firebase ke database. Device toke
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/customer/token
+GET https://account.gentatechnology.com/customer/token
 Authorization: Bearer .....
 Content-Type: application/json
 
@@ -123,7 +123,7 @@ Berikut adalah cara untuk update dasar akun customer
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/account/customer
+PUT https://account.gentatechnology.com/customer
 Authorization: Bearer ...
 Content-Type: application/json
 
@@ -158,7 +158,7 @@ Api ini hanya bisa digunakan di aplikasi `Lugo Driver`
 ### Contoh Request
 
 ```http
-POST https://api.gentatechnology.com/account/driver
+POST https://account.gentatechnology.com/driver
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -215,7 +215,7 @@ Api ini hanya bisa digunakan di aplikasi `Lugo Driver`
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/account/driver
+PUT https://account.gentatechnology.com/driver
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -270,7 +270,7 @@ Api ini hanya bisa digunakan di aplikasi `Lugo Driver`
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/account/driver/setting/coordinate
+PUT https://account.gentatechnology.com/driver/setting/coordinate
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -303,7 +303,7 @@ Api ini hanya bisa digunakan di aplikasi `Lugo Driver`
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/account/driver/setting/order
+PUT https://account.gentatechnology.com/driver/setting/order
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -342,7 +342,7 @@ Api ini hanya bisa digunakan di aplikasi `Lugo Driver`
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/account/driver/setting
+PUT https://account.gentatechnology.com/driver/setting
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -370,12 +370,12 @@ Content-Type: application/json
 
 ## Update Merchant
 
-Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan account.
 
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/account/merchant/<merchant_id>
+PUT https://account.gentatechnology.com/merchant/<merchant_id>
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -405,12 +405,12 @@ Content-Type: application/json
 
 ## Mendaftarkan diri sebagai Merchant
 
-Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan account.
 
 ### Contoh Request
 
 ```http
-POST https://api.gentatechnology.com/account/merchant
+POST https://account.gentatechnology.com/merchant
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -460,12 +460,12 @@ Content-Type: application/json
 
 ## Update diri sebagai Merchant
 
-Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan account.
 
 ### Contoh Request
 
 ```http
-POST https://api.gentatechnology.com/account/merchant
+POST https://account.gentatechnology.com/merchant
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -513,12 +513,12 @@ Content-Type: application/json
 
 ## Membuat jam operasional Merchant
 
-Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan account.
 
 ### Contoh Request
 
 ```http
-POST https://api.gentatechnology.com/account/merchant/operation
+POST https://account.gentatechnology.com/merchant/operation
 Authorization: Bearer ....
 Content-Type: application/json
 
@@ -553,12 +553,12 @@ Content-Type: application/json
 
 ## Membuat jam operasional Merchant
 
-Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan api.
+Api ini hanya digunakan untuk aplikasi merchant. Berikut adalah contoh penggunaan account.
 
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/account/merchant/operation/<operational_id>
+PUT https://account.gentatechnology.com/merchant/operation/<operational_id>
 Authorization: Bearer ....
 Content-Type: application/json
 

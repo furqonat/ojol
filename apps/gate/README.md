@@ -5,7 +5,7 @@ Api ini digunakan sebagai Api pendukung dimana berisi 3rd party api dan gate ser
 ## Base Url
 
 ```bash
-https://api.gentatechnology/gate
+https://gate.gentatechnology/gate
 ```
 
 ## Daftar Isi
@@ -27,7 +27,7 @@ Berikut adlah cara menggenrate signin url untuk mengautentikasi pengguna
 #### Contoh Request
 
 ```http
-GET https://api.gentatechnology/gate/oauth
+GET https://gate.gentatechnology/gate/oauth
 Content-Type: application/json
 Authorization: Bearer ....
 ```
@@ -48,7 +48,7 @@ Api ini digunakan untuk mendapatkan dana balance dari pengguna dan API ini hanya
 #### Contoh Request
 
 ```http
-GET https://api.gentatechnology/gate/oauth/profile
+GET https://gate.gentatechnology/gate/oauth/profile
 Content-Type: application/json
 Authorization: Bearer ....
 ```
@@ -76,7 +76,7 @@ Berikut adalah contoh untuk mendapatkan lugo services.
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology/gate/oauth/lugo/services
+GET https://gate.gentatechnology/gate/oauth/lugo/services
 Content-Type: application/json
 ```
 

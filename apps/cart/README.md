@@ -5,7 +5,7 @@ Dokumentasi ini hanya digunakan untuk aplikasi lugo merchant
 ## Base URL
 
 ```bash
-https://api.gentatechnology.com/cart
+https://cart.gentatechnology.com/
 ```
 
 ## Mendapatkan cart
@@ -15,7 +15,7 @@ Berikut adalah contoh mendapatkan cart
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/cart
+GET https://cart.gentatechnology.com/
 Content-Type: application/json
 Authorization: Bearer .....
 ```
@@ -79,7 +79,7 @@ Berikut adalah contoh menambahkan produk ke cart
 ### Contoh Request
 
 ```http
-POST https://api.gentatechnology.com/cart
+POST https://cart.gentatechnology.com/
 Content-Type: application/json
 Authorization: Bearer .....
 
@@ -110,7 +110,7 @@ Berikut adalah contoh update produk dari cart
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/cart
+PUT https://cart.gentatechnology.com/
 Content-Type: application/json
 Authorization: Bearer .....
 
