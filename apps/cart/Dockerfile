@@ -46,6 +46,11 @@ RUN true
 COPY pnpm-lock.yaml .
 RUN true
 
+RUN sed -i '/"@nx\/cypress": "17.1.3",/d' package.json
+RUN true
+RUN sed -i '/"cypress": "^13.0.0",/d' package.json
+RUN true
+
 RUN npm install -g pnpm
 
 RUN pnpm install

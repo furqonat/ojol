@@ -47,6 +47,11 @@ RUN true
 COPY pnpm-lock.yaml .
 RUN true
 
+RUN sed -i '/"@nx\/cypress": "17.1.3",/d' package.json
+RUN true
+RUN sed -i '/"cypress": "^13.0.0",/d' package.json
+RUN true
+
 RUN npm install -g pnpm
 
 RUN pnpm install
@@ -61,4 +66,4 @@ RUN npx nx run management:build
 RUN export GOOGLE_APPLICATION_CREDENTIALS=google-services.json
 RUN export JWT_SECRET=auth-secret-1234
 
-CMD ["npx", "nx", "run", "management:serve:production"]
+CMD ["npx", "next", "start", "/management/dist/apps/management"]
