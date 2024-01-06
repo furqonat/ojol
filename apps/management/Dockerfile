@@ -5,7 +5,7 @@ WORKDIR /management
 
 COPY apps/management ./apps/management
 RUN true
-COPY .env ./.env
+COPY apps/management/.env ./.env
 RUN true
 COPY libs/firebase ./libs/firebase
 RUN true
