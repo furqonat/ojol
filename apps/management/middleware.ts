@@ -15,7 +15,8 @@ export default withAuth(
     pages: {
       signIn: '/auth',
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret:
+      'eyJhbGciOiJIUzUxMiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcwMTY2MjA3MywiaWF0IjoxNzAxNjYyMDczfQ.A5iud4Cp8vb749hz4ifJJ-M5mzZfekoU7L1HKCxKVhqvB1W8q9wE3_NgqvljaOAqdCcVhfXan09vCKplr1OK7A',
   },
 )
 
