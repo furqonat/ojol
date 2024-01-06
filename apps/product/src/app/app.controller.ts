@@ -18,7 +18,7 @@ import { Prisma } from '@prisma/client/users'
 import { str2obj } from '@lugo/common'
 
 @UseGuards(RolesGuard)
-@Controller('product')
+@Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
