@@ -60,6 +60,7 @@ func (lugo LugoService) UpdateService(serviceId string, ptrServiceModel *db.Serv
 		db.Services.Enable.SetIfPresent(&ptrServiceModel.Enable),
 		db.Services.ServiceType.SetIfPresent(&ptrServiceModel.ServiceType),
 		db.Services.PriceInKm.SetIfPresent(&ptrServiceModel.PriceInKm),
+		db.Services.MinKm.SetIfPresent(&ptrServiceModel.MinKm),
 	).Exec(context.Background())
 
 	if err != nil {
