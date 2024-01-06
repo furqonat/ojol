@@ -33,7 +33,7 @@ export function Merchants() {
   useEffect(() => {
     if (data?.user?.token) {
       const url = new UrlService(
-        `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/merchant/`,
+        `${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/merchant/`,
       )
         .addQuery('id', 'true')
         .addQuery('name', 'true')
@@ -118,8 +118,7 @@ function Actions(props: { checked: boolean; id: string }) {
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
     const url =
-      process.env.NEXT_PUBLIC_PROD_BASE_URL +
-      `account/admin/merchant/${props.id}`
+      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/merchant/${props.id}`
     const body: Prisma.merchantUpdateInput = {
       status: checked === true ? 'ACTIVE' : 'BLOCK',
     }
@@ -146,8 +145,7 @@ function Actions(props: { checked: boolean; id: string }) {
     }>,
   ) {
     const url =
-      process.env.NEXT_PUBLIC_PROD_BASE_URL +
-      `account/admin/merchant/${props.id}`
+      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/merchant/${props.id}`
     const body: Prisma.merchantUpdateInput = {
       details: {
         update: {

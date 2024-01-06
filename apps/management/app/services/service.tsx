@@ -9,15 +9,12 @@ export function Services() {
   const { data } = useSession()
   useEffect(() => {
     if (data?.user?.token) {
-      fetch(
-        `${process.env.NEXT_PUBLIC_PROD_BASE_URL}gate/portal/services/all`,
-        {
-          headers: {
-            Authorization: `Bearer ${data?.user.token}`,
-            'Content-type': 'application/json',
-          },
+      fetch(`${process.env.NEXT_PUBLIC_GATE_BASE_URL}portal/services/all`, {
+        headers: {
+          Authorization: `Bearer ${data?.user.token}`,
+          'Content-type': 'application/json',
         },
-      )
+      })
         .then((res) => res.json())
         .then(setServices)
         .catch()
@@ -92,7 +89,7 @@ function Actions(props: {
       service_type: props.name,
     }
     fetch(
-      `${process.env.NEXT_PUBLIC_PROD_BASE_URL}gate/portal/services/${props.id}`,
+      `${process.env.NEXT_PUBLIC_GATE_BASE_URL}portal/services/${props.id}`,
       {
         method: 'PUT',
         body: JSON.stringify(body),

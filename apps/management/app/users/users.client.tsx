@@ -25,7 +25,7 @@ export function Users() {
   useEffect(() => {
     if (data?.user?.token) {
       const url = new UrlService(
-        `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/customer/`,
+        `${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/customer/`,
       )
         .addQuery('id', 'true')
         .addQuery('name', 'true')
@@ -109,8 +109,7 @@ function Actions(props: { checked: boolean; id: string }) {
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
     const url =
-      process.env.NEXT_PUBLIC_PROD_BASE_URL +
-      `account/admin/customer/${props.id}`
+      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/customer/${props.id}`
     const body: Prisma.customerUpdateInput = {
       status: checked === true ? 'ACTIVE' : 'BLOCK',
     }

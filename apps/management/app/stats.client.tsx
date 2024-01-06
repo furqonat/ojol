@@ -20,7 +20,7 @@ export function Stats(props: StatsProp) {
 
   const fetchTotal = useCallback(async () => {
     if (data?.user.token) {
-      const baseUrl = process.env.NEXT_PUBLIC_PROD_BASE_URL + 'account/admin/'
+      const baseUrl = process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + 'admin/'
       const endpoints = ['customer', 'driver', 'merchant', 'transactions']
 
       const requests = endpoints.map((endpoint) => {

@@ -46,8 +46,7 @@ export function Registration() {
   const [registrations, setRegistrations] = useState<ResponseData | null>(null)
   const { data } = useSession()
   useEffect(() => {
-    const url =
-      process.env.NEXT_PUBLIC_PROD_BASE_URL + 'account/admin/registration'
+    const url = process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + 'admin/registration'
     if (data?.user?.token) {
       fetch(url, {
         headers: {
@@ -143,7 +142,7 @@ function DetailDriver(props: { data: Driver }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   const url = new UrlService(
-    `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/driver/${data.id}`,
+    `${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/driver/${data.id}`,
   )
   function handleOpenDialog(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
@@ -368,7 +367,7 @@ function DetailMerchant(props: { data: Merchant }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   const url = new UrlService(
-    `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/merchant/${data.id}`,
+    `${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/merchant/${data.id}`,
   )
   function handleOpenDialog(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()

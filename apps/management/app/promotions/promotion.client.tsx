@@ -17,7 +17,7 @@ export function Promotion() {
 
   useEffect(() => {
     if (data?.user.token) {
-      const url = process.env.NEXT_PUBLIC_PROD_BASE_URL + 'gate/portal/banner'
+      const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/banner'
       fetch(url, {
         headers: {
           Authorization: `Bearer ${data?.user.token}`,
@@ -79,8 +79,7 @@ function UpdateBanner(props: { data: Banner }) {
   async function handleOnSave(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault()
     const url =
-      process.env.NEXT_PUBLIC_PROD_BASE_URL +
-      `gate/portal/banner/${props.data.id}`
+      process.env.NEXT_PUBLIC_GATE_BASE_URL + `portal/banner/${props.data.id}`
     let body: UpdateBannerBody
     if (files) {
       const imgBody: ImageBody[] = []
