@@ -16,7 +16,7 @@ type OAuthRoutes struct {
 
 func (s OAuthRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Group("/gate/oauth").Use(s.rateLimit.Handle())
+	api := s.handler.Gin.Group("/oauth").Use(s.rateLimit.Handle())
 	{
 		api.GET("/", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT, utils.USER, utils.DRIVER), s.controller.GenerateSignIn)
 		api.POST("/", s.controller.ApplyAccessToken)

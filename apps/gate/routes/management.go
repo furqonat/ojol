@@ -17,7 +17,7 @@ type ManagementRoutes struct {
 func (s ManagementRoutes) Setup() {
 	s.logger.Info("Setting up routes")
 	s.handler.Gin.NoRoute(s.cors.Cors())
-	api := s.handler.Gin.Group("/gate/portal").Use(s.cors.Cors()).Use(
+	api := s.handler.Gin.Group("/portal").Use(s.cors.Cors()).Use(
 		s.middleware.HandleAuthWithRoles(utils.SUPERADMIN, utils.ADMIN),
 	)
 	{

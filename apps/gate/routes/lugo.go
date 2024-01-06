@@ -16,7 +16,7 @@ type LugoRoutes struct {
 
 func (s LugoRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Group("/gate").Use(
+	api := s.handler.Gin.Use(
 		s.rateLimit.Handle(),
 	).Use(
 		s.middleware.HandleAuthWithRoles(utils.USER, utils.DRIVER, utils.MERCHANT),
