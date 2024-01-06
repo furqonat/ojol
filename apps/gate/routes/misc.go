@@ -15,7 +15,7 @@ type MiscRoutes struct {
 // Setup Misc routes
 func (s MiscRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Group("/gate/v1")
+	api := s.handler.Gin.Group("/v1")
 	{
 		api.GET("/liveness", s.miscController.GetLiveness)
 		api.GET("/readiness", s.miscController.GetReadiness)
