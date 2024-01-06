@@ -5,7 +5,7 @@ Dokumetasi ini digunakan untuk api order bike, car, food, mart, delivery
 ## Base Url
 
 ```bash
-https://api.gentatechnology.com/order
+https://order.gentatechnology.com/order
 ```
 
 ## Membuat Order Baru
@@ -15,7 +15,7 @@ Berikut adalah cara menggunaka order api
 ### Contoh Request FOOD dan MART
 
 ```http
-POST https://api.gentatechnology.com/order
+POST https://order.gentatechnology.com/order
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -50,7 +50,7 @@ Authorization: Bearer ....
 ### Contoh Request BIKE and CAR
 
 ```http
-POST https://api.gentatechnology.com/order
+POST https://order.gentatechnology.com/order
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -79,7 +79,7 @@ Authorization: Bearer ....
 ### Contoh Request DELIVERY
 
 ```http
-POST https://api.gentatechnology.com/order
+POST https://order.gentatechnology.com/order
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -141,7 +141,7 @@ Berikut adalah cara melakukan pembatalan order
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/order/<order_id>
+PUT https://order.gentatechnology.com/order/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -166,7 +166,7 @@ Api ini hanya bisa digunakan di aplikasi `driver` Berikut adalah contoh mendapat
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/order/driver
+GET https://order.gentatechnology.com/order/driver
 Content-Type: application/json
 Authorization: Bearer ....
 ```
@@ -214,7 +214,7 @@ Berikut adalah contoh menggunakan api ini.
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/order/driver/<order_id>
+PUT https://order.gentatechnology.com/order/driver/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -240,7 +240,7 @@ Berikut adalah cara menggunakan API ini.
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/order/driver/sign/<order_id>
+PUT https://order.gentatechnology.com/order/driver/sign/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -262,7 +262,7 @@ Berikut adalah cara menggunakan api ini.
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/order/driver/accept/<order_id>
+PUT https://order.gentatechnology.com/order/driver/accept/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -284,7 +284,7 @@ Berikut adalah cara menggunakan api ini.
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/order/driver/reject/<order_id>
+PUT https://order.gentatechnology.com/order/driver/reject/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -306,7 +306,7 @@ Berikut adalah cara menggunakan api ini.
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/order/merchant/
+GET https://order.gentatechnology.com/order/merchant/
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -378,7 +378,7 @@ Berikut adalah cara menggunakan api merchant menolak order.
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/merchant/reject/<order_id>
+PUT https://order.gentatechnology.com/merchant/reject/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -401,7 +401,7 @@ Berikut adalah cara menggunakan api merchant menerima order.
 ### Contoh Request
 
 ```http
-PUT https://api.gentatechnology.com/merchant/accept/<order_id>
+PUT https://order.gentatechnology.com/merchant/accept/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
 
@@ -423,7 +423,7 @@ Berikut adalah contoh mendapatkan detail order
 ### Contoh Request
 
 ```http
-GET https://api.gentatechnology.com/order/<order_id>
+GET https://order.gentatechnology.com/order/<order_id>
 Content-Type: application/json
 Authorization: Bearer ....
 

@@ -7,17 +7,17 @@ Api ini digunakan untuk aplikikasi lugo customer, lugo driver, dan lugo merchant
 
 ### SignIn Aplikasi Customer
 ```http
-POST https://api.gentatechnology.com/auth/customer
+POST https://auth.gentatechnology.com/customer
 ```
 
 ### SignIn Aplikasi Driver
 ```http
-POST https://api.gentatechnology.com/auth/driver
+POST https://auth.gentatechnology.com/driver
 ```
 
 ### SignIn Aplikasi Merchant
 ```http
-POST https://api.gentatechnology.com/auth/merchant
+POST https://auth.gentatechnology.com/merchant
 ```
 
 ### Header Request
@@ -30,7 +30,7 @@ final token = await credential.user?.getIdToken()
 
 #### Mengirim token keserver dengan library http
 ```dart
-http.post(Uri.parse('https://api.gentatechnology.com/auth/customer'), headers: {
+http.post(Uri.parse('https://auth.gentatechnology.com/customer'), headers: {
     "Authorization": "Bearer $token",
     "Content-Type": "application/json" // sebainya tambahkan ini untuk menghidari error yang tidak terduga
 })
