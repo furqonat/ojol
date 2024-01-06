@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"firebase.google.com/go/messaging"
@@ -138,7 +139,9 @@ func (order OrderService) createTrxOnFirestore(ptrOrderModel *db.OrderModel, ptr
 
 func (order OrderService) CreateOrderForDriver(driverId, orderId string) error {
 	_, err := order.firestore.Client.Collection("order").Doc(driverId).Set(context.Background(), map[string]interface{}{
-		"orderId": orderId,
+		"orderId":    orderId,
+		"driverId":   driverId,
+		"created_at": time.Now(),
 	})
 
 	if err != nil {
