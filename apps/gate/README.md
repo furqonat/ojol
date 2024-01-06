@@ -5,7 +5,7 @@ Api ini digunakan sebagai Api pendukung dimana berisi 3rd party api dan gate ser
 ## Base Url
 
 ```bash
-https://gate.gentatechnology/gate
+https://gate.gentatechnology.com/
 ```
 
 ## Daftar Isi
@@ -15,6 +15,8 @@ https://gate.gentatechnology/gate
   - [Get Dana Balance Etc](#get-dana-balance-etc)
 - [Lugo Service](#lugo-services)
   - [Mendapatkan lugo services](#mendapatkan-list-active-services)
+  - [Mendapatkan services fee](#mendapatkan-services-fee)
+  - [Mendapatkan Price KM](#mendapatkan-harga-per-kilo-meter)
 
 ## Dana Oauth
 
@@ -27,7 +29,7 @@ Berikut adlah cara menggenrate signin url untuk mengautentikasi pengguna
 #### Contoh Request
 
 ```http
-GET https://gate.gentatechnology/gate/oauth
+GET https://gate.gentatechnology.com/oauth
 Content-Type: application/json
 Authorization: Bearer ....
 ```
@@ -48,7 +50,7 @@ Api ini digunakan untuk mendapatkan dana balance dari pengguna dan API ini hanya
 #### Contoh Request
 
 ```http
-GET https://gate.gentatechnology/gate/oauth/profile
+GET https://gate.gentatechnology.com/oauth/profile
 Content-Type: application/json
 Authorization: Bearer ....
 ```
@@ -76,8 +78,9 @@ Berikut adalah contoh untuk mendapatkan lugo services.
 ### Contoh Request
 
 ```http
-GET https://gate.gentatechnology/gate/oauth/lugo/services
+GET https://gate.gentatechnology.com/lugo/services
 Content-Type: application/json
+Authorization: Bearer ...
 ```
 
 ### Contoh Response
@@ -110,4 +113,87 @@ Content-Type: application/json
     "id": "..."
   }
 ]
+```
+### Mendapatkan services fee
+
+Berikut adalah contoh untuk mendapatkan services fee.
+
+### Contoh Request
+
+```http
+GET https://gate.gentatechnology.com/lugo/fee
+Content-Type: application/json
+Authorization: Bearer ...
+```
+
+### Contoh Response
+
+```json
+{
+  "data": [
+    {
+      "id": "clqwbdco60001qtw2p5f7orta",
+      "service_type": "BIKE",
+      "percentage": 2,
+      "account_type": "REGULAR"
+    },
+    {
+      "id": "clqwbdo2d0002qtw2kbkol1jf",
+      "service_type": "BIKE",
+      "percentage": 1,
+      "account_type": "PREMIUM"
+    },
+    {
+      "id": "clqwbeicn0003qtw2gshgxeex",
+      "service_type": "CAR",
+      "percentage": 4,
+      "account_type": "BASIC"
+    },
+    {
+      "id": "clqwbeqd60004qtw2jmp6lkkr",
+      "service_type": "CAR",
+      "percentage": 3,
+      "account_type": "REGULAR"
+    },
+    {
+      "id": "clqwbfqlp0005qtw2xfjs5h8a",
+      "service_type": "CAR",
+      "percentage": 2,
+      "account_type": "PREMIUM"
+    },
+    {
+      "id": "clqwb7rrs0000qtw2fhuiplxg",
+      "service_type": "BIKE",
+      "percentage": 2,
+      "account_type": "BASIC"
+    }
+  ]
+}
+```
+
+### Mendapatkan harga per kilo meter 
+
+Berikut adalah contoh untuk mendapatkan harga perkilo meter.
+
+### Contoh Request
+
+```http
+POST https://gate.gentatechnology.com/lugo/fee
+Content-Type: application/json
+Authorization: Bearer ...
+{
+  "distance": 12.8,
+  "service_type": "BIKE"
+}
+```
+
+### Contoh Response
+
+```json
+
+{
+  "message": "OK",
+  "price": 13000
+}
+
 ```

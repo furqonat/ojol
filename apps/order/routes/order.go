@@ -18,7 +18,7 @@ type OrderRoutes struct {
 // Setup Misc routes
 func (s OrderRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	orderApi := s.handler.Gin.Use(s.rateLimitMiddleware.Handle())
+	orderApi := s.handler.Gin.Group("/").Use(s.rateLimitMiddleware.Handle())
 	{
 		orderApi.POST("/", s.authMiddleware.HandleAuthWithRoles(utils.USER), s.orderController.CreateOrder)
 

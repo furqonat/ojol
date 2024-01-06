@@ -31,7 +31,7 @@ func (s ManagementRoutes) Setup() {
 		api.POST("/fee", s.controller.CreateTrxFee)
 		api.PUT("/fee/:id", s.controller.UpdateTrxFee)
 
-		api.GET("/fee/distance", s.controller.GetPriceInKm)
+		api.POST("/fee/distance", s.controller.GetPriceInKm)
 
 		api.POST("/tax", s.controller.CreateTax)
 		api.PUT("/tax/:taxId", s.controller.UpdateTax)

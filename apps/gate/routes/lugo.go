@@ -16,7 +16,7 @@ type LugoRoutes struct {
 
 func (s LugoRoutes) Setup() {
 	s.logger.Info("Setting up routes")
-	api := s.handler.Gin.Use(
+	api := s.handler.Gin.Group("/lugo").Use(
 		s.rateLimit.Handle(),
 	).Use(
 		s.middleware.HandleAuthWithRoles(utils.USER, utils.DRIVER, utils.MERCHANT),
@@ -24,7 +24,7 @@ func (s LugoRoutes) Setup() {
 	{
 		api.GET("/services", s.controller.GetAvailableService)
 		api.GET("/fee", s.controller.GetTrxFee)
-		api.GET("/fee/distance", s.controller.GetPriceInKm)
+		api.POST("/fee/distance", s.controller.GetPriceInKm)
 	}
 }
 
