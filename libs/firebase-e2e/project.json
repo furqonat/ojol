@@ -1,0 +1,29 @@
+{
+  "name": "firebase-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/firebase-e2e/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/firebase-e2e",
+        "main": "libs/firebase-e2e/src/index.ts",
+        "tsConfig": "libs/firebase-e2e/tsconfig.lib.json",
+        "assets": ["libs/firebase-e2e/*.md"]
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/firebase-e2e/**/*.ts",
+          "libs/firebase-e2e/package.json"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

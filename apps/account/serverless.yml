@@ -1,0 +1,31 @@
+service: account
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-1
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: ./google-services.json
+    JWT_SECRET: auth-secret-1234
+
+  ecr:
+    images:
+      account:
+        path: ../../.
+        file: apps/account/Dockerfile
+
+functions:
+  app:
+    image:
+      name: account
+      command:
+        - dist/apps/account/main.handler
+      entryPoint:
+        - '/lambda-entrypoint.sh'
+    timeout: 30
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+      - http:
+          method: any
+          path: /

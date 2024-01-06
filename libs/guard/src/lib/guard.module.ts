@@ -1,13 +1,14 @@
+import { FirebaseModule, FirebaseService } from '@lugo/firebase'
 import { Module } from '@nestjs/common'
 import { RolesGuard } from './roles.guard'
-import { APP_GUARD } from '@nestjs/core'
-import { FirebaseService } from '@lugo/firebase'
 
+const FIREBASE_GUARD = 'FIREBASE_GUARD'
 @Module({
+  imports: [FirebaseModule],
   controllers: [],
   providers: [
     {
-      provide: APP_GUARD,
+      provide: FIREBASE_GUARD,
       useClass: RolesGuard,
     },
     FirebaseService,

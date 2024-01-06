@@ -1,0 +1,28 @@
+service: cart
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-southeast-1
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: ./google-services.json
+    JWT_SECRET: auth-secret-1234
+
+  ecr:
+    images:
+      cart:
+        path: ../../.
+        file: apps/cart/Dockerfile
+
+
+functions:
+  app:
+    image:
+      name: cart
+    timeout: 30
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+      - http:
+          method: any
+          path: /

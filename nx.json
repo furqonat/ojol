@@ -21,7 +21,11 @@
       ]
     },
     "e2e": {
-      "cache": true
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production"
+      ]
     },
     "@nx/jest:jest": {
       "cache": true,
@@ -39,6 +43,13 @@
           "codeCoverage": true
         }
       }
+    },
+    "@nx/vite:test": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production"
+      ]
     }
   },
   "namedInputs": {
@@ -61,5 +72,28 @@
   "nxCloudAccessToken": "NGM4YTBjMzYtMjI5OS00NmQ2LWExY2YtNzI4OWYwNWI2NDc1fHJlYWQtd3JpdGU=",
   "plugins": [
     "@nxrocks/nx-flutter"
-  ]
+  ],
+  "generators": {
+    "@nx/react": {
+      "application": {
+        "style": "css",
+        "linter": "eslint",
+        "bundler": "vite",
+        "babel": true
+      },
+      "component": {
+        "style": "css"
+      },
+      "library": {
+        "style": "css",
+        "linter": "eslint"
+      }
+    },
+    "@nx/next": {
+      "application": {
+        "style": "css",
+        "linter": "eslint"
+      }
+    }
+  }
 }

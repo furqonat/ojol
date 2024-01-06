@@ -1,21 +1,21 @@
 {
   "name": "jwtguard",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "jwtguard/src",
+  "sourceRoot": "libs/jwtguard/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["jwtguard/**/*.ts"]
+        "lintFilePatterns": ["libs/jwtguard/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "jwtguard/jest.config.ts"
+        "jestConfig": "libs/jwtguard/jest.config.ts"
       }
     }
   },

@@ -1,26 +1,19 @@
 import { Module } from '@nestjs/common'
-import { CustomerModule } from './customer/customer.module'
-import { AdminModule } from './admin/admin.module'
-import { GuardModule } from '@lugo/guard'
-import { FirebaseModule } from '@lugo/firebase'
 import { ConfigModule } from '@nestjs/config'
-import { JwtModule } from '@nestjs/jwt'
-import { UsersModule } from '@lugo/users'
+import { AdminModule } from '../admin/admin.module'
+import { CustomerModule } from '../customer/customer.module'
+import { DriverModule } from '../driver/driver.module'
+import { MerchantModule } from '../merchant/merchant.module'
 
 @Module({
   imports: [
-    CustomerModule,
-    AdminModule,
-    GuardModule,
-    FirebaseModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      global: true,
-    }),
-    UsersModule,
+    AdminModule,
+    CustomerModule,
+    DriverModule,
+    MerchantModule,
   ],
   controllers: [],
   providers: [],
