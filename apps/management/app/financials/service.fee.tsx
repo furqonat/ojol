@@ -110,7 +110,7 @@ function EditServiceFee(props: { data: service_fee }) {
     e.preventDefault()
     setLoading(true)
     const url =
-      process.env.NEXT_PUBLIC_GATE_BASE_URL + `gate/portal/fee/${props.data.id}`
+      process.env.NEXT_PUBLIC_GATE_BASE_URL + `portal/fee/${props.data.id}`
     const body = {
       service_type: serviceType?.value,
       account_type: accountType?.value,
