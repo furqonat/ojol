@@ -39,3 +39,9 @@ testem.log
 Thumbs.db
 
 .nx/cache
+
+# Next.js
+.next
+*.http
+.serverless
+.env.local

@@ -1,21 +1,21 @@
 {
   "name": "bcrypt",
   "$schema": "../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "bcrypt/src",
+  "sourceRoot": "libs/bcrypt/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["bcrypt/**/*.ts"]
+        "lintFilePatterns": ["libs/bcrypt/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "bcrypt/jest.config.ts"
+        "jestConfig": "libs/bcrypt/jest.config.ts"
       }
     }
   },

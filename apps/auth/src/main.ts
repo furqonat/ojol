@@ -1,11 +1,12 @@
-import serverlessExpress from '@vendia/serverless-express'
 import { ValidationPipe } from '@nestjs/common'
 import { NestFactory } from '@nestjs/core'
 
+// import serverlessExpress from '@vendia/serverless-express'
+// import { Handler, Callback, Context } from 'aws-lambda'
 import { AppModule } from './app/app.module'
+// import { ReplaySubject, firstValueFrom } from 'rxjs'
 
-import { Handler } from 'express'
-let server: Handler
+// const serverSubject = new ReplaySubject<Handler>()
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -16,22 +17,23 @@ async function bootstrap() {
       optionsSuccessStatus: 200,
     },
   })
-  app.useGlobalPipes(new ValidationPipe())
-  app.setGlobalPrefix('auth')
-  await app.init()
-  const expressApp = app.getHttpAdapter().getInstance()
-  return serverlessExpress({ app: expressApp })
-  // const port = process.env.PORT || 3333
-  // await app.listen(port)
-  // // Logger.log(
-  // //   `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
-  // // )
+  app.useGlobalPipes(new ValidationPipe({ transform: true }))
+  const port = process.env.PORT || 3000
+  await app.listen(port)
+  // await app.init()
+  // const expressApp = app.getHttpAdapter().getInstance()
+  // return serverlessExpress({ app: expressApp })
 }
 
-const handler: Handler = async (event, context, callback) => {
-  server = server ?? (await bootstrap())
-  return server(event, context, callback)
-}
+bootstrap()
 
-export { handler }
-/* bootstrap() */
+// bootstrap().then((server) => serverSubject.next(server))
+
+// export const handler: Handler = async (
+//   event: unknown,
+//   context: Context,
+//   callback: Callback,
+// ) => {
+//   const server = await firstValueFrom(serverSubject)
+//   return server(event, context, callback)
+// }

@@ -1,0 +1,35 @@
+service: auth
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-southeast-1
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: ./google-services.json
+    JWT_SECRET: auth-secret-1234
+
+  ecr:
+    images:
+      auth:
+        path: ../../.
+        file: apps/auth/Dockerfile
+
+plugins:
+  - serverless-offline
+  - serverless-plugin-warmup
+
+functions:
+  app:
+    image:
+      name: auth
+      command:
+        - dist/apps/auth/main.handler
+      entryPoint:
+        - '/lambda-entrypoint.sh'
+    timeout: 30
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+      - http:
+          method: any
+          path: /

@@ -1,0 +1,57 @@
+{
+  "name": "finance",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/finance/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/finance",
+        "main": "apps/finance/src/main.ts",
+        "tsConfig": "apps/finance/tsconfig.app.json",
+        "assets": ["apps/finance/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/finance/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "finance:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "finance:build:development"
+        },
+        "production": {
+          "buildTarget": "finance:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/finance/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/finance/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
