@@ -18,7 +18,7 @@ async function bootstrap() {
     },
   })
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
-  const port = process.env.PORT ?? 3000
+  const port = process.env.PORT || 3000
   await app.listen(port)
   // await app.init()
   // const expressApp = app.getHttpAdapter().getInstance()
