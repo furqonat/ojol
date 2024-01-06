@@ -13,7 +13,7 @@ export function AddNew() {
 
   function handleOnSave(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault()
-    const url = process.env.NEXT_PUBLIC_PROD_BASE_URL + `gate/portal/banner`
+    const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + `portal/banner`
     const body: Prisma.bannerCreateInput = {
       position: position,
       for_app: status,

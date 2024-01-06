@@ -10,7 +10,7 @@ export function Settings() {
 
   useEffect(() => {
     if (data?.user?.token) {
-      const url = process.env.NEXT_PUBLIC_PROD_BASE_URL + 'gate/portal/settings'
+      const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/settings'
       fetch(url, {
         headers: {
           Authorization: `Bearer ${data?.user.token}`,
@@ -63,8 +63,7 @@ function Actions(props: { data: settings }) {
   function handleOnSave(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault()
     const url =
-      process.env.NEXT_PUBLIC_PROD_BASE_URL +
-      `gate/portal/settings/${props.data.id}`
+      process.env.NEXT_PUBLIC_GATE_BASE_URL + `portal/settings/${props.data.id}`
     const body: Prisma.settingsUpdateInput = {
       sk: sk,
       phone: phone,

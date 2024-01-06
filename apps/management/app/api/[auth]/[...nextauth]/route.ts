@@ -18,7 +18,7 @@ const authOptions: NextAuthOptions = {
           return null
         }
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_PROD_BASE_URL}auth/admin`,
+          `${process.env.NEXT_PUBLIC_AUTH_BASE_URL}admin`,
           {
             method: 'POST',
             headers: {

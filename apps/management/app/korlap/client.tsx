@@ -30,7 +30,7 @@ export function Client() {
   useEffect(() => {
     if (data?.user.token) {
       const url = new UrlService(
-        `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/`,
+        `${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/`,
       )
         .addQuery('id', 'true')
         .addQuery('name', 'true')

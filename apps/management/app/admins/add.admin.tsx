@@ -72,7 +72,7 @@ export function AddAdmin() {
         roleId: roleId,
       }
     }
-    fetch(`${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/`, {
+    fetch(`${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/`, {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
@@ -98,7 +98,7 @@ export function AddAdmin() {
   useEffect(() => {
     if (data?.user.token) {
       const url = new UrlService(
-        `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/roles`,
+        `${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/roles`,
       )
       fetch(url.build(), {
         headers: {

@@ -53,7 +53,7 @@ export function AddNewServiceFee() {
   async function handleCreateServiceFee(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
-    const url = process.env.NEXT_PUBLIC_PROD_BASE_URL + 'gate/portal/fee'
+    const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/fee'
     const body = {
       service_type: serviceType?.value,
       account_type: accountType?.value,

@@ -23,7 +23,7 @@ export function Driver() {
   const fetchDriver = useCallback(async () => {
     if (data?.user.token) {
       const url = new UrlService(
-        `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/driver`,
+        `${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/driver`,
       )
         .addQuery('id', 'true')
         .addQuery('name', 'true')

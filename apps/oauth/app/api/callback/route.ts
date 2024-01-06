@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   const { authCode, state } = await req.json()
 
   const resp = await fetch(
-    `https://api.gentatechnology.com/gate/oauth/?customerId=${state}`,
+    `https://gate.gentatechnology.com/oauth/?customerId=${state}`,
     {
       method: 'POST',
       body: JSON.stringify({ access_token: authCode }),

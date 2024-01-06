@@ -26,7 +26,7 @@ export function Driver() {
   const fetchDriver = useCallback(async () => {
     if (data?.user.token) {
       const url = new UrlService(
-        `${process.env.NEXT_PUBLIC_PROD_BASE_URL}account/admin/driver`,
+        `${process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL}admin/driver`,
       )
         .addQuery('id', 'true')
         .addQuery('name', 'true')
@@ -122,7 +122,7 @@ function Actions(props: { checked: boolean; id: string }) {
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
     const url =
-      process.env.NEXT_PUBLIC_PROD_BASE_URL + `account/admin/driver/${props.id}`
+      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/driver/${props.id}`
     const body: Prisma.driverUpdateInput = {
       status: checked === true ? 'ACTIVE' : 'BLOCK',
     }
@@ -150,7 +150,7 @@ function Actions(props: { checked: boolean; id: string }) {
     }>,
   ) {
     const url =
-      process.env.NEXT_PUBLIC_PROD_BASE_URL + `account/admin/driver/${props.id}`
+      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/driver/${props.id}`
     const body: Prisma.driverUpdateInput = {
       driver_details: {
         update: {
