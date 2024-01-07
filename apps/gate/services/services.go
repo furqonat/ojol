@@ -12,4 +12,5 @@ var Module = fx.Options(
 	fx.Provide(NewFirestore),
 	fx.Provide(NewLogoService),
 	fx.Provide(NewJWTService),
+	fx.Provide(NewMessaging),
 )

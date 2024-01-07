@@ -7,7 +7,6 @@ import (
 
 type UpdateBanner struct {
 	db.BannerModel
-	Img []Images `json:"img"`
 }
 
 type Images struct {
@@ -93,19 +92,45 @@ func (lugo LugoService) UpdateBanner(id string, model *UpdateBanner) (*string, e
 	if errUpdate != nil {
 		return nil, errUpdate
 	}
-	if len(model.Img) > 0 {
-		for _, val := range model.Img {
-			_, errBnr := lugo.db.BannerImages.CreateOne(
-				db.BannerImages.Link.Set(val.Link),
-				db.BannerImages.Banner.Link(db.Banner.ID.Equals(banner.ID)),
-			).Exec(context.Background())
-
-			if errBnr != nil {
-				return nil, errBnr
-			}
-		}
-	}
 	return &banner.ID, nil
+}
+
+func (lugo LugoService) CreateImage(bannerId string, model *db.BannerImagesModel) (*db.BannerImagesModel, error) {
+	img, err := lugo.db.BannerImages.CreateOne(
+		db.BannerImages.Link.Set(model.Link),
+		db.BannerImages.Banner.Link(db.Banner.ID.Equals(bannerId)),
+		db.BannerImages.URL.SetIfPresent(lugo.assignPtrStringIfTrue(model.URL())),
+		db.BannerImages.Description.SetIfPresent(lugo.assignPtrStringIfTrue(model.Description())),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return img, nil
+}
+
+func (lugo LugoService) DeleteImage(imgId string) error {
+	_, err := lugo.db.BannerImages.FindUnique(
+		db.BannerImages.ID.Equals(imgId),
+	).Delete().Exec(context.Background())
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (lugo LugoService) UpdateImage(imgId string, model *db.BannerImagesModel) error {
+	_, err := lugo.db.BannerImages.FindUnique(
+		db.BannerImages.ID.Equals(imgId),
+	).Update(
+		db.BannerImages.URL.SetIfPresent(lugo.assignPtrStringIfTrue(model.URL())),
+		db.BannerImages.Description.SetIfPresent(lugo.assignPtrStringIfTrue(model.Description())),
+	).Exec(context.Background())
+
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (lugo LugoService) GetBanner(id string) (*db.BannerModel, error) {

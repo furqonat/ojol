@@ -26,6 +26,17 @@ func (lugo LugoService) CreateTrxFee(service *db.ServiceFeeModel) (*string, erro
 	return &fee.ID, nil
 }
 
+func (lugo LugoService) DeleteFee(feeId string) error {
+	_, errFee := lugo.db.ServiceFee.FindUnique(
+		db.ServiceFee.ID.Equals(feeId),
+	).Delete().Exec(context.Background())
+
+	if errFee != nil {
+		return errFee
+	}
+	return nil
+}
+
 func (lugo LugoService) PriceInKM(distance float64, serviceType db.ServiceType) (*int, error) {
 	price, errPrice := lugo.db.Services.FindFirst(
 		db.Services.ServiceType.Equals(serviceType),
@@ -33,7 +44,12 @@ func (lugo LugoService) PriceInKM(distance float64, serviceType db.ServiceType) 
 	if errPrice != nil {
 		return nil, errPrice
 	}
-	value := price.PriceInKm * int(math.Ceil(distance))
+	absDistance := int(math.Ceil(distance))
+	if absDistance < price.MinKm && price.MinKm != 0 {
+		return &price.PriceInMinKm, nil
+	}
+	mDist := math.Ceil(float64(absDistance) - float64(price.MinKm))
+	value := (price.PriceInKm * int(mDist)) + price.PriceInMinKm
 
 	return &value, nil
 }
@@ -61,6 +77,7 @@ func (lugo LugoService) UpdateService(serviceId string, ptrServiceModel *db.Serv
 		db.Services.ServiceType.SetIfPresent(&ptrServiceModel.ServiceType),
 		db.Services.PriceInKm.SetIfPresent(&ptrServiceModel.PriceInKm),
 		db.Services.MinKm.SetIfPresent(&ptrServiceModel.MinKm),
+		db.Services.PriceInMinKm.SetIfPresent(&ptrServiceModel.PriceInMinKm),
 	).Exec(context.Background())
 
 	if err != nil {
