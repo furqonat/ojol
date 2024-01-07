@@ -245,13 +245,13 @@ model merchant_operation_time {
   status              Boolean           @default(false)
   open_time           DateTime          @db.Time()
   close_time          DateTime          @db.Time()
-  merchant_details    merchant_details? @relation(fields: [merchant_details_id], references: [id])
+  merchant_details    merchant_details? @relation(fields: [merchant_details_id], references: [id], onDelete: Cascade)
   merchant_details_id String?
 }
 
 model images {
   id                  String           @id @default(cuid())
-  merchant_details    merchant_details @relation(fields: [merchant_details_id], references: [id])
+  merchant_details    merchant_details @relation(fields: [merchant_details_id], references: [id], onDelete: Cascade)
   merchant_details_id String
   link                String
 }

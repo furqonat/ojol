@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { Prisma, banner, banner_images } from '@prisma/client/users'
+import { banner, banner_images } from '@prisma/client/users'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useRef, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
-import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
+// import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 
 type Banner = banner & {
   images: banner_images[] | null | undefined
@@ -56,10 +56,6 @@ type ImageBody = {
   link: string
 }
 
-type UpdateBannerBody = Prisma.bannerUpdateInput & {
-  img?: ImageBody[]
-}
-
 function UpdateBanner(props: { data: Banner }) {
   console.log(props.data)
   const { data } = useSession()
@@ -74,7 +70,7 @@ function UpdateBanner(props: { data: Banner }) {
     value: props.data.position,
     label: props.data.position,
   })
-  const [files, setFiles] = useState<File[]>([])
+  // const [files, setFiles] = useState<File[]>([])
 
   async function handleOnSave(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault()
@@ -106,7 +102,7 @@ function UpdateBanner(props: { data: Banner }) {
   function handleChangeFiles(e: React.ChangeEvent<HTMLInputElement>) {
     const { files } = e.target
     if (files) {
-      setFiles(files as unknown as File[])
+      // setFiles(files as unknown as File[])
     }
   }
 
