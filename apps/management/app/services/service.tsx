@@ -51,6 +51,7 @@ export function Services() {
                   name={item.service_type}
                   token={data?.user.token}
                   minKm={item.min_km}
+                  priceInMinKm={item.price_in_min_km}
                 />
               </div>
             </div>
@@ -67,11 +68,13 @@ function Actions(props: {
   name: string
   price: number
   minKm: number
+  priceInMinKm: number
   token?: string
 }) {
   const [status, setStatus] = useState(props.status ?? false)
   const [price, setPrice] = useState(props.price ?? 0)
   const [minKm, setMinKm] = useState(props.minKm ?? 0)
+  const [priceInMinKm, setPriceInMinKm] = useState(props.priceInMinKm ?? 0)
   const [loading, setLoading] = useState(false)
 
   const dialog = useRef<HTMLDialogElement>(null)
@@ -89,6 +92,11 @@ function Actions(props: {
     setMinKm(valueAsNumber)
   }
 
+  function handleChangePriceInMinKm(e: React.ChangeEvent<HTMLInputElement>) {
+    const { valueAsNumber } = e.target
+    setPriceInMinKm(valueAsNumber)
+  }
+
   function handleSaveAction(e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault()
     setLoading(true)
@@ -97,6 +105,7 @@ function Actions(props: {
       price_in_km: price,
       service_type: props.name,
       min_km: minKm,
+      price_in_min_km: priceInMinKm,
     }
     fetch(
       `${process.env.NEXT_PUBLIC_GATE_BASE_URL}portal/services/${props.id}`,
@@ -118,7 +127,7 @@ function Actions(props: {
   return (
     <div className={'flex flex-row'}>
       <button
-        className="btn btn-sm btn-ghost"
+        className="btn btn-sm btn-outline"
         onClick={() => dialog.current?.showModal()}
       >
         <svg
@@ -159,6 +168,16 @@ function Actions(props: {
               placeholder={'Min Km'}
               value={minKm}
               onChange={handleChangeMinKm}
+            />
+          </div>
+          <div className={'flex flex-col mt-6 gap-3'}>
+            <h3 className={'flex-1 font-semibold'}>Min Price In Km</h3>
+            <input
+              type="number"
+              className={'input-bordered input input-sm'}
+              placeholder={'Min Price In Km'}
+              value={priceInMinKm}
+              onChange={handleChangePriceInMinKm}
             />
           </div>
           <div className={'flex flex-row gap-6 items-center mt-6'}>

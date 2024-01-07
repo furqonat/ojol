@@ -5,6 +5,7 @@ import { AddNewServiceFee, accountTypes, serviceTypes } from './add.service.fee'
 import { service_fee } from '@prisma/client/users'
 import { useSession } from 'next-auth/react'
 import Select, { SingleValue } from 'react-select'
+import { DeleteServiceFee } from './delete.service.fee'
 
 type Response = {
   data: service_fee[]
@@ -27,7 +28,6 @@ export function ServiceFee() {
     }
   }, [data?.user?.token])
 
-  console.log(serviceFee)
   return (
     <section>
       <div className={'flex w-full items-center'}>
@@ -49,7 +49,10 @@ export function ServiceFee() {
                       <span>{item.percentage} %</span>
                     </div>
                   </div>
-                  <EditServiceFee data={item} />
+                  <div className={'flex gap-2 items-center'}>
+                    <EditServiceFee data={item} />
+                    <DeleteServiceFee id={item.id} />
+                  </div>
                 </div>
               </div>
             </div>
