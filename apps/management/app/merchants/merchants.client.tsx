@@ -52,7 +52,6 @@ export function Merchants() {
     }
   }, [data?.user?.token])
 
-  console.log(users)
   return (
     <section>
       <div className="overflow-x-auto">
@@ -98,7 +97,7 @@ export function Merchants() {
                   </td>
                   <td>{item._count?.products}</td>
                   <td>
-                    <Actions checked={item.status === 'ACTIVE'} id={item.id} />
+                    <Actions data={item} />
                   </td>
                 </tr>
               )
@@ -109,16 +108,25 @@ export function Merchants() {
     </section>
   )
 }
+type Option = {
+  label: string
+  value: string
+}
 
-function Actions(props: { checked: boolean; id: string }) {
+function Actions(props: { data: User }) {
   const { data } = useSession()
-  const [status, setStatus] = useState(props.checked)
+  const [status, setStatus] = useState(props.data.status === 'ACTIVE')
+  const [badges, setBadge] = useState<SingleValue<Option>>({
+    value: props.data.details?.badge ?? '',
+    label: props.data.details?.badge ?? '',
+  })
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
     const url =
-      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/merchant/${props.id}`
+      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL +
+      `admin/merchant/${props.data.id}`
     const body: Prisma.merchantUpdateInput = {
       status: checked === true ? 'ACTIVE' : 'BLOCK',
     }
@@ -138,14 +146,11 @@ function Actions(props: { checked: boolean; id: string }) {
     })
   }
 
-  function handleChangeBadge(
-    newValue: SingleValue<{
-      label: string
-      value: string
-    }>,
-  ) {
+  function handleChangeBadge(newValue: SingleValue<Option>) {
+    setBadge(newValue)
     const url =
-      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/merchant/${props.id}`
+      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL +
+      `admin/merchant/${props.data.id}`
     const body: Prisma.merchantUpdateInput = {
       details: {
         update: {
@@ -204,6 +209,7 @@ function Actions(props: { checked: boolean; id: string }) {
               />
             </div>
             <Select
+              value={badges}
               onChange={handleChangeBadge}
               options={badge.map((item) => {
                 return {

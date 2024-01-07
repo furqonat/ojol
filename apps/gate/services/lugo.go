@@ -7,14 +7,16 @@ import (
 )
 
 type LugoService struct {
-	db     utils.Database
-	logger utils.Logger
+	db        utils.Database
+	messaging *Messaging
+	logger    utils.Logger
 }
 
-func NewLogoService(db utils.Database, logger utils.Logger) LugoService {
+func NewLogoService(db utils.Database, msg *Messaging, logger utils.Logger) LugoService {
 	return LugoService{
-		db:     db,
-		logger: logger,
+		db:        db,
+		logger:    logger,
+		messaging: msg,
 	}
 }
 

@@ -30,6 +30,7 @@ func (s ManagementRoutes) Setup() {
 
 		api.POST("/fee", s.controller.CreateTrxFee)
 		api.PUT("/fee/:id", s.controller.UpdateTrxFee)
+		api.DELETE("/fee/:id", s.controller.DeleteTrxFee)
 
 		api.POST("/fee/distance", s.controller.GetPriceInKm)
 
@@ -45,6 +46,18 @@ func (s ManagementRoutes) Setup() {
 		api.PUT("/banner/:id", s.controller.UpdateBanner)
 		api.GET("/banner", s.controller.GetBanners)
 		api.GET("/banner/:id", s.controller.GetBanner)
+
+		api.POST("/img/:bannerId", s.controller.CreateImage)
+		api.PUT("/img/:imgId", s.controller.UpdateImage)
+		api.DELETE("/img/:imgId", s.controller.DeleteImage)
+
+		api.POST("/promo/customer/:id", s.controller.SendMessageToCustomer)
+		api.POST("/promo/merchant/:id", s.controller.SendMessageToMerchant)
+		api.POST("/promo/driver/:id", s.controller.SendMessageToDriver)
+		api.POST("/promos", s.controller.BroadCastMessage)
+
+		api.GET("/promo", s.controller.GetPromotions)
+		api.GET("/promo/:id", s.controller.GetPromotion)
 	}
 }
 

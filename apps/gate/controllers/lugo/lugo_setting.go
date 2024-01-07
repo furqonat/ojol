@@ -144,3 +144,46 @@ func (c Controller) GetBanners(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, s)
 }
+
+func (c Controller) CreateImage(ctx *gin.Context) {
+	bannerId := ctx.Param("bannerId")
+	model := db.BannerImagesModel{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	s, err := c.service.CreateImage(bannerId, &model)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusCreated, s)
+}
+
+func (c Controller) UpdateImage(ctx *gin.Context) {
+	imgId := ctx.Param("imgId")
+	model := db.BannerImagesModel{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	if err := c.service.UpdateImage(imgId, &model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
+func (c Controller) DeleteImage(ctx *gin.Context) {
+	imgId := ctx.Param("imgId")
+	if err := c.service.DeleteImage(imgId); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}

@@ -2,7 +2,9 @@
   "name": "@lugo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "migrate": "prisma migrate dev --schema ./libs/schema/schema.prisma && nx run-many -t generate-db"
+  },
   "private": true,
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.2",
