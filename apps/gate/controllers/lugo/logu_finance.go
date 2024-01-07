@@ -44,6 +44,16 @@ func (c Controller) CreateTrxFee(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "res": service})
 }
 
+func (c Controller) DeleteTrxFee(ctx *gin.Context) {
+	feeId := ctx.Param("id")
+	if err := c.service.DeleteFee(feeId); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
 func (c Controller) UpdateTrxFee(ctx *gin.Context) {
 	feeId := ctx.Param("id")
 	model := db.ServiceFeeModel{}

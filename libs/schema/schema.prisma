@@ -33,6 +33,7 @@ model customer {
   order                   order[]
   favorites               favorites[]
   dana_token              dana_token[]
+  promotion               promotion[]
 }
 
 model dana_token {
@@ -85,6 +86,7 @@ model driver {
   referal                referal?                 @relation(fields: [referal_id], references: [id], onDelete: SetNull)
   referal_id             String?
   driver_trx             driver_trx[]
+  promotion              promotion[]
 }
 
 model referal {
@@ -220,6 +222,7 @@ model merchant {
   products        product[]
   merchant_trx    merchant_trx[]
   merchant_wallet merchant_wallet?
+  promotion       promotion[]
 }
 
 model merchant_details {
@@ -242,13 +245,13 @@ model merchant_operation_time {
   status              Boolean           @default(false)
   open_time           DateTime          @db.Time()
   close_time          DateTime          @db.Time()
-  merchant_details    merchant_details? @relation(fields: [merchant_details_id], references: [id])
+  merchant_details    merchant_details? @relation(fields: [merchant_details_id], references: [id], onDelete: Cascade)
   merchant_details_id String?
 }
 
 model images {
   id                  String           @id @default(cuid())
-  merchant_details    merchant_details @relation(fields: [merchant_details_id], references: [id])
+  merchant_details    merchant_details @relation(fields: [merchant_details_id], references: [id], onDelete: Cascade)
   merchant_details_id String
   link                String
 }
@@ -304,11 +307,12 @@ model service_fee {
 }
 
 model services {
-  id           String       @id @default(cuid())
-  enable       Boolean      @default(true)
-  service_type service_type
-  price_in_km  Int          @default(0)
-  min_km       Int          @default(0)
+  id              String       @id @default(cuid())
+  enable          Boolean      @default(true)
+  service_type    service_type
+  price_in_km     Int          @default(0)
+  min_km          Int          @default(0)
+  price_in_min_km Int          @default(0)
 }
 
 model company_balance {
@@ -382,7 +386,7 @@ enum service_type {
 
 model product {
   id                      String                    @id @default(cuid())
-  merchant                merchant                  @relation(fields: [merchant_id], references: [id])
+  merchant                merchant                  @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
   merchant_id             String
   name                    String
   image                   String?
@@ -399,16 +403,16 @@ model product {
 
 model category {
   id         String   @id @default(cuid())
-  product    product? @relation(fields: [product_id], references: [id])
+  product    product? @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id String?
   name       String
   created_at DateTime @default(now())
 }
 
 model favorites {
-  product     product  @relation(fields: [product_id], references: [id])
+  product     product  @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id  String
-  customer    customer @relation(fields: [customer_id], references: [id])
+  customer    customer @relation(fields: [customer_id], references: [id], onDelete: Cascade)
   customer_id String
 
   @@id([product_id, customer_id])
@@ -416,40 +420,40 @@ model favorites {
 
 model customer_product_review {
   id              String       @id @default(cuid())
-  product         product      @relation(fields: [product_id], references: [id])
-  customer        customer     @relation(fields: [customer_id], references: [id])
+  product         product      @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  customer        customer     @relation(fields: [customer_id], references: [id], onDelete: Cascade)
   product_id      String
   customer_id     String
   review          String?
   rating          Int
   createdt_at     DateTime     @default(now())
-  transacrion     transactions @relation(fields: [transacrions_id], references: [id])
+  transacrion     transactions @relation(fields: [transacrions_id], references: [id], onDelete: Cascade)
   transacrions_id String
 }
 
 model customer_driver_review {
   id              String       @id @default(cuid())
-  driver          driver       @relation(fields: [driver_id], references: [id])
-  customer        customer     @relation(fields: [customer_id], references: [id])
+  driver          driver       @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  customer        customer     @relation(fields: [customer_id], references: [id], onDelete: Cascade)
   review          String?
   rating          Int
   created_at      DateTime     @default(now())
   driver_id       String
   customer_id     String
-  transacrion     transactions @relation(fields: [transacrions_id], references: [id])
+  transacrion     transactions @relation(fields: [transacrions_id], references: [id], onDelete: Cascade)
   transacrions_id String
 }
 
 model driver_customer_review {
   id              String       @id @default(cuid())
-  driver          driver       @relation(fields: [driver_id], references: [id])
-  customer        customer     @relation(fields: [customer_id], references: [id])
+  driver          driver       @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  customer        customer     @relation(fields: [customer_id], references: [id], onDelete: Cascade)
   review          String?
   rating          Int
   created_at      DateTime     @default(now())
   driver_id       String
   customer_id     String
-  transacrion     transactions @relation(fields: [transacrions_id], references: [id])
+  transacrion     transactions @relation(fields: [transacrions_id], references: [id], onDelete: Cascade)
   transacrions_id String
 }
 
@@ -460,13 +464,13 @@ model order {
   payment_type   payment_type
   created_at     DateTime         @default(now())
   transactions   transactions?
-  driver         driver?          @relation(fields: [driver_id], references: [id])
+  driver         driver?          @relation(fields: [driver_id], references: [id], onDelete: Cascade)
   driver_id      String?
-  customer       customer         @relation(fields: [customer_id], references: [id])
+  customer       customer         @relation(fields: [customer_id], references: [id], onDelete: Cascade)
   customer_id    String
-  discount       discount?        @relation(fields: [discount_id], references: [id])
+  discount       discount?        @relation(fields: [discount_id], references: [id], onDelete: Cascade)
   discount_id    String?
-  tax            tax?             @relation(fields: [tax_id], references: [id])
+  tax            tax?             @relation(fields: [tax_id], references: [id], onDelete: Cascade)
   tax_id         String?
   gross_amount   Int
   net_amount     Int
@@ -502,7 +506,7 @@ model order_detail {
 
 model order_item {
   id         String  @id @default(cuid())
-  product    product @relation(fields: [product_id], references: [id])
+  product    product @relation(fields: [product_id], references: [id], onDelete: Cascade)
   product_id String
   quantity   Int
   order      order?  @relation(fields: [order_id], references: [id], onDelete: Cascade)
@@ -511,7 +515,7 @@ model order_item {
 
 model cart {
   id          String      @id @default(cuid())
-  customer    customer    @relation(fields: [customer_id], references: [id])
+  customer    customer    @relation(fields: [customer_id], references: [id], onDelete: Cascade)
   customer_id String      @unique
   created_at  DateTime    @default(now())
   cart_item   cart_item[]
@@ -519,8 +523,8 @@ model cart {
 
 model cart_item {
   id         String   @id @default(cuid())
-  product    product? @relation(fields: [product_id], references: [id])
-  cart       cart     @relation(fields: [cart_id], references: [id])
+  product    product? @relation(fields: [product_id], references: [id], onDelete: Cascade)
+  cart       cart     @relation(fields: [cart_id], references: [id], onDelete: Cascade)
   quantity   Int
   product_id String?
   cart_id    String
@@ -602,13 +606,28 @@ model banner {
 }
 
 model banner_images {
-  id        String  @id @default(cuid())
-  link      String
-  banner    banner? @relation(fields: [banner_id], references: [id])
-  banner_id String?
+  id          String  @id @default(cuid())
+  link        String
+  banner      banner? @relation(fields: [banner_id], references: [id], onDelete: Cascade)
+  banner_id   String?
+  url         String?
+  description String?
 }
 
 enum position {
   TOP
   BOTTOM
+}
+
+model promotion {
+  id          String    @id @default(cuid())
+  title       String
+  image_url   String?
+  description String?
+  merchant    merchant? @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+  merchant_id String?
+  driver      driver?   @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  driver_id   String?
+  customer    customer? @relation(fields: [customer_id], references: [id], onDelete: Cascade)
+  customer_id String?
 }
