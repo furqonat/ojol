@@ -1,3 +1,4 @@
+import { KorlapFee } from './korlap.fee'
 import { ServiceFee } from './service.fee'
 
 export default function FinancialPage() {
@@ -103,6 +104,7 @@ export default function FinancialPage() {
           </div>
         </section>
         <ServiceFee />
+        <KorlapFee />
       </section>
     </main>
   )
