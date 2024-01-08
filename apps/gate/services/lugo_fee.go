@@ -85,3 +85,50 @@ func (lugo LugoService) UpdateService(serviceId string, ptrServiceModel *db.Serv
 	}
 	return &service.ID, nil
 }
+
+func (lugo LugoService) CreateKorlapFee(data *db.KorlapFeeModel) (*db.KorlapFeeModel, error) {
+
+	fee, err := lugo.db.KorlapFee.CreateOne(
+		db.KorlapFee.AdminType.Set(data.AdminType),
+		db.KorlapFee.Percentage.Set(data.Percentage),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return fee, nil
+}
+
+func (lugo LugoService) UpdateKorlapFee(id string, data *db.KorlapFeeModel) (*string, error) {
+	fee, err := lugo.db.KorlapFee.FindUnique(
+		db.KorlapFee.ID.Equals(id),
+	).Update(
+		db.KorlapFee.Percentage.Set(data.Percentage),
+	).Exec(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+	return &fee.ID, nil
+}
+
+func (lugo LugoService) DeleteKorlapFee(id string) error {
+	_, err := lugo.db.KorlapFee.FindUnique(
+		db.KorlapFee.ID.Equals(id),
+	).Delete().Exec(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (lugo LugoService) GetKorlapFee(take, skip int) ([]db.KorlapFeeModel, int, error) {
+	fees, err := lugo.db.KorlapFee.FindMany().Take(take).Skip(skip).Exec(context.Background())
+	if err != nil {
+		return nil, 0, err
+	}
+	total, errT := lugo.db.KorlapFee.FindMany().Exec(context.Background())
+	if errT != nil {
+		return nil, 0, err
+	}
+	return fees, len(total), nil
+}
