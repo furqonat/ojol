@@ -14,8 +14,8 @@ type Payload struct {
 	Body     string `json:"body,omitempty"`
 }
 
-func (l LugoService) SendMessageToMerchant(merchantId string, payload Payload) error {
-	merchat, err := l.db.Merchant.FindUnique(
+func (u LugoService) SendMessageToMerchant(merchantId string, payload Payload) error {
+	merchant, err := u.db.Merchant.FindUnique(
 		db.Merchant.ID.Equals(merchantId),
 	).With(
 		db.Merchant.DeviceToken.Fetch(),
@@ -24,11 +24,11 @@ func (l LugoService) SendMessageToMerchant(merchantId string, payload Payload) e
 	if err != nil {
 		return err
 	}
-	token, ok := merchat.DeviceToken()
+	token, ok := merchant.DeviceToken()
 	if !ok {
 		return errors.New("unable fetch device token")
 	}
-	if _, err := l.db.Promotion.CreateOne(
+	if _, err := u.db.Promotion.CreateOne(
 		db.Promotion.Title.Set(payload.Title),
 		db.Promotion.ImageURL.Set(payload.ImageURL),
 		db.Promotion.Description.Set(payload.Body),
@@ -36,14 +36,14 @@ func (l LugoService) SendMessageToMerchant(merchantId string, payload Payload) e
 	).Exec(context.Background()); err != nil {
 		return err
 	}
-	if err := l.sendMessage(token.Token, payload); err != nil {
+	if err := u.sendMessage(token.Token, payload); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (l LugoService) SendMessageToDriver(driverId string, payload Payload) error {
-	driver, err := l.db.Driver.FindUnique(
+func (u LugoService) SendMessageToDriver(driverId string, payload Payload) error {
+	driver, err := u.db.Driver.FindUnique(
 		db.Driver.ID.Equals(driverId),
 	).With(
 		db.Driver.DeviceToken.Fetch(),
@@ -57,7 +57,7 @@ func (l LugoService) SendMessageToDriver(driverId string, payload Payload) error
 		return errors.New("unable fetch device token")
 	}
 
-	if _, err := l.db.Promotion.CreateOne(
+	if _, err := u.db.Promotion.CreateOne(
 		db.Promotion.Title.Set(payload.Title),
 		db.Promotion.ImageURL.Set(payload.ImageURL),
 		db.Promotion.Description.Set(payload.Body),
@@ -66,15 +66,15 @@ func (l LugoService) SendMessageToDriver(driverId string, payload Payload) error
 		return err
 	}
 
-	if err := l.sendMessage(token.Token, payload); err != nil {
+	if err := u.sendMessage(token.Token, payload); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (l LugoService) SendMessageToCustomer(cutomerId string, payload Payload) error {
-	customer, err := l.db.Customer.FindUnique(
-		db.Customer.ID.Equals(cutomerId),
+func (u LugoService) SendMessageToCustomer(customerId string, payload Payload) error {
+	customer, err := u.db.Customer.FindUnique(
+		db.Customer.ID.Equals(customerId),
 	).With(
 		db.Customer.DeviceToken.Fetch(),
 	).Exec(context.Background())
@@ -86,21 +86,21 @@ func (l LugoService) SendMessageToCustomer(cutomerId string, payload Payload) er
 	if !ok {
 		return errors.New("unable fetch device token")
 	}
-	if _, err := l.db.Promotion.CreateOne(
+	if _, err := u.db.Promotion.CreateOne(
 		db.Promotion.Title.Set(payload.Title),
 		db.Promotion.ImageURL.Set(payload.ImageURL),
 		db.Promotion.Description.Set(payload.Body),
-		db.Promotion.Customer.Link(db.Customer.ID.Equals(cutomerId)),
+		db.Promotion.Customer.Link(db.Customer.ID.Equals(customerId)),
 	).Exec(context.Background()); err != nil {
 		return err
 	}
-	if err := l.sendMessage(token.Token, payload); err != nil {
+	if err := u.sendMessage(token.Token, payload); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (l LugoService) sendMessage(token string, payload Payload) error {
+func (u LugoService) sendMessage(token string, payload Payload) error {
 	msg := &messaging.Message{
 		Notification: &messaging.Notification{
 			Title: payload.Title,
@@ -126,14 +126,14 @@ func (l LugoService) sendMessage(token string, payload Payload) error {
 		Token: token,
 	}
 
-	_, er := l.messaging.Send(context.Background(), msg)
+	_, er := u.messaging.Send(context.Background(), msg)
 	if er != nil {
 		return er
 	}
 	return nil
 }
 
-func (l LugoService) BroadCastMessage(payload Payload) error {
+func (u LugoService) BroadCastMessage(payload Payload) error {
 	msg := &messaging.Message{
 		Notification: &messaging.Notification{
 			Title: payload.Title,
@@ -159,20 +159,20 @@ func (l LugoService) BroadCastMessage(payload Payload) error {
 		Topic: "promotion",
 	}
 
-	_, er := l.messaging.Send(context.Background(), msg)
+	_, er := u.messaging.Send(context.Background(), msg)
 	if er != nil {
 		return er
 	}
 	return nil
 }
 
-func (l LugoService) GetPromotions(take, skip int) ([]db.PromotionModel, int, error) {
-	s, err := l.db.Promotion.FindMany().With(
+func (u LugoService) GetPromotions(take, skip int) ([]db.PromotionModel, int, error) {
+	s, err := u.db.Promotion.FindMany().With(
 		db.Promotion.Customer.Fetch(),
 		db.Promotion.Driver.Fetch(),
 		db.Promotion.Merchant.Fetch(),
 	).Take(take).Skip(skip).Exec(context.Background())
-	t, er := l.db.Promotion.FindMany().Exec(context.Background())
+	t, er := u.db.Promotion.FindMany().Exec(context.Background())
 	if err != nil {
 		return nil, 0, err
 	}
@@ -182,8 +182,8 @@ func (l LugoService) GetPromotions(take, skip int) ([]db.PromotionModel, int, er
 	return s, len(t), nil
 }
 
-func (l LugoService) GetPromotion(pId string) (*db.PromotionModel, error) {
-	s, err := l.db.Promotion.FindUnique(
+func (u LugoService) GetPromotion(pId string) (*db.PromotionModel, error) {
+	s, err := u.db.Promotion.FindUnique(
 		db.Promotion.ID.Equals(pId),
 	).With(
 		db.Promotion.Customer.Fetch(),

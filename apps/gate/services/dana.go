@@ -106,3 +106,43 @@ func (dana DanaService) GetUserProfile(accessToken string) (*utils.UserProfile, 
 	}
 	return &result.Response.Body, nil
 }
+
+func (dana DanaService) GetCompanyBallance() (*utils.MerchantQuery, error) {
+	guid := dana.danaApi.GenerateGUID()
+	timestamp := dana.danaApi.GetDateNow()
+
+	requestData := map[string]interface{}{
+		"head": map[string]interface{}{
+			"version":      "2.0",
+			"function":     "dana.merchant.queryMerchantResource",
+			"clientId":     utils.ClientID,
+			"clientSecret": utils.ClientSecret,
+			"reqTime":      timestamp,
+			"reqMsgId":     guid,
+			"reserve":      "{}",
+		},
+		"body": map[string]interface{}{
+			"requestMerchantId": utils.MerchantID,
+			"merchantResourceInfoList": []string{
+				"MERCHANT_AVAILABLE_BALANCE",
+				"MERCHANT_DEPOSIT_BALANCE",
+				"MERCHANT_TOTAL_BALANCE",
+			},
+		},
+	}
+	response, err := dana.danaApi.New("/dana/merchant/queryMerchantResource.htm", requestData)
+
+	if err != nil {
+		return nil, err
+	}
+	result := utils.Result[utils.MerchantQuery]{}
+	errParse := json.Unmarshal(response, &result)
+	if errParse != nil {
+		return nil, errParse
+	}
+	if result.Response.Body.ResultInfo.ResultCode != "SUCCESS" {
+		dana.logger.Info(result.Response)
+		return nil, errors.New(fmt.Sprintf("Error: %s", response))
+	}
+	return &result.Response.Body, nil
+}

@@ -13,13 +13,13 @@ type Images struct {
 	Link string `json:"link"`
 }
 
-func (lugo LugoService) CreateSetting(model *db.SettingsModel) (*string, error) {
+func (u LugoService) CreateSetting(model *db.SettingsModel) (*string, error) {
 	var s *string
 	sk, ok := model.Sk()
 	if ok {
 		s = &sk
 	}
-	set, err := lugo.db.Settings.CreateOne(
+	set, err := u.db.Settings.CreateOne(
 		db.Settings.Phone.Set(model.Phone),
 		db.Settings.Email.Set(model.Email),
 		db.Settings.Slug.Set(model.Slug),
@@ -33,13 +33,13 @@ func (lugo LugoService) CreateSetting(model *db.SettingsModel) (*string, error) 
 	return &set.ID, nil
 }
 
-func (lugo LugoService) UpdateSetting(id string, model *db.SettingsModel) (*string, error) {
-	setting, err := lugo.db.Settings.FindUnique(
+func (u LugoService) UpdateSetting(id string, model *db.SettingsModel) (*string, error) {
+	setting, err := u.db.Settings.FindUnique(
 		db.Settings.ID.Equals(id),
 	).Update(
 		db.Settings.Phone.Set(model.Phone),
 		db.Settings.Email.Set(model.Email),
-		db.Settings.Sk.SetIfPresent(lugo.assignPtrStringIfTrue(model.Sk())),
+		db.Settings.Sk.SetIfPresent(u.assignPtrStringIfTrue(model.Sk())),
 	).Exec(context.Background())
 	if err != nil {
 		return nil, err
@@ -47,8 +47,8 @@ func (lugo LugoService) UpdateSetting(id string, model *db.SettingsModel) (*stri
 	return &setting.ID, nil
 }
 
-func (lugo LugoService) GetSetting(id string) (*db.SettingsModel, error) {
-	setting, err := lugo.db.Settings.FindUnique(
+func (u LugoService) GetSetting(id string) (*db.SettingsModel, error) {
+	setting, err := u.db.Settings.FindUnique(
 		db.Settings.ID.Equals(id),
 	).Exec(context.Background())
 
@@ -58,16 +58,16 @@ func (lugo LugoService) GetSetting(id string) (*db.SettingsModel, error) {
 	return setting, err
 }
 
-func (lugo LugoService) GetSettings(take, skip int) ([]db.SettingsModel, error) {
-	settings, err := lugo.db.Settings.FindMany().Take(take).Skip(skip).Exec(context.Background())
+func (u LugoService) GetSettings(take, skip int) ([]db.SettingsModel, error) {
+	settings, err := u.db.Settings.FindMany().Take(take).Skip(skip).Exec(context.Background())
 	if err != nil {
 		return nil, err
 	}
 	return settings, nil
 }
 
-func (lugo LugoService) CreateBanner(model *db.BannerModel) (*string, error) {
-	banner, errBanner := lugo.db.Banner.CreateOne(
+func (u LugoService) CreateBanner(model *db.BannerModel) (*string, error) {
+	banner, errBanner := u.db.Banner.CreateOne(
 		db.Banner.Position.Set(model.Position),
 	).Exec(context.Background())
 	if errBanner != nil {
@@ -76,12 +76,12 @@ func (lugo LugoService) CreateBanner(model *db.BannerModel) (*string, error) {
 	return &banner.ID, nil
 }
 
-func (lugo LugoService) UpdateBanner(id string, model *UpdateBanner) (*string, error) {
+func (u LugoService) UpdateBanner(id string, model *UpdateBanner) (*string, error) {
 
-	description := lugo.assignPtrStringIfTrue(model.Description())
-	url := lugo.assignPtrStringIfTrue(model.URL())
+	description := u.assignPtrStringIfTrue(model.Description())
+	url := u.assignPtrStringIfTrue(model.URL())
 
-	banner, errUpdate := lugo.db.Banner.FindUnique(
+	banner, errUpdate := u.db.Banner.FindUnique(
 		db.Banner.ID.Equals(id),
 	).Update(
 		db.Banner.Status.SetIfPresent(&model.Status),
@@ -95,12 +95,12 @@ func (lugo LugoService) UpdateBanner(id string, model *UpdateBanner) (*string, e
 	return &banner.ID, nil
 }
 
-func (lugo LugoService) CreateImage(bannerId string, model *db.BannerImagesModel) (*db.BannerImagesModel, error) {
-	img, err := lugo.db.BannerImages.CreateOne(
+func (u LugoService) CreateImage(bannerId string, model *db.BannerImagesModel) (*db.BannerImagesModel, error) {
+	img, err := u.db.BannerImages.CreateOne(
 		db.BannerImages.Link.Set(model.Link),
 		db.BannerImages.Banner.Link(db.Banner.ID.Equals(bannerId)),
-		db.BannerImages.URL.SetIfPresent(lugo.assignPtrStringIfTrue(model.URL())),
-		db.BannerImages.Description.SetIfPresent(lugo.assignPtrStringIfTrue(model.Description())),
+		db.BannerImages.URL.SetIfPresent(u.assignPtrStringIfTrue(model.URL())),
+		db.BannerImages.Description.SetIfPresent(u.assignPtrStringIfTrue(model.Description())),
 	).Exec(context.Background())
 	if err != nil {
 		return nil, err
@@ -108,8 +108,8 @@ func (lugo LugoService) CreateImage(bannerId string, model *db.BannerImagesModel
 	return img, nil
 }
 
-func (lugo LugoService) DeleteImage(imgId string) error {
-	_, err := lugo.db.BannerImages.FindUnique(
+func (u LugoService) DeleteImage(imgId string) error {
+	_, err := u.db.BannerImages.FindUnique(
 		db.BannerImages.ID.Equals(imgId),
 	).Delete().Exec(context.Background())
 
@@ -119,12 +119,12 @@ func (lugo LugoService) DeleteImage(imgId string) error {
 	return nil
 }
 
-func (lugo LugoService) UpdateImage(imgId string, model *db.BannerImagesModel) error {
-	_, err := lugo.db.BannerImages.FindUnique(
+func (u LugoService) UpdateImage(imgId string, model *db.BannerImagesModel) error {
+	_, err := u.db.BannerImages.FindUnique(
 		db.BannerImages.ID.Equals(imgId),
 	).Update(
-		db.BannerImages.URL.SetIfPresent(lugo.assignPtrStringIfTrue(model.URL())),
-		db.BannerImages.Description.SetIfPresent(lugo.assignPtrStringIfTrue(model.Description())),
+		db.BannerImages.URL.SetIfPresent(u.assignPtrStringIfTrue(model.URL())),
+		db.BannerImages.Description.SetIfPresent(u.assignPtrStringIfTrue(model.Description())),
 	).Exec(context.Background())
 
 	if err != nil {
@@ -133,8 +133,8 @@ func (lugo LugoService) UpdateImage(imgId string, model *db.BannerImagesModel) e
 	return nil
 }
 
-func (lugo LugoService) GetBanner(id string) (*db.BannerModel, error) {
-	banner, err := lugo.db.Banner.FindUnique(
+func (u LugoService) GetBanner(id string) (*db.BannerModel, error) {
+	banner, err := u.db.Banner.FindUnique(
 		db.Banner.ID.Equals(id),
 	).With(
 		db.Banner.Images.Fetch(),
@@ -146,15 +146,15 @@ func (lugo LugoService) GetBanner(id string) (*db.BannerModel, error) {
 	return banner, nil
 }
 
-func (lugo LugoService) GetBanners(take, skip int) ([]db.BannerModel, error) {
-	banners, err := lugo.db.Banner.FindMany().With(db.Banner.Images.Fetch()).Take(take).Skip(skip).Exec(context.Background())
+func (u LugoService) GetBanners(take, skip int) ([]db.BannerModel, error) {
+	banners, err := u.db.Banner.FindMany().With(db.Banner.Images.Fetch()).Take(take).Skip(skip).Exec(context.Background())
 	if err != nil {
 		return nil, err
 	}
 	return banners, nil
 }
 
-func (lugo LugoService) assignPtrStringIfTrue(value string, condition bool) *string {
+func (u LugoService) assignPtrStringIfTrue(value string, condition bool) *string {
 	if condition {
 		return &value
 	}

@@ -13,18 +13,18 @@ type Response = {
 
 export function KorlapFee() {
   const { data } = useSession()
-  const [serviceFee, setServiceFee] = useState<Response | null>(null)
+  const [korlapFee, setKorlapFee] = useState<Response | null>(null)
 
   useEffect(() => {
     if (data?.user?.token) {
-      const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/portal'
+      const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/korlap'
       fetch(url, {
         headers: {
           Authorization: `Bearer ${data?.user?.token}`,
         },
       })
         .then((e) => e.json())
-        .then(setServiceFee)
+        .then(setKorlapFee)
     }
   }, [data?.user?.token])
   return (
@@ -34,7 +34,7 @@ export function KorlapFee() {
         <AddKorlapFee />
       </div>
       <div className={'flex flex-col gap-6'}>
-        {serviceFee?.data?.map((item) => {
+        {korlapFee?.data?.map((item) => {
           return (
             <div key={item.id} className={'card shadow-md'}>
               <div className={'card-body'}>

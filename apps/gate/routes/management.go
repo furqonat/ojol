@@ -34,8 +34,10 @@ func (s ManagementRoutes) Setup() {
 
 		api.POST("/fee/distance", s.controller.GetPriceInKm)
 
+		api.GET("/tax", s.controller.GetTax)
 		api.POST("/tax", s.controller.CreateTax)
 		api.PUT("/tax/:taxId", s.controller.UpdateTax)
+		api.DELETE("/tax/:taxId", s.controller.DeleteTax)
 
 		api.POST("/settings", s.controller.CreateSetting)
 		api.PUT("/settings/:id", s.controller.UpdateSetting)
@@ -63,6 +65,12 @@ func (s ManagementRoutes) Setup() {
 		api.POST("/korlap", s.controller.CreateKorlapFee)
 		api.PUT("/korlap/:id", s.controller.UpdateKorlapFee)
 		api.DELETE("/korlap/:id", s.controller.DeleteKorlapFee)
+
+		api.GET("/dana", s.controller.GetCompanyBallance)
+
+		api.GET("/discount", s.controller.GetDiscounts)
+		api.POST("/discount", s.controller.CreateDiscount)
+		api.DELETE("/discount/:id", s.controller.DeleteDiscount)
 	}
 }
 

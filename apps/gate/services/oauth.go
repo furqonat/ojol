@@ -35,9 +35,6 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 		return nil, errReExpr
 	}
 	ava, errT := auth.database.DanaToken.FindFirst(db.DanaToken.CustomerID.Equals(customerId)).Exec(context.Background())
-	// if errT != nil {
-	// 	return nil, errT
-	// }
 	if errT == nil {
 		tkn, errTkn := auth.database.DanaToken.FindUnique(
 			db.DanaToken.ID.Equals(ava.ID),
