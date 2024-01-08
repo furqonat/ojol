@@ -53,10 +53,8 @@ func (s ManagementRoutes) Setup() {
 		api.PUT("/img/:imgId", s.controller.UpdateImage)
 		api.DELETE("/img/:imgId", s.controller.DeleteImage)
 
-		api.POST("/promo/customer/:id", s.controller.SendMessageToCustomer)
-		api.POST("/promo/merchant/:id", s.controller.SendMessageToMerchant)
-		api.POST("/promo/driver/:id", s.controller.SendMessageToDriver)
-		api.POST("/promos", s.controller.BroadCastMessage)
+		api.POST("/promo", s.controller.CreatePromotion)
+		api.POST("/promo/broadcast", s.controller.BroadCastMessage)
 
 		api.GET("/promo", s.controller.GetPromotions)
 		api.GET("/promo/:id", s.controller.GetPromotion)
