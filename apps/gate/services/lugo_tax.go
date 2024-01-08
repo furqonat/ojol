@@ -5,8 +5,8 @@ import (
 	"context"
 )
 
-func (lugo LugoService) CreateTax(appliedFor db.AppliedFor, taxType db.TaxType, amount int) (*string, error) {
-	tax, errTax := lugo.db.Tax.CreateOne(
+func (u LugoService) CreateTax(appliedFor db.AppliedFor, taxType db.TaxType, amount int) (*string, error) {
+	tax, errTax := u.db.Tax.CreateOne(
 		db.Tax.AppliedFor.Set(appliedFor),
 		db.Tax.TaxType.Set(taxType),
 		db.Tax.Amount.Set(amount),
@@ -18,8 +18,16 @@ func (lugo LugoService) CreateTax(appliedFor db.AppliedFor, taxType db.TaxType, 
 	return &tax.ID, nil
 }
 
-func (lugo LugoService) UpdateTax(taxId string, data *db.TaxModel) (*string, error) {
-	tax, errTax := lugo.db.Tax.FindUnique(
+func (u LugoService) GetTax() ([]db.TaxModel, error) {
+	tax, err := u.db.Tax.FindMany().Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return tax, nil
+}
+
+func (u LugoService) UpdateTax(taxId string, data *db.TaxModel) (*string, error) {
+	tax, errTax := u.db.Tax.FindUnique(
 		db.Tax.ID.Equals(taxId),
 	).Update(
 		db.Tax.Amount.SetIfPresent(&data.Amount),
@@ -30,4 +38,13 @@ func (lugo LugoService) UpdateTax(taxId string, data *db.TaxModel) (*string, err
 	}
 
 	return &tax.ID, nil
+}
+
+func (u LugoService) DeleteTax(taxId string) error {
+	if _, err := u.db.Tax.FindUnique(
+		db.Tax.ID.Equals(taxId),
+	).Delete().Exec(context.Background()); err != nil {
+		return err
+	}
+	return nil
 }
