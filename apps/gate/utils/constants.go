@@ -16,6 +16,7 @@ const (
 	OAuthRedirectURL = "https://oauth.gentatechnology.com/oauth"
 	TerminalType     = "WEB"
 	MerchantID       = "216620020011023088828"
+	MerchantPhone    = "62-85334891543"
 	ClientSecret     = "26486fc6867e9ed457ac00c3fd248f1aa191dce8a1fc64070afb2837a4d07cf7"
 	PrivateKey       = `-----BEGIN PRIVATE KEY-----
 MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDF6yl3knDrtnMZ

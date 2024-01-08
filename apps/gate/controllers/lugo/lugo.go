@@ -22,7 +22,7 @@ func NewLugoController(logger utils.Logger, service services.LugoService) Contro
 }
 
 func (c Controller) GetAvailableService(ctx *gin.Context) {
-	availableService, err := c.service.GetAvaliableService()
+	availableService, err := c.service.GetAvailableService()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error " + err.Error()})
 		ctx.Abort()

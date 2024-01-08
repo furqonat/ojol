@@ -6,16 +6,16 @@ import (
 	"math"
 )
 
-func (lugo LugoService) GetTrxFee() ([]db.ServiceFeeModel, error) {
-	fee, errFee := lugo.db.ServiceFee.FindMany().Exec(context.Background())
+func (u LugoService) GetTrxFee() ([]db.ServiceFeeModel, error) {
+	fee, errFee := u.db.ServiceFee.FindMany().Exec(context.Background())
 	if errFee != nil {
 		return nil, errFee
 	}
 	return fee, nil
 }
 
-func (lugo LugoService) CreateTrxFee(service *db.ServiceFeeModel) (*string, error) {
-	fee, errFee := lugo.db.ServiceFee.CreateOne(
+func (u LugoService) CreateTrxFee(service *db.ServiceFeeModel) (*string, error) {
+	fee, errFee := u.db.ServiceFee.CreateOne(
 		db.ServiceFee.ServiceType.Set(service.ServiceType),
 		db.ServiceFee.Percentage.Set(service.Percentage),
 		db.ServiceFee.AccountType.Set(service.AccountType),
@@ -26,8 +26,8 @@ func (lugo LugoService) CreateTrxFee(service *db.ServiceFeeModel) (*string, erro
 	return &fee.ID, nil
 }
 
-func (lugo LugoService) DeleteFee(feeId string) error {
-	_, errFee := lugo.db.ServiceFee.FindUnique(
+func (u LugoService) DeleteFee(feeId string) error {
+	_, errFee := u.db.ServiceFee.FindUnique(
 		db.ServiceFee.ID.Equals(feeId),
 	).Delete().Exec(context.Background())
 
@@ -37,8 +37,8 @@ func (lugo LugoService) DeleteFee(feeId string) error {
 	return nil
 }
 
-func (lugo LugoService) PriceInKM(distance float64, serviceType db.ServiceType) (*int, error) {
-	price, errPrice := lugo.db.Services.FindFirst(
+func (u LugoService) PriceInKM(distance float64, serviceType db.ServiceType) (*int, error) {
+	price, errPrice := u.db.Services.FindFirst(
 		db.Services.ServiceType.Equals(serviceType),
 	).Exec(context.Background())
 	if errPrice != nil {
@@ -54,8 +54,8 @@ func (lugo LugoService) PriceInKM(distance float64, serviceType db.ServiceType) 
 	return &value, nil
 }
 
-func (lugo LugoService) UpdateTrxFee(feeId string, model *db.ServiceFeeModel) (*string, error) {
-	fee, err := lugo.db.ServiceFee.FindUnique(
+func (u LugoService) UpdateTrxFee(feeId string, model *db.ServiceFeeModel) (*string, error) {
+	fee, err := u.db.ServiceFee.FindUnique(
 		db.ServiceFee.ID.Equals(feeId),
 	).Update(
 		db.ServiceFee.AccountType.Set(model.AccountType),
@@ -69,8 +69,8 @@ func (lugo LugoService) UpdateTrxFee(feeId string, model *db.ServiceFeeModel) (*
 	return &fee.ID, nil
 }
 
-func (lugo LugoService) UpdateService(serviceId string, ptrServiceModel *db.ServicesModel) (*string, error) {
-	service, err := lugo.db.Services.FindUnique(
+func (u LugoService) UpdateService(serviceId string, ptrServiceModel *db.ServicesModel) (*string, error) {
+	service, err := u.db.Services.FindUnique(
 		db.Services.ID.Equals(serviceId),
 	).Update(
 		db.Services.Enable.SetIfPresent(&ptrServiceModel.Enable),
@@ -86,9 +86,9 @@ func (lugo LugoService) UpdateService(serviceId string, ptrServiceModel *db.Serv
 	return &service.ID, nil
 }
 
-func (lugo LugoService) CreateKorlapFee(data *db.KorlapFeeModel) (*db.KorlapFeeModel, error) {
+func (u LugoService) CreateKorlapFee(data *db.KorlapFeeModel) (*db.KorlapFeeModel, error) {
 
-	fee, err := lugo.db.KorlapFee.CreateOne(
+	fee, err := u.db.KorlapFee.CreateOne(
 		db.KorlapFee.AdminType.Set(data.AdminType),
 		db.KorlapFee.Percentage.Set(data.Percentage),
 	).Exec(context.Background())
@@ -98,8 +98,8 @@ func (lugo LugoService) CreateKorlapFee(data *db.KorlapFeeModel) (*db.KorlapFeeM
 	return fee, nil
 }
 
-func (lugo LugoService) UpdateKorlapFee(id string, data *db.KorlapFeeModel) (*string, error) {
-	fee, err := lugo.db.KorlapFee.FindUnique(
+func (u LugoService) UpdateKorlapFee(id string, data *db.KorlapFeeModel) (*string, error) {
+	fee, err := u.db.KorlapFee.FindUnique(
 		db.KorlapFee.ID.Equals(id),
 	).Update(
 		db.KorlapFee.Percentage.Set(data.Percentage),
@@ -111,8 +111,8 @@ func (lugo LugoService) UpdateKorlapFee(id string, data *db.KorlapFeeModel) (*st
 	return &fee.ID, nil
 }
 
-func (lugo LugoService) DeleteKorlapFee(id string) error {
-	_, err := lugo.db.KorlapFee.FindUnique(
+func (u LugoService) DeleteKorlapFee(id string) error {
+	_, err := u.db.KorlapFee.FindUnique(
 		db.KorlapFee.ID.Equals(id),
 	).Delete().Exec(context.Background())
 	if err != nil {
@@ -121,12 +121,12 @@ func (lugo LugoService) DeleteKorlapFee(id string) error {
 	return nil
 }
 
-func (lugo LugoService) GetKorlapFee(take, skip int) ([]db.KorlapFeeModel, int, error) {
-	fees, err := lugo.db.KorlapFee.FindMany().Take(take).Skip(skip).Exec(context.Background())
+func (u LugoService) GetKorlapFee(take, skip int) ([]db.KorlapFeeModel, int, error) {
+	fees, err := u.db.KorlapFee.FindMany().Take(take).Skip(skip).Exec(context.Background())
 	if err != nil {
 		return nil, 0, err
 	}
-	total, errT := lugo.db.KorlapFee.FindMany().Exec(context.Background())
+	total, errT := u.db.KorlapFee.FindMany().Exec(context.Background())
 	if errT != nil {
 		return nil, 0, err
 	}
