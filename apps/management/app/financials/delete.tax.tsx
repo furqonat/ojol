@@ -3,7 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { useRef, useState } from 'react'
 
-export function DeleteKorlapFee(props: { id: string }) {
+export function DeleteTax(props: { id: string }) {
   const { data } = useSession()
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -17,10 +17,10 @@ export function DeleteKorlapFee(props: { id: string }) {
     dialogRef.current?.close()
   }
 
-  async function handleDeleteKorlapFee(e: React.FormEvent<HTMLFormElement>) {
+  async function handleDeleteTax(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setLoading(true)
-    const url = `${process.env.NEXT_PUBLIC_GATE_BASE_URL}portal/korlap/${props.id}`
+    const url = `${process.env.NEXT_PUBLIC_GATE_BASE_URL}portal/tax/${props.id}`
     const resp = await fetch(url, {
       method: 'DELETE',
       headers: {
@@ -54,10 +54,8 @@ export function DeleteKorlapFee(props: { id: string }) {
       </button>
       <dialog className="modal" ref={dialogRef}>
         <div className="modal-box flex flex-col gap-4">
-          <h3 className="font-bold text-lg">
-            Are you sure delete this korlap fee?
-          </h3>
-          <form onSubmit={handleDeleteKorlapFee}>
+          <h3 className="font-bold text-lg">Are you sure delete this tax?</h3>
+          <form onSubmit={handleDeleteTax}>
             <div className={'flex flex-row-reverse mt-4 gap-5'}>
               <button className={'btn btn-sm btn-primary'}>
                 {loading ? <span className={'loading loading-dots'} /> : null}

@@ -1,5 +1,7 @@
+import { Discount } from './discount'
 import { KorlapFee } from './korlap.fee'
 import { ServiceFee } from './service.fee'
+import { Tax } from './tax'
 
 export default function FinancialPage() {
   return (
@@ -103,8 +105,12 @@ export default function FinancialPage() {
             </div>
           </div>
         </section>
-        <ServiceFee />
-        <KorlapFee />
+        <div className={'flex flex-col gap-7'}>
+          <ServiceFee />
+          <Discount />
+          <KorlapFee />
+          <Tax />
+        </div>
       </section>
     </main>
   )

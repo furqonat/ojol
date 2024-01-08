@@ -101,7 +101,18 @@ func (c Controller) CreateTax(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
+
 	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "res": service})
+}
+
+func (c Controller) GetTax(ctx *gin.Context) {
+	s, err := c.service.GetTax()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, s)
 }
 
 func (c Controller) UpdateTax(ctx *gin.Context) {
@@ -120,6 +131,16 @@ func (c Controller) UpdateTax(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK", "res": service})
+}
+
+func (c Controller) DeleteTax(ctx *gin.Context) {
+	taxId := ctx.Param("taxId")
+	if err := c.service.DeleteTax(taxId); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
 func (c Controller) CreateKorlapFee(ctx *gin.Context) {
@@ -158,7 +179,7 @@ func (c Controller) UpdateKorlapFee(ctx *gin.Context) {
 func (c Controller) DeleteKorlapFee(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	err := c.service.DeleteFee(id)
+	err := c.service.DeleteKorlapFee(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
 		ctx.Abort()
@@ -186,4 +207,50 @@ func (c Controller) GetKorlapFee(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": fees, "total": total})
+}
+
+func (c Controller) GetCompanyBallance(ctx *gin.Context) {
+	s, err := c.service.GetCompanyBallance()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, s)
+}
+
+func (c Controller) CreateDiscount(ctx *gin.Context) {
+	model := db.DiscountModel{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	s, err := c.service.CreateDiscount(&model)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusCreated, s)
+}
+
+func (c Controller) GetDiscounts(ctx *gin.Context) {
+	s, err := c.service.GetDiscount()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, s)
+}
+
+func (c Controller) DeleteDiscount(ctx *gin.Context) {
+	id := ctx.Param("id")
+	if err := c.service.DeleteDiscount(id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }

@@ -58,7 +58,7 @@ func (auth OAuthController) GetDanaProfile(ctx *gin.Context) {
 
 	profile, errProfile := auth.service.GetDanaProfile(customerId)
 	if errProfile != nil {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthoirized Exception"})
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized Exception"})
 		ctx.Abort()
 		return
 	}
