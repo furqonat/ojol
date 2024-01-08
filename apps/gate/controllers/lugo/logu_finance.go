@@ -3,6 +3,7 @@ package lugo
 import (
 	"apps/gate/db"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -119,4 +120,70 @@ func (c Controller) UpdateTax(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK", "res": service})
+}
+
+func (c Controller) CreateKorlapFee(ctx *gin.Context) {
+	model := db.KorlapFeeModel{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	s, err := c.service.CreateKorlapFee(&model)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusCreated, s)
+}
+
+func (c Controller) UpdateKorlapFee(ctx *gin.Context) {
+	id := ctx.Param("id")
+	model := db.KorlapFeeModel{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	s, err := c.service.UpdateKorlapFee(id, &model)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusCreated, gin.H{"message": "OK", "res": s})
+}
+
+func (c Controller) DeleteKorlapFee(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	err := c.service.DeleteFee(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusCreated, gin.H{"message": "OK"})
+}
+
+func (c Controller) GetKorlapFee(ctx *gin.Context) {
+	qTake := ctx.Query("take")
+	qSkip := ctx.Query("skip")
+	take, errT := strconv.Atoi(qTake)
+	if errT != nil {
+		take = 20
+	}
+	skip, errS := strconv.Atoi(qSkip)
+	if errS != nil {
+		skip = 0
+	}
+
+	fees, total, err := c.service.GetKorlapFee(take, skip)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": fees, "total": total})
 }

@@ -58,6 +58,11 @@ func (s ManagementRoutes) Setup() {
 
 		api.GET("/promo", s.controller.GetPromotions)
 		api.GET("/promo/:id", s.controller.GetPromotion)
+
+		api.GET("/korlap", s.controller.GetKorlapFee)
+		api.POST("/korlap", s.controller.CreateKorlapFee)
+		api.PUT("/korlap/:id", s.controller.UpdateKorlapFee)
+		api.DELETE("/korlap/:id", s.controller.DeleteKorlapFee)
 	}
 }
 
