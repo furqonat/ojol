@@ -32,7 +32,6 @@ export function Driver() {
         .addQuery('avatar', 'true')
         .addQuery('_count', 'true')
         .addQuery('type', 'ACTIVE')
-      console.log(url.build())
       fetch(url.build(), {
         headers: {
           Authorization: `Bearer ${data.user.token}`,
@@ -69,42 +68,46 @@ export function Driver() {
             </thead>
             <tbody>
               {/* row 1 */}
-              {drivers?.data.map((item, index) => {
-                return (
-                  <tr key={item.id}>
-                    <th>{index + 1}</th>
-                    <td>
-                      <div className="flex items-center gap-3">
-                        <div className="avatar">
-                          <div className="mask mask-squircle w-12 h-12">
-                            <img
-                              src={item.avatar ?? '/lugo.png'}
-                              alt="Avatar Tailwind CSS Component"
-                            />
+              {drivers &&
+                drivers?.data?.map((item, index) => {
+                  return (
+                    <tr key={item.id}>
+                      <th>{index + 1}</th>
+                      <td>
+                        <div className="flex items-center gap-3">
+                          <div className="avatar">
+                            <div className="mask mask-squircle w-12 h-12">
+                              <img
+                                src={item.avatar ?? '/lugo.png'}
+                                alt="Avatar Tailwind CSS Component"
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <div className="font-bold">{item?.name}</div>
+                            <div className="text-sm opacity-50">
+                              {item.driver_details?.badge}
+                            </div>
                           </div>
                         </div>
-                        <div>
-                          <div className="font-bold">{item?.name}</div>
-                          <div className="text-sm opacity-50">
-                            {item.driver_details?.badge}
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      {item.driver_details?.address}
-                      <br />
-                      <span className="badge badge-ghost badge-sm capitalize">
-                        {item.driver_details?.driver_type.toLowerCase()} Driver
-                      </span>
-                    </td>
-                    <td>{item._count?.order}</td>
-                    <th>
-                      <button className="btn btn-ghost btn-xs">details</button>
-                    </th>
-                  </tr>
-                )
-              })}
+                      </td>
+                      <td>
+                        {item.driver_details?.address}
+                        <br />
+                        <span className="badge badge-ghost badge-sm capitalize">
+                          {item.driver_details?.driver_type.toLowerCase()}{' '}
+                          Driver
+                        </span>
+                      </td>
+                      <td>{item._count?.order}</td>
+                      <th>
+                        <button className="btn btn-ghost btn-xs">
+                          details
+                        </button>
+                      </th>
+                    </tr>
+                  )
+                })}
             </tbody>
           </table>
         </div>
