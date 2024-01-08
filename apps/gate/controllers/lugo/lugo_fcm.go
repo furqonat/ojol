@@ -8,46 +8,19 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (c Controller) SendMessageToCustomer(ctx *gin.Context) {
-	customerId := ctx.Param("id")
+func (c Controller) CreatePromotion(ctx *gin.Context) {
 	model := services.Payload{}
 	if err := ctx.BindJSON(&model); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
 		ctx.Abort()
 		return
 	}
-	if err := c.service.SendMessageToCustomer(customerId, model); err != nil {
+	if err := c.service.CreatePromotion(model); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
 		ctx.Abort()
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
-}
-
-func (c Controller) SendMessageToMerchant(ctx *gin.Context) {
-	merchantId := ctx.Param("id")
-	model := services.Payload{}
-	if err := ctx.BindJSON(&model); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
-		ctx.Abort()
-		return
-	}
-	if err := c.service.SendMessageToMerchant(merchantId, model); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
-		ctx.Abort()
-		return
-	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
-}
-func (c Controller) SendMessageToDriver(ctx *gin.Context) {
-	driverId := ctx.Param("id")
-	model := services.Payload{}
-	if err := ctx.BindJSON(&model); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
-		ctx.Abort()
-		return
-	}
-	if err := c.service.SendMessageToDriver(driverId, model); err != nil {
+	if err := c.service.BroadCastMessage(model, string(model.AppType)); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
 		ctx.Abort()
 		return
@@ -62,7 +35,7 @@ func (c Controller) BroadCastMessage(ctx *gin.Context) {
 		ctx.Abort()
 		return
 	}
-	if err := c.service.BroadCastMessage(model); err != nil {
+	if err := c.service.BroadCastMessage(model, "promotion"); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
 		ctx.Abort()
 		return
