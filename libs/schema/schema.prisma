@@ -33,7 +33,6 @@ model customer {
   order                   order[]
   favorites               favorites[]
   dana_token              dana_token[]
-  promotion               promotion[]
 }
 
 model dana_token {
@@ -86,7 +85,6 @@ model driver {
   referal                referal?                 @relation(fields: [referal_id], references: [id], onDelete: SetNull)
   referal_id             String?
   driver_trx             driver_trx[]
-  promotion              promotion[]
 }
 
 model referal {
@@ -222,7 +220,6 @@ model merchant {
   products        product[]
   merchant_trx    merchant_trx[]
   merchant_wallet merchant_wallet?
-  promotion       promotion[]
 }
 
 model merchant_details {
@@ -339,9 +336,9 @@ model company_balance {
   id              String         @id @default(cuid())
   created_at      DateTime       @default(now())
   remark          String?
-  current_balance BigInt
-  balance_in      BigInt
-  balance_out     BigInt
+  current_balance Int
+  balance_in      Int
+  balance_out     Int
   type            balance_type
   status          balance_status
 }
@@ -644,10 +641,11 @@ model promotion {
   title       String
   image_url   String?
   description String?
-  merchant    merchant? @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
-  merchant_id String?
-  driver      driver?   @relation(fields: [driver_id], references: [id], onDelete: Cascade)
-  driver_id   String?
-  customer    customer? @relation(fields: [customer_id], references: [id], onDelete: Cascade)
-  customer_id String?
+  app_type app_type
+}
+
+enum app_type {
+  CUSTOMER
+  DRIVER
+  MERCHANT
 }

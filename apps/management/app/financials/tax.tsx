@@ -27,7 +27,6 @@ export function Tax() {
     <section>
       <div className={'flex w-full items-center'}>
         <h2 className={'text-xl font-semibold flex-1'}>Tax PPH & PPN</h2>
-        {/* <AddDiscount /> */}
         <AddTax />
       </div>
       <div className={'flex flex-col gap-6'}>

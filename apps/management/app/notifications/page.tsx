@@ -1,3 +1,5 @@
+import { AddNotification } from './add.notification'
+
 export default function NotificationsPage() {
   return (
     <main className={'container py-6 px-4 md:px-0'}>
@@ -8,7 +10,9 @@ export default function NotificationsPage() {
               Notifications
             </h2>
           </div>
-          <div></div>
+          <div>
+            <AddNotification />
+          </div>
         </div>
         {/* <Registration /> */}
       </section>
