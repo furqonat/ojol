@@ -1,23 +1,23 @@
 'use client'
 
-import { service_fee } from '@prisma/client/users'
 import { useSession } from 'next-auth/react'
+import { AddKorlapFee } from './add.korlap.fee'
 import { useEffect, useState } from 'react'
-import { AddNewServiceFee } from './add.service.fee'
-import { DeleteServiceFee } from './delete.service.fee'
-import { EditServiceFee } from './edit.service.fee'
+import { korlap_fee } from '@prisma/client/users'
+import { EditKorlapFee } from './edit.korlap.fee'
+import { DeleteKorlapFee } from './delete.korlap.fee'
 
 type Response = {
-  data: service_fee[]
+  data: korlap_fee[]
 }
 
-export function ServiceFee() {
+export function KorlapFee() {
   const { data } = useSession()
   const [serviceFee, setServiceFee] = useState<Response | null>(null)
 
   useEffect(() => {
     if (data?.user?.token) {
-      const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/fee'
+      const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/portal'
       fetch(url, {
         headers: {
           Authorization: `Bearer ${data?.user?.token}`,
@@ -27,12 +27,11 @@ export function ServiceFee() {
         .then(setServiceFee)
     }
   }, [data?.user?.token])
-
   return (
     <section>
       <div className={'flex w-full items-center'}>
-        <h2 className={'text-xl font-semibold flex-1'}>Service Fee</h2>
-        <AddNewServiceFee />
+        <h2 className={'text-xl font-semibold flex-1'}>Korlap & Korcap Fee</h2>
+        <AddKorlapFee />
       </div>
       <div className={'flex flex-col gap-6'}>
         {serviceFee?.data?.map((item) => {
@@ -42,16 +41,16 @@ export function ServiceFee() {
                 <div className={'flex flex-row w-full'}>
                   <div className={'flex-1'}>
                     <h3 className={'card-title capitalize'}>
-                      {item.service_type.toLowerCase()}
+                      {item.admin_type.toLowerCase()}
                     </h3>
                     <div className={'flex gap-2 items-center'}>
-                      <span className={'badge'}>{item.account_type}</span>
+                      <span className={'badge'}>{item.admin_type}</span>
                       <span>{item.percentage} %</span>
                     </div>
                   </div>
                   <div className={'flex gap-2 items-center'}>
-                    <EditServiceFee data={item} />
-                    <DeleteServiceFee id={item.id} />
+                    <EditKorlapFee data={item} />
+                    <DeleteKorlapFee id={item.id} />
                   </div>
                 </div>
               </div>

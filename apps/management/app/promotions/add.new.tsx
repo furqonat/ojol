@@ -80,11 +80,11 @@ export function AddNew() {
             </div>
           </div>
           <div className="modal-action">
-            <form method="dialog">
-              <div className="btn btn-primary" onClick={handleOnSave}>
+            <form method="dialog" className={'flex items-center gap-3'}>
+              <div className="btn btn-primary btn-sm" onClick={handleOnSave}>
                 Save
               </div>
-              <button className="btn">Close</button>
+              <button className="btn btn-sm">Close</button>
             </form>
           </div>
         </div>
