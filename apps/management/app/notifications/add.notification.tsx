@@ -1,6 +1,5 @@
 'use client'
 
-import { promotion } from '@prisma/client/users'
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage'
 import { useSession } from 'next-auth/react'
 import { useRef, useState } from 'react'
@@ -66,7 +65,7 @@ export function AddNotification() {
         image_url: link,
         app_type: appType?.value,
       }
-      const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/promo/'
+      const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/promo'
       const resp = await fetch(url, {
         method: 'POST',
         body: JSON.stringify(body),
@@ -79,9 +78,10 @@ export function AddNotification() {
         window.location.reload()
       }
     } else {
-      const body: Partial<promotion> = {
+      const body = {
         title: title,
-        description: description,
+        body: description,
+        app_type: appType?.value,
       }
       const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/promo'
       const resp = await fetch(url, {

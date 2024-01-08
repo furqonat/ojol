@@ -1,3 +1,4 @@
+import { Notification } from './notification'
 import { AddNotification } from './add.notification'
 
 export default function NotificationsPage() {
@@ -14,7 +15,7 @@ export default function NotificationsPage() {
             <AddNotification />
           </div>
         </div>
-        {/* <Registration /> */}
+        <Notification />
       </section>
     </main>
   )
