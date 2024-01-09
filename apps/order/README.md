@@ -42,7 +42,8 @@ Authorization: Bearer ....
       "latitude": -6.1231,
       "longitude": 112.1231,
       "address": "....",
-    }
+    },
+    "discount_id": "..." # jika ada
 
 }
 ```
@@ -71,7 +72,8 @@ Authorization: Bearer ....
       "latitude": -6.1231,
       "longitude": 112.1231,
       "address": "....",
-    }
+    },
+    "discount_id": "..." # jika ada
 
 }
 ```
@@ -101,7 +103,8 @@ Authorization: Bearer ....
       "latitude": -6.1231,
       "longitude": 112.1231,
       "address": "....",
-    }
+    },
+    "discount_id": "..." # jika ada
 
 }
 ```
@@ -133,6 +136,7 @@ Authorization: Bearer ....
 | `shipping_cost` | `int`    | total harga ongkos kirim                                      |
 | `total_amount`  | `int`    | total shipping cost `+` net amount                            |
 | `weight`        | `int`    | berat barang dalam kg, hanya digunakan untuk order `DELIVERY` |
+| `discount_id`   | `string` | discount id                                                   |
 
 ## Cancel Order
 
@@ -415,9 +419,8 @@ Authorization: Bearer ....
 }
 ```
 
-
-
 ## Mendapatkan Detail Order
+
 Berikut adalah contoh mendapatkan detail order
 
 ### Contoh Request

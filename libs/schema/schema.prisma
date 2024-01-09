@@ -380,14 +380,15 @@ model company_balance {
 }
 
 model discount {
-  id              String    @id @default(cuid())
+  id              String       @id @default(cuid())
   code            String
   expired_at      DateTime?
-  status          Boolean   @default(true)
-  created_at      DateTime  @default(now())
+  status          Boolean      @default(true)
+  created_at      DateTime     @default(now())
   percentage      Int?
   max_discount    Int
   amount          Int
+  trx_type        service_type
   min_transaction Int
   order           order[]
 }

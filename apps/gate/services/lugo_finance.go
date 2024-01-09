@@ -41,6 +41,7 @@ func (u LugoService) CreateDiscount(model *db.DiscountModel) (*string, error) {
 		db.Discount.Code.Set(model.Code),
 		db.Discount.MaxDiscount.Set(model.MaxDiscount),
 		db.Discount.Amount.Set(model.Amount),
+		db.Discount.TrxType.Set(model.TrxType),
 		db.Discount.MinTransaction.Set(model.MinTransaction),
 		db.Discount.ExpiredAt.SetIfPresent(u.assignPtrTimeIfTrue(model.ExpiredAt())),
 	).Exec(context.Background())
@@ -59,7 +60,7 @@ func (u LugoService) assignPtrTimeIfTrue(value time.Time, condition bool) *time.
 }
 
 func (u LugoService) GetDiscount() ([]db.DiscountModel, error) {
-	result, err := u.db.Discount.FindMany().OrderBy(db.Discount.ExpiredAt.Order(db.DESC)).Exec(context.Background())
+	result, err := u.db.Discount.FindMany(db.Discount.ExpiredAt.Gte(time.Now())).OrderBy(db.Discount.ExpiredAt.Order(db.DESC)).Exec(context.Background())
 	if err != nil {
 		return nil, err
 	}

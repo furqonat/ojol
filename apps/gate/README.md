@@ -114,6 +114,7 @@ Authorization: Bearer ...
   }
 ]
 ```
+
 ### Mendapatkan services fee
 
 Berikut adalah contoh untuk mendapatkan services fee.
@@ -171,14 +172,14 @@ Authorization: Bearer ...
 }
 ```
 
-### Mendapatkan harga per kilo meter 
+### Mendapatkan harga per kilo meter
 
 Berikut adalah contoh untuk mendapatkan harga perkilo meter.
 
 ### Contoh Request
 
 ```http
-POST https://gate.gentatechnology.com/lugo/fee
+POST https://gate.gentatechnology.com/lugo/fee/distance
 Content-Type: application/json
 Authorization: Bearer ...
 {
@@ -190,10 +191,38 @@ Authorization: Bearer ...
 ### Contoh Response
 
 ```json
-
 {
   "message": "OK",
   "price": 13000
 }
+```
 
+### Mendapatkan list discount
+
+Berikut adalah contoh untuk mendapatkan harga perkilo meter.
+
+### Contoh Request
+
+```http
+GET https://gate.gentatechnology.com/lugo/fee/discount
+Content-Type: application/json
+Authorization: Bearer ...
+```
+
+### Contoh Response
+
+```json
+[
+  {
+    "id": "asdasda",
+    "code": "RIDE5K",
+    "expired_at": "2024-01-10T10:48:00Z",
+    "status": true,
+    "created_at": "2024-01-09T03:48:05.008Z",
+    "max_discount": 5000,
+    "amount": 5000,
+    "trx_type": "BIKE",
+    "min_transaction": 20000
+  }
+]
 ```
