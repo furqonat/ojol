@@ -10,7 +10,7 @@ const firebaseConfig = {
   measurementId: process.env['MEASUREMENT_ID'],
 }
 
-const baseUrl = 'https://api.gentatechnology.com/auth'
+const baseUrl = 'https://auth.gentatechnology.com'
 
 export function getFirebaseConfig(): object {
   return firebaseConfig

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "admin_wallet" ALTER COLUMN "update_at" SET DEFAULT CURRENT_TIMESTAMP;

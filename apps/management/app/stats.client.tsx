@@ -36,10 +36,8 @@ export function Stats(props: StatsProp) {
 
       const responses = await Promise.all(requests)
       const jsonResponses = await Promise.all(
-        responses.map((res) => res.json()),
+        responses?.map((res) => res.json()),
       )
-
-      console.log(jsonResponses)
 
       const totalData = jsonResponses.reduce((acc, json, index) => {
         acc[endpoints[index]] = json.total

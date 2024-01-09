@@ -53,20 +53,20 @@ describe('Test Autentication Api', () => {
     it('Test Create Order from user', async () => {
       const token = await getIdToken(cusCred.user)
       const resp = await axios.post(
-        '/order/',
+        '/',
         {
-          order_type: 'FOOD',
+          order_type: 'BIKE',
           payment_type: 'DANA',
           gross_amount: 70000,
           net_amount: 75000,
           total_amount: 75000,
           shipping_cost: 5000,
-          product: [
-            {
-              quantity: 1,
-              product_id: 'uniqadasdw',
-            },
-          ],
+          // product: [
+          //   {
+          //     quantity: 1,
+          //     product_id: 'uniqadasdw',
+          //   },
+          // ],
           location: {
             latitude: -6.1231,
             longitude: 112.1231,
@@ -77,6 +77,7 @@ describe('Test Autentication Api', () => {
             longitude: 112.1231,
             address: 'Jl. Merkeda 12',
           },
+          discount_id: 'asdasda',
         },
         {
           headers: {
