@@ -25,6 +25,7 @@ type CreateOrderType struct {
 	Product     []Inner  `json:"product,omitempty"`
 	Location    Location `json:"location,omitempty"`
 	Destination Location `json:"destination,omitempty"`
+	DiscountID  *string  `json:"discount_id,omitempty"`
 }
 
 type Inner struct {
@@ -60,7 +61,10 @@ func (order OrderService) deleteTrx(orderId string) (*db.TransactionsModel, erro
 	return order.database.Transactions.FindUnique(db.Transactions.ID.Equals(orderId)).Delete().Exec(context.Background())
 }
 
-func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId string) (*string, *db.TransactionDetailModel, error) {
+func (order OrderService) CreateOrder(
+	ptrOrderModel *CreateOrderType,
+	customerId string,
+) (*string, *db.TransactionDetailModel, error) {
 
 	orderExists, err := order.database.Order.FindMany(
 		db.Order.CustomerID.Equals(customerId),
@@ -69,6 +73,8 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 			db.OrderStatusCanceled,
 		}),
 		db.Order.OrderType.Equals(ptrOrderModel.OrderType),
+	).With(
+		db.Order.Transactions.Fetch(),
 	).Take(1).Exec(context.Background())
 
 	if err != nil {
@@ -76,7 +82,11 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 	}
 
 	if len(orderExists) > 0 {
-		orderDb, errOrder := order.database.Order.FindUnique(db.Order.ID.Equals(orderExists[0].ID)).With(db.Order.Transactions.Fetch().With(db.Transactions.Detail.Fetch())).Exec(context.Background())
+		orderDb, errOrder := order.database.Order.FindUnique(
+			db.Order.ID.Equals(orderExists[0].ID),
+		).With(
+			db.Order.Transactions.Fetch().With(db.Transactions.Detail.Fetch()),
+		).Exec(context.Background())
 		if errOrder != nil {
 			return nil, nil, errOrder
 		}
@@ -104,6 +114,29 @@ func (order OrderService) CreateOrder(ptrOrderModel *CreateOrderType, customerId
 
 	if errCreateOrder != nil {
 		return nil, nil, errCreateOrder
+	}
+
+	if ptrOrderModel.DiscountID != nil {
+		getD, errGetD := order.database.Discount.FindUnique(
+			db.Discount.ID.Equals(*ptrOrderModel.DiscountID),
+		).Exec(context.Background())
+		if getD.TrxType != createOrderResult.OrderType {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("unable create order discount code not for this order")
+		}
+		if errGetD != nil {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("unable create order failed on discount")
+		}
+		_, errL := order.database.Order.FindUnique(
+			db.Order.ID.Equals(createOrderResult.ID),
+		).Update(
+			db.Order.Discount.Link(db.Discount.ID.Equals(*ptrOrderModel.DiscountID)),
+		).Exec(context.Background())
+		if errL != nil {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("unable create order failed on discount")
+		}
 	}
 
 	if ptrOrderModel.OrderType == db.ServiceTypeFood || ptrOrderModel.OrderType == db.ServiceTypeMart {
