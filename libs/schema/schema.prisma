@@ -47,6 +47,30 @@ model dana_token {
   dana_user_id  String
 }
 
+model dana_token_driver {
+  id            String   @id @default(cuid())
+  access_token  String
+  expires_in    DateTime
+  refresh_token String
+  re_expires_in DateTime
+  token_status  String
+  dana_user_id  String
+  driver        driver   @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  driver_id     String
+}
+
+model dana_token_merchant {
+  id            String   @id @default(cuid())
+  access_token  String
+  expires_in    DateTime
+  refresh_token String
+  re_expires_in DateTime
+  token_status  String
+  dana_user_id  String
+  merchant      merchant @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+  merchant_id   String
+}
+
 model customer_device_token {
   id          String    @id @default(cuid())
   token       String    @unique
@@ -85,6 +109,7 @@ model driver {
   referal                referal?                 @relation(fields: [referal_id], references: [id], onDelete: SetNull)
   referal_id             String?
   driver_trx             driver_trx[]
+  dana_token             dana_token_driver[]
 }
 
 model referal {
@@ -139,6 +164,7 @@ model driver_trx {
   status     trx_status @default(CREATED)
   driver     driver     @relation(fields: [driver_id], references: [id], onDelete: Cascade)
   driver_id  String
+  amount     Int
 }
 
 model merchant_trx {
@@ -149,6 +175,7 @@ model merchant_trx {
   status      trx_status @default(CREATED)
   merchant    merchant   @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
   merchant_id String
+  amount      Int
 }
 
 model merchant_wallet {
@@ -167,6 +194,7 @@ enum trx_status {
 enum trx_type {
   TOPUP
   WITHDRAW
+  ADJUSTMENT
 }
 
 model vehicle {
@@ -220,6 +248,7 @@ model merchant {
   products        product[]
   merchant_trx    merchant_trx[]
   merchant_wallet merchant_wallet?
+  dana_token      dana_token_merchant[]
 }
 
 model merchant_details {
@@ -279,16 +308,23 @@ model merchant_device_token {
 }
 
 model admin {
-  id           String        @id @default(cuid())
-  name         String
-  email        String        @unique
-  password     String
-  last_sign_in DateTime?
-  status       Boolean       @default(true)
-  avatar       String?
-  role         roles[]
-  referal      referal?
-  admin_wallet admin_wallet?
+  id             String        @id @default(cuid())
+  name           String
+  email          String        @unique
+  password       String
+  last_sign_in   DateTime?
+  status         Boolean       @default(true)
+  avatar         String?
+  role           roles[]
+  referal        referal?
+  admin_wallet   admin_wallet?
+  id_card        String?
+  id_card_images String?
+  bank_number    Int?
+  bank_holder    String?
+  bank_name      String?
+  phone_number   String?
+  trx_admin      trx_admin[]
 }
 
 model roles {
@@ -302,7 +338,7 @@ model admin_wallet {
   admin     admin    @relation(fields: [admin_id], references: [id], onDelete: Cascade)
   admin_id  String   @unique
   balance   Int      @default(0)
-  update_at DateTime @updatedAt
+  update_at DateTime @default(now()) @updatedAt
 }
 
 model korlap_fee {
@@ -344,14 +380,15 @@ model company_balance {
 }
 
 model discount {
-  id              String    @id @default(cuid())
+  id              String       @id @default(cuid())
   code            String
   expired_at      DateTime?
-  status          Boolean   @default(true)
-  created_at      DateTime  @default(now())
+  status          Boolean      @default(true)
+  created_at      DateTime     @default(now())
   percentage      Int?
   max_discount    Int
   amount          Int
+  trx_type        service_type
   min_transaction Int
   order           order[]
 }
@@ -637,15 +674,33 @@ enum position {
 }
 
 model promotion {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   image_url   String?
   description String?
-  app_type app_type
+  app_type    app_type
 }
 
 enum app_type {
   CUSTOMER
   DRIVER
   MERCHANT
+}
+
+model trx_admin {
+  id         String   @id @default(cuid())
+  trx_type   trx_type
+  amount     Int
+  note       String?
+  created_at DateTime @default(now())
+  admin      admin    @relation(fields: [admin_id], references: [id])
+  admin_id   String
+}
+
+model trx_company {
+  id         String   @id @default(cuid())
+  trx_type   trx_type
+  amount     Int
+  note       String?
+  created_at DateTime @default(now())
 }

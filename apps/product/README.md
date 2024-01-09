@@ -175,7 +175,7 @@ Api ini hanya di kususkan untuk aplikasi merchant jadi selain pengguna dari apli
 ### Contoh Request
 
 ```http
-GET https://product.gentatechnology.com/merchant?id=true&details={select: {address: true, name: true, images: true}}
+GET https://product.gentatechnology.com/merchants?id=true&details={select: {address: true, name: true, images: true}}
 Content-Type: application/json
 Authorization: Bearer .....
 ```

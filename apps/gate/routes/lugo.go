@@ -25,6 +25,7 @@ func (s LugoRoutes) Setup() {
 		api.GET("/services", s.controller.GetAvailableService)
 		api.GET("/fee", s.controller.GetTrxFee)
 		api.POST("/fee/distance", s.controller.GetPriceInKm)
+		api.GET("/discount", s.controller.GetDiscounts)
 	}
 }
 

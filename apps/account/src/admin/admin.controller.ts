@@ -197,7 +197,7 @@ export class AdminController {
     return this.adminService.deleteAdmin(adminId)
   }
 
-  @Roles(Role.ADMIN, Role.SUPERADMIN)
+  @Roles(Role.ADMIN, Role.SUPERADMIN, Role.KORCAP, Role.KORLAP)
   @Get(':id')
   async getAdmin(
     @Param('id') adminId: string,
@@ -207,7 +207,7 @@ export class AdminController {
   }
 
   @Put(':id')
-  @Roles(Role.SUPERADMIN, Role.ADMIN)
+  @Roles(Role.SUPERADMIN, Role.ADMIN, Role.KORCAP, Role.KORLAP)
   async updateAdmin(
     @Param('id') adminId: string,
     @Body() data: Prisma.adminUpdateInput,
