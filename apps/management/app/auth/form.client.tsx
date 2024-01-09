@@ -36,7 +36,6 @@ export function Form() {
       redirect: false,
     })
       .then((resp) => {
-        console.log(resp)
         setLoading(false)
         if (resp?.error) {
           if (!toast.isActive('error')) {
