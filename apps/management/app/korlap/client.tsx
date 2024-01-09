@@ -1,10 +1,18 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { isSuperAdmin } from '../../services/app.service'
-import { admin, driver, driver_details, referal } from '@prisma/client/users'
+import {
+  admin,
+  admin_wallet,
+  driver,
+  driver_details,
+  referal,
+} from '@prisma/client/users'
 import { useSession } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
 import { UrlService } from '../../services/url.service'
+import { Finance } from './finance'
 
 type Role = {
   id: string
@@ -27,6 +35,7 @@ type Referal = referal & {
 type Admin = admin & {
   role: Role[]
   referal?: Referal
+  admin_wallet?: admin_wallet
 }
 
 export function Client() {
@@ -51,6 +60,7 @@ export function Client() {
         .addQuery('bank_name', 'true')
         .addQuery('bank_holder', 'true')
         .addQuery('phone_number', 'true')
+        .addQuery('admin_wallet', 'true')
         .addQuery(
           'referal',
           '{select: { driver: {include: {driver_details:true, _count: {select: {order:true}}}}, _count: {select: {driver: {where: {status: "ACTIVE"}}}}}}',
@@ -99,7 +109,7 @@ export function Client() {
                       </div>
                       <div className={'card-actions'}>
                         <DetailsDrivers data={item.referal.driver} />
-                        <DetailsAdmin />
+                        <DetailsAdmin data={item} />
                       </div>
                     </div>
                   </div>
@@ -110,7 +120,9 @@ export function Client() {
             }
           })}
         </>
-      ) : null}
+      ) : (
+        <Finance />
+      )}
     </section>
   )
 }
@@ -193,7 +205,7 @@ function DetailsDrivers(props: { data: Driver[] }) {
   )
 }
 
-function DetailsAdmin() {
+function DetailsAdmin(props: { data: Admin }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   return (
     <>
@@ -221,7 +233,74 @@ function DetailsAdmin() {
       <dialog ref={dialogRef} className="modal">
         <div className="modal-box">
           <div className={'flex flex-col gap-6'}>
-            <h2>List driver linked by this admin</h2>
+            <h2>Detail Admin</h2>
+            <label>
+              <div className="label">
+                <span className="label-text-alt">Name</span>
+              </div>
+              <input
+                className={'input input-bordered input-sm w-full'}
+                readOnly={true}
+                defaultValue={props.data.name}
+              />
+            </label>
+            <label>
+              <div className="label">
+                <span className="label-text-alt">Balance</span>
+              </div>
+              <input
+                className={'input input-bordered input-sm w-full'}
+                readOnly={true}
+                defaultValue={props.data.admin_wallet?.balance}
+              />
+            </label>
+            <label>
+              <div className="label">
+                <span className="label-text-alt">Account Bank Owner Name</span>
+              </div>
+              <input
+                className={'input input-bordered input-sm w-full'}
+                readOnly={true}
+                defaultValue={props.data?.bank_holder ?? ''}
+              />
+            </label>
+            <label>
+              <div className="label">
+                <span className="label-text-alt">Bank Name</span>
+              </div>
+              <input
+                className={'input input-bordered input-sm w-full'}
+                readOnly={true}
+                defaultValue={props.data?.bank_name ?? ''}
+              />
+            </label>
+            <label>
+              <div className="label">
+                <span className="label-text-alt">Bank Number</span>
+              </div>
+              <input
+                className={'input input-bordered input-sm w-full'}
+                readOnly={true}
+                defaultValue={props.data?.bank_number ?? ''}
+              />
+            </label>
+            <label>
+              <div className="label">
+                <span className="label-text-alt">ID Card</span>
+              </div>
+              <input
+                className={'input input-bordered input-sm w-full'}
+                readOnly={true}
+                defaultValue={props.data.id_card ?? ''}
+              />
+            </label>
+            <label>
+              <div className="label">
+                <span className="label-text-alt">ID Card Images</span>
+              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={props.data?.id_card_images ?? ''} alt={'ktp'} />
+            </label>
           </div>
           <div className="modal-action">
             <form method="dialog" className={'flex gap-6'}>

@@ -7,8 +7,21 @@ import (
 	"time"
 )
 
-func (u LugoService) DriverTopUp() {
+func (u LugoService) DriverTopUp(driverId string, model *db.DriverTrxModel) error {
+	// driver, errD := u.db.Driver.FindUnique(
+	// 	db.Driver.ID.Equals(driverId),
+	// ).With(
+	// ).Exec(context.Background())
+	// s, err := u.db.DriverTrx.CreateOne(
+	// 	db.DriverTrx.TrxType.Set(model.TrxType),
+	// 	db.DriverTrx.Driver.Link(db.Driver.ID.Equals(driverId)),
+	// 	db.DriverTrx.Amount.Set(model.Amount),
+	// ).Exec(context.Background())
+	// if err != nil {
+	// 	return err
+	// }
 
+	return nil
 }
 
 func (u LugoService) MerchantTopUp() {
