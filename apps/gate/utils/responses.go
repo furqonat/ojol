@@ -17,6 +17,12 @@ type ApplyToken struct {
 	UserInfo        UserInfo        `json:"userInfo"`
 }
 
+type RequestWithdrawType struct {
+	ResultInfo  ResultInfo `json:"resultInfo"`
+	FundOrderId string     `json:"fundOrderId"`
+	RequestId   string     `json:"requestId"`
+}
+
 type UserProfile struct {
 	ResultInfo        ResultInfo          `json:"resultInfo"`
 	UserResourcesInfo []UserResourcesInfo `json:"userResourceInfos"`

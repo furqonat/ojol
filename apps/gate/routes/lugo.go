@@ -26,6 +26,8 @@ func (s LugoRoutes) Setup() {
 		api.GET("/fee", s.controller.GetTrxFee)
 		api.POST("/fee/distance", s.controller.GetPriceInKm)
 		api.GET("/discount", s.controller.GetDiscounts)
+		api.POST("/driver/wd", s.controller.DriverRequestWithdraw)
+		api.POST("/merchant/wd", s.controller.MerchantRequestWithdraw)
 	}
 }
 

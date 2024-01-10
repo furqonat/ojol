@@ -146,3 +146,49 @@ func (dana DanaService) GetCompanyBallance() (*utils.MerchantQuery, error) {
 	}
 	return &result.Response.Body, nil
 }
+
+func (dana DanaService) RequestWithdraw(phoneNumber string, amount int) (*utils.RequestWithdrawType, error) {
+	guid := dana.danaApi.GenerateGUID()
+	timestamp := dana.danaApi.GetDateNow()
+
+	requestData := map[string]interface{}{
+		"head": map[string]interface{}{
+			"version":      "2.0",
+			"function":     "dana.fund.agent.topup.boost.topupForUser",
+			"clientId":     utils.ClientID,
+			"clientSecret": utils.ClientSecret,
+			"reqTime":      timestamp,
+			"reqMsgId":     guid,
+			"reserve":      "{}",
+		},
+		"body": map[string]interface{}{
+			"mobileNo": phoneNumber,
+			"fundType": "AGENT_TOPUP_FOR_USER_SETTLE",
+			"fundAmount": map[string]interface{}{
+				"currency": "IDR",
+				"value":    amount * 1000,
+			},
+			"requestId": guid,
+			"agentMode": "NORMAL",
+			"envInfo": map[string]interface{}{
+				"terminalType":   "WEB",
+				"sourcePlatform": "IPG",
+			},
+		},
+	}
+	response, err := dana.danaApi.New("/dana/fund/agent/topup/boost/topupForUser.htm", requestData)
+	if err != nil {
+		return nil, err
+	}
+	result := utils.Result[utils.RequestWithdrawType]{}
+	if errParse := json.Unmarshal(response, &result); errParse != nil {
+		return nil, errParse
+	}
+
+	if result.Response.Body.ResultInfo.ResultCode != "SUCCESS" {
+		dana.logger.Info(result.Response)
+		return nil, errors.New(fmt.Sprintf("Error: %s", response))
+	}
+
+	return &result.Response.Body, nil
+}
