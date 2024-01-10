@@ -62,6 +62,7 @@ export function Finance() {
         .addQuery('phone_number', 'true')
         .addQuery('admin_wallet', 'true')
         .addQuery('trx_admin', 'true')
+        .addQuery('is_verified', 'true')
         .addQuery(
           'referal',
           '{select: { ref: true, driver: {include: {driver_details:true, _count: {select: {order:true}}}}, _count: {select: {driver: {where: {status: "ACTIVE"}}}}}}',
@@ -127,15 +128,39 @@ export function Finance() {
                 'stats stats-vertical shadow-sm border border-gray-200 border-solid'
               }
             >
-              <div className="stat">
-                <div className={'stat-title'}>My Referal </div>
-                <div className={'stat-value text-2xl'}>
-                  {admins?.referal?.ref}
+              <div className={'flex flex-row items-center'}>
+                <div className="stat flex-1">
+                  <div className={'stat-title'}>My Referal </div>
+                  <div className={'stat-value text-2xl'}>
+                    {admins?.referal?.ref}
+                  </div>
                 </div>
+                <button
+                  className={'btn btn-ghost'}
+                  onClick={(e) => {
+                    navigator.clipboard.writeText(admins?.referal.ref ?? '')
+                    alert('success copy to clipboard')
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"
+                    />
+                  </svg>
+                </button>
               </div>
             </div>
           </section>
-          <h3 className={'font-semibold text-lg'}>Income history</h3>
+          <h3 className={'font-semibold text-lg'}>Transactions history</h3>
           {admins &&
             admins?.trx_admin?.map((item) => {
               return (
@@ -155,7 +180,8 @@ export function Finance() {
                     <div>
                       <h3
                         className={`text-lg font-semibold ${
-                          item.trx_type === 'WITHDRAW'
+                          item.trx_type === 'WITHDRAW' ||
+                          item.trx_type === 'REDUCTION'
                             ? 'text-red-400'
                             : 'text-green-400'
                         }`}
@@ -226,10 +252,43 @@ export function Finance() {
 }
 
 function RequestWidthdraw(props: { data: Admin | null }) {
+  const { data } = useSession()
   const ref = useRef<HTMLDialogElement>(null)
+
+  const [amount, setAmount] = useState(0)
+
+  function handleChangeAmount(e: React.ChangeEvent<HTMLInputElement>) {
+    setAmount(e.target.valueAsNumber)
+  }
+
+  function handleOnSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const amountWallet = props.data?.admin_wallet.balance ?? 0
+    if (amount > amountWallet) {
+      alert('unable request widthdraw. balance is not enough')
+      return
+    } else {
+      const body = {
+        amount: amount,
+      }
+      const url = process.env.NEXT_PUBLIC_DEV_BASE_URL + '/portal/admin/wd'
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(body),
+        headers: {
+          Authorization: `Bearer ${data?.user?.token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((e) => e.json())
+        .then(console.log)
+    }
+  }
+
   if (!props.data?.is_verified) {
     return <Verification data={props.data} />
   }
+
   return (
     <>
       <button
@@ -240,16 +299,36 @@ function RequestWidthdraw(props: { data: Admin | null }) {
       </button>
       <dialog ref={ref} className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">
-            Press ESC key or click the button below to close
-          </p>
-          <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn">Close</button>
-            </form>
-          </div>
+          <h3 className="font-bold text-lg">Request Witdhdraw</h3>
+          <form onSubmit={handleOnSubmit} className={'flex flex-col gap-6'}>
+            <label>
+              <div className={'label'}>
+                <span className={'label-text-alt'}>Amount</span>
+              </div>
+              <input
+                className={'input input-sm input-bordered w-full'}
+                value={amount}
+                required={true}
+                type={'number'}
+                onChange={handleChangeAmount}
+              />
+            </label>
+            <div className={'flex flex-row-reverse w-full gap-4'}>
+              <button
+                type={'button'}
+                onClick={(e) => {
+                  e.preventDefault()
+                  ref.current?.close()
+                }}
+                className={'btn btn-outline btn-sm'}
+              >
+                Close
+              </button>
+              <button type={'submit'} className={'btn btn-sm btn-primary'}>
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
       </dialog>
     </>
@@ -281,6 +360,10 @@ function Verification(props: { data: Admin | null }) {
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
     const { files } = e.target
+    if (idCardImage.startsWith('https')) {
+      const refs = ref(getStorage(), idCardImage)
+      deleteObject(refs).then(() => {})
+    }
     const refs = ref(getStorage(), `verification/${files?.item(0)?.name}`)
     const data = await uploadBytes(refs, files?.item(0) as Blob)
     const url = await getDownloadURL(data.ref)
@@ -413,7 +496,7 @@ function Verification(props: { data: Admin | null }) {
             ) : null}
             <label>
               <div className={'label'}>
-                <span className={'label-text-alt'}>Phone Number</span>
+                <span className={'label-text-alt'}>Dana Phone Number</span>
               </div>
               <input
                 placeholder={'0813xxxxx'}

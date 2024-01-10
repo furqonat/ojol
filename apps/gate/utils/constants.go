@@ -11,6 +11,8 @@ const (
 	DRIVER           = "DRIVER"
 	SUPERADMIN       = "SUPERADMIN"
 	ADMIN            = "ADMIN"
+	KORLAP           = "KORLAP"
+	KORCAP           = "KORCAP"
 	ClientID         = "2023121413443087131578"
 	OAuthScope       = "CASHIER,QUERY_BALANCE,DEFAULT_BASIC_PROFILE,MINI_DANA"
 	OAuthRedirectURL = "https://oauth.gentatechnology.com/oauth"

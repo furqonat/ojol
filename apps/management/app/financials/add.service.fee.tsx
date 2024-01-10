@@ -56,7 +56,10 @@ export function AddNewServiceFee() {
     const url = process.env.NEXT_PUBLIC_GATE_BASE_URL + 'portal/fee'
     const body = {
       service_type: serviceType?.value,
-      account_type: accountType?.value,
+      account_type:
+        serviceType?.value === 'BIKE' || serviceType?.value === 'CAR'
+          ? 'BASIC'
+          : accountType?.value,
       percentage: amount,
     }
     const resp = await fetch(url, {
