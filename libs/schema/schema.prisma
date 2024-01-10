@@ -321,9 +321,6 @@ model admin {
   admin_wallet   admin_wallet?
   id_card        String?
   id_card_images String?
-  bank_number    Int?
-  bank_holder    String?
-  bank_name      String?
   phone_number   String?
   is_verified    Boolean       @default(false)
   trx_admin      trx_admin[]
