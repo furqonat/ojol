@@ -231,7 +231,7 @@ export function Finance() {
 
 function RequestWidthdraw(props: { data: Admin | null }) {
   const ref = useRef<HTMLDialogElement>(null)
-  if (!props.data?.bank_holder || !props.data?.bank_name) {
+  if (!props.data?.is_verified) {
     return <Verification data={props.data} />
   }
   return (
@@ -263,6 +263,7 @@ function RequestWidthdraw(props: { data: Admin | null }) {
 function Verification(props: { data: Admin | null }) {
   const { data } = useSession()
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const fileRef = useRef<HTMLInputElement>(null)
   const [idCard, setIdCard] = useState(props.data?.id_card ?? '')
   const [idCardImage, setIdCardImage] = useState(
     props.data?.id_card_images ?? '',
@@ -312,6 +313,7 @@ function Verification(props: { data: Admin | null }) {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${data?.user?.token}`,
+        'Content-type': 'application/json',
       },
       body: JSON.stringify(body),
     })
@@ -324,6 +326,7 @@ function Verification(props: { data: Admin | null }) {
     const refs = ref(getStorage(), idCardImage)
     deleteObject(refs).then((e) => {
       setIdCardImage('')
+      fileRef.current!.value = ''
     })
   }
 
@@ -356,6 +359,7 @@ function Verification(props: { data: Admin | null }) {
                 <span className={'label-text-alt'}>ID Card Images</span>
               </div>
               <input
+                ref={fileRef}
                 type={'file'}
                 required={true}
                 onChange={handleChangeIdCardImage}

@@ -309,24 +309,24 @@ model merchant_device_token {
 }
 
 model admin {
-  id                String        @id @default(cuid())
-  name              String
-  email             String        @unique
-  password          String
-  last_sign_in      DateTime?
-  status            Boolean       @default(true)
-  avatar            String?
-  role              roles[]
-  referal           referal?
-  admin_wallet      admin_wallet?
-  id_card           String?
-  id_card_images    String?
-  bank_number       Int?
-  bank_holder       String?
-  bank_name         String?
-  phone_number      String?
-  need_verification Boolean       @default(false)
-  trx_admin         trx_admin[]
+  id             String        @id @default(cuid())
+  name           String
+  email          String        @unique
+  password       String
+  last_sign_in   DateTime?
+  status         Boolean       @default(true)
+  avatar         String?
+  role           roles[]
+  referal        referal?
+  admin_wallet   admin_wallet?
+  id_card        String?
+  id_card_images String?
+  bank_number    Int?
+  bank_holder    String?
+  bank_name      String?
+  phone_number   String?
+  is_verified    Boolean       @default(false)
+  trx_admin      trx_admin[]
 }
 
 model roles {
