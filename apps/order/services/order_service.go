@@ -254,7 +254,17 @@ func (order OrderService) CreateOrder(
 		}
 		return &createOrderResult.ID, createTrxDetail, nil
 	} else {
-		return &createOrderResult.ID, nil, nil
+
+		createTrxDetail, errCreateTrxDetail := order.database.TransactionDetail.CreateOne(
+			db.TransactionDetail.Transactions.Link(db.Transactions.ID.Equals(trx.ID)),
+			db.TransactionDetail.CheckoutURL.Set("CASH"),
+			db.TransactionDetail.AcquirementID.Set("CASH"),
+			db.TransactionDetail.MerchantTransID.Set(createOrderResult.ID),
+		).Exec(context.Background())
+		if errCreateTrxDetail != nil {
+			return nil, nil, errCreateTrxDetail
+		}
+		return &createOrderResult.ID, createTrxDetail, nil
 
 	}
 }
