@@ -195,6 +195,7 @@ enum trx_type {
   TOPUP
   WITHDRAW
   ADJUSTMENT
+  REDUCTION
 }
 
 model vehicle {
@@ -308,23 +309,24 @@ model merchant_device_token {
 }
 
 model admin {
-  id             String        @id @default(cuid())
-  name           String
-  email          String        @unique
-  password       String
-  last_sign_in   DateTime?
-  status         Boolean       @default(true)
-  avatar         String?
-  role           roles[]
-  referal        referal?
-  admin_wallet   admin_wallet?
-  id_card        String?
-  id_card_images String?
-  bank_number    Int?
-  bank_holder    String?
-  bank_name      String?
-  phone_number   String?
-  trx_admin      trx_admin[]
+  id                String        @id @default(cuid())
+  name              String
+  email             String        @unique
+  password          String
+  last_sign_in      DateTime?
+  status            Boolean       @default(true)
+  avatar            String?
+  role              roles[]
+  referal           referal?
+  admin_wallet      admin_wallet?
+  id_card           String?
+  id_card_images    String?
+  bank_number       Int?
+  bank_holder       String?
+  bank_name         String?
+  phone_number      String?
+  need_verification Boolean       @default(false)
+  trx_admin         trx_admin[]
 }
 
 model roles {
@@ -369,14 +371,10 @@ model services {
 }
 
 model company_balance {
-  id              String         @id @default(cuid())
-  created_at      DateTime       @default(now())
-  remark          String?
-  current_balance Int
-  balance_in      Int
-  balance_out     Int
-  type            balance_type
-  status          balance_status
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+  remark     String?
+  balance    Int
 }
 
 model discount {
