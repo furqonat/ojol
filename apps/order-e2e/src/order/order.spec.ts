@@ -56,7 +56,7 @@ describe('Test Autentication Api', () => {
         '/',
         {
           order_type: 'BIKE',
-          payment_type: 'DANA',
+          payment_type: 'CASH',
           gross_amount: 70000,
           net_amount: 75000,
           total_amount: 75000,
@@ -67,6 +67,7 @@ describe('Test Autentication Api', () => {
           //     product_id: 'uniqadasdw',
           //   },
           // ],
+          weight: 2,
           location: {
             latitude: -6.1231,
             longitude: 112.1231,
@@ -77,7 +78,7 @@ describe('Test Autentication Api', () => {
             longitude: 112.1231,
             address: 'Jl. Merkeda 12',
           },
-          discount_id: 'asdasda',
+          // discount_id: 'asdasda',
         },
         {
           headers: {
