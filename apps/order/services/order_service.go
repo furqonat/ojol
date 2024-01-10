@@ -65,7 +65,10 @@ func (order OrderService) CreateOrder(
 	ptrOrderModel *CreateOrderType,
 	customerId string,
 ) (*string, *db.TransactionDetailModel, error) {
+	currentTime := time.Now()
 
+	// Add 15 minutes to the current time
+	fifteenMinutesLater := currentTime.Add(15 * time.Minute)
 	orderExists, err := order.database.Order.FindMany(
 		db.Order.CustomerID.Equals(customerId),
 		db.Order.OrderStatus.NotIn([]db.OrderStatus{
@@ -73,6 +76,7 @@ func (order OrderService) CreateOrder(
 			db.OrderStatusCanceled,
 		}),
 		db.Order.OrderType.Equals(ptrOrderModel.OrderType),
+		db.Order.CreatedAt.Lte(fifteenMinutesLater),
 	).With(
 		db.Order.Transactions.Fetch(),
 	).Take(1).Exec(context.Background())
@@ -132,6 +136,7 @@ func (order OrderService) CreateOrder(
 			db.Order.ID.Equals(createOrderResult.ID),
 		).Update(
 			db.Order.Discount.Link(db.Discount.ID.Equals(*ptrOrderModel.DiscountID)),
+			db.Order.NetAmount.Decrement(getD.Amount),
 		).Exec(context.Background())
 		if errL != nil {
 			order.deleteOrder(createOrderResult.ID)
