@@ -59,9 +59,6 @@ export function Finance() {
         .addQuery('role', 'true')
         .addQuery('id_card', 'true')
         .addQuery('id_card_images', 'true')
-        .addQuery('bank_number', 'true')
-        .addQuery('bank_name', 'true')
-        .addQuery('bank_holder', 'true')
         .addQuery('phone_number', 'true')
         .addQuery('admin_wallet', 'true')
         .addQuery('trx_admin', 'true')
@@ -78,7 +75,6 @@ export function Finance() {
         .then(setAdmins)
     }
   }, [data?.user?.token, data?.user?.id])
-  console.log(admins)
   return (
     <section className={'flex flex-col gap-6'}>
       {!isSuperAdmin(data) ? (
@@ -268,13 +264,18 @@ function Verification(props: { data: Admin | null }) {
   const [idCardImage, setIdCardImage] = useState(
     props.data?.id_card_images ?? '',
   )
-  const [bankNumber, setBankNumber] = useState(props.data?.bank_number ?? 0)
-  const [bankHolder, setBankHolder] = useState(props.data?.bank_holder ?? '')
-  const [bankName, setBankName] = useState(props.data?.bank_name ?? '')
-
+  const [phoneNumber, setPhoneNumber] = useState(props.data?.phone_number ?? '')
   function handleChangeIdCard(e: React.ChangeEvent<HTMLInputElement>) {
     setIdCard(e.target.value)
   }
+
+  useEffect(() => {
+    if (props.data) {
+      setIdCard(props.data?.id_card ?? '')
+      setIdCardImage(props.data?.id_card_images ?? '')
+      setPhoneNumber(props.data?.phone_number ?? '')
+    }
+  }, [props.data])
 
   async function handleChangeIdCardImage(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -286,16 +287,8 @@ function Verification(props: { data: Admin | null }) {
     setIdCardImage(url)
   }
 
-  function handleChangeBankNumber(e: React.ChangeEvent<HTMLInputElement>) {
-    setBankNumber(e.target.valueAsNumber)
-  }
-
-  function handleChangeBankHolder(e: React.ChangeEvent<HTMLInputElement>) {
-    setBankHolder(e.target.value)
-  }
-
-  function handleChangeBankName(e: React.ChangeEvent<HTMLInputElement>) {
-    setBankName(e.target.value)
+  function handleChangePhoneNumber(e: React.ChangeEvent<HTMLInputElement>) {
+    setPhoneNumber(e.target.value)
   }
 
   function handleOnSave(e: React.FormEvent<HTMLFormElement>) {
@@ -305,9 +298,7 @@ function Verification(props: { data: Admin | null }) {
     const body: Prisma.adminUpdateInput = {
       id_card: idCard,
       id_card_images: idCardImage,
-      bank_holder: bankHolder,
-      bank_name: bankName,
-      bank_number: bankNumber,
+      phone_number: phoneNumber,
     }
     fetch(url, {
       method: 'PUT',
@@ -422,38 +413,14 @@ function Verification(props: { data: Admin | null }) {
             ) : null}
             <label>
               <div className={'label'}>
-                <span className={'label-text-alt'}>Bank Number</span>
+                <span className={'label-text-alt'}>Phone Number</span>
               </div>
               <input
-                placeholder={'441231'}
-                value={bankNumber}
+                placeholder={'0813xxxxx'}
+                value={phoneNumber}
                 required={true}
                 type={'number'}
-                onChange={handleChangeBankNumber}
-                className={'input input-bordered input-sm w-full'}
-              />
-            </label>
-            <label>
-              <div className={'label'}>
-                <span className={'label-text-alt'}>Bank Holder Name</span>
-              </div>
-              <input
-                placeholder={'eg: Rahmat'}
-                value={bankHolder}
-                required={true}
-                onChange={handleChangeBankHolder}
-                className={'input input-bordered input-sm w-full'}
-              />
-            </label>
-            <label>
-              <div className={'label'}>
-                <span className={'label-text-alt'}>Bank Name</span>
-              </div>
-              <input
-                placeholder={'eg: BCA'}
-                value={bankName}
-                required={true}
-                onChange={handleChangeBankName}
+                onChange={handleChangePhoneNumber}
                 className={'input input-bordered input-sm w-full'}
               />
             </label>

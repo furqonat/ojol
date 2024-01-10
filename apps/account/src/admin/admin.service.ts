@@ -66,6 +66,13 @@ export class AdminService {
               id: data.roleId,
             },
           },
+          admin_wallet: data?.ref
+            ? {
+                create: {
+                  balance: 0,
+                },
+              }
+            : undefined,
           password: await this.bcrypt.generateHashPassword(data.password),
           referal: data.ref
             ? {

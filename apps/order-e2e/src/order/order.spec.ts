@@ -55,7 +55,7 @@ describe('Test Autentication Api', () => {
       const resp = await axios.post(
         '/',
         {
-          order_type: 'BIKE',
+          order_type: 'CAR',
           payment_type: 'CASH',
           gross_amount: 70000,
           net_amount: 75000,
@@ -67,7 +67,6 @@ describe('Test Autentication Api', () => {
           //     product_id: 'uniqadasdw',
           //   },
           // ],
-          weight: 2,
           location: {
             latitude: -6.1231,
             longitude: 112.1231,
