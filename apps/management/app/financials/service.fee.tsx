@@ -45,7 +45,10 @@ export function ServiceFee() {
                       {item.service_type.toLowerCase()}
                     </h3>
                     <div className={'flex gap-2 items-center'}>
-                      <span className={'badge'}>{item.account_type}</span>
+                      {item.service_type === 'BIKE' ||
+                      item.service_type === 'CAR' ? null : (
+                        <span className={'badge'}>{item.account_type}</span>
+                      )}
                       <span>{item.percentage} %</span>
                     </div>
                   </div>
