@@ -106,16 +106,19 @@ export function EditServiceFee(props: { data: service_fee }) {
                 onChange={(e) => setServiceType(e)}
               />
             </label>
-            <label className="form-control w-full">
-              <div className="label">
-                <span className="label-text-alt">Account Type</span>
-              </div>
-              <Select
-                value={accountType}
-                options={accountOptions}
-                onChange={(e) => setAccountType(e)}
-              />
-            </label>
+            {props.data.service_type === 'BIKE' ||
+            props.data.service_type === 'CAR' ? null : (
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text-alt">Account Type</span>
+                </div>
+                <Select
+                  value={accountType}
+                  options={accountOptions}
+                  onChange={(e) => setAccountType(e)}
+                />
+              </label>
+            )}
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text-alt">Amount In Percent</span>

@@ -2,6 +2,7 @@ package lugo
 
 import (
 	"apps/gate/db"
+	"apps/order/utils"
 	"net/http"
 	"strconv"
 
@@ -17,6 +18,10 @@ type CreatTax struct {
 	AppliedFor db.AppliedFor `json:"applied_for"`
 	TaxType    db.TaxType    `json:"tax_type"`
 	Amount     int           `json:"amount"`
+}
+
+type Withdraw struct {
+	Amount int `json:"amount"`
 }
 
 func (c Controller) GetTrxFee(ctx *gin.Context) {
@@ -253,4 +258,55 @@ func (c Controller) DeleteDiscount(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
+func (c Controller) AdminRequestWithdraw(ctx *gin.Context) {
+	adminId := ctx.GetString(utils.UID)
+	model := Withdraw{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	result, err := c.service.AdminRequestWithdraw(adminId, model.Amount)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, result)
+}
+
+func (c Controller) MerchantRequestWithdraw(ctx *gin.Context) {
+	merchantId := ctx.GetString(utils.UID)
+	model := Withdraw{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	result, err := c.service.MerchantRequestWithdraw(merchantId, model.Amount)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, result)
+}
+
+func (c Controller) DriverRequestWithdraw(ctx *gin.Context) {
+	driverId := ctx.GetString(utils.UID)
+	model := Withdraw{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	result, err := c.service.DriverRequestWithdraw(driverId, model.Amount)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, result)
 }

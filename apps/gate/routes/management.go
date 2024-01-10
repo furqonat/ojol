@@ -18,7 +18,7 @@ func (s ManagementRoutes) Setup() {
 	s.logger.Info("Setting up routes")
 	s.handler.Gin.NoRoute(s.cors.Cors())
 	api := s.handler.Gin.Group("/portal").Use(s.cors.Cors()).Use(
-		s.middleware.HandleAuthWithRoles(utils.SUPERADMIN, utils.ADMIN),
+		s.middleware.HandleAuthWithRoles(utils.SUPERADMIN, utils.ADMIN, utils.KORCAP, utils.KORLAP),
 	)
 	{
 		api.POST("/services/", s.controller.CreateService)
@@ -69,6 +69,8 @@ func (s ManagementRoutes) Setup() {
 		api.GET("/discount", s.controller.GetDiscounts)
 		api.POST("/discount", s.controller.CreateDiscount)
 		api.DELETE("/discount/:id", s.controller.DeleteDiscount)
+
+		api.POST("/admin/wd", s.controller.AdminRequestWithdraw)
 	}
 }
 

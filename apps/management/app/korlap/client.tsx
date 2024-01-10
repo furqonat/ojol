@@ -3,6 +3,7 @@
 
 import { isSuperAdmin } from '../../services/app.service'
 import {
+  Prisma,
   admin,
   admin_wallet,
   driver,
@@ -56,11 +57,9 @@ export function Client() {
         .addQuery('role', 'true')
         .addQuery('id_card', 'true')
         .addQuery('id_card_images', 'true')
-        .addQuery('bank_number', 'true')
-        .addQuery('bank_name', 'true')
-        .addQuery('bank_holder', 'true')
         .addQuery('phone_number', 'true')
         .addQuery('admin_wallet', 'true')
+        .addQuery('is_verified', 'true')
         .addQuery(
           'referal',
           '{select: { driver: {include: {driver_details:true, _count: {select: {order:true}}}}, _count: {select: {driver: {where: {status: "ACTIVE"}}}}}}',
@@ -74,8 +73,6 @@ export function Client() {
         .then(setAdmins)
     }
   }, [data?.user.token])
-
-  console.log(admins)
 
   return (
     <section className={'flex flex-col gap-6'}>
@@ -206,7 +203,28 @@ function DetailsDrivers(props: { data: Driver[] }) {
 }
 
 function DetailsAdmin(props: { data: Admin }) {
+  const { data } = useSession()
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const [checked, setChecked] = useState(props.data.is_verified)
+
+  function handleChecked(e: React.ChangeEvent<HTMLInputElement>) {
+    setChecked(e.target.checked)
+    const body: Prisma.adminUpdateInput = {
+      is_verified: e.target.checked,
+    }
+    const url =
+      process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/${props.data.id}`
+    fetch(url, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+      headers: {
+        Authorization: `Bearer ${data?.user?.token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((e) => e.json())
+      .catch(console.log)
+  }
   return (
     <>
       <button
@@ -256,32 +274,12 @@ function DetailsAdmin(props: { data: Admin }) {
             </label>
             <label>
               <div className="label">
-                <span className="label-text-alt">Account Bank Owner Name</span>
+                <span className="label-text-alt">Dana Phone Number</span>
               </div>
               <input
                 className={'input input-bordered input-sm w-full'}
                 readOnly={true}
-                defaultValue={props.data?.bank_holder ?? ''}
-              />
-            </label>
-            <label>
-              <div className="label">
-                <span className="label-text-alt">Bank Name</span>
-              </div>
-              <input
-                className={'input input-bordered input-sm w-full'}
-                readOnly={true}
-                defaultValue={props.data?.bank_name ?? ''}
-              />
-            </label>
-            <label>
-              <div className="label">
-                <span className="label-text-alt">Bank Number</span>
-              </div>
-              <input
-                className={'input input-bordered input-sm w-full'}
-                readOnly={true}
-                defaultValue={props.data?.bank_number ?? ''}
+                defaultValue={props.data?.phone_number ?? ''}
               />
             </label>
             <label>
@@ -293,6 +291,22 @@ function DetailsAdmin(props: { data: Admin }) {
                 readOnly={true}
                 defaultValue={props.data.id_card ?? ''}
               />
+            </label>
+            <label>
+              <div className="label">
+                <span className="label-text-alt">Is Verified</span>
+              </div>
+              <div className={'flex w-full gap-6'}>
+                <h3 className={'flex-1 font-semibold'}>
+                  Korlap or Korcap Status
+                </h3>
+                <input
+                  className={'toggle toggle-sm'}
+                  checked={checked}
+                  onChange={handleChecked}
+                  type={'checkbox'}
+                />
+              </div>
             </label>
             <label>
               <div className="label">
