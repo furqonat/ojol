@@ -204,7 +204,7 @@ Berikut adalah contoh untuk mendapatkan harga perkilo meter.
 ### Contoh Request
 
 ```http
-GET https://gate.gentatechnology.com/lugo/fee/discount
+GET https://gate.gentatechnology.com/lugo/discount
 Content-Type: application/json
 Authorization: Bearer ...
 ```
