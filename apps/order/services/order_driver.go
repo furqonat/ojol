@@ -36,7 +36,9 @@ func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
 }
 
 func (order OrderService) DriverRejectOrder(orderId string, driverId string) error {
-	orderExists, errOrderExists := order.database.Order.FindUnique(db.Order.ID.Equals(orderId)).Exec(context.Background())
+	orderExists, errOrderExists := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Exec(context.Background())
 	if errOrderExists != nil {
 		return errOrderExists
 	}
