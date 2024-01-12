@@ -11,7 +11,8 @@ import 'api_auth.dart';
 
 enum Status { idle, loading, success, failed }
 
-class ControllerAuth extends GetxController with GetSingleTickerProviderStateMixin{
+class ControllerAuth extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final ApiAuth api;
   ControllerAuth({required this.api});
 
@@ -34,9 +35,10 @@ class ControllerAuth extends GetxController with GetSingleTickerProviderStateMix
   var showPass = true.obs;
 
   //Login with firebase auth
-  firebaseLogin(BuildContext context)async {
+  firebaseLogin(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(email: edtEmail.text, password: edtPassword.text);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: edtEmail.text, password: edtPassword.text);
       var phoneNumber = FirebaseAuth.instance.currentUser?.phoneNumber;
       firebasePhoneVerification(context, phoneNumber!);
     } on FirebaseAuthException catch (e) {
@@ -59,7 +61,8 @@ class ControllerAuth extends GetxController with GetSingleTickerProviderStateMix
           showModalBottomSheet(
             context: context,
             isDismissible: false,
-            constraints: BoxConstraints.expand(width: Get.width, height: Get.height),
+            constraints:
+                BoxConstraints.expand(width: Get.width, height: Get.height),
             builder: (context) => Column(
               children: [
                 Text(
@@ -110,8 +113,9 @@ class ControllerAuth extends GetxController with GetSingleTickerProviderStateMix
                 const Spacer(),
                 ElevatedButton(
                     onPressed: () async {
-                        var useToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-                        sendToken(context, useToken!);
+                      var useToken =
+                          await FirebaseAuth.instance.currentUser?.getIdToken();
+                      sendToken(context, useToken!);
                     },
                     style: ElevatedButton.styleFrom(
                         elevation: 5,
@@ -158,15 +162,15 @@ class ControllerAuth extends GetxController with GetSingleTickerProviderStateMix
 
   getFirebasetoken(String token) async {
     try {
-      final userCredential = await FirebaseAuth.instance.currentUser?.getIdToken(true);
+      final userCredential =
+          await FirebaseAuth.instance.currentUser?.getIdToken(true);
 
       final pattern = RegExp('.{1,800}');
-      pattern.allMatches(userCredential!).forEach((match) => debugPrint(match.group(0)));
-
-      if (userCredential != null) {
-        await LocalService().setIsLogin(isLogin: true);
-        Get.offAllNamed(Routes.home);
-      }
+      pattern.allMatches(userCredential!).forEach(
+            (match) => debugPrint(match.group(0)),
+          );
+      await LocalService().setIsLogin(isLogin: true);
+      Get.offAllNamed(Routes.home);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "invalid-custom-token":
@@ -182,9 +186,10 @@ class ControllerAuth extends GetxController with GetSingleTickerProviderStateMix
   }
 
   //create with firebase auth
-  firebaseRegister(BuildContext context)async {
+  firebaseRegister(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: edtEmailDaftar.text, password: edtPasswordDaftar.text);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: edtEmailDaftar.text, password: edtPasswordDaftar.text);
       Get.toNamed(Routes.otp);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'The email address is already in use by another account.') {

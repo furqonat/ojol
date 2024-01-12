@@ -1,14 +1,30 @@
-import '../../api/api_service.dart';
+import 'package:lugo_marchant/shared/servinces/url_service.dart';
+import 'package:rest_client/product_client.dart';
 
 class ApiProduct {
-  Future<dynamic> getProducts(
-      {required String token,
-      required String userId,
-      required String filter}) async {
-    var r = await ApiService().apiJSONGetWitFirebaseToken(
-        'product',
-        '?id=true&name=true&description=true&price=true&filter=$filter&category=true&merchant_id=$userId&image=true&_count={select: {customer_product_review: true}}',
-        token);
-    return r;
+  final ProductClient productClient;
+
+  ApiProduct({required this.productClient});
+
+  Future<dynamic> getProducts({
+    required String token,
+    required String merchantId,
+    String? filter,
+  }) async {
+    final queryBuilder = QueryBuilder()
+      ..addQuery("id", "true")
+      ..addQuery("name", "true")
+      ..addQuery("description", "true")
+      ..addQuery("price", "true")
+      ..addQuery("filter", filter)
+      ..addQuery("merchant_id", merchantId)
+      ..addQuery("image", "true")
+      ..addQuery("category", "true")
+      ..addQuery("_count", "{select: {customer_product_review: true}}");
+    final resp = await productClient.getProducts(
+      bearerToken: "Bearer $token",
+      queries: queryBuilder.toMap(),
+    );
+    return resp;
   }
 }

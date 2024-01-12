@@ -21,7 +21,7 @@ class _AuthClient implements AuthClient {
   String? baseUrl;
 
   @override
-  Future<AuthResponse> customerSignIn(String token) async {
+  Future<AuthResponse> customerSignIn({required String token}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -85,19 +85,20 @@ class _AuthClient implements AuthClient {
   }
 
   @override
-  Future<AuthResponse> merchantSignIn(
-    String token,
-    MerchantBody body,
-  ) async {
+  Future<AuthResponse> merchantSignIn({
+    required String token,
+    MerchantBody? body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Content-Type': 'application/json',
       r'Authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
-    _data.addAll(body.toJson());
+    _data.addAll(body?.toJson() ?? <String, dynamic>{});
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<AuthResponse>(Options(
       method: 'POST',

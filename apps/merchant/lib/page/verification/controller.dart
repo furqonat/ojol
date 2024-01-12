@@ -207,19 +207,35 @@ class VerificationController extends GetxController {
     _fbAuth.verifyPhoneNumber(
       phoneNumber: phone.e164,
       verificationCompleted: (phoneAuthCredential) {
-        _fbAuth.currentUser
-            ?.linkWithCredential(phoneAuthCredential)
-            .then((value) {
-          verificationStatus.value = PhoneVerificationStatus(
-            status: true,
-            message: "OK",
-          );
-        }).catchError((error) {
-          verificationStatus.value = PhoneVerificationStatus(
-            status: false,
-            message: error.code,
-          );
-        });
+        if (verificationState == "1") {
+          _fbAuth.currentUser
+              ?.linkWithCredential(phoneAuthCredential)
+              .then((value) {
+            verificationStatus.value = PhoneVerificationStatus(
+              status: true,
+              message: "OK",
+            );
+          }).catchError((error) {
+            verificationStatus.value = PhoneVerificationStatus(
+              status: false,
+              message: error.code,
+            );
+          });
+        } else {
+          _fbAuth.currentUser
+              ?.reauthenticateWithCredential(phoneAuthCredential)
+              .then((value) {
+            verificationStatus.value = PhoneVerificationStatus(
+              status: true,
+              message: "OK",
+            );
+          }).catchError((error) {
+            verificationStatus.value = PhoneVerificationStatus(
+              status: false,
+              message: error.code,
+            );
+          });
+        }
       },
       verificationFailed: (error) {
         verificationStatus.value = PhoneVerificationStatus(
@@ -230,17 +246,33 @@ class VerificationController extends GetxController {
       codeSent: (verificationId, forceResendingToken) {
         final credential = PhoneAuthProvider.credential(
             verificationId: verificationId, smsCode: smsCode.text);
-        _fbAuth.currentUser?.linkWithCredential(credential).then((value) {
-          verificationStatus.value = PhoneVerificationStatus(
-            status: true,
-            message: "OK",
-          );
-        }).catchError((error) {
-          verificationStatus.value = PhoneVerificationStatus(
-            status: false,
-            message: error.code,
-          );
-        });
+        if (verificationState == "1") {
+          _fbAuth.currentUser?.linkWithCredential(credential).then((value) {
+            verificationStatus.value = PhoneVerificationStatus(
+              status: true,
+              message: "OK",
+            );
+          }).catchError((error) {
+            verificationStatus.value = PhoneVerificationStatus(
+              status: false,
+              message: error.code,
+            );
+          });
+        } else {
+          _fbAuth.currentUser
+              ?.reauthenticateWithCredential(credential)
+              .then((value) {
+            verificationStatus.value = PhoneVerificationStatus(
+              status: true,
+              message: "OK",
+            );
+          }).catchError((error) {
+            verificationStatus.value = PhoneVerificationStatus(
+              status: false,
+              message: error.code,
+            );
+          });
+        }
       },
       codeAutoRetrievalTimeout: (verificationId) {},
       timeout: const Duration(seconds: 60),

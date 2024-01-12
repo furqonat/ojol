@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:lugo_marchant/page/bottom_nav/controller_bottomnav.dart';
 import 'package:lugo_marchant/page/history/api_history.dart';
@@ -10,15 +11,35 @@ import 'package:lugo_marchant/page/room_chat/api_roomchat.dart';
 import 'package:lugo_marchant/page/room_chat/controller_roomchat.dart';
 import 'package:lugo_marchant/page/running_order/api_runningorder.dart';
 import 'package:lugo_marchant/page/running_order/controller_runningorder.dart';
+import 'package:rest_client/account_client.dart';
 
-class BindingBottomNav implements Bindings{
+class BindingBottomNav implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ControllerBottomNav>(() => ControllerBottomNav());
-    Get.lazyPut<ControllerRoomChat>(() => ControllerRoomChat(api: ApiRoomChat()));
-    Get.lazyPut<ControllerHome>(() => ControllerHome(api: ApiHome()));
-    Get.lazyPut<ControllerHistory>(() => ControllerHistory(api: ApiHistory()));
-    Get.lazyPut<ControllerRunningOrder>(() => ControllerRunningOrder(api: ApiRunningOrder()));
-    Get.lazyPut<ControllerProfile>(() => ControllerProfile(api: ApiProfile()));
+    final dio = Dio();
+    Get.lazyPut<ControllerBottomNav>(
+      () => ControllerBottomNav(),
+    );
+    Get.lazyPut<ControllerRoomChat>(
+      () => ControllerRoomChat(
+        api: ApiRoomChat(),
+      ),
+    );
+    Get.lazyPut<ControllerHome>(
+        () => ControllerHome(api: ApiHome(accountClient: AccountClient(dio))));
+    Get.lazyPut<ControllerHistory>(
+      () => ControllerHistory(
+        api: ApiHistory(),
+      ),
+    );
+    Get.lazyPut<ControllerRunningOrder>(
+        () => ControllerRunningOrder(api: ApiRunningOrder()));
+    Get.lazyPut<ControllerProfile>(
+      () => ControllerProfile(
+        api: ApiProfile(
+          accountClient: AccountClient(dio),
+        ),
+      ),
+    );
   }
 }

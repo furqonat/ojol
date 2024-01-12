@@ -1,19 +1,23 @@
-import 'package:lugo_marchant/api/api_service.dart';
 import 'package:lugo_marchant/response/user.dart';
 import 'package:lugo_marchant/shared/servinces/url_service.dart';
+import 'package:rest_client/account_client.dart';
 
 class ApiHome {
-  final service = ApiService();
+  final AccountClient accountClient;
+
+  ApiHome({required this.accountClient});
 
   Future<UserResponse> getMerchant(token) async {
-    final query = QueryBuilder("merchant")
+    final query = QueryBuilder()
       ..addQuery("name", "true")
       ..addQuery("avatar", "true")
       ..addQuery("details", "true")
       ..addQuery("merchant_wallet", "true")
       ..addQuery("dana_token", "true");
-    final resp = await service.apiJSONGetWitFirebaseToken(
-        "account", query.build().toString(), token);
+    final resp = await accountClient.getMerchant(
+      bearerToken: "Bearer $token",
+      queries: query.toMap(),
+    );
     return UserResponse.fromJson(resp);
   }
 }

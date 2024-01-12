@@ -1,4 +1,3 @@
-
 class Response {
   final String message;
   final dynamic res;
@@ -19,3 +18,13 @@ class Response {
       };
 }
 
+class DataResponse {
+  final List<dynamic> data;
+  final int total;
+
+  DataResponse({required this.data, required this.total});
+
+  factory DataResponse.fromJson(Map<String, dynamic> json) {
+    return DataResponse(data: json['data'], total: json['total']);
+  }
+}

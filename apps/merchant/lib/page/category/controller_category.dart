@@ -8,13 +8,14 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lugo_marchant/page/category/api_category.dart';
 
-class ControllerCategory extends GetxController with GetSingleTickerProviderStateMixin{
+class ControllerCategory extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final ApiCategory api;
-  ControllerCategory ({required this.api});
+  ControllerCategory({required this.api});
 
   var categoryValue = "Kategori".obs;
 
-  var categoryList= [
+  var categoryList = [
     "Kategori",
     "Makanan berat",
     "Makanan ringan",
@@ -39,7 +40,8 @@ class ControllerCategory extends GetxController with GetSingleTickerProviderStat
   final ImagePicker picker = ImagePicker();
 
   getFromCamera() async {
-    final XFile? camImage = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    final XFile? camImage =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
       img.value = camImage.path;
       file = camImage;
@@ -49,7 +51,7 @@ class ControllerCategory extends GetxController with GetSingleTickerProviderStat
 
   getFromFile() async {
     final XFile? fileImage =
-    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
       img.value = fileImage.path;
       file = fileImage;
@@ -77,14 +79,13 @@ class ControllerCategory extends GetxController with GetSingleTickerProviderStat
         imgUrl.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto profil berhasil di unggah');
       });
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Foto profil gagal di unggah');
     }
   }
 
-  uploadMenuNewCategory()async{
-    try{
+  uploadMenuNewCategory() async {
+    try {
       var token = await firebase.currentUser?.getIdToken();
       var r = await api.addProductWithNewCategory(
         name: edtName.text,
@@ -92,13 +93,14 @@ class ControllerCategory extends GetxController with GetSingleTickerProviderStat
         image: imgUrl.value,
         price: int.parse(edtPrice.text),
         status: true,
-        category_name: edtCategoryName.text,
-        product_type: "FOOD",
+        categoryName: edtCategoryName.text,
+        productType: "FOOD",
         token: token!,
       );
-      if (r["message"] == "OK"){
-        Fluttertoast.showToast(msg: "Anda kini punya produk baru untuk di jual");
-      }else{
+      if (r.message == "OK") {
+        Fluttertoast.showToast(
+            msg: "Anda kini punya produk baru untuk di jual");
+      } else {
         Fluttertoast.showToast(msg: "Anda tidak dapat menambahkan produk baru");
       }
     } catch (e, stackTrace) {
@@ -108,8 +110,8 @@ class ControllerCategory extends GetxController with GetSingleTickerProviderStat
     }
   }
 
-  uploadMenuCurrentCategory()async{
-    try{
+  uploadMenuCurrentCategory() async {
+    try {
       var token = await firebase.currentUser?.getIdToken();
       var r = await api.addProductWithCurrentCategory(
         name: edtName.text,
@@ -118,12 +120,13 @@ class ControllerCategory extends GetxController with GetSingleTickerProviderStat
         price: int.parse(edtPrice.text),
         status: true,
         id: categoryValue.value,
-        product_type: "FOOD",
+        productType: "FOOD",
         token: token!,
       );
-      if (r["message"] == "OK"){
-        Fluttertoast.showToast(msg: "Anda kini punya produk baru untuk di jual");
-      }else{
+      if (r.message == "OK") {
+        Fluttertoast.showToast(
+            msg: "Anda kini punya produk baru untuk di jual");
+      } else {
         Fluttertoast.showToast(msg: "Anda tidak dapat menambahkan produk baru");
       }
     } catch (e, stackTrace) {

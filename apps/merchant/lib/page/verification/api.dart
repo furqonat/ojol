@@ -1,16 +1,17 @@
-import 'package:lugo_marchant/api/api_service.dart' as service;
 import 'package:lugo_marchant/response/commont.dart';
+import 'package:rest_client/account_client.dart';
 
 class ApiService {
-  final apiService = service.ApiService();
+  final AccountClient accountClient;
+
+  ApiService({required this.accountClient});
+
   Future<CommonResponse> applyMerchant(
       {required Map<String, dynamic> body, required token}) async {
-    final resp = await apiService.apiJSONPostWithFirebaseToken(
-      "account",
-      "merchant",
-      body,
-      token,
+    final resp = await accountClient.applyToBeMerchant(
+      bearerToken: "Bearer $token",
+      body: body,
     );
-    return CommonResponse.fromJson(resp);
+    return CommonResponse(message: resp.message, res: resp.res);
   }
 }

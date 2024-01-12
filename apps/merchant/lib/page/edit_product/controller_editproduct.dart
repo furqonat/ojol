@@ -9,9 +9,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lugo_marchant/page/edit_product/api_editproduct.dart';
 
-class ControllerEditProduct extends GetxController{
+class ControllerEditProduct extends GetxController {
   final ApiEditProduct api;
-  ControllerEditProduct ({required this.api});
+  ControllerEditProduct({required this.api});
 
   var edtName = TextEditingController();
   var edtDescription = TextEditingController();
@@ -26,7 +26,8 @@ class ControllerEditProduct extends GetxController{
   final firebase = FirebaseAuth.instance;
 
   getFromCamera() async {
-    final XFile? camImage = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    final XFile? camImage =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
       imagePriview.value = camImage.path;
       file = camImage;
@@ -36,7 +37,7 @@ class ControllerEditProduct extends GetxController{
 
   getFromFile() async {
     final XFile? fileImage =
-    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
       imagePriview.value = fileImage.path;
       file = fileImage;
@@ -64,29 +65,28 @@ class ControllerEditProduct extends GetxController{
         image.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto produk berhasil di unggah');
       });
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Foto produk gagal di unggah');
     }
   }
 
-  editProduct()async{
-    try{
+  editProduct() async {
+    try {
       var token = await firebase.currentUser?.getIdToken();
-      var r = await api.EditProduct(
-          name: edtName.text,
-          description: edtDescription.text,
-          image: image.value,
-          price: int.parse(edtPrice.text),
-          status: status.value,
-          token: token!
+      var r = await api.editProduct(
+        name: edtName.text,
+        description: edtDescription.text,
+        image: image.value,
+        price: int.parse(edtPrice.text),
+        status: status.value,
+        token: token!,
       );
-      if(r["message"] == "OK"){
+      if (r["message"] == "OK") {
         Fluttertoast.showToast(msg: "Edit produk berhasil");
-      }else{
+      } else {
         Fluttertoast.showToast(msg: "Edit produk gagal");
       }
-    }catch(e, stackTrace){
+    } catch (e, stackTrace) {
       Fluttertoast.showToast(msg: "ada yang salah");
       log('$e');
       log('$stackTrace');

@@ -38,7 +38,8 @@ abstract class AuthClient {
 
   @POST("customer")
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<AuthResponse> customerSignIn(@Header("Authorization") String token);
+  Future<AuthResponse> customerSignIn(
+      {@Header("Authorization") required String token});
 
   @POST("driver")
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
@@ -46,8 +47,8 @@ abstract class AuthClient {
 
   @POST("merchant")
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<AuthResponse> merchantSignIn(
-    @Header("Authorization") String token,
-    @Body() MerchantBody body,
-  );
+  Future<AuthResponse> merchantSignIn({
+    @Header("Authorization") required String token,
+    @Body() MerchantBody? body,
+  });
 }

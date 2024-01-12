@@ -89,13 +89,13 @@ export class AppController {
     }
   }
   @Roles(Role.MERCHANT, Role.USER)
-  @Get('/categories')
+  @Get('/category')
   async getCategories(@Query('take') take = 20, @Query('skip') skip = 0) {
     return this.appService.getCategories(take, skip)
   }
 
   @Roles(Role.MERCHANT, Role.USER)
-  @Get('/category')
+  @Post('/category')
   async createCategories(@Body('name') name: string) {
     if (!name) {
       throw new BadRequestException()
