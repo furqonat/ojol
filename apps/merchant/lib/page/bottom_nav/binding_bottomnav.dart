@@ -1,0 +1,24 @@
+import 'package:get/get.dart';
+import 'package:lugo_marchant/page/bottom_nav/controller_bottomnav.dart';
+import 'package:lugo_marchant/page/history/api_history.dart';
+import 'package:lugo_marchant/page/history/controller_history.dart';
+import 'package:lugo_marchant/page/home/api_home.dart';
+import 'package:lugo_marchant/page/home/controller_home.dart';
+import 'package:lugo_marchant/page/profile/api_profile.dart';
+import 'package:lugo_marchant/page/profile/controller_profile.dart';
+import 'package:lugo_marchant/page/room_chat/api_roomchat.dart';
+import 'package:lugo_marchant/page/room_chat/controller_roomchat.dart';
+import 'package:lugo_marchant/page/running_order/api_runningorder.dart';
+import 'package:lugo_marchant/page/running_order/controller_runningorder.dart';
+
+class BindingBottomNav implements Bindings{
+  @override
+  void dependencies() {
+    Get.lazyPut<ControllerBottomNav>(() => ControllerBottomNav());
+    Get.lazyPut<ControllerRoomChat>(() => ControllerRoomChat(api: ApiRoomChat()));
+    Get.lazyPut<ControllerHome>(() => ControllerHome(api: ApiHome()));
+    Get.lazyPut<ControllerHistory>(() => ControllerHistory(api: ApiHistory()));
+    Get.lazyPut<ControllerRunningOrder>(() => ControllerRunningOrder(api: ApiRunningOrder()));
+    Get.lazyPut<ControllerProfile>(() => ControllerProfile(api: ApiProfile()));
+  }
+}

@@ -1,4 +1,4 @@
-# merchant
+# lugo_marchant
 
 A new Flutter project.
 
