@@ -19,53 +19,62 @@ class Verification extends GetView<VerificationController> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Obx(
-              () => EasyStepper(
-                activeStep: controller.activeStep.value,
-                activeStepTextColor: Colors.black87,
-                finishedStepTextColor: Colors.black87,
-                internalPadding: 20,
-                showLoadingAnimation: false,
-                stepRadius: 8,
-                lineStyle: const LineStyle(
-                  lineLength: 60,
-                  lineWidth: 20,
-                ),
-                showStepBorder: false,
-                padding: const EdgeInsets.only(top: 60),
-                steps: [
-                  EasyStep(
-                    customStep: CircleAvatar(
-                      radius: 8,
-                      backgroundColor: Colors.white,
-                      child: CircleAvatar(
-                        radius: 7,
-                        backgroundColor: controller.activeStep.value >= 0
-                            ? const Color(0xFF3978EF)
-                            : Colors.white,
+            controller.verificationState == "1"
+                ? Column(
+                    children: [
+                      Obx(
+                        () => EasyStepper(
+                          activeStep: controller.activeStep.value,
+                          activeStepTextColor: Colors.black87,
+                          finishedStepTextColor: Colors.black87,
+                          internalPadding: 20,
+                          showLoadingAnimation: false,
+                          stepRadius: 8,
+                          lineStyle: const LineStyle(
+                            lineLength: 60,
+                            lineWidth: 20,
+                          ),
+                          showStepBorder: false,
+                          padding: const EdgeInsets.only(top: 60),
+                          steps: [
+                            EasyStep(
+                              customStep: CircleAvatar(
+                                radius: 8,
+                                backgroundColor: Colors.white,
+                                child: CircleAvatar(
+                                  radius: 7,
+                                  backgroundColor:
+                                      controller.activeStep.value >= 0
+                                          ? const Color(0xFF3978EF)
+                                          : Colors.white,
+                                ),
+                              ),
+                              title: 'Phone',
+                            ),
+                            EasyStep(
+                              customStep: CircleAvatar(
+                                radius: 8,
+                                backgroundColor: Colors.white,
+                                child: CircleAvatar(
+                                  radius: 7,
+                                  backgroundColor:
+                                      controller.activeStep.value >= 1
+                                          ? const Color(0xFF3978EF)
+                                          : Colors.black,
+                                ),
+                              ),
+                              title: 'Details',
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    title: 'Phone',
-                  ),
-                  EasyStep(
-                    customStep: CircleAvatar(
-                      radius: 8,
-                      backgroundColor: Colors.white,
-                      child: CircleAvatar(
-                        radius: 7,
-                        backgroundColor: controller.activeStep.value >= 1
-                            ? const Color(0xFF3978EF)
-                            : Colors.black,
-                      ),
-                    ),
-                    title: 'Details',
-                  ),
-                ],
-              ),
-            ),
-            Obx(
-              () => verificationStep(context, controller.activeStep.value),
-            )
+                      Obx(
+                        () => verificationStep(
+                            context, controller.activeStep.value),
+                      )
+                    ],
+                  )
+                : phoneVerificationView(context, controller),
           ],
         ),
       ),

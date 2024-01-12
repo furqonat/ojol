@@ -21,13 +21,14 @@ class _AccountClient implements AccountClient {
   String? baseUrl;
 
   @override
-  Future<dynamic> getCustomer(
-    String bearerToken,
-    Map<String, dynamic> queries,
-  ) async {
+  Future<dynamic> getCustomer({
+    required String bearerToken,
+    Map<String, dynamic>? queries,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queries);
+    queryParameters.addAll(queries ?? <String, dynamic>{});
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Content-Type': 'application/json',
       r'Authorization': bearerToken,
@@ -56,10 +57,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> customerAssignDeviceToken(
-    String bearerToken,
-    DeviceToken body,
-  ) async {
+  Future<Response> customerAssignDeviceToken({
+    required String bearerToken,
+    required DeviceToken body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -92,10 +93,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> basicUpdateCustomer(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> basicUpdateCustomer({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -128,13 +129,14 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<dynamic> getDriver(
-    String bearerToken,
-    Map<String, dynamic> queries,
-  ) async {
+  Future<dynamic> getDriver({
+    required String bearerToken,
+    Map<String, dynamic>? queries,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queries);
+    queryParameters.addAll(queries ?? <String, dynamic>{});
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Content-Type': 'application/json',
       r'Authorization': bearerToken,
@@ -163,10 +165,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> applyToBeDriver(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> applyToBeDriver({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -199,10 +201,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> updateApplyToBeDriver(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> updateApplyToBeDriver({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -235,10 +237,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> driverAssignDeviceToken(
-    String bearerToken,
-    DeviceToken body,
-  ) async {
+  Future<Response> driverAssignDeviceToken({
+    required String bearerToken,
+    required DeviceToken body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -271,10 +273,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> updateDriverSetting(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> updateDriverSetting({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -307,10 +309,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> updateDriverOrderSetting(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> updateDriverOrderSetting({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -343,10 +345,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> updateDriverCoordinate(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> updateDriverCoordinate({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -379,13 +381,14 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<dynamic> getMerchant(
-    String bearerToken,
-    Map<String, dynamic> queries,
-  ) async {
+  Future<dynamic> getMerchant({
+    required String bearerToken,
+    Map<String, dynamic>? queries,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(queries);
+    queryParameters.addAll(queries ?? <String, dynamic>{});
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Content-Type': 'application/json',
       r'Authorization': bearerToken,
@@ -414,10 +417,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> applyToBeMerchant(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> applyToBeMerchant({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -450,10 +453,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> updateMerchant(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> updateMerchant({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -486,10 +489,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> createOperationTime(
-    String bearerToken,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> createOperationTime({
+    required String bearerToken,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -522,11 +525,11 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> updateOperationTime(
-    String bearerToken,
-    String operationTimeId,
-    Map<String, dynamic> body,
-  ) async {
+  Future<Response> updateOperationTime({
+    required String bearerToken,
+    required String operationTimeId,
+    required Map<String, dynamic> body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{
@@ -559,10 +562,10 @@ class _AccountClient implements AccountClient {
   }
 
   @override
-  Future<Response> merchantAssignDeviceToken(
-    String bearerToken,
-    DeviceToken body,
-  ) async {
+  Future<Response> merchantAssignDeviceToken({
+    required String bearerToken,
+    required DeviceToken body,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{

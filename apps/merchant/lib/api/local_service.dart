@@ -72,7 +72,7 @@ class LocalService {
     await local.write(signUpStatus, isSignUp);
   }
 
-  Future removeStorageForLogout() async {
+  Future cleanUp() async {
     await local.remove(cacheUser);
     await local.remove(cacheToken);
     await local.remove(loginState);

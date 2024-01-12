@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_marchant/page/verification/controller.dart';
+import 'package:lugo_marchant/route/route_name.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -87,7 +88,8 @@ Widget phoneVerificationView(
             onPressed: () {
               if (controller.formPhoneVerification.currentState!.validate()) {
                 final user = FirebaseAuth.instance.currentUser;
-                if (user?.phoneNumber != null) {
+                if (user?.phoneNumber != null &&
+                    controller.verificationState == "1") {
                   controller.handleActiveStep(1);
                 } else {
                   bottomSheet(context, controller);
@@ -118,7 +120,7 @@ void bottomSheet(BuildContext context, VerificationController controller) {
     enableDrag: false,
     constraints: BoxConstraints.expand(width: Get.width, height: Get.height),
     builder: (context) => Padding(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.only(top: 30, bottom: 60),
       child: Column(
         children: [
           Text(
@@ -166,17 +168,22 @@ void bottomSheet(BuildContext context, VerificationController controller) {
               selectedFillColor: const Color(0xFF95A1AC),
             ),
           ),
-          const Spacer(),
           ElevatedButton(
-            onPressed: () async {
-              // var useToken =
-              //     await FirebaseAuth.instance.currentUser?.getIdToken();
-              // sendToken(useToken!);
-              await controller.handleVerificationPhone();
-              if (controller.verificationStatus.value.status) {
-                Get.back();
-                controller.activeStep.value = 1;
-              }
+            onPressed: () {
+              controller.handleVerificationPhone().then((value) {
+                print(controller.verificationStatus.value.status);
+                print(controller.verificationStatus.value.message);
+                if (controller.verificationStatus.value.status) {
+                  if (controller.verificationState == "1") {
+                    Get.back();
+                    controller.activeStep.value = 1;
+                  } else {
+                    Get.back();
+                    print("run on it");
+                    Get.offAllNamed(Routes.bottomNav);
+                  }
+                }
+              });
             },
             style: ElevatedButton.styleFrom(
                 elevation: 5,

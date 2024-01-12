@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,20 +29,21 @@ class ControllerProduct extends GetxController {
 
   final firebase = FirebaseAuth.instance;
 
-  RxList<Product> product = <Product>[].obs;
+  final product = <Product>[].obs;
 
-  getProductsMethod() async {
+  getProducts() async {
     try {
       loading(Status.loading);
       product.clear();
       var token = await firebase.currentUser?.getIdToken();
       var userId = firebase.currentUser?.uid;
       var r = await api.getProducts(
-          token: token!,
-          userId: userId!,
-          filter: category.value == "Kategori" ? "" : category.value);
+        token: token!,
+        merchantId: userId!,
+        filter: category.value == "Kategori" ? null : category.value,
+      );
       if (r["data"] != null) {
-        var list = r["data"];
+        var list = r["data"]! as List<dynamic>;
         product(RxList<Product>.from(list.map((e) => Product.fromJson(e))));
         loading(Status.success);
       } else {
@@ -121,7 +123,7 @@ class ControllerProduct extends GetxController {
 
   @override
   void onInit() {
-    getProductsMethod();
+    getProducts();
     super.onInit();
   }
 }
