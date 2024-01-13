@@ -90,8 +90,33 @@ export class AppController {
   }
   @Roles(Role.MERCHANT, Role.USER)
   @Get('/category')
-  async getCategories(@Query('take') take = 20, @Query('skip') skip = 0) {
-    return this.appService.getCategories(take, skip)
+  async getCategories(
+    @Query('merchantId') merchantId?: string,
+    @Query('take') take = 20,
+    @Query('skip') skip = 0,
+  ) {
+    return this.appService.getCategories({
+      merchantId: merchantId,
+      take: take,
+      skip: skip,
+    })
+  }
+
+  @Roles(Role.MERCHANT, Role.USER)
+  @Get('/merchant/category')
+  async getMerchantCategories(
+    @Request() req?: { uid?: string },
+    @Query('take') take = 20,
+    @Query('skip') skip = 0,
+  ) {
+    if (req?.uid) {
+      return this.appService.getCategories({
+        merchantId: req.uid,
+        take: take,
+        skip: skip,
+      })
+    }
+    throw new UnauthorizedException({ message: 'Unauthorized' })
   }
 
   @Roles(Role.MERCHANT, Role.USER)

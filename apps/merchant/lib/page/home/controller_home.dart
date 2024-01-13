@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:lugo_marchant/response/commont.dart';
 import 'package:lugo_marchant/response/user.dart';
 
 import 'api_home.dart';
@@ -9,16 +10,28 @@ class ControllerHome extends GetxController {
   ControllerHome({required this.api});
   final merchant = UserResponse().obs;
   final _fbAuth = FirebaseAuth.instance;
+  final sell = MerchantSellInDay(
+    totalCancel: 0,
+    totalDone: 0,
+    totalIncome: 0,
+  ).obs;
 
-  Future<void> getUser() async {
+  Future<void> handleGetMerchant() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getMerchant(token);
     merchant.value = resp;
   }
 
+  Future<void> handleGetSell() async {
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final resp = await api.getMerchantSellInDay(token!);
+    sell.value = resp;
+  }
+
   @override
   void onReady() {
-    getUser();
+    handleGetMerchant();
+    handleGetSell();
     super.onReady();
   }
 
