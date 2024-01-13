@@ -15,7 +15,11 @@ export class MerchantService {
         where: {
           id: merchantId,
         },
-        select: select ? select : { id: true },
+        select: select
+          ? select
+          : {
+              id: true,
+            },
       })
       return merchant
     } catch (e) {

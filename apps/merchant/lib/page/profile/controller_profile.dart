@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +19,12 @@ class ControllerProfile extends GetxController {
   var loading = Status.idle.obs;
 
   final merchant = UserResponse().obs;
+  final _fbAuth = FirebaseAuth.instance;
 
-  getUser() async {
+  Future getUser() async {
     try {
       loading(Status.loading);
-      final firebaseToken =
-          await FirebaseAuth.instance.currentUser?.getIdToken();
+      final firebaseToken = await _fbAuth.currentUser?.getIdToken();
       final r = await api.userDetail(token: firebaseToken!);
       if (r.id != null) {
         merchant.value = r;
@@ -35,11 +33,25 @@ class ControllerProfile extends GetxController {
         Fluttertoast.showToast(msg: 'Something wrong');
         loading(Status.failed);
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       loading(Status.failed);
-      log('$e');
-      log('$stackTrace');
     }
+  }
+
+  Future<void> handleUpdateStoreOpen(bool status) async {
+    final token = await _fbAuth.currentUser?.getIdToken();
+    getUser().then((value) async {
+      if (merchant.value.status != 'ACTIVE') {
+        Fluttertoast.showToast(
+          msg: "unable update because you still in verification",
+        );
+        storeOpen.value = false;
+        return;
+      } else {
+        storeOpen.value = true;
+        await api.updateMerchantOpen(token: token!, status: status);
+      }
+    });
   }
 
   userHelp(BuildContext context) {
@@ -176,8 +188,8 @@ class ControllerProfile extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     getUser();
+    super.onInit();
   }
 
   @override
