@@ -12,4 +12,8 @@ class QueryBuilder {
   toMap() {
     return _queryParameters;
   }
+
+  Uri toStrUri() {
+    return Uri.parse("").replace(queryParameters: _queryParameters);
+  }
 }

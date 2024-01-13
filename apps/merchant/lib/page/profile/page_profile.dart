@@ -75,7 +75,13 @@ class PageProfile extends GetView<ControllerProfile> {
                         Switch(
                             value: controller.storeOpen.value,
                             activeColor: const Color(0xFF3978EF),
-                            onChanged: (value) => controller.storeOpen(value))
+                            onChanged: (value) {
+                              controller.handleUpdateStoreOpen(value).then(
+                                (it) {
+                                  controller.storeOpen(value);
+                                },
+                              );
+                            })
                       ],
                     ),
                   ),

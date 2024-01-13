@@ -5,16 +5,40 @@ UserResponse userFromJson(String str) =>
 
 String userToJson(UserResponse data) => json.encode(data.toJson());
 
+class DetailImages {
+  final String id;
+  final String link;
+
+  DetailImages({required this.id, required this.link});
+
+  factory DetailImages.fromJson(Map<String, dynamic> json) {
+    return DetailImages(
+      id: json['id'],
+      link: json['link'],
+    );
+  }
+}
+
 class Detail {
   final String? id;
   final String? name;
+  final String? address;
+  final String? badge;
+  final List<DetailImages>? images;
 
-  Detail({this.id, this.name});
+  Detail({this.id, this.name, this.address, this.images, this.badge});
 
   factory Detail.fromJson(Map<String, dynamic> json) {
     return Detail(
       id: json['id'],
       name: json['name'],
+      address: json['address'],
+      images: json['images'] != null
+          ? (json['images'] as List<dynamic>)
+              .map((e) => DetailImages.fromJson(e))
+              .toList()
+          : null,
+      badge: json['badge'],
     );
   }
 }
@@ -37,6 +61,8 @@ class UserResponse {
   final String? phone;
   final Detail? detail;
   final Wallet? wallet;
+  final String? status;
+  final dynamic products;
 
   UserResponse({
     this.avatar,
@@ -46,6 +72,8 @@ class UserResponse {
     this.phone,
     this.detail,
     this.wallet,
+    this.status,
+    this.products,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
@@ -59,6 +87,8 @@ class UserResponse {
         wallet: json['merchant_wallet'] != null
             ? Wallet.fromJson(json['merchant_wallet'])
             : null,
+        status: json['status'],
+        products: json['products'],
       );
 
   Map<String, dynamic> toJson() => {

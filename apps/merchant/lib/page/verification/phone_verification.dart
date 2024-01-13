@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_marchant/api/local_service.dart';
 import 'package:lugo_marchant/page/verification/controller.dart';
 import 'package:lugo_marchant/route/route_name.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -171,15 +172,16 @@ void bottomSheet(BuildContext context, VerificationController controller) {
           ElevatedButton(
             onPressed: () {
               controller.handleVerificationPhone().then((value) {
-                print(controller.verificationStatus.value.status);
-                print(controller.verificationStatus.value.message);
                 if (controller.verificationStatus.value.status) {
                   if (controller.verificationState == "1") {
                     Get.back();
                     controller.activeStep.value = 1;
                   } else {
                     Get.back();
-                    print("run on it");
+                    LocalService().setIsLogin(isLogin: true);
+                    LocalService().setInVerification(false);
+                    LocalService()
+                        .setInVerificationStep(VerificationState.phoneOnly);
                     Get.offAllNamed(Routes.bottomNav);
                   }
                 }
