@@ -55,22 +55,25 @@ class PageHome extends GetView<ControllerHome> {
                       color: Colors.white,
                     ),
                   ),
-                  RichText(
-                    text: TextSpan(
-                      style: GoogleFonts.readexPro(
-                        fontSize: 14,
-                        color: Colors.white,
+                  Obx(
+                    () => RichText(
+                      text: TextSpan(
+                        style: GoogleFonts.readexPro(
+                          fontSize: 14,
+                          color: Colors.white,
+                        ),
+                        children: <TextSpan>[
+                          const TextSpan(text: 'Penjualan hari ini\n'),
+                          TextSpan(
+                              text: NumberFormat.simpleCurrency(locale: 'id_ID')
+                                  .format(controller.sell.value.totalIncome),
+                              style: GoogleFonts.readexPro(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ],
                       ),
-                      children: <TextSpan>[
-                        const TextSpan(text: 'Penjualan hari ini\n'),
-                        TextSpan(
-                            text: 'Rp 500.000',
-                            style: GoogleFonts.readexPro(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ],
                     ),
                   ),
                 ],
@@ -90,19 +93,27 @@ class PageHome extends GetView<ControllerHome> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      Text('12 Pesanan Berhasil',
+                      Obx(
+                        () => Text(
+                          '${controller.sell.value.totalDone} Pesanan Berhasil',
                           style: GoogleFonts.readexPro(
                             fontSize: 12,
-                          )),
+                          ),
+                        ),
+                      ),
                       Container(
                         width: 1,
                         height: 20,
                         color: Colors.grey,
                       ),
-                      Text('5 Pesanan Batal',
+                      Obx(
+                        () => Text(
+                          '${controller.sell.value.totalCancel} Pesanan Batal',
                           style: GoogleFonts.readexPro(
                             fontSize: 12,
-                          )),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -167,11 +178,15 @@ class PageHome extends GetView<ControllerHome> {
                             ),
                             Obx(
                               () => Text(
-                                NumberFormat.simpleCurrency(
-                                  locale: 'id_ID',
-                                ).format(
-                                  controller.merchant.value.wallet?.balance,
-                                ),
+                                controller.merchant.value.wallet?.balance !=
+                                        null
+                                    ? NumberFormat.simpleCurrency(
+                                        locale: 'id_ID',
+                                      ).format(
+                                        controller
+                                            .merchant.value.wallet?.balance,
+                                      )
+                                    : "",
                                 style: GoogleFonts.readexPro(
                                     fontSize: 24, fontWeight: FontWeight.bold),
                               ),

@@ -71,9 +71,15 @@ abstract class OrderClient {
     @Path("orderId") required String orderId,
   });
 
-  @GET("merchant/")
+  @GET("merchant")
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future merchantGetOrders({
+    @Header("Authorization") required String bearerToken,
+  });
+
+  @GET("merchant/sell")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future merchantGetSell({
     @Header("Authorization") required String bearerToken,
   });
 

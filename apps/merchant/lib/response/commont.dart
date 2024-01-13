@@ -12,3 +12,22 @@ class CommonResponse {
     );
   }
 }
+
+class MerchantSellInDay {
+  final int totalCancel;
+  final int totalDone;
+  final int totalIncome;
+
+  MerchantSellInDay(
+      {required this.totalCancel,
+      required this.totalDone,
+      required this.totalIncome});
+
+  factory MerchantSellInDay.fromJson(Map<String, dynamic> json) {
+    return MerchantSellInDay(
+      totalCancel: json['cancel'],
+      totalDone: json['done'],
+      totalIncome: json['income'],
+    );
+  }
+}

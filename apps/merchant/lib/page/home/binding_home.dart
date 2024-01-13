@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:lugo_marchant/page/home/api_home.dart';
 import 'package:lugo_marchant/page/home/controller_home.dart';
 import 'package:rest_client/account_client.dart';
+import 'package:rest_client/order_client.dart';
 
 class BindingHome implements Bindings {
   @override
@@ -12,6 +13,7 @@ class BindingHome implements Bindings {
       () => ControllerHome(
         api: ApiHome(
           accountClient: AccountClient(dio),
+          orderClient: OrderClient(dio),
         ),
       ),
     );

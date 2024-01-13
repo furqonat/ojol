@@ -12,6 +12,7 @@ import 'package:lugo_marchant/page/room_chat/controller_roomchat.dart';
 import 'package:lugo_marchant/page/running_order/api_runningorder.dart';
 import 'package:lugo_marchant/page/running_order/controller_runningorder.dart';
 import 'package:rest_client/account_client.dart';
+import 'package:rest_client/order_client.dart';
 
 class BindingBottomNav implements Bindings {
   @override
@@ -26,7 +27,13 @@ class BindingBottomNav implements Bindings {
       ),
     );
     Get.lazyPut<ControllerHome>(
-        () => ControllerHome(api: ApiHome(accountClient: AccountClient(dio))));
+      () => ControllerHome(
+        api: ApiHome(
+          accountClient: AccountClient(dio),
+          orderClient: OrderClient(dio),
+        ),
+      ),
+    );
     Get.lazyPut<ControllerHistory>(
       () => ControllerHistory(
         api: ApiHistory(),

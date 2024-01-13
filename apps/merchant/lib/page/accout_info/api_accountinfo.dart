@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:lugo_marchant/response/user.dart';
 import 'package:lugo_marchant/shared/servinces/url_service.dart';
 import 'package:rest_client/account_client.dart';

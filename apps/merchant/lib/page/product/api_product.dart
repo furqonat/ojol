@@ -27,4 +27,10 @@ class ApiProduct {
     );
     return resp;
   }
+
+  Future getCategories({required String token}) async {
+    final resp =
+        await productClient.getProductCategories(bearerToken: "Bearer $token");
+    return resp;
+  }
 }

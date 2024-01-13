@@ -10,16 +10,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lugo_marchant/page/edit_product/api_editproduct.dart';
 
 class ControllerEditProduct extends GetxController {
-  final ApiEditProduct api;
   ControllerEditProduct({required this.api});
+  final ApiEditProduct api;
 
-  var edtName = TextEditingController();
-  var edtDescription = TextEditingController();
-  var image = ''.obs;
-  var imagePriview = ''.obs;
-  XFile? file;
-  var edtPrice = TextEditingController();
-  var status = false.obs;
+  final productId = Get.arguments['id'];
+  final name = TextEditingController();
+  final description = TextEditingController();
+  final image = ''.obs;
+
+  final price = TextEditingController();
+  final status = false.obs;
 
   final ImagePicker picker = ImagePicker();
 
@@ -29,9 +29,7 @@ class ControllerEditProduct extends GetxController {
     final XFile? camImage =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
-      imagePriview.value = camImage.path;
-      file = camImage;
-      uploadImage();
+      uploadImage(camImage);
     }
   }
 
@@ -39,30 +37,29 @@ class ControllerEditProduct extends GetxController {
     final XFile? fileImage =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
-      imagePriview.value = fileImage.path;
-      file = fileImage;
-      uploadImage();
+      uploadImage(fileImage);
     }
   }
 
-  uploadImage() async {
+  uploadImage(XFile? file) async {
     if (file == null) {
       log('Error: File is null.');
       return;
     }
 
-    String fileName = file!.name;
-    final path = 'user/profile/$fileName';
+    String fileName = file.name;
+    final path = 'product/images/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
 
     try {
-      File fileToUpload = File(file!.path);
+      File fileToUpload = File(file.path);
 
       UploadTask uploadTask = ref.putFile(fileToUpload);
 
       uploadTask.whenComplete(() async {
         String downloadURL = await ref.getDownloadURL();
         image.value = downloadURL;
+        await handleSaveEditProduct();
         Fluttertoast.showToast(msg: 'Foto produk berhasil di unggah');
       });
     } catch (e) {
@@ -70,18 +67,19 @@ class ControllerEditProduct extends GetxController {
     }
   }
 
-  editProduct() async {
+  handleSaveEditProduct() async {
     try {
       var token = await firebase.currentUser?.getIdToken();
-      var r = await api.editProduct(
-        name: edtName.text,
-        description: edtDescription.text,
+      final resp = await api.editProduct(
+        name: name.text,
+        description: description.text,
         image: image.value,
-        price: int.parse(edtPrice.text),
+        price: int.parse(price.text),
         status: status.value,
+        productId: productId,
         token: token!,
       );
-      if (r["message"] == "OK") {
+      if (resp.message == "OK") {
         Fluttertoast.showToast(msg: "Edit produk berhasil");
       } else {
         Fluttertoast.showToast(msg: "Edit produk gagal");
@@ -94,11 +92,15 @@ class ControllerEditProduct extends GetxController {
   }
 
   @override
-  void onInit() {
-    edtName.text = Get.arguments["name"];
-    edtDescription.text = Get.arguments["description"];
-    image.value = Get.arguments["image"];
-    edtPrice.text = Get.arguments["price"].toString();
+  void onInit() async {
+    final token = await firebase.currentUser?.getIdToken();
+    api.getProduct(productId: productId, token: token!).then((value) {
+      name.value = TextEditingValue(text: value['name'] ?? '');
+      price.value = TextEditingValue(text: value['price'].toString());
+      description.value = TextEditingValue(text: value['description'] ?? '');
+      image.value = value['image'] ?? '';
+      status.value = value['status'] ?? false;
+    });
     super.onInit();
   }
 }
