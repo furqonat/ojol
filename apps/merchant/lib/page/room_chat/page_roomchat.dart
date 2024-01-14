@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../route/route_name.dart';
 import 'controller_roomchat.dart';
 
-class PageRoomChat extends GetView<ControllerRoomChat>{
+class PageRoomChat extends GetView<ControllerRoomChat> {
   const PageRoomChat({super.key});
 
   @override
@@ -20,7 +20,8 @@ class PageRoomChat extends GetView<ControllerRoomChat>{
               controller: controller.edtSearch,
               decoration: InputDecoration(
                 hintText: 'Cari...',
-                prefixIcon: const Icon(Icons.search_rounded, size: 20, color: Colors.grey),
+                prefixIcon: const Icon(Icons.search_rounded,
+                    size: 20, color: Colors.grey),
                 hintStyle: GoogleFonts.readexPro(
                   fontSize: 16,
                   fontWeight: FontWeight.normal,
@@ -28,72 +29,57 @@ class PageRoomChat extends GetView<ControllerRoomChat>{
                 ),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
-                    borderSide: const BorderSide(
-                        width: 1,
-                        color: Color(0xFF4B39EF)
-                    )
-                ),
+                    borderSide:
+                        const BorderSide(width: 1, color: Color(0xFF4B39EF))),
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
-                    borderSide: const BorderSide(
-                        width: 1,
-                        color: Colors.grey
-                    )
-                ),
+                    borderSide: const BorderSide(width: 1, color: Colors.grey)),
                 focusedErrorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
-                    borderSide: const BorderSide(
-                        width: 1,
-                        color: Color(0xFF1D2428)
-                    )
-                ),
+                    borderSide:
+                        const BorderSide(width: 1, color: Color(0xFF1D2428))),
                 errorBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(40),
-                    borderSide: const BorderSide(
-                        width: 1,
-                        color: Colors.red
-                    )
-                ),
+                    borderSide: const BorderSide(width: 1, color: Colors.red)),
               ),
             ),
           ),
           Expanded(
               child: ListView.builder(
-                itemCount: 10,
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: ()=> Get.toNamed(Routes.chat),
-                  child: ListTile(
-                    leading: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Card(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100)
-                        ),
-                        child: const Icon(Icons.person_rounded, size: 30, color: Colors.black54),
-                      ),
-                    ),
-                    title: Text(
-                      "Username",
-                      style: GoogleFonts.readexPro(
-                        fontSize: 12,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "Hello World . Hello Word",
-                      style: GoogleFonts.readexPro(
-                        fontSize: 12,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
+            itemCount: 10,
+            itemBuilder: (context, index) => GestureDetector(
+              onTap: () => Get.toNamed(Routes.chat),
+              child: ListTile(
+                leading: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: Card(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100)),
+                    child: const Icon(Icons.person_rounded,
+                        size: 30, color: Colors.black54),
                   ),
                 ),
-              )
-          )
+                title: Text(
+                  "Username",
+                  style: GoogleFonts.readexPro(
+                    fontSize: 12,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  "Hello World . Hello Word",
+                  style: GoogleFonts.readexPro(
+                    fontSize: 12,
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+            ),
+          ))
         ],
       ),
     );

@@ -1,1 +1,1 @@
-class ApiChat{}
+class ApiChat {}

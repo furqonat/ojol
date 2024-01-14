@@ -1,1 +1,1 @@
-class ApiPromo{}
+class ApiPromo {}

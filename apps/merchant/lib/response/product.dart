@@ -26,22 +26,22 @@ class Product {
   });
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
-    category: List<dynamic>.from(json["category"].map((x) => x)),
-    description: json["description"],
-    id: json["id"],
-    image: json["image"],
-    name: json["name"],
-    price: json["price"],
-    count: Count.fromJson(json["_count"]),
-  );
+        category: List<dynamic>.from(json["category"].map((x) => x)),
+        description: json["description"],
+        id: json["id"],
+        image: json["image"],
+        name: json["name"],
+        price: json["price"],
+        count: Count.fromJson(json["_count"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "category": List<dynamic>.from(category!.map((x) => x)),
-    "description": description,
-    "id": id,
-    "image": image,
-    "name": name,
-    "price": price,
-    "_count": count?.toJson(),
-  };
+        "category": List<dynamic>.from(category!.map((x) => x)),
+        "description": description,
+        "id": id,
+        "image": image,
+        "name": name,
+        "price": price,
+        "_count": count?.toJson(),
+      };
 }

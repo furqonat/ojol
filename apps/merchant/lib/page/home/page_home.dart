@@ -3,9 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:lugo_marchant/page/home/controller_home.dart';
 import 'package:lugo_marchant/route/route_name.dart';
+import 'package:lugo_marchant/shared/utils.dart';
 
 class PageHome extends GetView<ControllerHome> {
   const PageHome({super.key});
@@ -65,8 +65,9 @@ class PageHome extends GetView<ControllerHome> {
                         children: <TextSpan>[
                           const TextSpan(text: 'Penjualan hari ini\n'),
                           TextSpan(
-                              text: NumberFormat.simpleCurrency(locale: 'id_ID')
-                                  .format(controller.sell.value.totalIncome),
+                              text: intlNumberCurrency(
+                                controller.sell.value.totalIncome,
+                              ),
                               style: GoogleFonts.readexPro(
                                 fontSize: 18,
                                 color: Colors.white,
@@ -147,20 +148,28 @@ class PageHome extends GetView<ControllerHome> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        GestureDetector(
-                          onTap: () => Get.toNamed(Routes.danaBalance),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Image(
+                        Obx(
+                          () => GestureDetector(
+                            onTap: () => Get.toNamed(Routes.danaBalance),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Image(
                                   width: 95,
                                   image: AssetImage(
-                                      'assets/images/1699744330264.png')),
-                              Text('Rp 50.000',
-                                  style: GoogleFonts.readexPro(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold)),
-                            ],
+                                    'assets/images/1699744330264.png',
+                                  ),
+                                ),
+                                controller.merchant.value.danaToken == null
+                                    ? ElevatedButton(
+                                        onPressed: () {
+                                          controller.handleGenerateSignInUrl();
+                                        },
+                                        child: const Text("Hubungkan Akun"),
+                                      )
+                                    : displayDanaBalance(),
+                              ],
+                            ),
                           ),
                         ),
                         Container(
@@ -178,17 +187,12 @@ class PageHome extends GetView<ControllerHome> {
                             ),
                             Obx(
                               () => Text(
-                                controller.merchant.value.wallet?.balance !=
-                                        null
-                                    ? NumberFormat.simpleCurrency(
-                                        locale: 'id_ID',
-                                      ).format(
-                                        controller
-                                            .merchant.value.wallet?.balance,
-                                      )
-                                    : "",
+                                intlNumberCurrency(
+                                  controller.merchant.value.wallet?.balance,
+                                ),
                                 style: GoogleFonts.readexPro(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
+                                  fontSize: 24,
+                                ),
                               ),
                             ),
                           ],
@@ -334,6 +338,22 @@ class PageHome extends GetView<ControllerHome> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget displayDanaBalance() {
+    final balance = controller.danaProfile.where((dana) {
+      return dana.resourceType == 'BALANCE';
+    }).first;
+    return Column(
+      children: [
+        Text(
+          intlNumberCurrency(balance.value),
+          style: GoogleFonts.readexPro(
+            fontSize: 24,
+          ),
+        )
+      ],
     );
   }
 }

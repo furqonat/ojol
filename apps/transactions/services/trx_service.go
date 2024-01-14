@@ -206,3 +206,51 @@ func (trxService TrxService) assignPtrStringIfTrue(value string, condition bool)
 	}
 	return nil
 }
+
+func (trx TrxService) getPreviousDay() time.Time {
+	currentTime := time.Now()
+
+	currentHour := currentTime.Hour()
+
+	adjustedTime := currentTime.Add(-time.Duration(currentHour) * time.Hour)
+	return adjustedTime
+}
+
+func (trx TrxService) getNextDay() time.Time {
+	currentTime := time.Now()
+
+	currentHour := currentTime.Hour()
+
+	adjustedTime := currentTime.Add(time.Duration(currentHour) * time.Hour)
+	return adjustedTime
+}
+
+func (trx TrxService) getPreviousWeek() time.Time {
+	currentTime := time.Now()
+	currentDay := currentTime.Day()
+
+	previousWeek := currentTime.AddDate(0, 0, -7-currentDay)
+	return previousWeek
+}
+
+func (trx TrxService) getNextWeek() time.Time {
+	currentTime := time.Now()
+	currentDay := currentTime.Day()
+
+	nextWeek := currentTime.AddDate(0, 0, 7-currentDay)
+	return nextWeek
+}
+
+func (trx TrxService) getPreviousMonth() time.Time {
+	currentTime := time.Now()
+
+	previousMonth := currentTime.AddDate(0, -1, 0)
+	return previousMonth
+}
+
+func (trx TrxService) getNextMonth() time.Time {
+	currentTime := time.Now()
+
+	nextMonth := currentTime.AddDate(0, 1, 0)
+	return nextMonth
+}
