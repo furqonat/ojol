@@ -4,6 +4,8 @@ import (
 	"apps/gate/db"
 	"apps/gate/utils"
 	"context"
+	"errors"
+	"fmt"
 	"time"
 )
 
@@ -34,7 +36,7 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 	if errReExpr != nil {
 		return nil, errReExpr
 	}
-	ava, errT := auth.database.DanaToken.FindFirst(db.DanaToken.CustomerID.Equals(customerId)).Exec(context.Background())
+	ava, errT := auth.database.DanaToken.FindUnique(db.DanaToken.CustomerID.Equals(customerId)).Exec(context.Background())
 	if errT == nil {
 		tkn, errTkn := auth.database.DanaToken.FindUnique(
 			db.DanaToken.ID.Equals(ava.ID),
@@ -83,12 +85,176 @@ func (auth OAuthService) GetDanaProfile(customerId string) ([]utils.UserResource
 	customer, err := auth.database.Customer.FindUnique(
 		db.Customer.ID.Equals(customerId),
 	).With(
-		db.Customer.DanaToken.Fetch().Take(1),
+		db.Customer.DanaToken.Fetch(),
 	).Exec(context.Background())
 	if err != nil {
 		return nil, err
 	}
-	danaToken := customer.DanaToken()[0]
+	danaToken, ok := customer.DanaToken()
+	if !ok {
+		return nil, errors.New("unable fetch dana token")
+	}
+	auth.logger.Info(danaToken)
+	dana, errDana := auth.dana.GetUserProfile(danaToken.AccessToken)
+	if errDana != nil {
+		auth.logger.Info(err)
+		return nil, errDana
+	}
+	return dana.UserResourcesInfo, nil
+}
+
+func (auth OAuthService) MerchantApplyAccessToken(accessToken string, merchantId string) (*string, error) {
+	resp, err := auth.dana.ApplyAccessToken(accessToken)
+	if err != nil {
+		return nil, err
+	}
+	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ExpiresIn)
+	if errExpr != nil {
+		return nil, errExpr
+	}
+	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ReExpiresIn)
+	if errReExpr != nil {
+		return nil, errReExpr
+	}
+	ava, errT := auth.database.DanaTokenMerchant.FindUnique(db.DanaTokenMerchant.MerchantID.Equals(merchantId)).Exec(context.Background())
+	if errT == nil {
+		tkn, errTkn := auth.database.DanaTokenMerchant.FindUnique(
+			db.DanaTokenMerchant.ID.Equals(ava.ID),
+		).Update(
+			db.DanaTokenMerchant.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+			db.DanaTokenMerchant.ExpiresIn.Set(expiredIn),
+			db.DanaTokenMerchant.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+			db.DanaTokenMerchant.ReExpiresIn.Set(reExpired),
+			db.DanaTokenMerchant.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
+			db.DanaTokenMerchant.DanaUserID.Set(resp.UserInfo.PublicUserId),
+		).Exec(context.Background())
+		if errTkn != nil {
+			auth.logger.Info(errTkn)
+
+			return nil, errTkn
+		}
+		auth.logger.Info(tkn)
+
+		return &tkn.ID, nil
+	}
+	dbToken, errDanaToken := auth.database.DanaTokenMerchant.CreateOne(
+		db.DanaTokenMerchant.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+		db.DanaTokenMerchant.ExpiresIn.Set(expiredIn),
+		db.DanaTokenMerchant.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+		db.DanaTokenMerchant.ReExpiresIn.Set(reExpired),
+		db.DanaTokenMerchant.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
+		db.DanaTokenMerchant.DanaUserID.Set(resp.UserInfo.PublicUserId),
+		db.DanaTokenMerchant.Merchant.Link(db.Merchant.ID.Equals(merchantId)),
+	).Exec(context.Background())
+	if errDanaToken != nil {
+		auth.logger.Info(errDanaToken)
+
+		return nil, errDanaToken
+	}
+
+	auth.logger.Info(dbToken)
+
+	return &dbToken.ID, nil
+}
+func (auth OAuthService) MerchantGenerateSignUrl(merchantId string) string {
+	return auth.dana.GenerateSignInUrl(fmt.Sprintf("merch-%s", merchantId))
+}
+
+func (auth OAuthService) MerchantGetDanaProfile(merchantId string) ([]utils.UserResourcesInfo, error) {
+	customer, err := auth.database.Merchant.FindUnique(
+		db.Merchant.ID.Equals(merchantId),
+	).With(
+		db.Merchant.DanaToken.Fetch(),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	danaToken, ok := customer.DanaToken()
+	if !ok {
+		return nil, errors.New("unable fetch dana token")
+	}
+	auth.logger.Info(danaToken)
+	dana, errDana := auth.dana.GetUserProfile(danaToken.AccessToken)
+	if errDana != nil {
+		auth.logger.Info(err)
+		return nil, errDana
+	}
+	return dana.UserResourcesInfo, nil
+}
+
+func (auth OAuthService) DriverApplyAccessToken(accessToken string, driverId string) (*string, error) {
+	resp, err := auth.dana.ApplyAccessToken(accessToken)
+	if err != nil {
+		return nil, err
+	}
+	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ExpiresIn)
+	if errExpr != nil {
+		return nil, errExpr
+	}
+	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ReExpiresIn)
+	if errReExpr != nil {
+		return nil, errReExpr
+	}
+	ava, errT := auth.database.DanaTokenDriver.FindUnique(
+		db.DanaTokenDriver.DriverID.Equals(driverId),
+	).Exec(context.Background())
+	if errT == nil {
+		tkn, errTkn := auth.database.DanaTokenDriver.FindUnique(
+			db.DanaTokenDriver.ID.Equals(ava.ID),
+		).Update(
+			db.DanaTokenDriver.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+			db.DanaTokenDriver.ExpiresIn.Set(expiredIn),
+			db.DanaTokenDriver.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+			db.DanaTokenDriver.ReExpiresIn.Set(reExpired),
+			db.DanaTokenDriver.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
+			db.DanaTokenDriver.DanaUserID.Set(resp.UserInfo.PublicUserId),
+		).Exec(context.Background())
+		if errTkn != nil {
+			auth.logger.Info(errTkn)
+
+			return nil, errTkn
+		}
+		auth.logger.Info(tkn)
+
+		return &tkn.ID, nil
+	}
+	dbToken, errDanaToken := auth.database.DanaTokenDriver.CreateOne(
+		db.DanaTokenDriver.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+		db.DanaTokenDriver.ExpiresIn.Set(expiredIn),
+		db.DanaTokenDriver.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+		db.DanaTokenDriver.ReExpiresIn.Set(reExpired),
+		db.DanaTokenDriver.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
+		db.DanaTokenDriver.DanaUserID.Set(resp.UserInfo.PublicUserId),
+		db.DanaTokenDriver.Driver.Link(db.Driver.ID.Equals(driverId)),
+	).Exec(context.Background())
+	if errDanaToken != nil {
+		auth.logger.Info(errDanaToken)
+
+		return nil, errDanaToken
+	}
+
+	auth.logger.Info(dbToken)
+
+	return &dbToken.ID, nil
+}
+
+func (auth OAuthService) DriverGenerateSignUrl(driverId string) string {
+	return auth.dana.GenerateSignInUrl(fmt.Sprintf("dri-%s", driverId))
+}
+
+func (auth OAuthService) DriverGetDanaProfile(driverId string) ([]utils.UserResourcesInfo, error) {
+	driver, err := auth.database.Driver.FindUnique(
+		db.Driver.ID.Equals(driverId),
+	).With(
+		db.Driver.DanaToken.Fetch(),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	danaToken, ok := driver.DanaToken()
+	if !ok {
+		return nil, errors.New("unable fetch dana token")
+	}
 	auth.logger.Info(danaToken)
 	dana, errDana := auth.dana.GetUserProfile(danaToken.AccessToken)
 	if errDana != nil {
