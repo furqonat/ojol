@@ -208,13 +208,25 @@ export class AppService {
     }
   }
 
-  async getCategories(take?: number, skip?: number) {
+  async getCategories(props: {
+    merchantId?: string
+    take?: number
+    skip?: number
+  }) {
+    const { take, skip, merchantId } = props
     const categories = await this.prisma.category.findMany({
       take: take ? Number(take) : 20,
       skip: skip ? Number(skip) : 0,
       select: {
         name: true,
         id: true,
+      },
+      where: {
+        product: merchantId
+          ? {
+              merchant_id: merchantId,
+            }
+          : undefined,
       },
     })
     const total = await this.prisma.category.count()

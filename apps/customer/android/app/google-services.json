@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "319389880269",
+    "project_id": "lumajanglugo",
+    "storage_bucket": "lumajanglugo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319389880269:android:42bc403a980d08ab1dfe84",
+        "android_client_info": {
+          "package_name": "com.example.lugo_customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319389880269:android:fea05a9861a26dce1dfe84",
+        "android_client_info": {
+          "package_name": "com.example.lugo_driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319389880269:android:4a3b62a73a372f9c1dfe84",
+        "android_client_info": {
+          "package_name": "com.example.lugo_marchant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
