@@ -1,0 +1,129 @@
+{
+  "name": "rest-client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/rest-client/src",
+  "projectType": "library",
+  "targets": {
+    "analyze": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter analyze",
+        "cwd": "libs/rest-client"
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter clean",
+        "cwd": "libs/rest-client"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dart format libs/rest-client/*",
+        "cwd": "libs/rest-client"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter test",
+        "cwd": "libs/rest-client"
+      }
+    },
+    "doctor": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter doctor",
+        "cwd": "libs/rest-client"
+      }
+    },
+    "build-aar": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build aar",
+        "cwd": "libs/rest-client"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/rest-client/build"
+      ]
+    },
+    "build-apk": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build apk",
+        "cwd": "libs/rest-client"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/rest-client/build"
+      ]
+    },
+    "build-appbundle": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build appbundle",
+        "cwd": "libs/rest-client"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/rest-client/build"
+      ]
+    },
+    "build-bundle": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build bundle",
+        "cwd": "libs/rest-client"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/rest-client/build"
+      ]
+    },
+    "build-ios": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build ios",
+        "cwd": "libs/rest-client"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/rest-client/build"
+      ]
+    },
+    "build-ios-framework": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build ios-framework",
+        "cwd": "libs/rest-client"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/rest-client/build"
+      ]
+    },
+    "build-ipa": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build ipa",
+        "cwd": "libs/rest-client"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/rest-client/build"
+      ]
+    },
+    "generate-db": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "cp ../..//libs/schema/schema.prisma schema.prisma",
+          "sed -i '/generator client {/,/}/d' schema.prisma",
+          "sed -i '1i\\generator client {\\\n provider =\"dart run orm\" \\\n output =\"./lib/\" \\\n}'  schema.prisma",
+          "npx prisma generate --schema=schema.prisma ",
+          "dart run build_runner build",
+          "rm schema.prisma"
+        ],
+        "parallel": false,
+        "cwd": "libs/rest-client"
+      }
+    }
+  },
+  "tags": []
+}

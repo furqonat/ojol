@@ -2,7 +2,7 @@ package lugo
 
 import (
 	"apps/gate/db"
-	"apps/order/utils"
+	"apps/gate/utils"
 	"net/http"
 	"strconv"
 

@@ -15,7 +15,11 @@ export class MerchantService {
         where: {
           id: merchantId,
         },
-        select: select ? select : { id: true },
+        select: select
+          ? select
+          : {
+              id: true,
+            },
       })
       return merchant
     } catch (e) {
@@ -23,10 +27,7 @@ export class MerchantService {
     }
   }
 
-  async applyMerchant(
-    merchantId: string,
-    details: Prisma.merchant_detailsUpdateOneWithoutMerchantNestedInput,
-  ) {
+  async applyMerchant(merchantId: string, details: Prisma.merchantUpdateInput) {
     try {
       const alreadyApply = await this.prismaService.merchant_details.findUnique(
         {
@@ -35,31 +36,23 @@ export class MerchantService {
           },
         },
       )
-      if (alreadyApply && details?.create) {
+      if (alreadyApply) {
         throw new BadRequestException({ message: 'merchant already apply' })
-      }
-      if (alreadyApply && details?.delete) {
-        throw new BadRequestException({ message: 'cannot deleted' })
       }
       const merchant = await this.prismaService.merchant.update({
         where: {
           id: merchantId,
         },
         data: details,
-        select: {
-          details: {
-            select: {
-              id: true,
-            },
-          },
-        },
       })
       return {
         message: 'OK',
-        res: merchant.details.id,
+        res: merchant.id,
       }
     } catch (e) {
-      throw new BadRequestException({ message: 'Internal Error' })
+      throw new BadRequestException({
+        message: `Internal Error ${e.toString()}`,
+      })
     }
   }
 

@@ -6,6 +6,7 @@ require (
 	github.com/alecthomas/assert v1.0.0
 	github.com/apex/gateway v1.1.2
 	github.com/gin-gonic/gin v1.9.1
+	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/joho/godotenv v1.5.1
 	github.com/shopspring/decimal v1.3.1
 	github.com/spf13/viper v1.17.0
@@ -19,8 +20,6 @@ require (
 )
 
 require (
-	github.com/chenzhuoyu/iasm v0.9.0 // indirect
-	github.com/gin-contrib/cors v1.5.0 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )

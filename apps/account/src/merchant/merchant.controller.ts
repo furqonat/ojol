@@ -34,7 +34,7 @@ export class MerchantController {
   async applyToBeMerchant(
     @Request() token?: { uid?: string },
     @Body()
-    details?: Prisma.merchant_detailsUpdateOneWithoutMerchantNestedInput,
+    details?: Prisma.merchantUpdateInput,
   ) {
     return this.merchantService.applyMerchant(token.uid, details)
   }
