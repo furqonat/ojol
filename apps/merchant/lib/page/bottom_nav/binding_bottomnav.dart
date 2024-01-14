@@ -40,7 +40,12 @@ class BindingBottomNav implements Bindings {
       ),
     );
     Get.lazyPut<ControllerRunningOrder>(
-        () => ControllerRunningOrder(api: ApiRunningOrder()));
+      () => ControllerRunningOrder(
+        api: ApiRunningOrder(
+          orderClient: OrderClient(dio),
+        ),
+      ),
+    );
     Get.lazyPut<ControllerProfile>(
       () => ControllerProfile(
         api: ApiProfile(
