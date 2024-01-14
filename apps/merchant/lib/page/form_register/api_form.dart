@@ -1,1 +1,1 @@
-class ApiForm{}
+class ApiForm {}

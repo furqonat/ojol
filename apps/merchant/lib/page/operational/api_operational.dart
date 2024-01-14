@@ -1,1 +1,1 @@
-class ApiOperational{}
+class ApiOperational {}

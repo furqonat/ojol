@@ -63,6 +63,7 @@ class UserResponse {
   final Wallet? wallet;
   final String? status;
   final dynamic products;
+  final dynamic danaToken;
 
   UserResponse({
     this.avatar,
@@ -74,6 +75,7 @@ class UserResponse {
     this.wallet,
     this.status,
     this.products,
+    this.danaToken,
   });
 
   factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
@@ -89,6 +91,7 @@ class UserResponse {
             : null,
         status: json['status'],
         products: json['products'],
+        danaToken: json['dana_token'],
       );
 
   Map<String, dynamic> toJson() => {

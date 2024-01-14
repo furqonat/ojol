@@ -49,7 +49,7 @@ func (order OrderService) MerchantRejectOrder(orderId string) error {
 	return nil
 }
 
-func (order OrderService) GetAvaliableOrderForMerchant(merchantId string, take, skip int) ([]db.OrderModel, error) {
+func (order OrderService) GetOrderMerchants(merchantId string, take, skip int) ([]db.OrderModel, error) {
 	orders, err := order.database.Order.FindMany(
 		db.Order.OrderItems.Every(
 			db.OrderItem.Product.Where(
