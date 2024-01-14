@@ -83,6 +83,12 @@ abstract class OrderClient {
     @Header("Authorization") required String bearerToken,
   });
 
+  @GET("merchant/order")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future merchantGetOrder({
+    @Header("Authorization") required String bearerToken,
+  });
+
   @PUT("{orderId}")
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future cancelOrder({
