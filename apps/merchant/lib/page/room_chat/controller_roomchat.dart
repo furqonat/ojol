@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import 'api_roomchat.dart';
 
-class ControllerRoomChat extends GetxController{
+class ControllerRoomChat extends GetxController {
   final ApiRoomChat api;
   ControllerRoomChat({required this.api});
 

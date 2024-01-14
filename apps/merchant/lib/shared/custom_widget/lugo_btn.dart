@@ -33,18 +33,13 @@ class _LugoButtonState extends State<LugoButton> {
         style: ElevatedButton.styleFrom(
             elevation: 5,
             fixedSize: Size(widget.width, widget.height),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12)
-            ),
-            backgroundColor: widget.color
-        ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            backgroundColor: widget.color),
         child: Text(
           widget.textButton,
           style: GoogleFonts.readexPro(
-              fontSize: widget.textSize,
-              color: widget.textColor
-          ),
-        )
-    );
+              fontSize: widget.textSize, color: widget.textColor),
+        ));
   }
 }

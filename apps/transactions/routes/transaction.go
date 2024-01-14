@@ -16,7 +16,6 @@ type TrxRoutes struct {
 	cors                middlewares.CorsMiddleware
 }
 
-// Setup Misc routes
 func (trxRoutes TrxRoutes) Setup() {
 	trxRoutes.logger.Info("Setting up routes")
 	trxRoutes.handler.Gin.NoRoute(trxRoutes.cors.Cors())
@@ -25,10 +24,11 @@ func (trxRoutes TrxRoutes) Setup() {
 		trxApi.GET("/", trxRoutes.jwt.HandleAuthWithRoles(utils.ADMIN, utils.SUPERADMIN), trxRoutes.controller.GetTransactions)
 		trxApi.GET("/:id", trxRoutes.jwt.HandleAuthWithRoles(utils.ADMIN, utils.SUPERADMIN), trxRoutes.controller.GetTrx)
 		trxApi.POST("/finish", trxRoutes.controller.FinishOrder)
+		trxApi.GET("/merchant", trxRoutes.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), trxRoutes.controller.GetMerchantTrx)
+		trxApi.GET("/driver", trxRoutes.authMiddleware.HandleAuthWithRoles(utils.DRIVER), trxRoutes.controller.GetDriverTrx)
 	}
 }
 
-// NewTransactionRoutes creates new Transaction controller
 func NewTransactionRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,

@@ -77,3 +77,69 @@ func (trxRouter TransactionRouter) FinishOrder(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
+
+func (trxRouter TransactionRouter) GetMerchantTrx(ctx *gin.Context) {
+	trxIn := ctx.Query("trxIn")
+	merchantId := ctx.GetString(utils.UID)
+	if trxIn == "day" {
+		db, err := trxRouter.service.GetTrxInDay(merchantId)
+		if err != nil {
+			errMsg := fmt.Sprintf("unable get transactions %s", err.Error())
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": errMsg})
+			ctx.Abort()
+			return
+		}
+		ctx.JSON(http.StatusOK, db)
+	}
+	if trxIn == "week" {
+		db, err := trxRouter.service.GetTrxInWeek(merchantId)
+		if err != nil {
+			errMsg := fmt.Sprintf("unable get transactions %s", err.Error())
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": errMsg})
+			ctx.Abort()
+			return
+		}
+		ctx.JSON(http.StatusOK, db)
+	}
+	db, err := trxRouter.service.GetTrxInMonth(merchantId)
+	if err != nil {
+		errMsg := fmt.Sprintf("unable get transactions %s", err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": errMsg})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, db)
+}
+
+func (trxRouter TransactionRouter) GetDriverTrx(ctx *gin.Context) {
+	trxIn := ctx.Query("trxIn")
+	driverId := ctx.GetString(utils.UID)
+	if trxIn == "day" {
+		db, err := trxRouter.service.GetDriverTrxInDay(driverId)
+		if err != nil {
+			errMsg := fmt.Sprintf("unable get transactions %s", err.Error())
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": errMsg})
+			ctx.Abort()
+			return
+		}
+		ctx.JSON(http.StatusOK, db)
+	}
+	if trxIn == "week" {
+		db, err := trxRouter.service.GetDriverTrxInWeek(driverId)
+		if err != nil {
+			errMsg := fmt.Sprintf("unable get transactions %s", err.Error())
+			ctx.JSON(http.StatusInternalServerError, gin.H{"message": errMsg})
+			ctx.Abort()
+			return
+		}
+		ctx.JSON(http.StatusOK, db)
+	}
+	db, err := trxRouter.service.GetDriverTrxInMonth(driverId)
+	if err != nil {
+		errMsg := fmt.Sprintf("unable get transactions %s", err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": errMsg})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, db)
+}

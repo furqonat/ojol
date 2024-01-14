@@ -5,7 +5,7 @@ import 'api_form.dart';
 
 enum Status { idle, loading, success, failed }
 
-class ControllerForm extends GetxController{
+class ControllerForm extends GetxController {
   final ApiForm api;
   ControllerForm({required this.api});
 
