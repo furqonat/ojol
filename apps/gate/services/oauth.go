@@ -156,6 +156,7 @@ func (auth OAuthService) MerchantApplyAccessToken(accessToken string, merchantId
 
 	return &dbToken.ID, nil
 }
+
 func (auth OAuthService) MerchantGenerateSignUrl(merchantId string) string {
 	return auth.dana.GenerateSignInUrl(fmt.Sprintf("merch-%s", merchantId))
 }

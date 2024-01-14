@@ -3,9 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:lugo_marchant/page/product/controller_product.dart';
 import 'package:lugo_marchant/route/route_name.dart';
+import 'package:lugo_marchant/shared/utils.dart';
 
 class PageProduct extends GetView<ControllerProduct> {
   const PageProduct({super.key});
@@ -79,13 +79,9 @@ class PageProduct extends GetView<ControllerProduct> {
                                 Padding(
                                   padding: const EdgeInsets.only(bottom: 5),
                                   child: Text(
-                                    controller.product[index].price != null
-                                        ? NumberFormat.simpleCurrency(
-                                            locale: 'id_ID',
-                                          ).format(
-                                            controller.product[index].price,
-                                          )
-                                        : "",
+                                    intlNumberCurrency(
+                                      controller.product[index].price,
+                                    ),
                                     style: GoogleFonts.readexPro(
                                       fontSize: 12,
                                       color: Colors.black87,

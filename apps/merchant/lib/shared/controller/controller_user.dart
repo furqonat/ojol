@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../api/local_service.dart';
 import '../../response/user.dart';
 
-class ControllerUser extends GetxController{
+class ControllerUser extends GetxController {
   var user = UserResponse().obs;
 
   @override

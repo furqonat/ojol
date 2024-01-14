@@ -178,7 +178,7 @@ func (order OrderController) MerchantGetOrders(ctx *gin.Context) {
 		skip = 0
 	}
 
-	orders, errGetOrder := order.service.GetAvaliableOrderForMerchant(merchantId, take, skip)
+	orders, errGetOrder := order.service.GetOrderMerchants(merchantId, take, skip)
 
 	if errGetOrder != nil {
 		order.logger.Infof("unable get order %s", errGetOrder.Error())

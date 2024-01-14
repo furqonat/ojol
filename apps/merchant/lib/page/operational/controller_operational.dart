@@ -41,6 +41,4 @@ class ControllerOperational extends GetxController {
       'Status': false.obs,
     };
   });
-
 }
-

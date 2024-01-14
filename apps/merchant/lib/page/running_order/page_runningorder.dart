@@ -2,9 +2,9 @@ import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:lugo_marchant/page/running_order/controller_runningorder.dart';
 import 'package:lugo_marchant/shared/custom_widget/lugo_btn.dart';
+import 'package:lugo_marchant/shared/utils.dart';
 
 class PageRunningOrder extends GetView<ControllerRunningOrder> {
   const PageRunningOrder({super.key});
@@ -224,9 +224,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    NumberFormat.simpleCurrency(
-                                                      locale: 'id_ID',
-                                                    ).format(
+                                                    intlNumberCurrency(
                                                       data['product']['price'] *
                                                           data['quantity'],
                                                     ),
@@ -324,9 +322,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                             ),
                                           ),
                                           Text(
-                                            NumberFormat.simpleCurrency(
-                                                    locale: 'id_ID')
-                                                .format(
+                                            intlNumberCurrency(
                                               element['gross_amount'],
                                             ),
                                             style: GoogleFonts.readexPro(
@@ -551,9 +547,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    NumberFormat.simpleCurrency(
-                                                      locale: 'id_ID',
-                                                    ).format(
+                                                    intlNumberCurrency(
                                                       data['product']['price'] *
                                                           data['quantity'],
                                                     ),
@@ -651,9 +645,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                             ),
                                           ),
                                           Text(
-                                            NumberFormat.simpleCurrency(
-                                                    locale: 'id_ID')
-                                                .format(
+                                            intlNumberCurrency(
                                               element['gross_amount'],
                                             ),
                                             style: GoogleFonts.readexPro(
@@ -853,9 +845,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    NumberFormat.simpleCurrency(
-                                                      locale: 'id_ID',
-                                                    ).format(
+                                                    intlNumberCurrency(
                                                       data['product']['price'] *
                                                           data['quantity'],
                                                     ),
@@ -953,9 +943,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                             ),
                                           ),
                                           Text(
-                                            NumberFormat.simpleCurrency(
-                                                    locale: 'id_ID')
-                                                .format(
+                                            intlNumberCurrency(
                                               element['gross_amount'],
                                             ),
                                             style: GoogleFonts.readexPro(

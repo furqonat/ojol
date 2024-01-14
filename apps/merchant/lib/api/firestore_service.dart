@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirestoreService{
-
-  Future<dynamic> FirestorePost (String collection, String documents, Map<String, dynamic> params) async {
+class FirestoreService {
+  Future<dynamic> FirestorePost(
+      String collection, String documents, Map<String, dynamic> params) async {
     final r = FirebaseFirestore.instance.collection(collection).doc(documents);
     await r.set(params);
   }
 
-  Stream<String> FirestoreStreamGet (String collection) {
+  Stream<String> FirestoreStreamGet(String collection) {
     final r = FirebaseFirestore.instance.collection(collection).snapshots();
 
     return r.map((QuerySnapshot querySnapshot) {
@@ -20,8 +20,6 @@ class FirestoreService{
       }
 
       return json.encode(dataList);
-
     });
   }
-
 }
