@@ -109,7 +109,7 @@
         "{workspaceRoot}/libs/rest-client/build"
       ]
     },
-    "generate-db": {
+    "generate-dbms": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [

@@ -32,12 +32,12 @@ model customer {
   cart                    cart?
   order                   order[]
   favorites               favorites[]
-  dana_token              dana_token[]
+  dana_token              dana_token?
 }
 
 model dana_token {
   id            String   @id @default(cuid())
-  customer_id   String
+  customer_id   String   @unique
   customer      customer @relation(references: [id], fields: [customer_id], onDelete: Cascade)
   access_token  String
   expires_in    DateTime
@@ -56,7 +56,7 @@ model dana_token_driver {
   token_status  String
   dana_user_id  String
   driver        driver   @relation(fields: [driver_id], references: [id], onDelete: Cascade)
-  driver_id     String
+  driver_id     String   @unique
 }
 
 model dana_token_merchant {
@@ -68,7 +68,7 @@ model dana_token_merchant {
   token_status  String
   dana_user_id  String
   merchant      merchant @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
-  merchant_id   String
+  merchant_id   String   @unique
 }
 
 model customer_device_token {
@@ -109,7 +109,7 @@ model driver {
   referal                referal?                 @relation(fields: [referal_id], references: [id], onDelete: SetNull)
   referal_id             String?
   driver_trx             driver_trx[]
-  dana_token             dana_token_driver[]
+  dana_token             dana_token_driver?
 }
 
 model referal {
@@ -249,7 +249,7 @@ model merchant {
   products        product[]
   merchant_trx    merchant_trx[]
   merchant_wallet merchant_wallet?
-  dana_token      dana_token_merchant[]
+  dana_token      dana_token_merchant?
 }
 
 model merchant_details {
