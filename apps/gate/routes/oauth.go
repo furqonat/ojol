@@ -18,9 +18,17 @@ func (s OAuthRoutes) Setup() {
 	s.logger.Info("Setting up routes")
 	api := s.handler.Gin.Group("/oauth").Use(s.rateLimit.Handle())
 	{
-		api.GET("/", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT, utils.USER, utils.DRIVER), s.controller.GenerateSignIn)
+		api.GET("/", s.authMiddleware.HandleAuthWithRoles(utils.USER), s.controller.GenerateSignIn)
 		api.POST("/", s.controller.ApplyAccessToken)
-		api.GET("/profile", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT, utils.USER, utils.DRIVER), s.controller.GetDanaProfile)
+		api.GET("/profile", s.authMiddleware.HandleAuthWithRoles(utils.USER), s.controller.GetDanaProfile)
+
+		api.GET("/merchant", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.controller.MerchantGenerateSignIn)
+		api.POST("/merchant", s.controller.MerchantApplyAccessToken)
+		api.GET("/merchant/profile", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.controller.MerchantGetDanaProfile)
+
+		api.GET("/driver", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.controller.DriverGenerateSignIn)
+		api.POST("/driver", s.controller.DriverApplyAccessToken)
+		api.GET("/driver/profile", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.controller.DriverGetDanaProfile)
 	}
 }
 
