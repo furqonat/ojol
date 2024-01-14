@@ -224,3 +224,18 @@ func (order OrderController) MerchantGetOrderInThisDay(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, orderDb)
 }
+func (order OrderController) MerchantGetOrderSellThisDay(ctx *gin.Context) {
+	merchantId := ctx.GetString(utils.UID)
+	cancel, done, process, err := order.service.MerchantGetSellInDay(merchantId)
+	if err != nil {
+		order.logger.Infof("unable finish order %s", err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"done":    done,
+		"cancel":  cancel,
+		"process": process,
+	})
+}

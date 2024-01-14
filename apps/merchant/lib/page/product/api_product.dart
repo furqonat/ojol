@@ -1,3 +1,4 @@
+import 'package:lugo_marchant/response/category.dart';
 import 'package:lugo_marchant/shared/servinces/url_service.dart';
 import 'package:rest_client/product_client.dart';
 
@@ -28,9 +29,13 @@ class ApiProduct {
     return resp;
   }
 
-  Future getCategories({required String token}) async {
-    final resp =
-        await productClient.getProductCategories(bearerToken: "Bearer $token");
-    return resp;
+  Future<List<Category>> getCategories({required String token}) async {
+    final resp = await productClient.getMerchantProductCategories(
+      bearerToken: "Bearer $token",
+    );
+    print(resp);
+    return (resp['data'] as List<dynamic>)
+        .map((e) => Category(id: e['id'], name: e['name']))
+        .toList();
   }
 }

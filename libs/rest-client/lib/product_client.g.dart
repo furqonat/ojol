@@ -240,6 +240,47 @@ class _ProductClient implements ProductClient {
   @override
   Future<dynamic> getProductCategories({
     required String bearerToken,
+    String? merchantId,
+    int? take = 20,
+    int? skip = 0,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'merchantId': merchantId,
+      r'take': take,
+      r'skip': skip,
+    };
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': bearerToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/json',
+    )
+        .compose(
+          _dio.options,
+          'category',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+    final value = _result.data;
+    return value;
+  }
+
+  @override
+  Future<dynamic> getMerchantProductCategories({
+    required String bearerToken,
     int? take = 20,
     int? skip = 0,
   }) async {
@@ -263,7 +304,7 @@ class _ProductClient implements ProductClient {
     )
         .compose(
           _dio.options,
-          'category',
+          'merchant/category',
           queryParameters: queryParameters,
           data: _data,
         )

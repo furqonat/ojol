@@ -58,6 +58,15 @@ abstract class ProductClient {
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<dynamic> getProductCategories({
     @Header("Authorization") required String bearerToken,
+    @Query("merchantId") String? merchantId,
+    @Query("take") int? take = 20,
+    @Query("skip") int? skip = 0,
+  });
+
+  @GET("merchant/category")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<dynamic> getMerchantProductCategories({
+    @Header("Authorization") required String bearerToken,
     @Query("take") int? take = 20,
     @Query("skip") int? skip = 0,
   });

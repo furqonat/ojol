@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lugo_marchant/page/category/api_category.dart';
+import 'package:lugo_marchant/response/category.dart';
 
 class ControllerCategory extends GetxController
     with GetSingleTickerProviderStateMixin {
@@ -14,13 +15,7 @@ class ControllerCategory extends GetxController
   ControllerCategory({required this.api});
 
   var categoryValue = "Kategori".obs;
-
-  var categoryList = [
-    "Kategori",
-    "Makanan berat",
-    "Makanan ringan",
-    "Minuman",
-  ].obs;
+  final categodyId = "".obs;
 
   late TabController tabController;
 
@@ -31,13 +26,35 @@ class ControllerCategory extends GetxController
   var edtQuantity = TextEditingController();
   var edtDescription = TextEditingController();
   var edtCategoryName = TextEditingController();
-  var edtCategory = TextEditingController();
 
+  var categoryName = TextEditingController();
   var imgUrl = ''.obs;
   var img = ''.obs;
   XFile? file;
 
   final ImagePicker picker = ImagePicker();
+  final category = <Category>[].obs;
+
+  handleGetCategory() async {
+    final token = await firebase.currentUser?.getIdToken();
+    final resp = await api.getMerchantCategories(token: token!);
+    resp.add(Category(id: "", name: "Kategori"));
+    category(resp.map((e) => Category(id: e.id, name: e.name)).toList());
+  }
+
+  handleCreateCategory() async {
+    final token = await firebase.currentUser?.getIdToken();
+    final resp = await api.createCategory(
+      token: token!,
+      name: categoryName.text,
+    );
+    if (resp.message == 'OK') {
+      Fluttertoast.showToast(msg: "success create category");
+      handleGetCategory();
+    } else {
+      Fluttertoast.showToast(msg: "unable create category");
+    }
+  }
 
   getFromCamera() async {
     final XFile? camImage =
@@ -66,7 +83,7 @@ class ControllerCategory extends GetxController
     }
 
     String fileName = file!.name;
-    final path = 'user/profile/$fileName';
+    final path = 'merchant/products/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
 
     try {
@@ -84,7 +101,18 @@ class ControllerCategory extends GetxController
     }
   }
 
-  uploadMenuNewCategory() async {
+  handleCreateProduct() async {
+    if (categodyId.value != "") {
+      await _handleCreateProductWithCurrentCategory();
+      Get.back();
+      return;
+    }
+    await _handleCreateProductWithNewCategory();
+    Get.back();
+    return;
+  }
+
+  _handleCreateProductWithNewCategory() async {
     try {
       var token = await firebase.currentUser?.getIdToken();
       var r = await api.addProductWithNewCategory(
@@ -99,7 +127,8 @@ class ControllerCategory extends GetxController
       );
       if (r.message == "OK") {
         Fluttertoast.showToast(
-            msg: "Anda kini punya produk baru untuk di jual");
+          msg: "Anda kini punya produk baru untuk di jual",
+        );
       } else {
         Fluttertoast.showToast(msg: "Anda tidak dapat menambahkan produk baru");
       }
@@ -110,7 +139,7 @@ class ControllerCategory extends GetxController
     }
   }
 
-  uploadMenuCurrentCategory() async {
+  _handleCreateProductWithCurrentCategory() async {
     try {
       var token = await firebase.currentUser?.getIdToken();
       var r = await api.addProductWithCurrentCategory(
@@ -119,7 +148,7 @@ class ControllerCategory extends GetxController
         image: imgUrl.value,
         price: int.parse(edtPrice.text),
         status: true,
-        id: categoryValue.value,
+        categoryId: categodyId.value,
         productType: "FOOD",
         token: token!,
       );
@@ -138,13 +167,14 @@ class ControllerCategory extends GetxController
 
   @override
   void onInit() {
+    handleGetCategory();
     tabController = TabController(length: 2, vsync: this);
     super.onInit();
   }
 
   @override
   void dispose() {
-    edtCategory.dispose();
+    categoryName.dispose();
     super.dispose();
   }
 }
