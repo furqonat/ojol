@@ -13,7 +13,11 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        flexibleSpace: TabBar(
+        title: const Text("Order"),
+      ),
+      body: Column(
+        children: [
+          TabBar(
             labelColor: const Color(0xFF14181B),
             indicatorColor: const Color(0xFF4B39EF),
             labelStyle: GoogleFonts.readexPro(),
@@ -32,10 +36,8 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
               Tab(
                 text: 'Selesai',
               ),
-            ]),
-      ),
-      body: Column(
-        children: [
+            ],
+          ),
           Expanded(
               child:
                   TabBarView(controller: controller.tabController, children: [

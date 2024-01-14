@@ -44,6 +44,7 @@ dependencies:
   rest_client:
     path: ../../libs/rest-client
   dio: ^5.4.0
+  multiple_search_selection: ^2.6.1
 
 dev_dependencies:
   flutter_test:

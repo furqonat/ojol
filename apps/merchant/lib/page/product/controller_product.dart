@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:lugo_marchant/page/product/api_product.dart';
+import 'package:lugo_marchant/response/category.dart';
 
 import '../../response/product.dart';
 
@@ -17,17 +18,18 @@ class ControllerProduct extends GetxController {
 
   var category = "Kategori".obs;
 
-  var categoryList = [
-    "Kategori",
-    "Opsi 1",
-    "Opsi 2",
-    "Opsi 3",
-    "Opsi 5",
-  ].obs;
-
   final firebase = FirebaseAuth.instance;
 
   final product = <Product>[].obs;
+  final categories = <Category>[].obs;
+
+  Future getCategories() async {
+    final token = await firebase.currentUser?.getIdToken();
+    final resp = await api.getCategories(token: token!);
+    resp.add(Category(id: "", name: "Kategori"));
+    categories(resp.map((e) => Category(id: e.id, name: e.name)).toList());
+    print(categories.map((e) => e.name));
+  }
 
   Future getProducts() async {
     try {
@@ -56,8 +58,9 @@ class ControllerProduct extends GetxController {
   }
 
   @override
-  void onInit() {
-    getProducts();
+  void onInit() async {
+    await getCategories();
+    await getProducts();
     super.onInit();
   }
 }

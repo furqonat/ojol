@@ -85,14 +85,61 @@ func (order OrderService) MerchantGetSellStatusInDay(merchantId string) (*TotalO
 		return nil, errIncome
 	}
 	return &TotalOrder{
-		TotalDone:   totalDone,
-		TotalCancel: totalCanceled,
+		TotalDone:   len(totalDone),
+		TotalCancel: len(totalCanceled),
 		TotalIncome: float64(totalIncome),
 	}, nil
 
 }
 
-func (order OrderService) getSellStatusInDay(merchantId string, status db.OrderStatus) (int, error) {
+func (order OrderService) MerchantGetSellInDay(merchantId string) ([]db.OrderModel, []db.OrderModel, []db.OrderModel, error) {
+	canceled, errorCancel := order.getSellStatusInDay(merchantId, db.OrderStatusWaitingMerchant)
+	if errorCancel != nil {
+		return nil, nil, nil, errorCancel
+	}
+
+	done, errorDone := order.getSellStatusInDay(merchantId, db.OrderStatusDone)
+	if errorDone != nil {
+		return nil, nil, nil, errorCancel
+	}
+	currentTime := time.Now()
+	oneDayAgo := currentTime.Add(-24 * time.Hour)
+	nextDay := currentTime.Add(24 * time.Hour)
+	orderDb, errOrder := order.database.Order.FindMany(
+		db.Order.CreatedAt.Gte(oneDayAgo),
+		db.Order.CreatedAt.Lte(nextDay),
+		db.Order.OrderItems.Some(
+			db.OrderItem.Product.Where(
+				db.Product.MerchantID.Equals(merchantId),
+			),
+		),
+		db.Order.OrderStatus.NotIn([]db.OrderStatus{
+			db.OrderStatusDone,
+			db.OrderStatusCanceled,
+			db.OrderStatusCreated,
+			db.OrderStatusExpired,
+			db.OrderStatusWaitingMerchant,
+		}),
+	).With(
+		db.Order.OrderItems.Fetch().With(
+			db.OrderItem.Product.Fetch(),
+		),
+		db.Order.Customer.Fetch(),
+		db.Order.Driver.Fetch().With(
+			db.Driver.DriverDetails.Fetch().With(
+				db.DriverDetails.Vehicle.Fetch(),
+			),
+		),
+		db.Order.OrderDetail.Fetch(),
+	).Exec(context.Background())
+	if errOrder != nil {
+		return nil, nil, nil, errOrder
+	}
+	return canceled, done, orderDb, nil
+
+}
+
+func (order OrderService) getSellStatusInDay(merchantId string, status db.OrderStatus) ([]db.OrderModel, error) {
 	currentTime := time.Now()
 	oneDayAgo := currentTime.Add(-24 * time.Hour)
 	nextDay := currentTime.Add(24 * time.Hour)
@@ -105,11 +152,22 @@ func (order OrderService) getSellStatusInDay(merchantId string, status db.OrderS
 			),
 		),
 		db.Order.OrderStatus.Equals(status),
+	).With(
+		db.Order.OrderItems.Fetch().With(
+			db.OrderItem.Product.Fetch(),
+		),
+		db.Order.Customer.Fetch(),
+		db.Order.Driver.Fetch().With(
+			db.Driver.DriverDetails.Fetch().With(
+				db.DriverDetails.Vehicle.Fetch(),
+			),
+		),
+		db.Order.OrderDetail.Fetch(),
 	).Exec(context.Background())
 	if errOrder != nil {
-		return 0, errOrder
+		return nil, errOrder
 	}
-	return len(orderDb), nil
+	return orderDb, nil
 }
 
 func (order OrderService) getMerchantIncomeInDay(merchantId string) (int, error) {
