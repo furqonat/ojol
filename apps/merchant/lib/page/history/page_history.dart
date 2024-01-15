@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_marchant/page/history/controller_history.dart';
+import 'package:lugo_marchant/shared/utils.dart';
 
 class PageHistory extends GetView<ControllerHistory> {
   const PageHistory({super.key});
@@ -142,7 +143,8 @@ class PageHistory extends GetView<ControllerHistory> {
                                               ),
                                             ),
                                             Text(
-                                              "",
+                                              controller.orders[index]['driver']
+                                                  ['name'],
                                               style: GoogleFonts.readexPro(
                                                 color: Colors.black87,
                                                 fontWeight: FontWeight.bold,
@@ -166,7 +168,9 @@ class PageHistory extends GetView<ControllerHistory> {
                                               ),
                                             ),
                                             Text(
-                                              'B 1234 AB',
+                                              controller.orders[index]['driver']
+                                                      ['driver_details']
+                                                  ['vehicle']['vehicle_rn'],
                                               style: GoogleFonts.readexPro(
                                                 color: Colors.black87,
                                                 fontWeight: FontWeight.bold,
@@ -190,7 +194,9 @@ class PageHistory extends GetView<ControllerHistory> {
                                               ),
                                             ),
                                             Text(
-                                              'Mio J',
+                                              controller.orders[index]['driver']
+                                                      ['driver_details']
+                                                  ['vehicle']['vehicle_brand'],
                                               style: GoogleFonts.readexPro(
                                                 color: Colors.black87,
                                                 fontWeight: FontWeight.bold,
@@ -207,134 +213,61 @@ class PageHistory extends GetView<ControllerHistory> {
                                           color: Colors.grey,
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 0, 10, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              'Ayam geprek',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.black87,
+                                      ...(controller.orders[index]
+                                              ['order_items'] as List<dynamic>)
+                                          .map(
+                                        (e) {
+                                          final data =
+                                              e as Map<String, dynamic>;
+                                          return Column(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 0, 10, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      '${data['product']['name']}',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      intlNumberCurrency(
+                                                        data['product']
+                                                                ['price'] *
+                                                            data['quantity'],
+                                                      ),
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${data['quantity']}x',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              'Rp 40.000',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                            Text(
-                                              '2x',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 5, 10, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              'Ayam goreng',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Rp 20.000',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                            Text(
-                                              '2x',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.black87,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                            ],
+                                          );
+                                        },
+                                      ).toList(),
                                       const Padding(
                                         padding: EdgeInsets.all(10),
                                         child: Divider(
                                           height: 1,
                                           thickness: 1,
                                           color: Colors.grey,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 0, 10, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              'Ayam geprek',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.deepOrange,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Rp 12.000',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.deepOrange,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 5, 10, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              'PPN',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                            Text(
-                                              'Rp 0',
-                                              style: GoogleFonts.readexPro(
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            10, 5, 10, 0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Text(
-                                              'Potongan jasa',
-                                              style: GoogleFonts.readexPro(
-                                                color: const Color(0xFF3978EF),
-                                              ),
-                                            ),
-                                            Text(
-                                              'Rp 0',
-                                              style: GoogleFonts.readexPro(
-                                                color: const Color(0xFF3978EF),
-                                              ),
-                                            ),
-                                          ],
                                         ),
                                       ),
                                       const Padding(
@@ -360,7 +293,9 @@ class PageHistory extends GetView<ControllerHistory> {
                                               ),
                                             ),
                                             Text(
-                                              'Rp 10.000',
+                                              intlNumberCurrency(
+                                                  controller.orders[index]
+                                                      ['gross_amount']),
                                               style: GoogleFonts.readexPro(
                                                 color: Colors.black87,
                                                 fontWeight: FontWeight.bold,

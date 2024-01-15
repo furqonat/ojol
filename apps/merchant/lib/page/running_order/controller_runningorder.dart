@@ -38,11 +38,13 @@ class ControllerRunningOrder extends GetxController
   handleAcceptOrder(String orderId) async {
     final token = await _fbAuth.currentUser?.getIdToken();
     await api.acceptOrder(token: token!, orderId: orderId);
+    handleGetOrder();
   }
 
   handleReject(String orderId) async {
     final token = await _fbAuth.currentUser?.getIdToken();
     await api.rejectOrder(token: token!, orderId: orderId);
+    handleGetOrder();
   }
 
   @override

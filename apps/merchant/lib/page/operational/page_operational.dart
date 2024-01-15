@@ -17,23 +17,17 @@ class PageOperational extends GetView<ControllerOperational> {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         leading: InkWell(
-            onTap: () => Get.back(),
-            child: Card(
-              elevation: 0,
-              color: const Color(0xFF3978EF),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100)),
-              child: const Center(
-                child: Icon(Icons.chevron_left, size: 24, color: Colors.white),
-              ),
-            )),
-        actions: [
-          Obx(() => Switch.adaptive(
-                activeColor: const Color(0xFF3978EF),
-                value: controller.shopStatus.value,
-                onChanged: (value) => controller.shopStatus(value),
-              ))
-        ],
+          onTap: () => Get.back(),
+          child: Card(
+            elevation: 0,
+            color: const Color(0xFF3978EF),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100)),
+            child: const Center(
+              child: Icon(Icons.chevron_left, size: 24, color: Colors.white),
+            ),
+          ),
+        ),
       ),
       body: ListView.builder(
         shrinkWrap: true,

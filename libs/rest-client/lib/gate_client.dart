@@ -40,4 +40,32 @@ abstract class GateClient {
   Future driverGetDanaProfile({
     @Header("Authorization") required String bearerToken,
   });
+
+  @POST("lugo/driver/topup")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future driverTopUp({
+    @Header("Authorization") required String bearerToken,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST("lugo/driver/wd")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future driverWithdraw({
+    @Header("Authorization") required String bearerToken,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST("lugo/merchant/topup")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future merchantTopUp({
+    @Header("Authorization") required String bearerToken,
+    @Body() required Map<String, dynamic> body,
+  });
+
+  @POST("lugo/merchant/wd")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future merchantWithdraw({
+    @Header("Authorization") required String bearerToken,
+    @Body() required Map<String, dynamic> body,
+  });
 }
