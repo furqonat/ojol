@@ -72,6 +72,11 @@ func (order OrderService) GetOrderMerchants(merchantId string, take, skip int) (
 		db.Order.OrderItems.Fetch().With(
 			db.OrderItem.Product.Fetch(),
 		),
+		db.Order.Driver.Fetch().With(
+			db.Driver.DriverDetails.Fetch().With(
+				db.DriverDetails.Vehicle.Fetch(),
+			),
+		),
 	).Exec(context.Background())
 
 	if err != nil {
