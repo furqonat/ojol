@@ -21,4 +21,5 @@ abstract class Routes {
   static const editProduct = '/edit_product';
   static const forgotPassword = "/forgot_password";
   static const verification = "/verification/:state";
+  static const balance = "/balance";
 }
