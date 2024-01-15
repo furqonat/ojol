@@ -18,7 +18,7 @@ dismisKeyboard() {
 }
 
 String intlNumberCurrency(dynamic value) {
-  if (value == 0 || value == null || value == "") {
+  if (value == null || value == "") {
     return "";
   }
   return NumberFormat.simpleCurrency(locale: 'id_ID').format(value);

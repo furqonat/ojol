@@ -5,17 +5,130 @@ import (
 	"apps/gate/utils"
 	"context"
 	"errors"
+	"fmt"
 	"regexp"
 	"strings"
 	"time"
 )
 
-func (u LugoService) DriverTopUp(driverId string, model *db.DriverTrxModel) error {
-	return nil
+func (u LugoService) DriverTopUp(driverId string, amount int) (*utils.CreateOrder, error) {
+	trx, errTrx := u.db.DriverTrx.FindFirst(
+		db.DriverTrx.DriverID.Equals(driverId),
+		db.DriverTrx.Status.Equals(db.TrxStatusProcess),
+		db.DriverTrx.TrxType.Equals(db.TrxTypeTopup),
+	).Exec(context.Background())
+	if errTrx != nil {
+		return nil, errTrx
+	}
+
+	if trx != nil {
+		checkoutUrl, ok := trx.CheckoutURL()
+		if !ok {
+			return nil, errors.New("unable fetch check url")
+		}
+		return &utils.CreateOrder{
+			CheckoutUrl: checkoutUrl,
+		}, nil
+	}
+	mTrx, errMerchTrx := u.db.DriverTrx.CreateOne(
+		db.DriverTrx.TrxType.Set(db.TrxTypeTopup),
+		db.DriverTrx.Driver.Link(db.Driver.ID.Equals(driverId)),
+		db.DriverTrx.Amount.Set(amount),
+		db.DriverTrx.Status.Set(db.TrxStatusProcess),
+	).Exec(context.Background())
+	currentTime := time.Now()
+
+	if errMerchTrx != nil {
+		return nil, errMerchTrx
+	}
+
+	// Add 1 hour to the current time
+	oneHourLater := currentTime.Add(time.Hour)
+
+	formattedTime := oneHourLater.Format(utils.DanaDateFormat)
+	dana, errDana := u.dana.CreateNewOrder(
+		formattedTime,
+		"transactionType",
+		"TOPUP",
+		fmt.Sprintf("TPD-%s", mTrx.ID),
+		amount,
+		"riskObjectId",
+		"riskObjectCode",
+		"riskObjectOperator",
+		"",
+	)
+	if errDana != nil {
+		return nil, errDana
+	}
+	_, err := u.db.DriverTrx.FindUnique(
+		db.DriverTrx.ID.Equals(mTrx.ID),
+	).Update(
+		db.DriverTrx.CheckoutURL.Set(dana.CheckoutUrl),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return dana, nil
 }
 
-func (u LugoService) MerchantTopUp() {
+func (u LugoService) MerchantTopUp(merchantId string, amount int) (*utils.CreateOrder, error) {
+	trx, errTrx := u.db.MerchantTrx.FindFirst(
+		db.MerchantTrx.MerchantID.Equals(merchantId),
+		db.MerchantTrx.Status.Equals(db.TrxStatusProcess),
+		db.MerchantTrx.TrxType.Equals(db.TrxTypeTopup),
+	).Exec(context.Background())
+	if errTrx != nil {
+		return nil, errTrx
+	}
 
+	if trx != nil {
+		checkoutUrl, ok := trx.CheckoutURL()
+		if !ok {
+			return nil, errors.New("unable fetch check url")
+		}
+		return &utils.CreateOrder{
+			CheckoutUrl: checkoutUrl,
+		}, nil
+	}
+	mTrx, errMerchTrx := u.db.MerchantTrx.CreateOne(
+		db.MerchantTrx.TrxType.Set(db.TrxTypeTopup),
+		db.MerchantTrx.Merchant.Link(db.Merchant.ID.Equals(merchantId)),
+		db.MerchantTrx.Amount.Set(amount),
+		db.MerchantTrx.Status.Set(db.TrxStatusProcess),
+	).Exec(context.Background())
+	currentTime := time.Now()
+
+	if errMerchTrx != nil {
+		return nil, errMerchTrx
+	}
+
+	// Add 1 hour to the current time
+	oneHourLater := currentTime.Add(time.Hour)
+
+	formattedTime := oneHourLater.Format(utils.DanaDateFormat)
+	dana, errDana := u.dana.CreateNewOrder(
+		formattedTime,
+		"transactionType",
+		"TOPUP",
+		fmt.Sprintf("TPM-%s", mTrx.ID),
+		amount,
+		"riskObjectId",
+		"riskObjectCode",
+		"riskObjectOperator",
+		"",
+	)
+	if errDana != nil {
+		return nil, errDana
+	}
+	_, err := u.db.MerchantTrx.FindUnique(
+		db.MerchantTrx.ID.Equals(mTrx.ID),
+	).Update(
+		db.MerchantTrx.CheckoutURL.Set(dana.CheckoutUrl),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return dana, nil
 }
 
 func (u LugoService) GetCompanyBallance() (*utils.MerchantQuery, error) {
@@ -181,7 +294,7 @@ func (u LugoService) MerchantRequestWithdraw(merchantId string, amount int) (*ut
 		db.MerchantTrx.TrxType.Set(db.TrxTypeReduction),
 		db.MerchantTrx.Merchant.Link(db.Merchant.ID.Equals(merchantId)),
 		db.MerchantTrx.Amount.Set(amount),
-		db.MerchantTrx.Status.Set(db.TrxStatusSuccess),
+		db.MerchantTrx.Status.Set(db.TrxStatusProcess),
 	).Exec(context.Background())
 
 	if errMerchTrx != nil {
@@ -264,7 +377,7 @@ func (u LugoService) DriverRequestWithdraw(driverId string, amount int) (*utils.
 		db.DriverTrx.TrxType.Set(db.TrxTypeReduction),
 		db.DriverTrx.Driver.Link(db.Driver.ID.Equals(driverId)),
 		db.DriverTrx.Amount.Set(amount),
-		db.DriverTrx.Status.Set(db.TrxStatusSuccess),
+		db.DriverTrx.Status.Set(db.TrxStatusProcess),
 	).Exec(context.Background())
 
 	if errMerchTrx != nil {

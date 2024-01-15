@@ -310,3 +310,37 @@ func (c Controller) DriverRequestWithdraw(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, result)
 }
+
+func (c Controller) MerchantTopUp(ctx *gin.Context) {
+	merchatId := ctx.GetString(utils.UID)
+	model := Withdraw{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	res, err := c.service.MerchantTopUp(merchatId, model.Amount)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (c Controller) DriverTopUp(ctx *gin.Context) {
+	driverId := ctx.GetString(utils.UID)
+	model := Withdraw{}
+	if err := ctx.BindJSON(&model); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	res, err := c.service.DriverTopUp(driverId, model.Amount)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}

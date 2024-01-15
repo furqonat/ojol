@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"strings"
 
 	"firebase.google.com/go/auth"
 
@@ -37,7 +38,7 @@ func (ptrFrsMiddleware *FirebaseMiddleware) HandleAuthWithRoles(roles ...string)
 
 		token, err := ptrFrsMiddleware.client.VerifyIDToken(context.Background(), idToken)
 		if err != nil {
-			gCtx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			gCtx.JSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized", "error": err.Error()})
 			gCtx.Abort()
 			return
 		}
@@ -56,7 +57,6 @@ func (ptrFrsMiddleware *FirebaseMiddleware) HandleAuthWithRoles(roles ...string)
 			}
 		}
 
-		// Attach user information to the context for further processing
 		gCtx.Set(utils.UID, token.UID)
 		gCtx.Set(utils.ROLES, token.Claims[utils.ROLES])
 		gCtx.Next()
@@ -64,12 +64,11 @@ func (ptrFrsMiddleware *FirebaseMiddleware) HandleAuthWithRoles(roles ...string)
 }
 
 func (ptrFrsMiddleware *FirebaseMiddleware) getTokenFromHeaders(c *gin.Context) (string, error) {
-	// Extract the token from the request, e.g., from headers, query parameters, or cookies
-	// For example, you can extract it from the Authorization header like this:
-	token := c.GetHeader("Authorization")
-	if token == "" {
+	bearer := c.GetHeader("Authorization")
+	if bearer == "" {
 		return "", ErrNoToken
 	}
+	token := strings.TrimPrefix(bearer, "Bearer ")
 	return token, nil
 }
 

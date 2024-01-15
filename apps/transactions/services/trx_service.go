@@ -5,6 +5,7 @@ import (
 	"apps/transactions/utils"
 	"context"
 	"errors"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/firestore"
@@ -69,8 +70,16 @@ func (trx TrxService) GetTrxs(take, skip int) ([]db.TransactionsModel, int, erro
 }
 
 func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]) error {
+	id := data.Request.Body.MerchantTransId
+	oType := strings.Split(id, "-")
+	if oType[0] == "TPD" {
+		return trxService.adjustDriverBalance(oType[1], data.Request.Body.AcquirementStatus)
+	}
+	if oType[0] == "TPM" {
+		return trxService.adjustMerchantBalance(oType[1], data.Request.Body.AcquirementStatus)
+	}
 	order, errOrder := trxService.database.Order.FindUnique(
-		db.Order.ID.Equals(data.Request.Body.MerchantTransId),
+		db.Order.ID.Equals(oType[len(oType)-1]),
 	).With(
 		db.Order.Transactions.Fetch(),
 	).Exec(context.Background())
@@ -131,6 +140,67 @@ func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]
 		}
 	}
 	return nil
+}
+
+func (trxService TrxService) adjustMerchantBalance(trxId string, statusTrx utils.AcquirementStatus) error {
+	status := trxService.assignTrxStatus(statusTrx)
+	if status == db.TransactionStatusPaid {
+		// isSuccess = &datetime
+		trx, err := trxService.database.MerchantTrx.FindUnique(
+			db.MerchantTrx.ID.Equals(trxId),
+		).Update(
+			db.MerchantTrx.Status.Set(db.TrxStatusSuccess),
+		).Exec(context.Background())
+		if err != nil {
+			return err
+		}
+		_, errB := trxService.database.MerchantWallet.FindUnique(
+			db.MerchantWallet.ID.Equals(trx.MerchantID),
+		).Update(
+			db.MerchantWallet.Balance.Increment(trx.Amount),
+		).Exec(context.Background())
+
+		if errB != nil {
+			return errB
+		}
+
+	}
+	if status == db.TransactionStatusDone || status == db.TransactionStatusCanceled {
+		// isExpired = &datetime
+		return nil
+	}
+	return nil
+
+}
+
+func (trxService TrxService) adjustDriverBalance(trxId string, statusTrx utils.AcquirementStatus) error {
+	status := trxService.assignTrxStatus(statusTrx)
+	if status == db.TransactionStatusPaid {
+		trx, err := trxService.database.DriverTrx.FindUnique(
+			db.DriverTrx.ID.Equals(trxId),
+		).Update(
+			db.DriverTrx.Status.Set(db.TrxStatusSuccess),
+		).Exec(context.Background())
+		if err != nil {
+			return err
+		}
+		_, errB := trxService.database.DriverWallet.FindUnique(
+			db.DriverWallet.ID.Equals(trx.DriverID),
+		).Update(
+			db.DriverWallet.Balance.Increment(trx.Amount),
+		).Exec(context.Background())
+
+		if errB != nil {
+			return errB
+		}
+
+	}
+	if status == db.TransactionStatusDone || status == db.TransactionStatusCanceled {
+		// isExpired = &datetime
+		return nil
+	}
+	return nil
+
 }
 
 func (trxService TrxService) SuccessTrxOnFirestore(paymentAt *time.Time, orderId string, status db.TransactionStatus) error {

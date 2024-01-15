@@ -28,6 +28,8 @@ func (s LugoRoutes) Setup() {
 		api.GET("/discount", s.controller.GetDiscounts)
 		api.POST("/driver/wd", s.controller.DriverRequestWithdraw)
 		api.POST("/merchant/wd", s.controller.MerchantRequestWithdraw)
+		api.POST("/driver/topup", s.controller.DriverTopUp)
+		api.POST("/merchant/topup", s.controller.MerchantTopUp)
 	}
 }
 

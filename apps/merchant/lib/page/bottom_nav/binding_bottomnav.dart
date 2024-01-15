@@ -38,7 +38,9 @@ class BindingBottomNav implements Bindings {
     );
     Get.lazyPut<ControllerHistory>(
       () => ControllerHistory(
-        api: ApiHistory(),
+        api: ApiHistory(
+          orderClient: OrderClient(dio),
+        ),
       ),
     );
     Get.lazyPut<ControllerRunningOrder>(
