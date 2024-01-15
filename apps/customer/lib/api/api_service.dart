@@ -8,22 +8,23 @@ class ApiService {
 
   Future<dynamic> apiJSONGet(String url) async {
     dynamic data;
-    try{
+    try {
       Map<String, String> headers = {
         'content-Type': 'application/json',
       };
       log('headers = $headers');
       log('url = $baseUrl$url');
 
-      http.Response r = await http.get(Uri.parse(baseUrl + url), headers: headers);
+      http.Response r =
+          await http.get(Uri.parse(baseUrl + url), headers: headers);
       log("status codenya ${r.statusCode}");
       log(r.body.toString());
       data = json.decode(r.body);
       // log(data.toString());
       // logApi(url: url, res: r, method: "GET");
-    }on SocketException{
+    } on SocketException {
       data = "Tidak ada koneksi internet";
-    }catch(e){
+    } catch (e) {
       data = "terjadi kesalahan";
     }
 
@@ -33,7 +34,7 @@ class ApiService {
   Future<dynamic> apiJSONPost(String url, Map<String, dynamic> params) async {
     dynamic data;
 
-    try{
+    try {
       Map<String, String> headers = {
         'content-Type': 'application/json',
       };
@@ -48,9 +49,9 @@ class ApiService {
       log("status codenya ${r.statusCode}");
       // log(data.toString());
       // logApi(url: url, res: r, method: "POST", payload: params);
-    }on SocketException{
+    } on SocketException {
       data = "Tidak ada koneksi internet";
-    }catch(e){
+    } catch (e) {
       data = "terjadi kesalahan";
     }
 
@@ -59,7 +60,7 @@ class ApiService {
 
   Future<dynamic> apiJSONPut(String url, Map<String, dynamic> params) async {
     dynamic data;
-    try{
+    try {
       Map<String, String> headers = {
         'content-Type': 'application/json',
       };
@@ -74,9 +75,9 @@ class ApiService {
       log("status codenya ${r.statusCode}");
       // log(data.toString());
       // logApi(url: url, res: r, method: "PUT", payload: params);
-    } on SocketException{
+    } on SocketException {
       data = "Tidak ada koneksi internet";
-    } catch(e){
+    } catch (e) {
       data = "Terjadi Kesalahan";
     }
 
@@ -85,7 +86,7 @@ class ApiService {
 
   Future<dynamic> apiJSONDelete(String url) async {
     dynamic data;
-    try{
+    try {
       Map<String, String> headers = {
         'content-Type': 'application/json',
       };
@@ -101,9 +102,9 @@ class ApiService {
         log("status codenya ${r.statusCode}, error: $error");
         throw Exception("Failed to delete data");
       }
-    }on SocketException{
+    } on SocketException {
       data = "Tidak ada koneksi internet";
-    }catch(e){
+    } catch (e) {
       data = "Terjadi kesalahan";
     }
 
@@ -112,7 +113,7 @@ class ApiService {
 
   Future<dynamic> apiJSONGetWitFirebaseToken(String url, String token) async {
     dynamic data;
-    try{
+    try {
       Map<String, String> headers = {
         'content-Type': 'application/json',
         'Authorization': 'Bearer $token',
@@ -121,25 +122,25 @@ class ApiService {
       log('url = $baseUrl$url');
 
       http.Response r =
-      await http.get(Uri.parse(baseUrl + url), headers: headers);
+          await http.get(Uri.parse(baseUrl + url), headers: headers);
       log("status codenya ${r.statusCode}");
 
       data = json.decode(r.body);
       log(data.toString());
       // logApi(url: url, res: r, method: "GET");
-    }on SocketException{
+    } on SocketException {
       data = "Tidak ada koneksi internet";
-    }catch(e){
+    } catch (e) {
       data = "Terjadi kesalahan";
     }
 
     return data;
   }
 
-  Future<dynamic> apiJSONPostWithFirebaseToken(String url, Map<String, dynamic> params, String token) async {
+  Future<dynamic> apiJSONPostWithFirebaseToken(
+      String url, Map<String, dynamic> params, String token) async {
     dynamic data;
-    try{
-
+    try {
       Map<String, String> headers = {
         'content-Type': 'application/json',
         'accept': 'application/json',
@@ -156,18 +157,19 @@ class ApiService {
       log("status codenya ${r.statusCode}");
       log(data.toString());
       // logApi(url: url, res: r, method: "POST", payload: params);
-    }on SocketException{
+    } on SocketException {
       data = "Tidak ada koneksi internet";
-    }catch(e){
+    } catch (e) {
       data = "Terjadi kesalahan";
     }
 
     return data;
   }
 
-  Future<dynamic> apiJSONPutWithFirebaseToken(String url, Map<String, dynamic> params, String token) async {
+  Future<dynamic> apiJSONPutWithFirebaseToken(
+      String url, Map<String, dynamic> params, String token) async {
     dynamic data;
-    try{
+    try {
       Map<String, String> headers = {
         'content-Type': 'application/json',
         'accept': 'application/json',
@@ -184,13 +186,12 @@ class ApiService {
       log("status codenya ${r.statusCode}");
       log(data.toString());
       // logApi(url: url, res: r, method: "POST", payload: params);
-    }on SocketException{
+    } on SocketException {
       data = "Tidak ada koneksi internet";
-    }catch(e){
+    } catch (e) {
       data = "Terjadi kesalahan";
     }
 
     return data;
   }
-
 }

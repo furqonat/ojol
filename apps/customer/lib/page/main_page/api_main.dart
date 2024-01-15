@@ -1,1 +1,1 @@
-class ApiMain{}
+class ApiMain {}

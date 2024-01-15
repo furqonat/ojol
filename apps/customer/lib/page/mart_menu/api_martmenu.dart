@@ -1,1 +1,1 @@
-class ApiMartMenu{}
+class ApiMartMenu {}

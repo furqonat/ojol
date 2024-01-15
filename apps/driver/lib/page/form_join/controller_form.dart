@@ -1,8 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -11,9 +11,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lugo_driver/api/local_serivce.dart';
 import 'package:lugo_driver/route/route_name.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
 import 'api_form.dart';
 
-class ControllerFormJoin extends GetxController{
+class ControllerFormJoin extends GetxController {
   final ApiFormJoin api;
   ControllerFormJoin({required this.api});
 
@@ -47,7 +48,10 @@ class ControllerFormJoin extends GetxController{
   var uploadSIM = ''.obs;
   var uploadKendaraan = ''.obs;
 
-  late XFile fileKTP = XFile(''), fileSTNK = XFile(''), fileSIM = XFile(''), fileKendaraan = XFile('');
+  late XFile fileKTP = XFile(''),
+      fileSTNK = XFile(''),
+      fileSIM = XFile(''),
+      fileKendaraan = XFile('');
 
   final ImagePicker picker = ImagePicker();
 
@@ -55,23 +59,27 @@ class ControllerFormJoin extends GetxController{
 
   //KTP
   getKTPFromCamera() async {
-    final XFile? camImage = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    final XFile? camImage =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
       viewKTP.value = camImage.path;
       fileKTP = camImage;
       uploadKTPImage();
     }
   }
+
   getKTPFromFile() async {
-    final XFile? fileImage = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    final XFile? fileImage =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
       viewKTP.value = fileImage.path;
       fileKTP = fileImage;
       uploadKTPImage();
     }
   }
+
   uploadKTPImage() async {
-    if (fileKTP == null) {
+    if (fileKTP.path == '') {
       log('Error: File is null.');
       return;
     }
@@ -90,7 +98,6 @@ class ControllerFormJoin extends GetxController{
         uploadKTP.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto KTP berhasil di unggah');
       });
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Foto KTP gagal di unggah');
     }
@@ -98,23 +105,27 @@ class ControllerFormJoin extends GetxController{
 
   //STNK
   getSTNKFromCamera() async {
-    final XFile? camImage = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    final XFile? camImage =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
       viewSTNK.value = camImage.path;
       fileSTNK = camImage;
       uploadSTNKImage();
     }
   }
+
   getSTNKFromFile() async {
-    final XFile? fileImage = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    final XFile? fileImage =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
       viewSTNK.value = fileImage.path;
       fileSTNK = fileImage;
       uploadSTNKImage();
     }
   }
+
   uploadSTNKImage() async {
-    if (fileSTNK == null) {
+    if (fileSTNK.path == '') {
       log('Error: File is null.');
       return;
     }
@@ -133,7 +144,6 @@ class ControllerFormJoin extends GetxController{
         uploadSTNK.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto STNK berhasil di unggah');
       });
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Foto STNK gagal di unggah');
     }
@@ -141,23 +151,27 @@ class ControllerFormJoin extends GetxController{
 
   //SIM
   getSIMFromCamera() async {
-    final XFile? camImage = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    final XFile? camImage =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
       viewSIM.value = camImage.path;
       fileSIM = camImage;
       uploadSIMImage();
     }
   }
+
   getSIMFromFile() async {
-    final XFile? fileImage = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    final XFile? fileImage =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
       viewSIM.value = fileImage.path;
       fileSIM = fileImage;
       uploadSIMImage();
     }
   }
+
   uploadSIMImage() async {
-    if (fileSIM == null) {
+    if (fileSIM.path == '') {
       log('Error: File is null.');
       return;
     }
@@ -176,7 +190,6 @@ class ControllerFormJoin extends GetxController{
         uploadSIM.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto SIM berhasil di unggah');
       });
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Foto SIM gagal di unggah');
     }
@@ -184,23 +197,27 @@ class ControllerFormJoin extends GetxController{
 
   //Kendaraan
   getKendaraanFromCamera() async {
-    final XFile? camImage = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    final XFile? camImage =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
       viewKendaraan.value = camImage.path;
       fileKendaraan = camImage;
       uploadKendaraanImage();
     }
   }
+
   getKendaraanFromFile() async {
-    final XFile? fileImage = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    final XFile? fileImage =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
       viewKendaraan.value = fileImage.path;
       fileKendaraan = fileImage;
       uploadKendaraanImage();
     }
   }
+
   uploadKendaraanImage() async {
-    if (fileKendaraan == null) {
+    if (fileKendaraan.path == '') {
       log('Error: File is null.');
       return;
     }
@@ -219,16 +236,16 @@ class ControllerFormJoin extends GetxController{
         uploadKendaraan.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto Kendaraan berhasil di unggah');
       });
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Foto Kendaraan gagal di unggah');
     }
   }
 
   //Register with firebase register
-  firebaseRegister(BuildContext context)async {
+  firebaseRegister(BuildContext context) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: edtEmail.text, password: edtPassword.text);
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: edtEmail.text, password: edtPassword.text);
       firebasePhoneVerification(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'The email address is already in use by another account.') {
@@ -246,11 +263,11 @@ class ControllerFormJoin extends GetxController{
         codeAutoRetrievalTimeout: (verificationId) {},
         verificationCompleted: (phoneAuthCredential) {},
         codeSent: (verificationId, forceResendingToken) async {
-
           showModalBottomSheet(
             context: context,
             isDismissible: false,
-            constraints: BoxConstraints.expand(width: Get.width, height: Get.height),
+            constraints:
+                BoxConstraints.expand(width: Get.width, height: Get.height),
             builder: (context) => Column(
               children: [
                 Text(
@@ -301,8 +318,11 @@ class ControllerFormJoin extends GetxController{
                 const Spacer(),
                 ElevatedButton(
                     onPressed: () async {
-                      final credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: edtOTP.text);
-                      firebase.currentUser?.updatePhoneNumber(credential).then((value) async {
+                      final credential = PhoneAuthProvider.credential(
+                          verificationId: verificationId, smsCode: edtOTP.text);
+                      firebase.currentUser
+                          ?.updatePhoneNumber(credential)
+                          .then((value) async {
                         var useToken = await firebase.currentUser?.getIdToken();
                         sendToken(context, useToken!);
                       });
@@ -346,29 +366,30 @@ class ControllerFormJoin extends GetxController{
     }
   }
 
-  joinLugo()async{
-    try{
+  joinLugo() async {
+    try {
       var token = await firebase.currentUser!.getIdToken(true);
 
       final pattern = RegExp('.{1,800}');
       pattern.allMatches(token!).forEach((match) => debugPrint(match.group(0)));
 
       var r = await api.joinLugo(
-          address: edtCompleteAddress.text,
-          license_image: uploadSIM.value,
-          id_card_image: uploadKTP.value,
-          vehicle_type: partnerType.value,
-          vehicle_brand: edtBrandTransport.text,
-          vehicle_year: int.parse(edtYearTransport.text),
-          vehicle_image: uploadKendaraan.value,
-          vehicle_registration: uploadSTNK.value,
-          vehicle_rn: edtPlateTransport.text,
-          referal: referal.value,
-          token: token!);
-      if(r["message"] == "OK"){
+        address: edtCompleteAddress.text,
+        license_image: uploadSIM.value,
+        id_card_image: uploadKTP.value,
+        vehicle_type: partnerType.value,
+        vehicle_brand: edtBrandTransport.text,
+        vehicle_year: int.parse(edtYearTransport.text),
+        vehicle_image: uploadKendaraan.value,
+        vehicle_registration: uploadSTNK.value,
+        vehicle_rn: edtPlateTransport.text,
+        referal: referal.value,
+        token: token,
+      );
+      if (r["message"] == "OK") {
         getFirebasetoken();
       }
-    }catch(e, stackTrace){
+    } catch (e, stackTrace) {
       log('$e');
       log('$stackTrace');
     }
@@ -376,7 +397,8 @@ class ControllerFormJoin extends GetxController{
 
   getFirebasetoken() async {
     try {
-      final userCredential = await FirebaseAuth.instance.currentUser?.getIdToken(true);
+      final userCredential =
+          await FirebaseAuth.instance.currentUser?.getIdToken(true);
       if (userCredential != null) {
         await LocalService().setIsLogin(isLogin: true);
         Get.offAllNamed(Routes.bottom_nav);
@@ -413,5 +435,4 @@ class ControllerFormJoin extends GetxController{
     referal.value = Get.arguments["referal"];
     super.onInit();
   }
-
-  }
+}

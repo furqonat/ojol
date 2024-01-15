@@ -7,7 +7,7 @@ import 'package:lugo_customer/page/profile/page_profile.dart';
 import 'package:lugo_customer/page/room_chat/page_rromchat.dart';
 import 'package:lugo_customer/page/running_order/page_running.dart';
 
-class ControllerHome extends GetxController{
+class ControllerHome extends GetxController {
   late PageController pageController;
 
   var currentPage = 0.obs;
@@ -37,5 +37,4 @@ class ControllerHome extends GetxController{
   }
 
   void changePage(index) => currentPage.value = index;
-
 }

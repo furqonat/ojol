@@ -3,20 +3,18 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/detail_point/api_detailpoint.dart';
 
-class ControllerDetailPoint extends GetxController{
+class ControllerDetailPoint extends GetxController {
   final ApiDetailPoint api;
   ControllerDetailPoint({required this.api});
 
-  confirmDiaoog(BuildContext context){
+  confirmDiaoog(BuildContext context) {
     return showDialog(
       context: context,
       builder: (context) => AlertDialog.adaptive(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         shadowColor: Colors.black12,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         title: Text(
           "Tukar poin?",
           style: GoogleFonts.readexPro(
@@ -34,7 +32,7 @@ class ControllerDetailPoint extends GetxController{
         ),
         actions: [
           OutlinedButton(
-              onPressed: (){
+              onPressed: () {
                 Get.back();
                 Get.back();
               },

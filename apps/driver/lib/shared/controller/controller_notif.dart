@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import '../../route/route_name.dart';
 import '../local_notif.dart';
 
-class ControllerNotification extends GetxController{
+class ControllerNotification extends GetxController {
   @override
   void onInit() async {
     super.onInit();
@@ -34,14 +34,10 @@ class ControllerNotification extends GetxController{
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       log("onMessageOpenedApp");
       try {
-
-        if(message == null) return;
         Get.toNamed(Routes.bottom_nav);
-
       } catch (e) {
         log("error $e");
       }
     });
   }
-
 }

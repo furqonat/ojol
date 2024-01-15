@@ -1,1 +1,1 @@
-class ApiHistory{}
+class ApiHistory {}

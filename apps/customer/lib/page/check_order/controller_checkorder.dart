@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:lugo_customer/page/check_order/api_checkorder.dart';
 
-class ControllerCheckOrder extends GetxController{
+class ControllerCheckOrder extends GetxController {
   final ApiCheckOrder api;
   ControllerCheckOrder({required this.api});
 
