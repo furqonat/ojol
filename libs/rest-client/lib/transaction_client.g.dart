@@ -21,64 +21,80 @@ class _TransactionClient implements TransactionClient {
   String? baseUrl;
 
   @override
-  Future<dynamic> getMerchantTransactions({required String bearerToken}) async {
+  Future<List<Transaction>> getMerchantTransactions({
+    required String bearerToken,
+    Map<String, dynamic>? queries,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(queries ?? <String, dynamic>{});
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Content-Type': 'application/json',
       r'Authorization': bearerToken,
     };
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<Transaction>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
       contentType: 'application/json',
     )
-        .compose(
-          _dio.options,
-          'trx/merchant',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
-    final value = _result.data;
+            .compose(
+              _dio.options,
+              'trx/merchant',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => Transaction.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 
   @override
-  Future<dynamic> getDriverTransactions({required String bearerToken}) async {
+  Future<List<Transaction>> getDriverTransactions({
+    required String bearerToken,
+    Map<String, dynamic>? queries,
+  }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
+    queryParameters.addAll(queries ?? <String, dynamic>{});
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Content-Type': 'application/json',
       r'Authorization': bearerToken,
     };
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _result = await _dio
+        .fetch<List<dynamic>>(_setStreamType<List<Transaction>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
       contentType: 'application/json',
     )
-        .compose(
-          _dio.options,
-          'trx/driver',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(
-            baseUrl: _combineBaseUrls(
-          _dio.options.baseUrl,
-          baseUrl,
-        ))));
-    final value = _result.data;
+            .compose(
+              _dio.options,
+              'trx/driver',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    var value = _result.data!
+        .map((dynamic i) => Transaction.fromJson(i as Map<String, dynamic>))
+        .toList();
     return value;
   }
 

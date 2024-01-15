@@ -1,5 +1,6 @@
 import 'package:lugo_marchant/response/dana.dart';
 import 'package:rest_client/gate_client.dart';
+import 'package:rest_client/shared.dart';
 import 'package:rest_client/transaction_client.dart';
 
 class ApiDana {
@@ -15,9 +16,13 @@ class ApiDana {
     return (resp as List).map((e) => DanaProfile.fromJson(e)).toList();
   }
 
-  Future getMerchantTransactions({required String token}) async {
+  Future<List<Transaction>> getMerchantTransactions({
+    required String token,
+    trxIn = "day",
+  }) async {
     return await trxClient.getMerchantTransactions(
       bearerToken: "Bearer $token",
+      queries: {"trxIn": trxIn},
     );
   }
 }
