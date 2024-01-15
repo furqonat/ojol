@@ -8,19 +8,23 @@ class ControllerHistory extends GetxController {
   final ApiHistory api;
   ControllerHistory({required this.api});
 
-  var loading = Status.idle.obs;
+  final loading = Status.idle.obs;
+  final orders = [].obs;
 
   final _fbAuth = FirebaseAuth.instance;
 
   handleGetOrders() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getOrders(token: token!);
-    print(resp);
+    orders.value = resp['data'];
+    print(orders.length);
+    loading.value = Status.success;
   }
 
   @override
   void onInit() {
-    handleGetOrders();
     super.onInit();
+    loading.value = Status.loading;
+    handleGetOrders();
   }
 }

@@ -51,16 +51,27 @@ func (order OrderService) MerchantRejectOrder(orderId string) error {
 
 func (order OrderService) GetOrderMerchants(merchantId string, take, skip int) ([]db.OrderModel, error) {
 	orders, err := order.database.Order.FindMany(
-		db.Order.OrderItems.Every(
+		db.Order.OrderItems.Some(
 			db.OrderItem.Product.Where(
 				db.Product.MerchantID.Equals(merchantId),
 			),
+		),
+		db.Order.OrderType.In(
+			[]db.ServiceType{
+				db.ServiceTypeMart,
+				db.ServiceTypeFood,
+			},
+		),
+		db.Order.DriverID.Not(
+			"NULL",
 		),
 	).With(
 		db.Order.Customer.Fetch(),
 		db.Order.Transactions.Fetch(),
 		db.Order.OrderDetail.Fetch(),
-		db.Order.OrderItems.Fetch(),
+		db.Order.OrderItems.Fetch().With(
+			db.OrderItem.Product.Fetch(),
+		),
 	).Exec(context.Background())
 
 	if err != nil {
