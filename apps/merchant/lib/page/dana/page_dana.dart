@@ -166,14 +166,14 @@ class PageDana extends GetView<ControllerDana> {
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          "ID Transaksi 0812345678",
+                          "ID Transaksi : ${controller.transaction[index].id}",
                           style: GoogleFonts.readexPro(
                               fontSize: 14,
                               color: const Color(0xFF14181B),
                               fontWeight: FontWeight.w300),
                         ),
                         Text(
-                          "11 November 2023 - 07.00",
+                          controller.transaction[index].createdAt,
                           style: GoogleFonts.readexPro(
                               fontSize: 14,
                               color: const Color(0xFF14181B),
@@ -185,14 +185,15 @@ class PageDana extends GetView<ControllerDana> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         Text(
-                          "Rp 20.000",
+                          intlNumberCurrency(
+                              controller.transaction[index].amount),
                           style: GoogleFonts.readexPro(
                               fontSize: 16,
                               color: const Color(0xFF14181B),
                               fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          "Berhasil",
+                          controller.transaction[index].status,
                           style: GoogleFonts.readexPro(
                             fontSize: 14,
                             fontWeight: FontWeight.w300,
