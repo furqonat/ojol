@@ -38,7 +38,8 @@ class ControllerOtp extends GetxController {
           showModalBottomSheet(
             context: context,
             isDismissible: false,
-            constraints: BoxConstraints.expand(width: Get.width, height: Get.height),
+            constraints:
+                BoxConstraints.expand(width: Get.width, height: Get.height),
             builder: (context) => Column(
               children: [
                 Text(
@@ -147,9 +148,9 @@ class ControllerOtp extends GetxController {
   // get Firebase token
   getFirebasetoken(String token) async {
     try {
-      final userCredential = await FirebaseAuth.instance.currentUser?.getIdToken(true);
-      if (userCredential != null) {
-      }
+      final userCredential =
+          await FirebaseAuth.instance.currentUser?.getIdToken(true);
+      if (userCredential != null) {}
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case "invalid-custom-token":

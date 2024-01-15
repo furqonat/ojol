@@ -1,1 +1,1 @@
-class ApiPoint{}
+class ApiPoint {}

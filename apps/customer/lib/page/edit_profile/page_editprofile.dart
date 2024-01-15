@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/edit_profile/controller_editprofile.dart';
 import 'package:validatorless/validatorless.dart';
 
-class PageEditProfile extends GetView<ControllerEditProfile>{
+class PageEditProfile extends GetView<ControllerEditProfile> {
   const PageEditProfile({super.key});
 
   @override
@@ -20,8 +20,8 @@ class PageEditProfile extends GetView<ControllerEditProfile>{
           child: AppBar(
             automaticallyImplyLeading: false,
             flexibleSpace: Obx(() => Stack(
-              children: <Widget>[
-                controller.imgPreview.value == ''
+                  children: <Widget>[
+                    controller.imgPreview.value == ''
                         ? CachedNetworkImage(
                             width: Get.width,
                             height: Get.height * 0.3,
@@ -39,7 +39,7 @@ class PageEditProfile extends GetView<ControllerEditProfile>{
                             height: Get.height * 0.3,
                             fit: BoxFit.cover,
                             File(controller.imgPreview.value)),
-                Container(
+                    Container(
                       width: Get.width,
                       height: Get.height * 0.3,
                       padding: const EdgeInsets.all(10),
@@ -104,10 +104,9 @@ class PageEditProfile extends GetView<ControllerEditProfile>{
                         ],
                       ),
                     ),
-              ],
-            )),
-          )
-      ),
+                  ],
+                )),
+          )),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: Form(
@@ -134,33 +133,22 @@ class PageEditProfile extends GetView<ControllerEditProfile>{
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(
-                              width: 1,
-                              color: Color(0xFF4B39EF)
-                          )
-                      ),
+                              width: 1, color: Color(0xFF4B39EF))),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              width: 1,
-                              color: Colors.grey
-                          )
-                      ),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(
-                              width: 1,
-                              color: Color(0xFF1D2428)
-                          )
-                      ),
+                              width: 1, color: Color(0xFF1D2428))),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              width: 1,
-                              color: Colors.red
-                          )
-                      ),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.red)),
                     ),
-                    validator: Validatorless.required('Nama tidak boleh kosong'),
+                    validator:
+                        Validatorless.required('Nama tidak boleh kosong'),
                   ),
                 ),
                 Padding(
@@ -183,35 +171,24 @@ class PageEditProfile extends GetView<ControllerEditProfile>{
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(
-                              width: 1,
-                              color: Color(0xFF4B39EF)
-                          )
-                      ),
+                              width: 1, color: Color(0xFF4B39EF))),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              width: 1,
-                              color: Colors.grey
-                          )
-                      ),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(
-                              width: 1,
-                              color: Color(0xFF1D2428)
-                          )
-                      ),
+                              width: 1, color: Color(0xFF1D2428))),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              width: 1,
-                              color: Colors.red
-                          )
-                      ),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.red)),
                     ),
                     validator: Validatorless.multiple([
                       Validatorless.required('Ponsel tidak boleh kosong'),
-                      Validatorless.regex(RegExp(r'^[1-9][0-9]{8,}$'), 'Ponsel tidak sesuai, cukup gunakan 813xxxxxxxx'),
+                      Validatorless.regex(RegExp(r'^[1-9][0-9]{8,}$'),
+                          'Ponsel tidak sesuai, cukup gunakan 813xxxxxxxx'),
                     ]),
                   ),
                 ),
@@ -235,46 +212,35 @@ class PageEditProfile extends GetView<ControllerEditProfile>{
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                                width: 1,
-                                color: Color(0xFF4B39EF)
-                            )
-                        ),
+                                width: 1, color: Color(0xFF4B39EF))),
                         enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                width: 1,
-                                color: Colors.grey
-                            )
-                        ),
+                            borderSide:
+                                const BorderSide(width: 1, color: Colors.grey)),
                         focusedErrorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: const BorderSide(
-                                width: 1,
-                                color: Color(0xFF1D2428)
-                            )
-                        ),
+                                width: 1, color: Color(0xFF1D2428))),
                         errorBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(
-                                width: 1,
-                                color: Colors.red
-                            )
-                        ),
+                            borderSide:
+                                const BorderSide(width: 1, color: Colors.red)),
                       ),
                       validator: Validatorless.multiple([
                         Validatorless.required('Email tidak boleh kosong'),
                         Validatorless.email('Format email tidak benar')
-                      ])
-                  ),
+                      ])),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(25),
                   child: ElevatedButton(
-                      onPressed: (){
-                        if(controller.formkeyEditUser.currentState!.validate()){
-                          if(controller.phoneCheck.value == controller.edtPhone.text){
+                      onPressed: () {
+                        if (controller.formkeyEditUser.currentState!
+                            .validate()) {
+                          if (controller.phoneCheck.value ==
+                              controller.edtPhone.text) {
                             controller.updateUser();
-                          }else{
+                          } else {
                             controller.firebasePhoneVerification(context);
                           }
                         }
@@ -284,18 +250,13 @@ class PageEditProfile extends GetView<ControllerEditProfile>{
                           elevation: 0,
                           fixedSize: Size(Get.width, Get.height * 0.05),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)
-                          ),
-                          backgroundColor: const Color(0xFF3978EF)
-                      ),
+                              borderRadius: BorderRadius.circular(12)),
+                          backgroundColor: const Color(0xFF3978EF)),
                       child: Text(
                         "Simpan",
                         style: GoogleFonts.readexPro(
-                            fontSize: 14,
-                            color: Colors.white
-                        ),
-                      )
-                  ),
+                            fontSize: 14, color: Colors.white),
+                      )),
                 )
               ],
             ),

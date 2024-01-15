@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lugo_customer/page/location_picker/controller_locationpicker.dart';
 import 'package:lugo_customer/route/route_name.dart';
 
-class PageLocationPicker extends GetView<ControllerLocationPicker>{
+class PageLocationPicker extends GetView<ControllerLocationPicker> {
   const PageLocationPicker({super.key});
 
   @override
@@ -20,21 +20,19 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         leading: InkWell(
-            onTap: ()=> Get.offNamed(Routes.home),
+            onTap: () => Get.offNamed(Routes.home),
             child: Card(
               elevation: 0,
               color: const Color(0xFF3978EF),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100)
-              ),
+                  borderRadius: BorderRadius.circular(100)),
               child: const Center(
                 child: Icon(Icons.chevron_left, size: 24, color: Colors.white),
               ),
-            )
-        ),
+            )),
         actions: [
           InkWell(
-              onTap: (){
+              onTap: () {
                 log(controller.argumentChecker());
               },
               child: SizedBox(
@@ -44,14 +42,12 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                   elevation: 0,
                   color: const Color(0xFF3978EF),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100)
-                  ),
+                      borderRadius: BorderRadius.circular(100)),
                   child: const Center(
                     child: Icon(Icons.list_alt, size: 24, color: Colors.white),
                   ),
                 ),
-              )
-          ),
+              )),
         ],
       ),
       body: PopScope(
@@ -79,7 +75,8 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                   return Container(
                     decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20))),
                     child: SingleChildScrollView(
                       controller: scrollController,
                       child: Obx(() => Column(
@@ -93,16 +90,21 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                       onPressed: () {},
                                       style: ElevatedButton.styleFrom(
                                           elevation: 5,
-                                          fixedSize: Size(Get.width, Get.height * 0.05),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)
-                                          ),
+                                          fixedSize: Size(
+                                              Get.width, Get.height * 0.05),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
                                           backgroundColor: Colors.white),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
-                                          const Icon(Icons.location_on_rounded, color: Color(0xFF3978EF)),
+                                          const Icon(Icons.location_on_rounded,
+                                              color: Color(0xFF3978EF)),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5),
                                             child: Text(
                                               "Lokasi Lanjut",
                                               style: GoogleFonts.readexPro(
@@ -117,12 +119,14 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                               Visibility(
                                 visible: controller.firstStep.value,
                                 child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
                                     width: Get.width,
                                     height: 50,
                                     child: TextFormField(
-                                      style: GoogleFonts.readexPro(fontSize: 12),
+                                      style:
+                                          GoogleFonts.readexPro(fontSize: 12),
                                       controller: controller.edtPickUp,
                                       decoration: InputDecoration(
                                         hintText: 'Detail alamat',
@@ -132,21 +136,27 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                           color: const Color(0xFF95A1AC),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                             borderSide: const BorderSide(
                                                 width: 1,
                                                 color: Color(0xFF4B39EF))),
                                         enabledBorder: OutlineInputBorder(
-                                            borderRadius:BorderRadius.circular(12),
-                                            borderSide: const BorderSide(width: 1, color: Colors.grey)),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: const BorderSide(
+                                                width: 1, color: Colors.grey)),
                                         focusedErrorBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                             borderSide: const BorderSide(
                                                 width: 1,
                                                 color: Color(0xFF1D2428))),
                                         errorBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
-                                            borderSide: const BorderSide(width: 1, color: Colors.red)),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: const BorderSide(
+                                                width: 1, color: Colors.red)),
                                       ),
                                     ),
                                   ),
@@ -171,15 +181,21 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                       onPressed: () {},
                                       style: ElevatedButton.styleFrom(
                                           elevation: 5,
-                                          fixedSize: Size(Get.width, Get.height * 0.05),
-                                          shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(12)),
+                                          fixedSize: Size(
+                                              Get.width, Get.height * 0.05),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
                                           backgroundColor: Colors.white),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: <Widget>[
-                                          const Icon(Icons.location_on_rounded, color: Colors.deepOrangeAccent),
+                                          const Icon(Icons.location_on_rounded,
+                                              color: Colors.deepOrangeAccent),
                                           Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5),
                                             child: Text(
                                               "Lokasi Tujuan",
                                               style: GoogleFonts.readexPro(
@@ -194,12 +210,14 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                               Visibility(
                                 visible: controller.firstStep.value,
                                 child: Padding(
-                                  padding:const EdgeInsets.fromLTRB(10, 5, 10, 10),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 5, 10, 10),
                                   child: SizedBox(
                                     width: Get.width,
                                     height: 50,
                                     child: TextFormField(
-                                      style: GoogleFonts.readexPro(fontSize: 12),
+                                      style:
+                                          GoogleFonts.readexPro(fontSize: 12),
                                       controller: controller.edtDropOff,
                                       decoration: InputDecoration(
                                         hintText: 'Detail alamat',
@@ -209,21 +227,27 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                           color: const Color(0xFF95A1AC),
                                         ),
                                         focusedBorder: OutlineInputBorder(
-                                            borderRadius:BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                             borderSide: const BorderSide(
                                                 width: 1,
                                                 color: Color(0xFF4B39EF))),
                                         enabledBorder: OutlineInputBorder(
-                                            borderRadius:BorderRadius.circular(12),
-                                            borderSide: const BorderSide(width: 1, color: Colors.grey)),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: const BorderSide(
+                                                width: 1, color: Colors.grey)),
                                         focusedErrorBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
                                             borderSide: const BorderSide(
                                                 width: 1,
                                                 color: Color(0xFF1D2428))),
                                         errorBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(12),
-                                            borderSide: const BorderSide(width: 1, color: Colors.red)),
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: const BorderSide(
+                                                width: 1, color: Colors.red)),
                                       ),
                                     ),
                                   ),
@@ -232,10 +256,14 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                               Visibility(
                                 visible: controller.firstStep.value,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        if (controller.requestType.value == 'rider' || controller.requestType.value == 'driver') {
+                                        if (controller.requestType.value ==
+                                                'rider' ||
+                                            controller.requestType.value ==
+                                                'driver') {
                                           controller.firstStep(false);
                                           controller.secondStep(true);
                                         } else {
@@ -245,9 +273,13 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                       },
                                       style: ElevatedButton.styleFrom(
                                           elevation: 0,
-                                          fixedSize: Size(Get.width, Get.height * 0.06),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                          backgroundColor: const Color(0xFF3978EF)),
+                                          fixedSize: Size(
+                                              Get.width, Get.height * 0.06),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          backgroundColor:
+                                              const Color(0xFF3978EF)),
                                       child: Text(
                                         "Cek",
                                         style: GoogleFonts.readexPro(
@@ -264,13 +296,16 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                 child: Container(
                                   width: Get.width,
                                   height: Get.height * 0.07,
-                                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   decoration: BoxDecoration(
                                       color: Colors.grey.shade300,
                                       borderRadius: BorderRadius.circular(8)),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Icon(
                                         controller.requestType.value == 'rider'
@@ -304,18 +339,22 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                 child: Container(
                                   height: 50,
                                   width: Get.width,
-                                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(width: 1, color: Colors.black54)),
+                                      border: Border.all(
+                                          width: 1, color: Colors.black54)),
                                   child: Row(
-                                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       SizedBox(
                                         height: 50,
                                         width: Get.width * 0.63,
                                         child: TextFormField(
-                                          style: GoogleFonts.readexPro(fontSize: 12),
+                                          style: GoogleFonts.readexPro(
+                                              fontSize: 12),
                                           controller: controller.edtDiscount,
                                           decoration: InputDecoration(
                                               hintText: 'Kode diskon',
@@ -327,19 +366,29 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                               errorBorder: InputBorder.none,
                                               focusedBorder: InputBorder.none,
                                               enabledBorder: InputBorder.none,
-                                              focusedErrorBorder:InputBorder.none,
-                                              contentPadding:const EdgeInsets.symmetric(horizontal: 10)),
+                                              focusedErrorBorder:
+                                                  InputBorder.none,
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10)),
                                         ),
                                       ),
                                       Padding(
-                                        padding:const EdgeInsets.only(right: 5),
+                                        padding:
+                                            const EdgeInsets.only(right: 5),
                                         child: ElevatedButton(
                                             onPressed: () {},
                                             style: ElevatedButton.styleFrom(
                                                 elevation: 0,
-                                                fixedSize: Size(Get.width * 0.28,Get.height * 0.03),
-                                                shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(8)),
-                                                backgroundColor:const Color(0xFF3978EF)),
+                                                fixedSize: Size(
+                                                    Get.width * 0.28,
+                                                    Get.height * 0.03),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                backgroundColor:
+                                                    const Color(0xFF3978EF)),
                                             child: Text(
                                               "Gunakan",
                                               style: GoogleFonts.readexPro(
@@ -357,15 +406,18 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                 child: Container(
                                   height: 50,
                                   width: Get.width,
-                                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                           width: 1,
                                           color: Colors.grey.shade300)),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
                                         'Biaya',
@@ -392,15 +444,18 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                 child: Container(
                                   height: 50,
                                   width: Get.width,
-                                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                           width: 1,
                                           color: Colors.grey.shade300)),
                                   child: Row(
-                                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
                                         'Cash',
@@ -420,7 +475,8 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                         value: controller.payType.value,
                                         borderRadius: BorderRadius.circular(8),
                                         underline: const SizedBox(),
-                                        items: controller.payTypeList.map((element) {
+                                        items: controller.payTypeList
+                                            .map((element) {
                                           return DropdownMenuItem(
                                             value: element,
                                             child: Text(
@@ -431,7 +487,8 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                             ),
                                           );
                                         }).toList(),
-                                        onChanged: (String? value) => controller.payType(value),
+                                        onChanged: (String? value) =>
+                                            controller.payType(value),
                                       )
                                     ],
                                   ),
@@ -444,17 +501,28 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                       horizontal: 10, vertical: 10),
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        if (controller.requestType.value == 'rider' || controller.requestType.value == 'driver') {
+                                        if (controller.requestType.value ==
+                                                'rider' ||
+                                            controller.requestType.value ==
+                                                'driver') {
                                           controller.secondStep(false);
                                           controller.firstStep(true);
-                                          Get.toNamed(Routes.check_order, arguments: {'request_type': controller.requestType.value});
+                                          Get.toNamed(Routes.check_order,
+                                              arguments: {
+                                                'request_type':
+                                                    controller.requestType.value
+                                              });
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
                                           elevation: 0,
-                                          fixedSize: Size(Get.width, Get.height * 0.06),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                          backgroundColor:const Color(0xFF3978EF)),
+                                          fixedSize: Size(
+                                              Get.width, Get.height * 0.06),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          backgroundColor:
+                                              const Color(0xFF3978EF)),
                                       child: Text(
                                         "Lanjutkan",
                                         style: GoogleFonts.readexPro(
@@ -471,13 +539,16 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                 child: Container(
                                   width: Get.width,
                                   height: Get.height * 0.07,
-                                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   decoration: BoxDecoration(
                                       color: Colors.grey.shade300,
                                       borderRadius: BorderRadius.circular(8)),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       const Icon(
                                         Icons.redeem_rounded,
@@ -509,7 +580,8 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                 child: Container(
                                   height: 50,
                                   width: Get.width,
-                                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
                                   decoration: BoxDecoration(
                                       color: Colors.grey.shade300,
                                       borderRadius: BorderRadius.circular(12)),
@@ -527,7 +599,9 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                         focusedBorder: InputBorder.none,
                                         enabledBorder: InputBorder.none,
                                         focusedErrorBorder: InputBorder.none,
-                                        contentPadding:const EdgeInsets.symmetric(horizontal: 10)),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 10)),
                                   ),
                                 ),
                               ),
@@ -536,18 +610,22 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                 child: Container(
                                   height: 50,
                                   width: Get.width,
-                                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
-                                      border: Border.all(width: 1, color: Colors.black54)),
+                                      border: Border.all(
+                                          width: 1, color: Colors.black54)),
                                   child: Row(
-                                    mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       SizedBox(
                                         height: 50,
                                         width: Get.width * 0.63,
                                         child: TextFormField(
-                                          style: GoogleFonts.readexPro(fontSize: 12),
+                                          style: GoogleFonts.readexPro(
+                                              fontSize: 12),
                                           controller: controller.edtDiscount,
                                           decoration: InputDecoration(
                                               hintText: 'Kode diskon',
@@ -559,19 +637,29 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                               errorBorder: InputBorder.none,
                                               focusedBorder: InputBorder.none,
                                               enabledBorder: InputBorder.none,
-                                              focusedErrorBorder: InputBorder.none,
-                                              contentPadding:const EdgeInsets.symmetric(horizontal: 10)),
+                                              focusedErrorBorder:
+                                                  InputBorder.none,
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10)),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.only(right: 6),
+                                        padding:
+                                            const EdgeInsets.only(right: 6),
                                         child: ElevatedButton(
                                             onPressed: () {},
                                             style: ElevatedButton.styleFrom(
                                                 elevation: 0,
-                                                fixedSize: Size(Get.width * 0.28, Get.height * 0.03),
-                                                shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(8)),
-                                                backgroundColor: const Color(0xFF3978EF)),
+                                                fixedSize: Size(
+                                                    Get.width * 0.28,
+                                                    Get.height * 0.03),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                backgroundColor:
+                                                    const Color(0xFF3978EF)),
                                             child: Text(
                                               "Gunakan",
                                               style: GoogleFonts.readexPro(
@@ -589,15 +677,18 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                                 child: Container(
                                   height: 50,
                                   width: Get.width,
-                                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       border: Border.all(
                                           width: 1,
                                           color: Colors.grey.shade300)),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Text(
                                         'Biaya',
@@ -622,20 +713,30 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                               Visibility(
                                 visible: controller.deliveryStep.value,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 10),
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        if (controller.requestType.value =='delivery') {
+                                        if (controller.requestType.value ==
+                                            'delivery') {
                                           controller.deliveryStep(false);
                                           controller.firstStep(true);
-                                          Get.toNamed(Routes.check_order, arguments: {'request_type': controller.requestType.value});
+                                          Get.toNamed(Routes.check_order,
+                                              arguments: {
+                                                'request_type':
+                                                    controller.requestType.value
+                                              });
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
                                           elevation: 0,
-                                          fixedSize: Size(Get.width, Get.height * 0.06),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                          backgroundColor: const Color(0xFF3978EF)),
+                                          fixedSize: Size(
+                                              Get.width, Get.height * 0.06),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          backgroundColor:
+                                              const Color(0xFF3978EF)),
                                       child: Text(
                                         "Lanjutkan",
                                         style: GoogleFonts.readexPro(
@@ -653,8 +754,7 @@ class PageLocationPicker extends GetView<ControllerLocationPicker>{
                 },
               )
             ],
-      )
-      ),
+          )),
     );
   }
 }

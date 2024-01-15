@@ -1,1 +1,1 @@
-class ApiLocationPicker{}
+class ApiLocationPicker {}

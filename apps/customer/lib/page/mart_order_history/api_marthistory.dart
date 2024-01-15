@@ -1,1 +1,1 @@
-class ApiMartHistory{}
+class ApiMartHistory {}

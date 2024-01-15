@@ -12,10 +12,10 @@ class Favorite {
   });
 
   factory Favorite.fromJson(Map<String, dynamic> json) => Favorite(
-    customerId: json["customer_id"],
-  );
+        customerId: json["customer_id"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "customer_id": customerId,
-  };
+        "customer_id": customerId,
+      };
 }

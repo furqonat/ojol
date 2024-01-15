@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:lugo_customer/page/mart_menu/api_martmenu.dart';
 
-class ControllerMartMenu extends GetxController{
+class ControllerMartMenu extends GetxController {
   final ApiMartMenu api;
   ControllerMartMenu({required this.api});
 

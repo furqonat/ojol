@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:lugo_customer/api/local_service.dart';
 import 'package:lugo_customer/response/user.dart';
 
-class ControllerUser extends GetxController{
+class ControllerUser extends GetxController {
   var user = UserResponse().obs;
 
   @override

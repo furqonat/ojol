@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:lugo_customer/page/saldo/api_saldo.dart';
 
-class ControllerSaldo extends GetxController{
+class ControllerSaldo extends GetxController {
   final ApiSaldo api;
   ControllerSaldo({required this.api});
 

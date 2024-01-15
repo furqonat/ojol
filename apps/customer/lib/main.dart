@@ -41,7 +41,7 @@ class AppView extends StatefulWidget {
   State<AppView> createState() => _AppViewState();
 }
 
-class _AppViewState extends State<AppView> with WidgetsBindingObserver{
+class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   String pageName = '';
 
   @override
@@ -72,43 +72,39 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver{
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     return ScreenUtilInit(
         designSize: const Size(393, 830),
         builder: (BuildContext context, Widget? child) => GetMaterialApp(
-          navigatorKey: Get.key,
-          title: 'Lugo Customer',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            platform: TargetPlatform.android,
-            brightness: Brightness.light,
-          ),
-          builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1)),
-              child: GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: ()=> FocusManager.instance.primaryFocus?.unfocus(),
-                child: Stack(
-                  children: [
-                    child!
-                  ],
-                ),
-              )
-          ),
-          getPages: RoutingPages.pages,
-          initialBinding: ControllerMain(),
-          initialRoute: Routes.INITIAL,
-          locale: const Locale('id', 'ID'),
-          routingCallback: (value){
-            if(value!= null){
-              updatePageRoute(value);
-            }
-          },
-          defaultTransition: Transition.cupertino,
-        )
-    );
+              navigatorKey: Get.key,
+              title: 'Lugo Customer',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                platform: TargetPlatform.android,
+                brightness: Brightness.light,
+              ),
+              builder: (context, child) => MediaQuery(
+                  data: MediaQuery.of(context)
+                      .copyWith(textScaler: const TextScaler.linear(1)),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                    child: Stack(
+                      children: [child!],
+                    ),
+                  )),
+              getPages: RoutingPages.pages,
+              initialBinding: ControllerMain(),
+              initialRoute: Routes.INITIAL,
+              locale: const Locale('id', 'ID'),
+              routingCallback: (value) {
+                if (value != null) {
+                  updatePageRoute(value);
+                }
+              },
+              defaultTransition: Transition.cupertino,
+            ));
   }
 }

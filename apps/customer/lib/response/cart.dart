@@ -21,18 +21,18 @@ class Cart {
   });
 
   factory Cart.fromJson(Map<String, dynamic> json) => Cart(
-    id: json["id"],
-    quantity: json["quantity"],
-    productId: json["product_id"],
-    cartId: json["cart_id"],
-    product: MerchantProduct.fromJson(json["product"]),
-  );
+        id: json["id"],
+        quantity: json["quantity"],
+        productId: json["product_id"],
+        cartId: json["cart_id"],
+        product: MerchantProduct.fromJson(json["product"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "quantity": quantity,
-    "product_id": productId,
-    "cart_id": cartId,
-    "product": product?.toJson(),
-  };
+        "id": id,
+        "quantity": quantity,
+        "product_id": productId,
+        "cart_id": cartId,
+        "product": product?.toJson(),
+      };
 }

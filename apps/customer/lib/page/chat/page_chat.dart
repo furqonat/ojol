@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lugo_customer/page/chat/controller_chat.dart';
 
-class PageChat extends GetView<ControllerChat>{
+class PageChat extends GetView<ControllerChat> {
   const PageChat({super.key});
 
   @override
@@ -15,18 +15,18 @@ class PageChat extends GetView<ControllerChat>{
         backgroundColor: const Color(0xFF3978EF),
         foregroundColor: Colors.white,
         title: Text(
-            'Username',
+          'Username',
           style: GoogleFonts.readexPro(
             fontSize: 18,
           ),
         ),
         leading: InkWell(
-          onTap: ()=> Get.back(),
+          onTap: () => Get.back(),
           child: const Icon(Icons.chevron_left_rounded),
         ),
         actions: [
           InkWell(
-            onTap: (){},
+            onTap: () {},
             child: const SizedBox(
               width: 55,
               height: 55,
@@ -43,33 +43,42 @@ class PageChat extends GetView<ControllerChat>{
               itemCount: controller.samplechat.length,
               itemBuilder: (context, index) {
                 return Column(
-                  crossAxisAlignment: controller.samplechat[index]['user']! == 'user_1'
-                      ? CrossAxisAlignment.end
-                      : CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      controller.samplechat[index]['user']! == 'user_1'
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
-                      margin: EdgeInsets.fromLTRB(8, 8, 8, controller.samplechat[index]['attachment']! != '' ? 0 : 8),
+                      margin: EdgeInsets.fromLTRB(
+                          8,
+                          8,
+                          8,
+                          controller.samplechat[index]['attachment']! != ''
+                              ? 0
+                              : 8),
                       decoration: BoxDecoration(
                         color: controller.samplechat[index]['user']! == 'user_1'
                             ? const Color(0xFF3978EF)
                             : const Color(0xFF3978EF).withOpacity(0.6),
-                        borderRadius: controller.samplechat[index]['user']! == 'user_1'
-                            ? const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                          bottomLeft: Radius.circular(15),
-                        )
-                            : const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                          bottomRight: Radius.circular(15),
-                        ),
+                        borderRadius:
+                            controller.samplechat[index]['user']! == 'user_1'
+                                ? const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                    bottomLeft: Radius.circular(15),
+                                  )
+                                : const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                    bottomRight: Radius.circular(15),
+                                  ),
                       ),
                       child: Column(
-                        crossAxisAlignment: controller.samplechat[index]['user']! == 'user_1'
-                            ? CrossAxisAlignment.end
-                            : CrossAxisAlignment.start,
+                        crossAxisAlignment:
+                            controller.samplechat[index]['user']! == 'user_1'
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
                             controller.samplechat[index]['msg']!,
@@ -90,46 +99,49 @@ class PageChat extends GetView<ControllerChat>{
                       ),
                     ),
                     Visibility(
-                        visible: controller.samplechat[index]['attachment']! != '' ? true : false,
+                        visible:
+                            controller.samplechat[index]['attachment']! != ''
+                                ? true
+                                : false,
                         child: Padding(
                           padding: const EdgeInsets.all(8),
                           child: Card(
                             elevation: 5,
                             shape: RoundedRectangleBorder(
-                                borderRadius: controller.samplechat[index]['user']! == 'user_1'
+                                borderRadius: controller.samplechat[index]
+                                            ['user']! ==
+                                        'user_1'
                                     ? const BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                  bottomLeft: Radius.circular(15),
-                                )
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15),
+                                        bottomLeft: Radius.circular(15),
+                                      )
                                     : const BorderRadius.only(
-                                  topLeft: Radius.circular(15),
-                                  topRight: Radius.circular(15),
-                                  bottomRight: Radius.circular(15),
-                                )
-                            ),
+                                        topLeft: Radius.circular(15),
+                                        topRight: Radius.circular(15),
+                                        bottomRight: Radius.circular(15),
+                                      )),
                             child: ClipRRect(
-                              borderRadius: controller.samplechat[index]['user']! == 'user_1'
+                              borderRadius: controller.samplechat[index]
+                                          ['user']! ==
+                                      'user_1'
                                   ? const BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                                bottomLeft: Radius.circular(15),
-                              )
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15),
+                                      bottomLeft: Radius.circular(15),
+                                    )
                                   : const BorderRadius.only(
-                                topLeft: Radius.circular(15),
-                                topRight: Radius.circular(15),
-                                bottomRight: Radius.circular(15),
-                              ),
+                                      topLeft: Radius.circular(15),
+                                      topRight: Radius.circular(15),
+                                      bottomRight: Radius.circular(15),
+                                    ),
                               child: Image(
                                   width: Get.width * 0.7,
-                                  image: AssetImage(
-                                      controller.samplechat[index]['attachment']!
-                                  )
-                              ),
+                                  image: AssetImage(controller.samplechat[index]
+                                      ['attachment']!)),
                             ),
                           ),
-                        )
-                    )
+                        ))
                   ],
                 );
               },
@@ -152,16 +164,11 @@ class PageChat extends GetView<ControllerChat>{
                         height: 50,
                         child: TextFormField(
                           controller: controller.edtChat,
-                          style: GoogleFonts.readexPro(
-                              fontSize: 14
-                          ),
+                          style: GoogleFonts.readexPro(fontSize: 14),
                           decoration: InputDecoration(
                               hintText: 'Tulis Pesan',
                               border: InputBorder.none,
-                              hintStyle: GoogleFonts.readexPro(
-                                  fontSize: 14
-                              )
-                          ),
+                              hintStyle: GoogleFonts.readexPro(fontSize: 14)),
                         ),
                       ),
                       const Spacer(),
@@ -169,13 +176,13 @@ class PageChat extends GetView<ControllerChat>{
                         width: 50,
                         height: 50,
                         child: InkWell(
-                          onTap: (){},
+                          onTap: () {},
                           child: Card(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100)
-                            ),
+                                borderRadius: BorderRadius.circular(100)),
                             color: const Color(0xFF3978EF),
-                            child: const Icon(Icons.camera_enhance_rounded, color: Colors.white),
+                            child: const Icon(Icons.camera_enhance_rounded,
+                                color: Colors.white),
                           ),
                         ),
                       ),
@@ -183,13 +190,13 @@ class PageChat extends GetView<ControllerChat>{
                         width: 50,
                         height: 50,
                         child: InkWell(
-                          onTap: (){},
+                          onTap: () {},
                           child: Card(
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100)
-                            ),
+                                borderRadius: BorderRadius.circular(100)),
                             color: const Color(0xFF3978EF),
-                            child: const Icon(Icons.send_rounded, color: Colors.white),
+                            child: const Icon(Icons.send_rounded,
+                                color: Colors.white),
                           ),
                         ),
                       ),

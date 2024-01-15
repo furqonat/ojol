@@ -1,1 +1,1 @@
-class ApiCheckOrder{}
+class ApiCheckOrder {}

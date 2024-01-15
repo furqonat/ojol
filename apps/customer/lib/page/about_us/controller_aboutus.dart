@@ -1,3 +1,3 @@
 import 'package:get/get.dart';
 
-class ControllerAboutUs extends GetxController{}
+class ControllerAboutUs extends GetxController {}

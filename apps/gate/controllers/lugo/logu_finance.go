@@ -312,7 +312,7 @@ func (c Controller) DriverRequestWithdraw(ctx *gin.Context) {
 }
 
 func (c Controller) MerchantTopUp(ctx *gin.Context) {
-	merchatId := ctx.Query(utils.UID)
+	merchatId := ctx.GetString(utils.UID)
 	model := Withdraw{}
 	if err := ctx.BindJSON(&model); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})

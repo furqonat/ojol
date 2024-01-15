@@ -61,157 +61,123 @@ import '../page/room_chat/page_rromchat.dart';
 import '../page/running_order/binding_running.dart';
 import '../page/running_order/page_running.dart';
 
-class RoutingPages{
+class RoutingPages {
   static final pages = [
     GetPage(
         name: Routes.INITIAL,
-        page: ()=> const PageSplash(),
-        binding: BindingSplash()
-    ),
+        page: () => const PageSplash(),
+        binding: BindingSplash()),
     GetPage(
         name: Routes.auth,
-        page: ()=> const PageAuth(),
-        binding: BindingAuth()
-    ),
+        page: () => const PageAuth(),
+        binding: BindingAuth()),
     GetPage(
-        name: Routes.otp,
-        page: ()=> const PageOtp(),
-        binding: BindingOtp()
-    ),
+        name: Routes.otp, page: () => const PageOtp(), binding: BindingOtp()),
     GetPage(
-        name: Routes.pin,
-        page: ()=> const PagePin(),
-        binding: BindingPin()
-    ),
+        name: Routes.pin, page: () => const PagePin(), binding: BindingPin()),
     GetPage(
         name: Routes.saldo,
-        page: ()=> const PageSaldo(),
-        binding: BindingSaldo()
-    ),
+        page: () => const PageSaldo(),
+        binding: BindingSaldo()),
     GetPage(
         name: Routes.point,
-        page: ()=> const PagePoint(),
-        binding: BindingPoint()
-    ),
+        page: () => const PagePoint(),
+        binding: BindingPoint()),
     GetPage(
         name: Routes.detail_point,
-        page: ()=> const PageDetailPoint(),
-        binding: BindingDetailPoint()
-    ),
+        page: () => const PageDetailPoint(),
+        binding: BindingDetailPoint()),
     GetPage(
         name: Routes.home,
-        page: ()=> const PageHome(),
-        binding: BindingHome()
-    ),
+        page: () => const PageHome(),
+        binding: BindingHome()),
     GetPage(
         name: Routes.main,
-        page: ()=> const PageMain(),
-        binding: BindingMain()
-    ),
+        page: () => const PageMain(),
+        binding: BindingMain()),
     GetPage(
         name: Routes.location_picker,
-        page: ()=> const PageLocationPicker(),
-        binding: BindingLocationPicker()
-    ),
+        page: () => const PageLocationPicker(),
+        binding: BindingLocationPicker()),
     GetPage(
         name: Routes.check_order,
-        page: ()=> const PageCheckOrder(),
-        binding: BindingCheckOrder()
-    ),
+        page: () => const PageCheckOrder(),
+        binding: BindingCheckOrder()),
     GetPage(
         name: Routes.order_finish,
-        page: ()=> const PageOrderFinish(),
-        binding: BindingOrderFinish()
-    ),
+        page: () => const PageOrderFinish(),
+        binding: BindingOrderFinish()),
     GetPage(
         name: Routes.delivery_finish,
-        page: ()=> const PageDelivFinish(),
-        binding: BindingDelivFinish()
-    ),
+        page: () => const PageDelivFinish(),
+        binding: BindingDelivFinish()),
     GetPage(
         name: Routes.room_chat,
-        page: ()=> const PageRoomChat(),
-        binding: BindingRoomChat()
-    ),
+        page: () => const PageRoomChat(),
+        binding: BindingRoomChat()),
     GetPage(
         name: Routes.chat,
-        page: ()=> const PageChat(),
-        binding: BindingChat()
-    ),
+        page: () => const PageChat(),
+        binding: BindingChat()),
     GetPage(
         name: Routes.history_order,
-        page: ()=> const PageHistory(),
-        binding: BindingHistory()
-    ),
+        page: () => const PageHistory(),
+        binding: BindingHistory()),
     GetPage(
         name: Routes.running_order,
-        page: ()=> const PageRunning(),
-        binding: BindingRunning()
-    ),
+        page: () => const PageRunning(),
+        binding: BindingRunning()),
     GetPage(
         name: Routes.food,
-        page: ()=> const PageFood(),
-        binding: BindingFood()
-    ),
+        page: () => const PageFood(),
+        binding: BindingFood()),
     GetPage(
         name: Routes.food_menu,
-        page: ()=> const PageFoodMenu(),
-        binding: BindingFoodMenu()
-    ),
+        page: () => const PageFoodMenu(),
+        binding: BindingFoodMenu()),
     GetPage(
         name: Routes.food_pay,
-        page: ()=> const PageFoodPay(),
-        binding: BindingFoodPay()
-    ),
+        page: () => const PageFoodPay(),
+        binding: BindingFoodPay()),
     GetPage(
         name: Routes.food_finish,
-        page: ()=> const PageFoodFinish(),
-        binding: BindingFoodFinish()
-    ),
+        page: () => const PageFoodFinish(),
+        binding: BindingFoodFinish()),
     GetPage(
         name: Routes.profile,
-        page: ()=> const PageProfile(),
-        binding: BindingProfile()
-    ),
+        page: () => const PageProfile(),
+        binding: BindingProfile()),
     GetPage(
         name: Routes.history_food,
-        page: ()=> const PageHistoryFood(),
-        binding: BindingHistoryFood()
-    ),
+        page: () => const PageHistoryFood(),
+        binding: BindingHistoryFood()),
     GetPage(
         name: Routes.edit_profile,
-        page: ()=> const PageEditProfile(),
-        binding: BindingEditProfile()
-    ),
+        page: () => const PageEditProfile(),
+        binding: BindingEditProfile()),
     GetPage(
         name: Routes.about_us,
-        page: ()=> const PageAboutUs(),
-        binding: BindingAboutUs()
-    ),
+        page: () => const PageAboutUs(),
+        binding: BindingAboutUs()),
     GetPage(
         name: Routes.privacy_term,
-        page: ()=> const PagePrivacyTerm(),
-        binding: BindingPrivacyTerm()
-    ),
+        page: () => const PagePrivacyTerm(),
+        binding: BindingPrivacyTerm()),
     GetPage(
         name: Routes.mart,
-        page: ()=> const PageMart(),
-        binding: BindingMart()
-    ),
+        page: () => const PageMart(),
+        binding: BindingMart()),
     GetPage(
         name: Routes.mart_menu,
-        page: ()=> const PageMartMenu(),
-        binding: BindingMartMenu()
-    ),
+        page: () => const PageMartMenu(),
+        binding: BindingMartMenu()),
     GetPage(
         name: Routes.mart_pay,
-        page: ()=> const PageMartPay(),
-        binding: BindingMartPay()
-    ),
+        page: () => const PageMartPay(),
+        binding: BindingMartPay()),
     GetPage(
         name: Routes.history_mart,
-        page: ()=> const PageMartHistory(),
-        binding: BindingMartHistory()
-    ),
+        page: () => const PageMartHistory(),
+        binding: BindingMartHistory()),
   ];
 }
