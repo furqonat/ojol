@@ -80,7 +80,7 @@ func (trxRouter TransactionRouter) FinishOrder(ctx *gin.Context) {
 
 func (trxRouter TransactionRouter) GetMerchantTrx(ctx *gin.Context) {
 	trxIn := ctx.Query("trxIn")
-	merchantId := ctx.GetString(utils.UID)
+	merchantId := ctx.Query("merchantId")
 	if trxIn == "day" {
 		db, err := trxRouter.service.GetTrxInDay(merchantId)
 		if err != nil {
@@ -90,6 +90,7 @@ func (trxRouter TransactionRouter) GetMerchantTrx(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusOK, db)
+		return
 	}
 	if trxIn == "week" {
 		db, err := trxRouter.service.GetTrxInWeek(merchantId)
@@ -100,6 +101,7 @@ func (trxRouter TransactionRouter) GetMerchantTrx(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusOK, db)
+		return
 	}
 	db, err := trxRouter.service.GetTrxInMonth(merchantId)
 	if err != nil {
@@ -123,6 +125,7 @@ func (trxRouter TransactionRouter) GetDriverTrx(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusOK, db)
+		return
 	}
 	if trxIn == "week" {
 		db, err := trxRouter.service.GetDriverTrxInWeek(driverId)
@@ -133,6 +136,7 @@ func (trxRouter TransactionRouter) GetDriverTrx(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusOK, db)
+		return
 	}
 	db, err := trxRouter.service.GetDriverTrxInMonth(driverId)
 	if err != nil {

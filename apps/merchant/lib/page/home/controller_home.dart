@@ -21,6 +21,7 @@ class ControllerHome extends GetxController {
     totalDone: 0,
     totalIncome: 0,
   ).obs;
+  final loadingDana = false.obs;
 
   Future<void> handleGetMerchant() async {
     final token = await _fbAuth.currentUser?.getIdToken();
@@ -34,7 +35,6 @@ class ControllerHome extends GetxController {
   Future<void> handleGetSell() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getMerchantSellInDay(token!);
-    print("sell income => ${resp.totalIncome}");
     sell.value = resp;
   }
 
@@ -42,6 +42,7 @@ class ControllerHome extends GetxController {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.generateSignInUrl(token: token!);
     final url = Uri.parse(resp['signInUrl']);
+
     if (!await launchUrl(url)) {
       Fluttertoast.showToast(msg: "unable open url");
     }
@@ -50,17 +51,23 @@ class ControllerHome extends GetxController {
   handleAssignDeviceToken() async {
     final deviceToken = await FirebaseMessaging.instance.getToken();
     final token = await _fbAuth.currentUser?.getIdToken();
-    await api.applyDeviceToken(token: token!, deviceToken: deviceToken!);
+    final resp = await api.applyDeviceToken(
+      token: token!,
+      deviceToken: deviceToken!,
+    );
+    print(resp.message);
   }
 
   handleGetDanaProfile() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getDanaProfile(token: token!);
     danaProfile.value = resp;
+    loadingDana.value = false;
   }
 
   @override
   void onReady() {
+    loadingDana.value = true;
     handleGetMerchant();
     handleGetSell();
 
