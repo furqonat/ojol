@@ -157,25 +157,27 @@ model driver_wallet {
 }
 
 model driver_trx {
-  id         String     @id @default(cuid())
-  trx_type   trx_type
-  created_at DateTime   @default(now())
-  payment_at DateTime?
-  status     trx_status @default(CREATED)
-  driver     driver     @relation(fields: [driver_id], references: [id], onDelete: Cascade)
-  driver_id  String
-  amount     Int
+  id           String     @id @default(cuid())
+  trx_type     trx_type
+  created_at   DateTime   @default(now())
+  payment_at   DateTime?
+  status       trx_status @default(CREATED)
+  driver       driver     @relation(fields: [driver_id], references: [id], onDelete: Cascade)
+  driver_id    String
+  amount       Int
+  checkout_url String?
 }
 
 model merchant_trx {
-  id          String     @id @default(cuid())
-  trx_type    trx_type
-  created_at  DateTime   @default(now())
-  payment_at  DateTime?
-  status      trx_status @default(CREATED)
-  merchant    merchant   @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
-  merchant_id String
-  amount      Int
+  id           String     @id @default(cuid())
+  trx_type     trx_type
+  created_at   DateTime   @default(now())
+  payment_at   DateTime?
+  status       trx_status @default(CREATED)
+  merchant     merchant   @relation(fields: [merchant_id], references: [id], onDelete: Cascade)
+  merchant_id  String
+  amount       Int
+  checkout_url String?
 }
 
 model merchant_wallet {
