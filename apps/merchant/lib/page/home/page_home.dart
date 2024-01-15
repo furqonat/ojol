@@ -348,7 +348,7 @@ class PageHome extends GetView<ControllerHome> {
     return Column(
       children: [
         Text(
-          intlNumberCurrency(balance.value),
+          intlNumberCurrency(int.parse(balance.value)),
           style: GoogleFonts.readexPro(
             fontSize: 24,
           ),
