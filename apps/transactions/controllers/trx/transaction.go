@@ -80,7 +80,7 @@ func (trxRouter TransactionRouter) FinishOrder(ctx *gin.Context) {
 
 func (trxRouter TransactionRouter) GetMerchantTrx(ctx *gin.Context) {
 	trxIn := ctx.Query("trxIn")
-	merchantId := ctx.Query("merchantId")
+	merchantId := ctx.GetString(utils.UID)
 	if trxIn == "day" {
 		db, err := trxRouter.service.GetTrxInDay(merchantId)
 		if err != nil {

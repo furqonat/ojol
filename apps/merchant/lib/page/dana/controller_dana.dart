@@ -32,13 +32,14 @@ class ControllerDana extends GetxController {
     phoneNumber.value = phone.value;
   }
 
-  handleGetTrx([trxIn = "day"]) async {
+  handleGetTrx([trxIn = "month"]) async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getMerchantTransactions(
       token: token!,
       trxIn: trxIn,
     );
     transaction.value = resp;
+    print(transaction.length);
   }
 
   @override
