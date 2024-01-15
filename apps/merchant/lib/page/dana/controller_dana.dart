@@ -31,8 +31,15 @@ class ControllerDana extends GetxController {
     phoneNumber.value = phone.value;
   }
 
+  handleGetTrx() async {
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final resp = await api.getMerchantTransactions(token: token!);
+    print(resp);
+  }
+
   @override
   void onInit() {
+    handleGetTrx();
     handleGetDanaProfile();
     super.onInit();
   }

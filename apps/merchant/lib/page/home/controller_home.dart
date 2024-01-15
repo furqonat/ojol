@@ -34,6 +34,7 @@ class ControllerHome extends GetxController {
   Future<void> handleGetSell() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getMerchantSellInDay(token!);
+    print("sell income => ${resp.totalIncome}");
     sell.value = resp;
   }
 

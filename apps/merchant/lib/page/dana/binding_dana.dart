@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:lugo_marchant/page/dana/api_dana.dart';
 import 'package:lugo_marchant/page/dana/controller_dana.dart';
 import 'package:rest_client/gate_client.dart';
+import 'package:rest_client/transaction_client.dart';
 
 class BindingDana implements Bindings {
   @override
@@ -12,6 +13,7 @@ class BindingDana implements Bindings {
       () => ControllerDana(
         api: ApiDana(
           gateClient: GateClient(dio),
+          trxClient: TransactionClient(dio),
         ),
       ),
     );
