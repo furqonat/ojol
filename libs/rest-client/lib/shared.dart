@@ -33,7 +33,7 @@ class Transaction {
   final String id;
   final String trxType;
   final String createdAt;
-  final String paymentAt;
+  final String? paymentAt;
   final String status;
   final int amount;
 
@@ -41,7 +41,7 @@ class Transaction {
     required this.id,
     required this.trxType,
     required this.createdAt,
-    required this.paymentAt,
+    this.paymentAt,
     required this.status,
     required this.amount,
   });
