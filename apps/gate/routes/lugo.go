@@ -18,8 +18,6 @@ func (s LugoRoutes) Setup() {
 	s.logger.Info("Setting up routes")
 	api := s.handler.Gin.Group("/lugo").Use(
 		s.rateLimit.Handle(),
-	).Use(
-		s.middleware.HandleAuthWithRoles(utils.USER, utils.DRIVER, utils.MERCHANT),
 	)
 	{
 		api.GET("/services", s.controller.GetAvailableService)
