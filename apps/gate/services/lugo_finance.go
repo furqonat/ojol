@@ -12,14 +12,14 @@ import (
 )
 
 func (u LugoService) DriverTopUp(driverId string, amount int) (*utils.CreateOrder, error) {
-	trx, errTrx := u.db.DriverTrx.FindFirst(
+	trx, _ := u.db.DriverTrx.FindFirst(
 		db.DriverTrx.DriverID.Equals(driverId),
 		db.DriverTrx.Status.Equals(db.TrxStatusProcess),
 		db.DriverTrx.TrxType.Equals(db.TrxTypeTopup),
 	).Exec(context.Background())
-	if errTrx != nil {
-		return nil, errTrx
-	}
+	// if errTrx != nil {
+	// 	return nil, errTrx
+	// }
 
 	if trx != nil {
 		checkoutUrl, ok := trx.CheckoutURL()
@@ -72,14 +72,14 @@ func (u LugoService) DriverTopUp(driverId string, amount int) (*utils.CreateOrde
 }
 
 func (u LugoService) MerchantTopUp(merchantId string, amount int) (*utils.CreateOrder, error) {
-	trx, errTrx := u.db.MerchantTrx.FindFirst(
+	trx, _ := u.db.MerchantTrx.FindFirst(
 		db.MerchantTrx.MerchantID.Equals(merchantId),
 		db.MerchantTrx.Status.Equals(db.TrxStatusProcess),
 		db.MerchantTrx.TrxType.Equals(db.TrxTypeTopup),
 	).Exec(context.Background())
-	if errTrx != nil {
-		return nil, errTrx
-	}
+	// if errTrx == nil {
+	// 	return nil, errTrx
+	// }
 
 	if trx != nil {
 		checkoutUrl, ok := trx.CheckoutURL()
