@@ -100,36 +100,43 @@ class PageDana extends GetView<ControllerDana> {
                             Border.all(color: Colors.grey.shade300, width: 1)),
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: DropdownButton<String>(
-                      elevation: 2,
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: Color(0xFF95A1AC),
-                        size: 24,
-                      ),
-                      value: controller.orderValue.value,
-                      borderRadius: BorderRadius.circular(8),
-                      underline: const SizedBox(),
-                      items: controller.orderList.map((element) {
-                        return DropdownMenuItem(
-                          value: element,
-                          child: Text(
-                            element,
-                            style: GoogleFonts.poppins(
-                              fontSize: 12,
+                        elevation: 2,
+                        icon: const Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: Color(0xFF95A1AC),
+                          size: 24,
+                        ),
+                        value: controller.orderValue.value,
+                        borderRadius: BorderRadius.circular(8),
+                        underline: const SizedBox(),
+                        items: controller.orderList.map((element) {
+                          return DropdownMenuItem(
+                            value: element,
+                            child: Text(
+                              element,
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                              ),
                             ),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? value) =>
-                          controller.orderValue(value),
-                    ),
+                          );
+                        }).toList(),
+                        onChanged: (String? value) {
+                          controller.orderValue(value);
+                          if (value == "Bulan Ini") {
+                            controller.handleGetTrx("month");
+                          } else if (value == "Minggu Ini") {
+                            controller.handleGetTrx("week");
+                          } else {
+                            controller.handleGetTrx("day");
+                          }
+                        }),
                   )
                 ],
               ),
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: 10,
+                itemCount: controller.transaction.length,
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) => Padding(
                   padding: const EdgeInsets.only(bottom: 15),
@@ -152,7 +159,7 @@ class PageDana extends GetView<ControllerDana> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "Tipe Transaksi",
+                          controller.transaction[index].trxType,
                           style: GoogleFonts.readexPro(
                               fontSize: 16,
                               color: const Color(0xFF14181B),

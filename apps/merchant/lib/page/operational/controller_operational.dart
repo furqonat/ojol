@@ -3,15 +3,15 @@ import 'package:get/get.dart';
 import 'api_operational.dart';
 
 class ControllerOperational extends GetxController {
-  final ApiOperational api;
   ControllerOperational({required this.api});
+  final ApiOperational api;
 
   var shopStatus = false.obs;
 
   Rx<TimeOfDay> timeOpen = TimeOfDay.now().obs;
   Rx<TimeOfDay> timeClose = TimeOfDay.now().obs;
 
-  static String getHari(int index) {
+  static String getDay(int index) {
     switch (index) {
       case 0:
         return 'Senin';
@@ -33,7 +33,7 @@ class ControllerOperational extends GetxController {
   }
 
   final List<Map<String, dynamic>> aInput = List.generate(7, (i) {
-    final hari = getHari(i);
+    final hari = getDay(i);
     return {
       'Hari': hari,
       'Jam buka': "hh:mm".obs,

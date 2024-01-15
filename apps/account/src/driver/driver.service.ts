@@ -71,7 +71,7 @@ export class DriverService {
         },
       })
       await this.firebase.firestore.collection('drivers').doc(driverId).create({
-        driverId: driverId,
+        id: driverId,
         isOnline: createDetail.is_online,
         address: createDetail.driver_details.address,
         latitude: createDetail.driver_details.current_lat,

@@ -151,25 +151,30 @@ class PageHome extends GetView<ControllerHome> {
                         Obx(
                           () => GestureDetector(
                             onTap: () => Get.toNamed(Routes.danaBalance),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Image(
-                                  width: 95,
-                                  image: AssetImage(
-                                    'assets/images/1699744330264.png',
+                            child: controller.loadingDana.value
+                                ? const CircularProgressIndicator()
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Image(
+                                        width: 95,
+                                        image: AssetImage(
+                                          'assets/images/1699744330264.png',
+                                        ),
+                                      ),
+                                      controller.merchant.value.danaToken ==
+                                              null
+                                          ? ElevatedButton(
+                                              onPressed: () {
+                                                controller
+                                                    .handleGenerateSignInUrl();
+                                              },
+                                              child:
+                                                  const Text("Hubungkan Akun"),
+                                            )
+                                          : displayDanaBalance(),
+                                    ],
                                   ),
-                                ),
-                                controller.merchant.value.danaToken == null
-                                    ? ElevatedButton(
-                                        onPressed: () {
-                                          controller.handleGenerateSignInUrl();
-                                        },
-                                        child: const Text("Hubungkan Akun"),
-                                      )
-                                    : displayDanaBalance(),
-                              ],
-                            ),
                           ),
                         ),
                         Container(
@@ -348,7 +353,7 @@ class PageHome extends GetView<ControllerHome> {
     return Column(
       children: [
         Text(
-          intlNumberCurrency(balance.value),
+          intlNumberCurrency(int.parse(balance.value)),
           style: GoogleFonts.readexPro(
             fontSize: 24,
           ),
