@@ -226,3 +226,61 @@ Authorization: Bearer ...
   }
 ]
 ```
+
+## Mendapatkan banner image
+
+Berikut adalah cara penggunaan
+
+### Contoh Request
+
+```http
+GET http://localhost:3000/lugo/banner
+Content-Type: application/json
+Authorization: Bearer ....
+```
+
+### Contoh Reponse
+
+```json
+[
+  {
+    "id": "clquqbgf90000122wjcveawb9",
+    "position": "TOP",
+    "url": "https://api.gentatechnology.com/gate/portal/banner/clquqbgf90000122wjcveawb9",
+    "description": "lorem",
+    "status": false,
+    "for_app": true,
+    "images": [
+      {
+        "id": "clr49o59s0004p180k1b5yw0b",
+        "link": "https://firebasestorage.googleapis.com/v0/b/lumajanglugo.appspot.com/o/images%2FScreenshot%20from%202024-01-07%2009-11-28.png?alt=media\u0026token=aee8a227-c649-49ac-abbf-aa7359b7bed4",
+        "banner_id": "clquqbgf90000122wjcveawb9"
+      }
+    ]
+  },
+  {
+    "id": "clr21uq1v0000t4pp4b3ng2m7",
+    "position": "TOP",
+    "status": false,
+    "for_app": true,
+    "images": [
+      {
+        "id": "clr49o59s0004p180k1b5yw0b",
+        "link": "https://firebasestorage.googleapis.com/v0/b/lumajanglugo.appspot.com/o/images%2FScreenshot%20from%202024-01-07%2009-11-28.png?alt=media\u0026token=aee8a227-c649-49ac-abbf-aa7359b7bed4",
+        "banner_id": "clquqbgf90000122wjcveawb9"
+      }
+    ]
+  }
+]
+```
+
+### Table Response
+
+| Query      | Type           | Description                                                                         |
+| ---------- | -------------- | ----------------------------------------------------------------------------------- |
+| `id`       | `String`       | Id banner                                                                           |
+| `position` | `String`       | posisi banner atas atau bawah (`TOP` or `BOTTOM`)                                   |
+| `status`   | `boolean`      | Mendapatkan detail kendaraan driver                                                 |
+| `for_app`  | `boolean`      | apabila `true` digunakan untuk aplikasi `customer` apabila `false` untuk `merchant` |
+| `images`   | `string array` |                                                                                     |
+| `link`     | `String`       | Gambar banner                                                                       |
