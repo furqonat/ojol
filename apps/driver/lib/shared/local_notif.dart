@@ -16,7 +16,7 @@ class LocalNotificationService {
     // TODO ADD IOS CONFIG HERE
     // =======================
 
-    final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+    const InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
     await _notificationPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (payload) {

@@ -34,7 +34,7 @@ class ControllerNotification extends GetxController {
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       log("onMessageOpenedApp");
       try {
-        Get.toNamed(Routes.bottom_nav);
+        Get.toNamed(Routes.main);
       } catch (e) {
         log("error $e");
       }

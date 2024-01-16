@@ -1,6 +1,5 @@
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'controller_orderfinish.dart';
@@ -92,7 +91,7 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                         color: const Color(0xFF3978EF)
                     ),
                     children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: 'ID Transaksi'
                       ),
                       TextSpan(
@@ -116,7 +115,7 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                         color: const Color(0xFF3978EF)
                     ),
                     children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: 'ID Order'
                       ),
                       TextSpan(
@@ -140,7 +139,7 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                         color: const Color(0xFF3978EF)
                     ),
                     children: <TextSpan>[
-                      TextSpan(
+                      const TextSpan(
                           text: 'Pembayaran'
                       ),
                       TextSpan(
