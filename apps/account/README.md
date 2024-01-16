@@ -91,6 +91,56 @@ Content-Type: application/json
 | `badge`         | `boolean` | Mendapatkan badge driver            |
 | `driver_type`   | `boolean` | Mendapatkan detail type driver      |
 
+
+
+## Mendapatkan Akun Detail Driver
+
+Untuk mendapatkan detail pengguna api account menggunakan query parameter pada url. Setiap request harus menyertakan `Bearer` token. Berikut adalah cara mendapatkan detail pengguna:
+
+### Contoh Request
+
+```http
+GET https://account.gentatechnology.com/<driverId>/?id=true&name=true&email=true
+Authorization: Bearer .....
+Content-Type: application/json
+```
+
+### Contoh Response
+
+```json
+{
+  "id": "......",
+  "name": "....",
+  "email": "...."
+}
+```
+
+### Table Query Parameter
+
+| Query            | Type                  | Description                                    |
+| ---------------- | --------------------- | ---------------------------------------------- |
+| `id`             | `boolean`             | Mendapatkan user id                            |
+| `name`           | `boolean`             | Mendapatkan nama user                          |
+| `email`          | `boolean`             | Mendapatkan email user                         |
+| `phone`          | `boolean`             | Mendapatkan nomor telepon user                 |
+| `avatar`         | `boolean`             | Mendapatkan avatar user                        |
+| `status`         | `boolean`             | Mendapatkan status pengguna                    |
+| `driver_details` | `boolean` or `object` | mendapatkan driver detail (hanya untuk driver) |
+
+### Table Query Parameter `driver_details`
+
+| Query           | Type      | Description                         |
+| --------------- | --------- | ----------------------------------- |
+| `id`            | `boolean` | Mendapatkan user id                 |
+| `adrress`       | `boolean` | Mendapatkan alamat user             |
+| `vehicle`       | `boolean` | Mendapatkan detail kendaraan driver |
+| `driver_id`     | `boolean` | Mendapatkan id driver               |
+| `license_image` | `boolean` | Mendapatkan gambar `SIM`            |
+| `id_card_image` | `boolean` | Mendapatkan gamnar `KTP`            |
+| `badge`         | `boolean` | Mendapatkan badge driver            |
+| `driver_type`   | `boolean` | Mendapatkan detail type driver      |
+
+
 ## Simpan Device Token
 
 Api ini digunakan untuk menyimpan device token firebase ke database. Device token digunakan untuk mengirim push notifikasi ke hp
