@@ -3,21 +3,24 @@ import 'package:lugo_driver/api/api_service.dart';
 class ApiFormJoin{
 
   Future<dynamic> joinLugo({
+    required String driver_type,
     required String address,
     required String license_image,
     required String id_card_image,
     required String vehicle_type,
     required String vehicle_brand,
-    required int vehicle_year,
+    required String vehicle_year,
     required String vehicle_image,
     required String vehicle_registration,
     required String vehicle_rn,
     required String referal,
+    required String name,
     required String token,
   })async{
 
     final body = {
       "details": {
+        "driver_type": driver_type,
         "address": address,
         "license_image": license_image,
         "id_card_image": id_card_image,
@@ -32,10 +35,13 @@ class ApiFormJoin{
           }
         }
       },
-      "referal": referal
+      "referal": referal,
+      "name" : name
     };
 
-    var r = await ApiService().apiJSONPostWithFirebaseToken('account/driver', body, token);
+    print(body);
+
+    var r = await ApiService().apiJSONPostWithFirebaseToken('account', 'driver', body, token);
     return r;
   }
 
@@ -48,7 +54,7 @@ class ApiFormJoin{
       "sample" : sample
     };
 
-    var r = await ApiService().apiJSONPostWithFirebaseToken('auth/driver', body, token);
+    var r = await ApiService().apiJSONPostWithFirebaseToken('auth', 'driver', body, token);
     return r;
   }
 

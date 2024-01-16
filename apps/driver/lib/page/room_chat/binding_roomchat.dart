@@ -1,16 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'api_roomchat.dart';
+import 'controller_roomchat.dart';
 
-class ControllerRoomChat extends GetxController{
-  final ApiRoomChat api;
-  ControllerRoomChat({required this.api});
-
-  var edtSearch = TextEditingController();
-
+class BindingRoomChat implements Bindings{
   @override
-  void dispose() {
-    edtSearch.dispose();
-    super.dispose();
+  void dependencies() {
+    Get.lazyPut<ControllerRoomChat>(() => ControllerRoomChat(api: ApiRoomChat()));
   }
 }

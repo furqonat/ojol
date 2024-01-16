@@ -7,9 +7,9 @@ import '../route/route_name.dart';
 handleNotificationRoute(String screen, int? id, {int? secondId}) {
   log("disini $screen");
   switch (screen) {
-  // Travel Screen
+    // Travel Screen
     case 'detail_travel':
-      Get.toNamed(Routes.bottom_nav, arguments: id);
+      Get.toNamed(Routes.main, arguments: id);
       break;
     default:
   }
@@ -27,4 +27,3 @@ convertToIdr(dynamic number, int decimalDigit) {
   );
   return currencyFormatter.format(number);
 }
-

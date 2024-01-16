@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:lugo_driver/api/local_serivce.dart';
 import 'package:lugo_driver/route/route_name.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
 import 'api_form.dart';
 
 class ControllerFormJoin extends GetxController {
@@ -79,11 +77,6 @@ class ControllerFormJoin extends GetxController {
   }
 
   uploadKTPImage() async {
-    if (fileKTP.path == '') {
-      log('Error: File is null.');
-      return;
-    }
-
     String fileName = fileKTP.name;
     final path = 'user/vehicle/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
@@ -125,11 +118,6 @@ class ControllerFormJoin extends GetxController {
   }
 
   uploadSTNKImage() async {
-    if (fileSTNK.path == '') {
-      log('Error: File is null.');
-      return;
-    }
-
     String fileName = fileSTNK.name;
     final path = 'user/vehicle/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
@@ -171,11 +159,6 @@ class ControllerFormJoin extends GetxController {
   }
 
   uploadSIMImage() async {
-    if (fileSIM.path == '') {
-      log('Error: File is null.');
-      return;
-    }
-
     String fileName = fileSTNK.name;
     final path = 'user/vehicle/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
@@ -217,11 +200,6 @@ class ControllerFormJoin extends GetxController {
   }
 
   uploadKendaraanImage() async {
-    if (fileKendaraan.path == '') {
-      log('Error: File is null.');
-      return;
-    }
-
     String fileName = fileKendaraan.name;
     final path = 'user/vehicle/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
@@ -374,18 +352,19 @@ class ControllerFormJoin extends GetxController {
       pattern.allMatches(token!).forEach((match) => debugPrint(match.group(0)));
 
       var r = await api.joinLugo(
-        address: edtCompleteAddress.text,
-        license_image: uploadSIM.value,
-        id_card_image: uploadKTP.value,
-        vehicle_type: partnerType.value,
-        vehicle_brand: edtBrandTransport.text,
-        vehicle_year: int.parse(edtYearTransport.text),
-        vehicle_image: uploadKendaraan.value,
-        vehicle_registration: uploadSTNK.value,
-        vehicle_rn: edtPlateTransport.text,
-        referal: referal.value,
-        token: token,
-      );
+          driver_type: partnerType.value,
+          address: edtCompleteAddress.text,
+          license_image: uploadSIM.value,
+          id_card_image: uploadKTP.value,
+          vehicle_type: partnerType.value,
+          vehicle_brand: edtBrandTransport.text,
+          vehicle_year: edtYearTransport.text,
+          vehicle_image: uploadKendaraan.value,
+          vehicle_registration: uploadSTNK.value,
+          vehicle_rn: edtPlateTransport.text,
+          referal: referal.value,
+          name: edtFullName.text,
+          token: token);
       if (r["message"] == "OK") {
         getFirebasetoken();
       }
@@ -401,7 +380,7 @@ class ControllerFormJoin extends GetxController {
           await FirebaseAuth.instance.currentUser?.getIdToken(true);
       if (userCredential != null) {
         await LocalService().setIsLogin(isLogin: true);
-        Get.offAllNamed(Routes.bottom_nav);
+        Get.offAllNamed(Routes.main);
       }
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
