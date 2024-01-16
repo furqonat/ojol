@@ -30,6 +30,8 @@ func (s LugoRoutes) Setup() {
 		api.POST("/merchant/wd", s.controller.MerchantRequestWithdraw)
 		api.POST("/driver/topup", s.controller.DriverTopUp)
 		api.POST("/merchant/topup", s.controller.MerchantTopUp)
+		api.GET("/banner", s.controller.GetBanners)
+		api.GET("/banner/:id", s.controller.GetBanner)
 	}
 }
 
