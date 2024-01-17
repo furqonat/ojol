@@ -325,7 +325,7 @@ class ControllerDashboard extends GetxController {
   acceptOrder() async {
     try {
       final token = await firebase.currentUser?.getIdToken();
-      var r = await api.acceptOrder(order_id: order.value.id!, token: token!);
+      var r = await api.acceptOrder(orderId: order.value.id!, token: token!);
       if (r["message"] == 'OK') {
         showBottomSheet(true);
         initiateChat();
@@ -343,14 +343,14 @@ class ControllerDashboard extends GetxController {
   initiateChat() async {
     try {
       var r = await api.makeRoomChat(
-          customer_name: order.value.customer!.name!,
-          merchant_name: order.value.customer!.name!,
-          driver_name: order.value.customer!.name!,
-          customer_id: controllerUser.user.value.id!,
-          merchant_id: controllerUser.user.value.id!,
-          driver_id: controllerUser.user.value.id!,
+          customerName: order.value.customer!.name!,
+          merchantName: order.value.customer!.name!,
+          driverName: order.value.customer!.name!,
+          customerId: controllerUser.user.value.id!,
+          merchantId: controllerUser.user.value.id!,
+          driverId: controllerUser.user.value.id!,
           status: true);
-      print(r);
+      debugPrint(r);
     } catch (e, stackTrace) {
       log('$e');
       log('$stackTrace');
@@ -379,7 +379,7 @@ class ControllerDashboard extends GetxController {
   rejectOrder() async {
     try {
       final token = await firebase.currentUser?.getIdToken();
-      var r = await api.rejectOrder(order_id: order.value.id!, token: token!);
+      var r = await api.rejectOrder(orderId: order.value.id!, token: token!);
       if (r["message"] == 'OK') {
         Fluttertoast.showToast(msg: "Anda telah membatalkan pesanan");
         Get.back();

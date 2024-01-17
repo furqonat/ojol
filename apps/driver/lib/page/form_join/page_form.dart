@@ -6,7 +6,7 @@ import 'package:validatorless/validatorless.dart';
 import '../../shared/custom_widget/lugo_button.dart';
 import 'controller_form.dart';
 
-class PageFormJoin extends GetView<ControllerFormJoin>{
+class PageFormJoin extends GetView<ControllerFormJoin> {
   const PageFormJoin({super.key});
 
   @override
@@ -17,13 +17,11 @@ class PageFormJoin extends GetView<ControllerFormJoin>{
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
-          onPressed: ()=> Get.back(),
+          onPressed: () => Get.back(),
           style: IconButton.styleFrom(
               backgroundColor: const Color(0xFF3978EF),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100)
-              )
-          ),
+                  borderRadius: BorderRadius.circular(100))),
           icon: const Icon(Icons.chevron_left_rounded, color: Colors.white),
         ),
       ),
@@ -164,19 +162,24 @@ class PageFormJoin extends GetView<ControllerFormJoin>{
                       ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF4B39EF))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF4B39EF))),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.grey)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF1D2428))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF1D2428))),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.red)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.red)),
                       contentPadding: const EdgeInsets.all(24),
                     ),
-                    validator: Validatorless.required("Nama tidak boleh kosong"),
+                    validator:
+                        Validatorless.required("Nama tidak boleh kosong"),
                   ),
                 ),
               ),
@@ -200,19 +203,24 @@ class PageFormJoin extends GetView<ControllerFormJoin>{
                       ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF4B39EF))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF4B39EF))),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.grey)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF1D2428))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF1D2428))),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.red)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.red)),
                       contentPadding: const EdgeInsets.all(24),
                     ),
-                    validator: Validatorless.required("Alamat tidak boleh kosong"),
+                    validator:
+                        Validatorless.required("Alamat tidak boleh kosong"),
                   ),
                 ),
               ),
@@ -237,19 +245,24 @@ class PageFormJoin extends GetView<ControllerFormJoin>{
                       ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF4B39EF))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF4B39EF))),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.grey)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF1D2428))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF1D2428))),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.red)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.red)),
                       contentPadding: const EdgeInsets.all(24),
                     ),
-                    validator: Validatorless.required("Nomor ponsel tidak boleh kosong"),
+                    validator: Validatorless.required(
+                        "Nomor ponsel tidak boleh kosong"),
                   ),
                 ),
               ),
@@ -273,16 +286,20 @@ class PageFormJoin extends GetView<ControllerFormJoin>{
                       ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF4B39EF))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF4B39EF))),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.grey)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF1D2428))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF1D2428))),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.red)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.red)),
                       contentPadding: const EdgeInsets.all(24),
                     ),
                     validator: Validatorless.required(
@@ -310,19 +327,24 @@ class PageFormJoin extends GetView<ControllerFormJoin>{
                       ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF4B39EF))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF4B39EF))),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.grey)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF1D2428))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF1D2428))),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.red)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.red)),
                       contentPadding: const EdgeInsets.all(24),
                     ),
-                    validator: Validatorless.required("Tahun kendaraan tidak boleh kosong"),
+                    validator: Validatorless.required(
+                        "Tahun kendaraan tidak boleh kosong"),
                   ),
                 ),
               ),
@@ -346,19 +368,24 @@ class PageFormJoin extends GetView<ControllerFormJoin>{
                       ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF4B39EF))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF4B39EF))),
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Colors.grey)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide: const BorderSide(width: 1, color: Color(0xFF1D2428))),
+                          borderSide: const BorderSide(
+                              width: 1, color: Color(0xFF1D2428))),
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(40),
-                          borderSide:const BorderSide(width: 1, color: Colors.red)),
+                          borderSide:
+                              const BorderSide(width: 1, color: Colors.red)),
                       contentPadding: const EdgeInsets.all(24),
                     ),
-                    validator: Validatorless.required("Plat kendaraan tidak boleh kosong"),
+                    validator: Validatorless.required(
+                        "Plat kendaraan tidak boleh kosong"),
                   ),
                 ),
               ),
@@ -623,15 +650,15 @@ class PageFormJoin extends GetView<ControllerFormJoin>{
                       height: Get.height * 0.07,
                       color: const Color(0xFF3978EF),
                       onTap: () {
-                        if (controller.formkeyAuthRegister.currentState!.validate()) {
+                        if (controller.formkeyAuthRegister.currentState!
+                            .validate()) {
                           controller.firebaseRegister(context);
                         }
                       }),
                 ),
               )
             ],
-      ))),
+          ))),
     );
   }
 }
-

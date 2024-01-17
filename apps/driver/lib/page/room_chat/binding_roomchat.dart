@@ -2,9 +2,10 @@ import 'package:get/get.dart';
 import 'api_roomchat.dart';
 import 'controller_roomchat.dart';
 
-class BindingRoomChat implements Bindings{
+class BindingRoomChat implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ControllerRoomChat>(() => ControllerRoomChat(api: ApiRoomChat()));
+    Get.lazyPut<ControllerRoomChat>(
+        () => ControllerRoomChat(api: ApiRoomChat()));
   }
 }

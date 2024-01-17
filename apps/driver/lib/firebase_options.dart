@@ -25,7 +25,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -55,7 +58,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU',
-    appId: '1:319389880269:android:fea05a9861a26dce1dfe84',
+    appId: '1:319389880269:android:c4426646217e816a1dfe84',
     messagingSenderId: '319389880269',
     projectId: 'lumajanglugo',
     storageBucket: 'lumajanglugo.appspot.com',
@@ -63,19 +66,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyD1DxONCHTiZQfN4GRz9hvppede3mz7Sq4',
-    appId: '1:319389880269:ios:a5307bd74f0725031dfe84',
+    appId: '1:319389880269:ios:2aeb8865384b1f661dfe84',
     messagingSenderId: '319389880269',
     projectId: 'lumajanglugo',
     storageBucket: 'lumajanglugo.appspot.com',
-    iosBundleId: 'com.example.lugoDriver',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD1DxONCHTiZQfN4GRz9hvppede3mz7Sq4',
-    appId: '1:319389880269:ios:24d11f36943b17a01dfe84',
-    messagingSenderId: '319389880269',
-    projectId: 'lumajanglugo',
-    storageBucket: 'lumajanglugo.appspot.com',
-    iosBundleId: 'com.example.lugoDriver.RunnerTests',
+    iosBundleId: 'com.gentatechnology.driver',
   );
 }

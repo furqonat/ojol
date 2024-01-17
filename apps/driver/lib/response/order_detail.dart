@@ -4,7 +4,8 @@
 
 import 'dart:convert';
 
-OrderDetail orderDetailFromJson(String str) => OrderDetail.fromJson(json.decode(str));
+OrderDetail orderDetailFromJson(String str) =>
+    OrderDetail.fromJson(json.decode(str));
 
 String orderDetailToJson(OrderDetail data) => json.encode(data.toJson());
 
@@ -30,24 +31,24 @@ class OrderDetail {
   });
 
   factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
-    id: json["id"],
-    orderId: json["order_id"],
-    latitude: json["latitude"],
-    longitude: json["longitude"],
-    address: json["address"],
-    dstLatitude: json["dst_latitude"],
-    dstLongitude: json["dst_longitude"],
-    dstAddress: json["dst_address"],
-  );
+        id: json["id"],
+        orderId: json["order_id"],
+        latitude: json["latitude"],
+        longitude: json["longitude"],
+        address: json["address"],
+        dstLatitude: json["dst_latitude"],
+        dstLongitude: json["dst_longitude"],
+        dstAddress: json["dst_address"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "order_id": orderId,
-    "latitude": latitude,
-    "longitude": longitude,
-    "address": address,
-    "dst_latitude": dstLatitude,
-    "dst_longitude": dstLongitude,
-    "dst_address": dstAddress,
-  };
+        "id": id,
+        "order_id": orderId,
+        "latitude": latitude,
+        "longitude": longitude,
+        "address": address,
+        "dst_latitude": dstLatitude,
+        "dst_longitude": dstLongitude,
+        "dst_address": dstAddress,
+      };
 }

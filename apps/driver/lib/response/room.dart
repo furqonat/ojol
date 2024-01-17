@@ -26,24 +26,24 @@ class RoomChat {
   });
 
   factory RoomChat.fromJson(Map<String, dynamic> json) => RoomChat(
-    id: json["id"],
-    customerName: json["customer_name"],
-    merchantName: json["merchant_name"],
-    driverName: json["driver_name"],
-    customerId: json["customer_id"],
-    merchantId: json["merchant_id"],
-    driverId: json["driver_id"],
-    status: json["status"],
-  );
+        id: json["id"],
+        customerName: json["customer_name"],
+        merchantName: json["merchant_name"],
+        driverName: json["driver_name"],
+        customerId: json["customer_id"],
+        merchantId: json["merchant_id"],
+        driverId: json["driver_id"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "customer_name": customerName,
-    "merchant_name": merchantName,
-    "driver_name": driverName,
-    "customer_id": customerId,
-    "merchant_id": merchantId,
-    "driver_id": driverId,
-    "status": status,
-  };
+        "id": id,
+        "customer_name": customerName,
+        "merchant_name": merchantName,
+        "driver_name": driverName,
+        "customer_id": customerId,
+        "merchant_id": merchantId,
+        "driver_id": driverId,
+        "status": status,
+      };
 }

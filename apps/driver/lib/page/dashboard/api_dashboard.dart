@@ -3,63 +3,63 @@ import 'package:lugo_driver/api/firestore_service.dart';
 
 class ApiDashboard {
   Future<dynamic> acceptOrder(
-      {required String order_id, required String token}) async {
+      {required String orderId, required String token}) async {
     final sample = {"sample": "sample"};
 
     var r = await ApiService().apiJSONPutWithFirebaseToken(
-        'order', 'driver/accept/$order_id', sample, token);
+        'order', 'driver/accept/$orderId', sample, token);
     return r;
   }
 
   Future<dynamic> rejectOrder(
-      {required String order_id, required String token}) async {
+      {required String orderId, required String token}) async {
     final sample = {"sample": "sample"};
 
     var r = await ApiService().apiJSONPutWithFirebaseToken(
-        'order', 'driver/reject/$order_id', sample, token);
+        'order', 'driver/reject/$orderId', sample, token);
     return r;
   }
 
   Stream<List<T>> getOrder<T>(
       {required T Function(Map<String, dynamic> data) fromJson}) {
     var r =
-        FirestoreService().FirestoreStreamGet<T>('order', fromJson: fromJson);
+        FirestoreService().firestoreStreamGet<T>('order', fromJson: fromJson);
     return r;
   }
 
   Future<List<T>> getDriver<T>(
       {required T Function(Map<String, dynamic> data) fromJson}) async {
-    var r = await FirestoreService().FirestoreFutureGet("drivers");
+    var r = await FirestoreService().firestoreFutureGet("drivers");
     return r.map<T>((e) => fromJson(e)).toList();
   }
 
   Future<dynamic> getDetailOrder(
-      {required String order_id, required String token}) async {
+      {required String orderId, required String token}) async {
     var r =
-        await ApiService().apiJSONGetWitFirebaseToken('order', order_id, token);
+        await ApiService().apiJSONGetWitFirebaseToken('order', orderId, token);
     return r;
   }
 
   Future<dynamic> makeRoomChat({
-    required String customer_name,
-    required String merchant_name,
-    required String driver_name,
-    required String customer_id,
-    required String merchant_id,
-    required String driver_id,
+    required String customerName,
+    required String merchantName,
+    required String driverName,
+    required String customerId,
+    required String merchantId,
+    required String driverId,
     required bool status,
   }) async {
     final body = {
-      "customer_name": customer_name,
-      "merchant_name": merchant_name,
-      "driver_name": driver_name,
-      "customer_id": customer_id,
-      "merchant_id": merchant_id,
-      "driver_id": driver_id,
+      "customer_name": customerName,
+      "merchant_name": merchantName,
+      "driver_name": driverName,
+      "customer_id": customerId,
+      "merchant_id": merchantId,
+      "driver_id": driverId,
       "status": status,
     };
 
-    var r = await FirestoreService().FirestorePost('room', body);
+    var r = await FirestoreService().firestorePost('room', body);
     return r;
   }
 
@@ -81,7 +81,7 @@ class ApiDashboard {
       "type": type,
     };
 
-    var r = await FirestoreService().FirestorePost('drivers', body);
+    var r = await FirestoreService().firestorePost('drivers', body);
     return r;
   }
 
@@ -105,6 +105,6 @@ class ApiDashboard {
       "type": type,
     };
 
-    return FirestoreService().FirestorePut("drivers", document, body);
+    return FirestoreService().firestorePut("drivers", document, body);
   }
 }

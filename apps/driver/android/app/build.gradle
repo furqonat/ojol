@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "ccom.gentatechnology.driver"
+    namespace "com.gentatechnology.driver"
     compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 

@@ -352,16 +352,16 @@ class ControllerFormJoin extends GetxController {
       pattern.allMatches(token!).forEach((match) => debugPrint(match.group(0)));
 
       var r = await api.joinLugo(
-          driver_type: partnerType.value,
+          driverType: partnerType.value,
           address: edtCompleteAddress.text,
-          license_image: uploadSIM.value,
-          id_card_image: uploadKTP.value,
-          vehicle_type: partnerType.value,
-          vehicle_brand: edtBrandTransport.text,
-          vehicle_year: edtYearTransport.text,
-          vehicle_image: uploadKendaraan.value,
-          vehicle_registration: uploadSTNK.value,
-          vehicle_rn: edtPlateTransport.text,
+          licenseImage: uploadSIM.value,
+          idCardImage: uploadKTP.value,
+          vehicleType: partnerType.value,
+          vehicleBrand: edtBrandTransport.text,
+          vehicleYear: edtYearTransport.text,
+          vehicleImage: uploadKendaraan.value,
+          vehicleRegistration: uploadSTNK.value,
+          vehicleRn: edtPlateTransport.text,
           referal: referal.value,
           name: edtFullName.text,
           token: token);

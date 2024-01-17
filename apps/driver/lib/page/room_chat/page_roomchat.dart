@@ -6,7 +6,7 @@ import 'package:lugo_driver/response/room.dart';
 import '../../route/route_name.dart';
 import 'controller_roomchat.dart';
 
-class PageRoomChat extends GetView<ControllerRoomChat>{
+class PageRoomChat extends GetView<ControllerRoomChat> {
   const PageRoomChat({super.key});
 
   @override
@@ -33,125 +33,119 @@ class PageRoomChat extends GetView<ControllerRoomChat>{
                 Tab(
                   text: 'Customer',
                 ),
-              ]
-          ),
+              ]),
         ),
       ),
-      body: TabBarView(
-          controller: controller.tabController,
-          children: [
-            //pakai nama merchant
-            StreamBuilder<List<RoomChat>>(
-              stream: controller.getRoomChat(),
-              builder: (context, snapshot) {
-                if(snapshot.hasData){
-                  return Expanded(
-                      child: ListView.builder(
-                        itemCount: 10,
-                        itemBuilder: (context, index) => ListTile(
-                          onTap: ()=> Get.toNamed(Routes.chat),
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: CachedNetworkImage(
-                              width: 50,
-                              height: 50,
-                              imageUrl: "",
-                              errorWidget: (context, url, error) => SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: Card(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(100)
-                                  ),
-                                  child: const Icon(Icons.person_rounded, size: 30, color: Colors.black54),
-                                ),
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                            "user name",
-                            style: GoogleFonts.readexPro(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            "Pesanan selesai",
-                            style: GoogleFonts.readexPro(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
+      body: TabBarView(controller: controller.tabController, children: [
+        //pakai nama merchant
+        StreamBuilder<List<RoomChat>>(
+          stream: controller.getRoomChat(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Expanded(
+                  child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) => ListTile(
+                  onTap: () => Get.toNamed(Routes.chat),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      width: 50,
+                      height: 50,
+                      imageUrl: "",
+                      errorWidget: (context, url, error) => SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Card(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100)),
+                          child: const Icon(Icons.person_rounded,
+                              size: 30, color: Colors.black54),
                         ),
-                      )
-                  );
-                }else{
-                  return const Center(
-                    child: Text("Ada yang salah"),
-                  );
-                }
-              },
-            ),
-            //pakai nama user
-            StreamBuilder<List<RoomChat>>(
-              stream: controller.getRoomChat(),
-              builder: (context, snapshot) {
-                if(snapshot.hasData){
-                  return Expanded(
-                      child: ListView.builder(
-                        itemCount: 10,
-                        itemBuilder: (context, index) => ListTile(
-                          onTap: ()=> Get.toNamed(Routes.chat),
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: CachedNetworkImage(
-                              width: 50,
-                              height: 50,
-                              imageUrl: "",
-                              errorWidget: (context, url, error) => SizedBox(
-                                width: 50,
-                                height: 50,
-                                child: Card(
-                                  color: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(100)
-                                  ),
-                                  child: const Icon(Icons.person_rounded, size: 30, color: Colors.black54),
-                                ),
-                              ),
-                            ),
-                          ),
-                          title: Text(
-                            "user name",
-                            style: GoogleFonts.readexPro(
-                              fontSize: 12,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          subtitle: Text(
-                            "Pesanan selesai",
-                            style: GoogleFonts.readexPro(
-                              fontSize: 12,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
+                      ),
+                    ),
+                  ),
+                  title: Text(
+                    "user name",
+                    style: GoogleFonts.readexPro(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    "Pesanan selesai",
+                    style: GoogleFonts.readexPro(
+                      fontSize: 12,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+              ));
+            } else {
+              return const Center(
+                child: Text("Ada yang salah"),
+              );
+            }
+          },
+        ),
+        //pakai nama user
+        StreamBuilder<List<RoomChat>>(
+          stream: controller.getRoomChat(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Expanded(
+                  child: ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) => ListTile(
+                  onTap: () => Get.toNamed(Routes.chat),
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: CachedNetworkImage(
+                      width: 50,
+                      height: 50,
+                      imageUrl: "",
+                      errorWidget: (context, url, error) => SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: Card(
+                          color: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100)),
+                          child: const Icon(Icons.person_rounded,
+                              size: 30, color: Colors.black54),
                         ),
-                      )
-                  );
-                }else{
-                  return const Center(
-                    child: Text("Ada yang salah"),
-                  );
-                }
-              },
-            ),
-          ]
-      ),
+                      ),
+                    ),
+                  ),
+                  title: Text(
+                    "user name",
+                    style: GoogleFonts.readexPro(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Text(
+                    "Pesanan selesai",
+                    style: GoogleFonts.readexPro(
+                      fontSize: 12,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ),
+              ));
+            } else {
+              return const Center(
+                child: Text("Ada yang salah"),
+              );
+            }
+          },
+        ),
+      ]),
     );
   }
 }

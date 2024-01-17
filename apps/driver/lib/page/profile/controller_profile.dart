@@ -12,7 +12,7 @@ import 'api_profile.dart';
 
 enum Status { idle, loading, success, failed }
 
-class ControllerProfile extends GetxController{
+class ControllerProfile extends GetxController {
   final ApiProfile api;
   ControllerProfile({required this.api});
 
@@ -24,7 +24,7 @@ class ControllerProfile extends GetxController{
 
   ControllerUser controllerUser = Get.find<ControllerUser>();
 
-  userHelp(BuildContext context){
+  userHelp(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -42,8 +42,7 @@ class ControllerProfile extends GetxController{
                       fontSize: 24,
                       color: Colors.black87,
                       fontWeight: FontWeight.bold,
-                    )
-                ),
+                    )),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
@@ -52,9 +51,7 @@ class ControllerProfile extends GetxController{
                     RichText(
                       text: TextSpan(
                           style: GoogleFonts.readexPro(
-                              fontSize: 14,
-                              color: Colors.black87
-                          ),
+                              fontSize: 14, color: Colors.black87),
                           children: <TextSpan>[
                             const TextSpan(
                               text: 'Whatsapp ',
@@ -65,10 +62,8 @@ class ControllerProfile extends GetxController{
                                   fontSize: 14,
                                   color: Colors.black87,
                                   fontWeight: FontWeight.bold,
-                                )
-                            ),
-                          ]
-                      ),
+                                )),
+                          ]),
                     ),
                     const Spacer(),
                     const Icon(Icons.phone_rounded, color: Colors.green)
@@ -82,9 +77,7 @@ class ControllerProfile extends GetxController{
                     RichText(
                       text: TextSpan(
                           style: GoogleFonts.readexPro(
-                              fontSize: 14,
-                              color: Colors.black87
-                          ),
+                              fontSize: 14, color: Colors.black87),
                           children: <TextSpan>[
                             const TextSpan(
                               text: 'Email ',
@@ -95,10 +88,8 @@ class ControllerProfile extends GetxController{
                                   fontSize: 14,
                                   color: Colors.black87,
                                   fontWeight: FontWeight.bold,
-                                )
-                            ),
-                          ]
-                      ),
+                                )),
+                          ]),
                     ),
                     const Spacer(),
                     const Icon(Icons.email_rounded, color: Colors.red)
@@ -112,21 +103,21 @@ class ControllerProfile extends GetxController{
     );
   }
 
-  getUser()async{
-    try{
+  getUser() async {
+    try {
       loading(Status.loading);
       var firebaseToken = await FirebaseAuth.instance.currentUser?.getIdToken();
       var r = await api.userDetail(token: firebaseToken!);
-      if(r["id"] != "" || r["id"] != null){
+      if (r["id"] != "" || r["id"] != null) {
         var user = UserResponse.fromJson(r);
         controllerUser.user.value = user;
         await LocalService().setUser(user: user.toJson());
         loading(Status.success);
-      }else{
+      } else {
         Fluttertoast.showToast(msg: 'Something wrong');
         loading(Status.failed);
       }
-    }catch(e, stackTrace){
+    } catch (e, stackTrace) {
       loading(Status.failed);
       log('$e');
       log('$stackTrace');
@@ -138,5 +129,4 @@ class ControllerProfile extends GetxController{
     getUser();
     super.onInit();
   }
-
 }

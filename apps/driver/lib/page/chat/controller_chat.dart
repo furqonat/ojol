@@ -10,30 +10,19 @@ import 'package:lugo_driver/response/chat.dart';
 import 'package:lugo_driver/shared/controller/controller_user.dart';
 import 'api_chat.dart';
 
-class ControllerChat extends GetxController{
+class ControllerChat extends GetxController {
   final ApiChat api;
   ControllerChat({required this.api});
 
   var samplechat = [
+    {'user': 'user_1', 'msg': 'oi', 'attachment': ''},
+    {'user': 'user_2', 'msg': 'apa?', 'attachment': ''},
+    {'user': 'user_1', 'msg': 'sudah di mana?', 'attachment': ''},
     {
-      'user' : 'user_1',
-      'msg' : 'oi',
-      'attachment' : ''
-    },
-    {
-      'user' : 'user_2',
-      'msg' : 'apa?',
-      'attachment' : ''
-    },
-    {
-      'user' : 'user_1',
-      'msg' : 'sudah di mana?',
-      'attachment' : ''
-    },
-    {
-      'user' : 'user_2',
-      'msg' : 'di depan rumah, ini paket sudah sampai depan rumah lu, buka pintu nya',
-      'attachment' : 'assets/images/paket_sampai.jpg'
+      'user': 'user_2',
+      'msg':
+          'di depan rumah, ini paket sudah sampai depan rumah lu, buka pintu nya',
+      'attachment': 'assets/images/paket_sampai.jpg'
     }
   ].obs.reversed.toList();
 
@@ -59,60 +48,62 @@ class ControllerChat extends GetxController{
   }
 
   Stream<List<Chat>> getChat() {
-    return api.getChat(fromJson: (data) => Chat.fromJson(data))
-        .map((chatList) => chatList.where((chat) =>
-    chat.idSender == controllerUser.user.value.id
-        && chat.idReceiver == receiverId.value
-        && chat.idTransaksi == transactionId.value)
-        .toList().reversed.toList());
+    return api.getChat(fromJson: (data) => Chat.fromJson(data)).map(
+        (chatList) => chatList
+            .where((chat) =>
+                chat.idSender == controllerUser.user.value.id &&
+                chat.idReceiver == receiverId.value &&
+                chat.idTransaksi == transactionId.value)
+            .toList()
+            .reversed
+            .toList());
   }
 
-  sendChat()async{
-    try{
+  sendChat() async {
+    try {
       await api.sendChat(
           msg: edtChat.text,
-          id_sender: controllerUser.user.value.id!,
-          id_receiver: receiverId.value,
+          idSender: controllerUser.user.value.id!,
+          idReceiver: receiverId.value,
           time: DateTime.now(),
-          id_transaksi: transactionId.value,
-          attachment: attachment.value
-      );
-    }catch(e, stackTrace){
+          idTrx: transactionId.value,
+          attachment: attachment.value);
+    } catch (e, stackTrace) {
       log("$e");
       log("$stackTrace");
     }
   }
 
-  pickImage(BuildContext context){
+  pickImage(BuildContext context) {
     return showDialog(
-        context: context,
-        builder: (context) => AlertDialog.adaptive(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)
-          ),
-          content: Text("Ambil gambar dari?", style: GoogleFonts.poppins(fontSize: 12)),
-          actions: [
-            OutlinedButton(
-                onPressed: (){
-                  getFromCamera();
-                  Get.back();
-                },
-                child: Text("Camera", style: GoogleFonts.poppins(fontSize: 12))),
-            OutlinedButton(
-                onPressed: (){
-                  getFromFile();
-                  Get.back();
-                },
-                child: Text("Galeri", style: GoogleFonts.poppins(fontSize: 12)))
-          ],
-        ),
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        content: Text("Ambil gambar dari?",
+            style: GoogleFonts.poppins(fontSize: 12)),
+        actions: [
+          OutlinedButton(
+              onPressed: () {
+                getFromCamera();
+                Get.back();
+              },
+              child: Text("Camera", style: GoogleFonts.poppins(fontSize: 12))),
+          OutlinedButton(
+              onPressed: () {
+                getFromFile();
+                Get.back();
+              },
+              child: Text("Galeri", style: GoogleFonts.poppins(fontSize: 12)))
+        ],
+      ),
     );
   }
 
   getFromCamera() async {
-    final XFile? camImage = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    final XFile? camImage =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
       view.value = camImage.path;
       file = camImage;
@@ -120,8 +111,10 @@ class ControllerChat extends GetxController{
       // uploadImage();
     }
   }
+
   getFromFile() async {
-    final XFile? fileImage = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+    final XFile? fileImage =
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
       view.value = fileImage.path;
       file = fileImage;
@@ -129,6 +122,7 @@ class ControllerChat extends GetxController{
       // uploadImage();
     }
   }
+
   uploadImage() async {
     if (file == null) {
       log('Error: File is null.');
@@ -148,7 +142,6 @@ class ControllerChat extends GetxController{
         String downloadURL = await ref.getDownloadURL();
         upload.value = downloadURL;
       });
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Foto gagal di unggah');
     }
