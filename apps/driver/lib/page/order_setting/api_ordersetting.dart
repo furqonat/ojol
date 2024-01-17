@@ -1,1 +1,1 @@
-class ApiOrderSetting{}
+class ApiOrderSetting {}

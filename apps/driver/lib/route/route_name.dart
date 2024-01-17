@@ -8,5 +8,5 @@ abstract class Routes {
   static const chat = '/chat';
   static const orderSetting = '/order_setting';
   static const joinLugo = '/form_join';
-  static const phoneVerification = "phoneVerification";
+  static const phoneVerification = "/phoneVerification";
 }

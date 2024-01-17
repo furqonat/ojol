@@ -24,20 +24,20 @@ class Chat {
   });
 
   factory Chat.fromJson(Map<String, dynamic> json) => Chat(
-    msg: json["msg"],
-    idSender: json["id_sender"],
-    idReceiver: json["id_receiver"],
-    time: (json["time"] as Timestamp).toDate(),
-    idTransaksi: json["id_transaksi"],
-    attachment: json["attachment"],
-  );
+        msg: json["msg"],
+        idSender: json["id_sender"],
+        idReceiver: json["id_receiver"],
+        time: (json["time"] as Timestamp).toDate(),
+        idTransaksi: json["id_transaksi"],
+        attachment: json["attachment"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "msg": msg,
-    "id_sender": idSender,
-    "id_receiver": idReceiver,
-    "time": time,
-    "id_transaksi": idTransaksi,
-    "attachment": attachment,
-  };
+        "msg": msg,
+        "id_sender": idSender,
+        "id_receiver": idReceiver,
+        "time": time,
+        "id_transaksi": idTransaksi,
+        "attachment": attachment,
+      };
 }

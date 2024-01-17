@@ -24,22 +24,22 @@ class Riders {
   });
 
   factory Riders.fromJson(Map<String, dynamic> json) => Riders(
-    id: json["id"],
-    address: json["address"],
-    isOnline: json["isOnline"],
-    latitude: json["latitude"],
-    longitude: json["longitude"],
-    name: json["name"],
-    type: json["type"],
-  );
+        id: json["id"],
+        address: json["address"],
+        isOnline: json["isOnline"],
+        latitude: json["latitude"],
+        longitude: json["longitude"],
+        name: json["name"],
+        type: json["type"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "address": address,
-    "isOnline": isOnline,
-    "latitude": latitude,
-    "longitude": longitude,
-    "name": name,
-    "type": type,
-  };
+        "id": id,
+        "address": address,
+        "isOnline": isOnline,
+        "latitude": latitude,
+        "longitude": longitude,
+        "name": name,
+        "type": type,
+      };
 }

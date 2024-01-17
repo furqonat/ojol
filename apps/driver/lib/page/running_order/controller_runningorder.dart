@@ -7,7 +7,8 @@ import 'package:lugo_driver/response/free_order.dart';
 import 'api_runningorder.dart';
 
 enum Status { idle, loading, success, failed }
-class ControllerRunningOrder extends GetxController{
+
+class ControllerRunningOrder extends GetxController {
   final ApiRunningOrder api;
   ControllerRunningOrder({required this.api});
 
@@ -19,23 +20,24 @@ class ControllerRunningOrder extends GetxController{
 
   var empty = ''.obs;
 
-  getListOrder()async{
-    try{
+  getListOrder() async {
+    try {
       var token = await firebase.currentUser?.getIdToken();
       loading(Status.loading);
       var r = await api.listOrder(token!);
-      if(r["total"] != 0){
+      if (r["total"] != 0) {
         var list = r["data"];
-        freeOrder(RxList<FreeOrder>.from(list.map((e) => FreeOrder.fromJson(e))));
+        freeOrder(
+            RxList<FreeOrder>.from(list.map((e) => FreeOrder.fromJson(e))));
         loading(Status.success);
-      }else if(r["total"] == 0){
+      } else if (r["total"] == 0) {
         empty("Tidak ada pesanan yang bisa di pilih");
         loading(Status.failed);
-      }else{
+      } else {
         Fluttertoast.showToast(msg: "Ada yang salah");
         loading(Status.failed);
       }
-    }catch(e, stackTrace){
+    } catch (e, stackTrace) {
       log('$e');
       log('$stackTrace');
     }

@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:lugo_driver/response/room.dart';
 import 'api_roomchat.dart';
 
-class ControllerRoomChat<T> extends GetxController with GetSingleTickerProviderStateMixin{
+class ControllerRoomChat<T> extends GetxController
+    with GetSingleTickerProviderStateMixin {
   final ApiRoomChat api;
   ControllerRoomChat({required this.api});
 

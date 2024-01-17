@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lugo_driver/page/auth/controller_auth.dart';
+import 'controller_auth.dart';
 import 'package:lugo_driver/shared/custom_widget/lugo_button.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -79,7 +79,7 @@ class PageAuth extends GetView<ControllerAuth> {
                                 padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                                 child: TextFormField(
                                   autofocus: false,
-                                  controller: controller.email,
+                                  controller: controller.emailSignIn,
                                   keyboardType: TextInputType.emailAddress,
                                   decoration: InputDecoration(
                                     labelText: 'Email',
@@ -119,49 +119,46 @@ class PageAuth extends GetView<ControllerAuth> {
                                 padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
                                 child: TextFormField(
                                   autofocus: false,
-                                  controller: controller.password,
+                                  controller: controller.passwordSignIn,
                                   obscureText: controller.showPass.value,
                                   keyboardType: TextInputType.visiblePassword,
                                   decoration: InputDecoration(
-                                      labelText: 'Password',
-                                      labelStyle: GoogleFonts.readexPro(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.normal,
-                                        color: const Color(0xFF95A1AC),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40),
-                                          borderSide: const BorderSide(
-                                              width: 1,
-                                              color: Color(0xFF4B39EF))),
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40),
-                                          borderSide: const BorderSide(
-                                              width: 1, color: Colors.grey)),
-                                      focusedErrorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40),
-                                          borderSide: const BorderSide(
-                                              width: 1,
-                                              color: Color(0xFF1D2428))),
-                                      errorBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(40),
-                                          borderSide: const BorderSide(
-                                              width: 1, color: Colors.red)),
-                                      contentPadding: const EdgeInsets.all(24),
-                                      suffixIcon: GestureDetector(
-                                        onTap: () => controller.showPass.value
-                                            ? controller.showPass(false)
-                                            : controller.showPass(true),
-                                        child: Icon(
-                                            controller.showPass.value
-                                                ? Icons.visibility_rounded
-                                                : Icons.visibility_off_rounded,
-                                            color: const Color(0xFF95A1AC)),
-                                      )),
+                                    labelText: 'Password',
+                                    labelStyle: GoogleFonts.readexPro(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.normal,
+                                      color: const Color(0xFF95A1AC),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(40),
+                                        borderSide: const BorderSide(
+                                            width: 1,
+                                            color: Color(0xFF4B39EF))),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(40),
+                                        borderSide: const BorderSide(
+                                            width: 1, color: Colors.grey)),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(40),
+                                        borderSide: const BorderSide(
+                                            width: 1,
+                                            color: Color(0xFF1D2428))),
+                                    errorBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(40),
+                                        borderSide: const BorderSide(
+                                            width: 1, color: Colors.red)),
+                                    contentPadding: const EdgeInsets.all(24),
+                                    suffixIcon: GestureDetector(
+                                      onTap: () => controller.showPass.value
+                                          ? controller.showPass(false)
+                                          : controller.showPass(true),
+                                      child: Icon(
+                                          controller.showPass.value
+                                              ? Icons.visibility_rounded
+                                              : Icons.visibility_off_rounded,
+                                          color: const Color(0xFF95A1AC)),
+                                    ),
+                                  ),
                                   validator: Validatorless.multiple([
                                     Validatorless.required(
                                         'Password tidak boleh kosong'),
@@ -205,9 +202,12 @@ class PageAuth extends GetView<ControllerAuth> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(
-                                        width: 1, color: Colors.grey)),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    width: 1,
+                                    color: Colors.grey,
+                                  ),
+                                ),
                                 margin: const EdgeInsets.all(20),
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 10),
@@ -235,6 +235,118 @@ class PageAuth extends GetView<ControllerAuth> {
                                   }).toList(),
                                   onChanged: (String? value) =>
                                       controller.partnerType(value),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                child: TextFormField(
+                                  autofocus: false,
+                                  controller: controller.emailSignUp,
+                                  style: GoogleFonts.readexPro(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                    color: const Color(0xFF95A1AC),
+                                  ),
+                                  decoration: InputDecoration(
+                                    labelText: 'Email',
+                                    labelStyle: GoogleFonts.readexPro(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: const Color(0xFF95A1AC),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                        width: 1,
+                                        color: Color(0xFF4B39EF),
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                        width: 1,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(40),
+                                      borderSide: const BorderSide(
+                                        width: 1,
+                                        color: Color(0xFF1D2428),
+                                      ),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                          width: 1, color: Colors.red),
+                                    ),
+                                    contentPadding: const EdgeInsets.all(24),
+                                  ),
+                                  validator: Validatorless.required(
+                                    "Email tidak boleh kosong",
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20,
+                                  horizontal: 20,
+                                ),
+                                child: TextFormField(
+                                  autofocus: false,
+                                  controller: controller.passwordSignUp,
+                                  obscureText: controller.showPass.value,
+                                  keyboardType: TextInputType.visiblePassword,
+                                  decoration: InputDecoration(
+                                    labelText: 'Password',
+                                    labelStyle: GoogleFonts.readexPro(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.normal,
+                                      color: const Color(0xFF95A1AC),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                        width: 1,
+                                        color: Color(0xFF4B39EF),
+                                      ),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                          width: 1, color: Colors.grey),
+                                    ),
+                                    focusedErrorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(40),
+                                      borderSide: const BorderSide(
+                                        width: 1,
+                                        color: Color(0xFF1D2428),
+                                      ),
+                                    ),
+                                    errorBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                      borderSide: const BorderSide(
+                                          width: 1, color: Colors.red),
+                                    ),
+                                    contentPadding: const EdgeInsets.all(24),
+                                    suffixIcon: GestureDetector(
+                                      onTap: () => controller.showPass.value
+                                          ? controller.showPass(false)
+                                          : controller.showPass(true),
+                                      child: Icon(
+                                          controller.showPass.value
+                                              ? Icons.visibility_rounded
+                                              : Icons.visibility_off_rounded,
+                                          color: const Color(0xFF95A1AC)),
+                                    ),
+                                  ),
+                                  validator: Validatorless.multiple([
+                                    Validatorless.required(
+                                        'Password tidak boleh kosong'),
+                                    Validatorless.min(
+                                        8, 'Password tidak sesuai')
+                                  ]),
                                 ),
                               ),
                               Padding(

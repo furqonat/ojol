@@ -1,61 +1,55 @@
 import 'package:lugo_driver/api/api_service.dart';
 
-class ApiFormJoin{
-
+class ApiFormJoin {
   Future<dynamic> joinLugo({
-    required String driver_type,
+    required String driverType,
     required String address,
-    required String license_image,
-    required String id_card_image,
-    required String vehicle_type,
-    required String vehicle_brand,
-    required String vehicle_year,
-    required String vehicle_image,
-    required String vehicle_registration,
-    required String vehicle_rn,
+    required String licenseImage,
+    required String idCardImage,
+    required String vehicleType,
+    required String vehicleBrand,
+    required String vehicleYear,
+    required String vehicleImage,
+    required String vehicleRegistration,
+    required String vehicleRn,
     required String referal,
     required String name,
     required String token,
-  })async{
-
+  }) async {
     final body = {
       "details": {
-        "driver_type": driver_type,
+        "driver_type": driverType,
         "address": address,
-        "license_image": license_image,
-        "id_card_image": id_card_image,
+        "license_image": licenseImage,
+        "id_card_image": idCardImage,
         "vehicle": {
           "create": {
-            "vehicle_type": vehicle_type, // BIKE or CAR,
-            "vehicle_brand": vehicle_brand,
-            "vehicle_year": vehicle_year,
-            "vehicle_image": vehicle_image,
-            "vehicle_registration": vehicle_registration, // FOTO stnk
-            "vehicle_rn": vehicle_rn // plat nomor
+            "vehicle_type": vehicleType, // BIKE or CAR,
+            "vehicle_brand": vehicleBrand,
+            "vehicle_year": vehicleYear,
+            "vehicle_image": vehicleImage,
+            "vehicle_registration": vehicleRegistration, // FOTO stnk
+            "vehicle_rn": vehicleRn // plat nomor
           }
         }
       },
       "referal": referal,
-      "name" : name
+      "name": name
     };
 
-    print(body);
-
-    var r = await ApiService().apiJSONPostWithFirebaseToken('account', 'driver', body, token);
+    var r = await ApiService()
+        .apiJSONPostWithFirebaseToken('account', 'driver', body, token);
     return r;
   }
 
-  Future<dynamic> sendToken ({
+  Future<dynamic> sendToken({
     required String sample,
     required String token,
-  })async{
+  }) async {
+    final body = {"sample": sample};
 
-    final body = {
-      "sample" : sample
-    };
-
-    var r = await ApiService().apiJSONPostWithFirebaseToken('auth', 'driver', body, token);
+    var r = await ApiService()
+        .apiJSONPostWithFirebaseToken('auth', 'driver', body, token);
     return r;
   }
-
 }

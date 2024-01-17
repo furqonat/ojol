@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'controller_orderfinish.dart';
 
-class PageOrderFinish extends GetView<ControllerOrderFinish>{
+class PageOrderFinish extends GetView<ControllerOrderFinish> {
   const PageOrderFinish({super.key});
 
   @override
@@ -16,13 +16,11 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
         automaticallyImplyLeading: false,
         centerTitle: true,
         elevation: 0,
-        title: Text(
-            "Sudah Sampai",
+        title: Text("Sudah Sampai",
             style: GoogleFonts.readexPro(
               color: const Color(0xFF3978EF),
               fontWeight: FontWeight.bold,
-            )
-        ),
+            )),
       ),
       body: Column(
         children: <Widget>[
@@ -36,8 +34,7 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                       width: 90,
                       height: 90,
                       fit: BoxFit.cover,
-                      image: AssetImage('assets/images/sample_food.png')
-                  ),
+                      image: AssetImage('assets/images/sample_food.png')),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
@@ -88,22 +85,14 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                     style: GoogleFonts.readexPro(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF3978EF)
-                    ),
+                        color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                      const TextSpan(
-                          text: 'ID Transaksi'
-                      ),
-                      TextSpan(
-                          text: ' 1234567899',
-                          style: GoogleFonts.readexPro(
-                              fontSize: 16,
-                              color: Colors.black54
-                          )
-                      ),
-                    ]
-                )
-            ),
+                  const TextSpan(text: 'ID Transaksi'),
+                  TextSpan(
+                      text: ' 1234567899',
+                      style: GoogleFonts.readexPro(
+                          fontSize: 16, color: Colors.black54)),
+                ])),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
@@ -112,22 +101,14 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                     style: GoogleFonts.readexPro(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF3978EF)
-                    ),
+                        color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                      const TextSpan(
-                          text: 'ID Order'
-                      ),
-                      TextSpan(
-                          text: ' 1234567899',
-                          style: GoogleFonts.readexPro(
-                              fontSize: 16,
-                              color: Colors.black54
-                          )
-                      ),
-                    ]
-                )
-            ),
+                  const TextSpan(text: 'ID Order'),
+                  TextSpan(
+                      text: ' 1234567899',
+                      style: GoogleFonts.readexPro(
+                          fontSize: 16, color: Colors.black54)),
+                ])),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
@@ -136,22 +117,14 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                     style: GoogleFonts.readexPro(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: const Color(0xFF3978EF)
-                    ),
+                        color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                      const TextSpan(
-                          text: 'Pembayaran'
-                      ),
-                      TextSpan(
-                          text: ' | cash',
-                          style: GoogleFonts.readexPro(
-                              fontSize: 16,
-                              color: Colors.black54
-                          )
-                      ),
-                    ]
-                )
-            ),
+                  const TextSpan(text: 'Pembayaran'),
+                  TextSpan(
+                      text: ' | cash',
+                      style: GoogleFonts.readexPro(
+                          fontSize: 16, color: Colors.black54)),
+                ])),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 50, 10, 50),
@@ -175,14 +148,11 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Text(
-                          "Rating Driver",
+                      Text("Rating Driver",
                           style: GoogleFonts.readexPro(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: const Color(0xFF3978EF)
-                          )
-                      ),
+                              color: const Color(0xFF3978EF))),
                       AnimatedRatingStars(
                         starSize: 16,
                         initialRating: 3,
@@ -194,23 +164,18 @@ class PageOrderFinish extends GetView<ControllerOrderFinish>{
                     ],
                   ),
                   ElevatedButton(
-                      onPressed: (){},
+                      onPressed: () {},
                       style: ElevatedButton.styleFrom(
                           elevation: 5,
                           fixedSize: Size(Get.width, Get.height * 0.06),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)
-                          ),
-                          backgroundColor: const Color(0xFF3978EF)
-                      ),
+                              borderRadius: BorderRadius.circular(12)),
+                          backgroundColor: const Color(0xFF3978EF)),
                       child: Text(
                         "Selesai",
                         style: GoogleFonts.readexPro(
-                            fontSize: 16,
-                            color: Colors.white
-                        ),
-                      )
-                  )
+                            fontSize: 16, color: Colors.white),
+                      ))
                 ],
               ),
             ),
