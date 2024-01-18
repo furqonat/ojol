@@ -34,10 +34,11 @@ class PageAuth extends GetView<ControllerAuth> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: const Image(
-                  width: 300.0,
-                  height: 200.0,
-                  fit: BoxFit.contain,
-                  image: AssetImage('assets/images/LUGO DRIVER.png')),
+                width: 300.0,
+                height: 200.0,
+                fit: BoxFit.contain,
+                image: AssetImage('assets/images/LUGO DRIVER.png'),
+              ),
             ),
           ),
           SliverToBoxAdapter(

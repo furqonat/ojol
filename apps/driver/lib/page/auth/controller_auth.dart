@@ -81,6 +81,7 @@ class ControllerAuth extends GetxController
         // print(token);
         final resp = await authClient.driverSignIn("Bearer $token");
         if (resp.message == 'OK') {
+          preferences.setPatnerType(partnerType.value);
           preferences.setReferal(referal.text);
           Get.toNamed(Routes.phoneVerification);
         } else {

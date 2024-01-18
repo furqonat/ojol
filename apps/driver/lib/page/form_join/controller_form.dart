@@ -1,17 +1,16 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lugo_driver/api/local_serivce.dart';
 import 'package:lugo_driver/route/route_name.dart';
 import 'package:lugo_driver/shared/preferences.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:rest_client/account_client.dart';
+
 import 'api_form.dart';
 
 class ControllerFormJoin extends GetxController {
@@ -26,77 +25,70 @@ class ControllerFormJoin extends GetxController {
 
   final formkeyAuthRegister = GlobalKey<FormState>();
 
-  var partnerType = ''.obs;
-  var referal = ''.obs;
+  final partnerType = ''.obs;
+  final referal = ''.obs;
 
-  var fullName = TextEditingController();
-  var completeAddress = TextEditingController();
-  var phone = TextEditingController();
-  var vehicle = TextEditingController();
-  var vehicleBrand = TextEditingController();
-  var vehicleYear = TextEditingController();
-  var vehicleRn = TextEditingController();
+  final fullName = TextEditingController();
+  final completeAddress = TextEditingController();
+  final phone = TextEditingController();
+  final vehicle = TextEditingController();
+  final vehicleBrand = TextEditingController();
+  final vehicleYear = TextEditingController();
+  final vehicleRn = TextEditingController();
 
-  var edtEmail = TextEditingController();
-  var edtPassword = TextEditingController();
+  final viewIdCard = ''.obs;
+  final viewVehicleRegistration = ''.obs;
+  final viewVehicleRegistation = ''.obs;
+  final viewVehicle = ''.obs;
 
-  var edtOTP = TextEditingController();
+  final idCardImageLink = ''.obs;
+  final vehicleRegistrationImageLink = ''.obs;
+  final drivingLicenseImageLink = ''.obs;
+  final vehicleImageLink = ''.obs;
 
-  var showPassword = true.obs;
-
-  var viewKTP = ''.obs;
-  var viewSTNK = ''.obs;
-  var viewSIM = ''.obs;
-  var viewKendaraan = ''.obs;
-
-  var uploadKTP = ''.obs;
-  var uploadSTNK = ''.obs;
-  var uploadSIM = ''.obs;
-  var uploadKendaraan = ''.obs;
-
-  late XFile fileKTP = XFile(''),
-      fileSTNK = XFile(''),
-      fileSIM = XFile(''),
-      fileKendaraan = XFile('');
+  var idCardFile = XFile('');
+  var vehicleRegistrationFile = XFile('');
+  var drivingLicenseFile = XFile('');
+  var vehicleFile = XFile('');
 
   final ImagePicker picker = ImagePicker();
 
-  final firebase = FirebaseAuth.instance;
+  final _fbAuth = FirebaseAuth.instance;
 
   //KTP
-  getKTPFromCamera() async {
+  getIdCardFromCamera() async {
     final XFile? camImage =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
-      viewKTP.value = camImage.path;
-      fileKTP = camImage;
-      uploadKTPImage();
+      viewIdCard.value = camImage.path;
+      idCardFile = camImage;
+      uploadIdCard();
     }
   }
 
-  getKTPFromFile() async {
+  getIdCardFromFile() async {
     final XFile? fileImage =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
-      viewKTP.value = fileImage.path;
-      fileKTP = fileImage;
-      uploadKTPImage();
+      viewIdCard.value = fileImage.path;
+      idCardFile = fileImage;
+      uploadIdCard();
     }
   }
 
-  uploadKTPImage() async {
-    String fileName = fileKTP.name;
+  uploadIdCard() async {
+    String fileName = idCardFile.name;
     final path = 'user/vehicle/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
 
     try {
-      File fileToUpload = File(fileKTP.path);
+      File fileToUpload = File(idCardFile.path);
 
       UploadTask uploadTask = ref.putFile(fileToUpload);
 
       uploadTask.whenComplete(() async {
         String downloadURL = await ref.getDownloadURL();
-        uploadKTP.value = downloadURL;
+        idCardImageLink.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto KTP berhasil di unggah');
       });
     } catch (e) {
@@ -104,81 +96,82 @@ class ControllerFormJoin extends GetxController {
     }
   }
 
-  //STNK
-  getSTNKFromCamera() async {
+  //VehicleRegistration
+  getVehicleRegistrationFromCamera() async {
     final XFile? camImage =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
-      viewSTNK.value = camImage.path;
-      fileSTNK = camImage;
-      uploadSTNKImage();
+      viewVehicleRegistration.value = camImage.path;
+      vehicleRegistrationFile = camImage;
+      uploadVehicleRegistrationImage();
     }
   }
 
-  getSTNKFromFile() async {
+  getVehicleRegistrationFromFile() async {
     final XFile? fileImage =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
-      viewSTNK.value = fileImage.path;
-      fileSTNK = fileImage;
-      uploadSTNKImage();
+      viewVehicleRegistration.value = fileImage.path;
+      vehicleRegistrationFile = fileImage;
+      uploadVehicleRegistrationImage();
     }
   }
 
-  uploadSTNKImage() async {
-    String fileName = fileSTNK.name;
+  uploadVehicleRegistrationImage() async {
+    String fileName = vehicleRegistrationFile.name;
     final path = 'user/vehicle/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
 
     try {
-      File fileToUpload = File(fileSTNK.path);
+      File fileToUpload = File(vehicleRegistrationFile.path);
 
       UploadTask uploadTask = ref.putFile(fileToUpload);
 
       uploadTask.whenComplete(() async {
         String downloadURL = await ref.getDownloadURL();
-        uploadSTNK.value = downloadURL;
-        Fluttertoast.showToast(msg: 'Foto STNK berhasil di unggah');
+        vehicleRegistrationImageLink.value = downloadURL;
+        Fluttertoast.showToast(
+            msg: 'Foto VehicleRegistration berhasil di unggah');
       });
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Foto STNK gagal di unggah');
+      Fluttertoast.showToast(msg: 'Foto VehicleRegistration gagal di unggah');
     }
   }
 
   //SIM
-  getSIMFromCamera() async {
+  getDrivingLicenseFromCamera() async {
     final XFile? camImage =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
-      viewSIM.value = camImage.path;
-      fileSIM = camImage;
-      uploadSIMImage();
+      viewVehicleRegistation.value = camImage.path;
+      drivingLicenseFile = camImage;
+      uploadDriverLicenseImage();
     }
   }
 
-  getSIMFromFile() async {
+  getDrivingLicenseFromFile() async {
     final XFile? fileImage =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
-      viewSIM.value = fileImage.path;
-      fileSIM = fileImage;
-      uploadSIMImage();
+      viewVehicleRegistation.value = fileImage.path;
+      drivingLicenseFile = fileImage;
+      uploadDriverLicenseImage();
     }
   }
 
-  uploadSIMImage() async {
-    String fileName = fileSTNK.name;
+  uploadDriverLicenseImage() async {
+    String fileName = vehicleRegistrationFile.name;
     final path = 'user/vehicle/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
 
     try {
-      File fileToUpload = File(fileSIM.path);
+      File fileToUpload = File(drivingLicenseFile.path);
 
       UploadTask uploadTask = ref.putFile(fileToUpload);
 
       uploadTask.whenComplete(() async {
         String downloadURL = await ref.getDownloadURL();
-        uploadSIM.value = downloadURL;
+        drivingLicenseImageLink.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto SIM berhasil di unggah');
       });
     } catch (e) {
@@ -186,40 +179,39 @@ class ControllerFormJoin extends GetxController {
     }
   }
 
-  //Kendaraan
-  getKendaraanFromCamera() async {
+  getVehicleImageFromCamera() async {
     final XFile? camImage =
         await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
-      viewKendaraan.value = camImage.path;
-      fileKendaraan = camImage;
-      uploadKendaraanImage();
+      viewVehicle.value = camImage.path;
+      vehicleFile = camImage;
+      uploadVehicleImage();
     }
   }
 
-  getKendaraanFromFile() async {
+  getVehicleImageFromFile() async {
     final XFile? fileImage =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
-      viewKendaraan.value = fileImage.path;
-      fileKendaraan = fileImage;
-      uploadKendaraanImage();
+      viewVehicle.value = fileImage.path;
+      vehicleFile = fileImage;
+      uploadVehicleImage();
     }
   }
 
-  uploadKendaraanImage() async {
-    String fileName = fileKendaraan.name;
+  uploadVehicleImage() async {
+    String fileName = vehicleFile.name;
     final path = 'user/vehicle/$fileName';
     final ref = FirebaseStorage.instance.ref().child(path);
 
     try {
-      File fileToUpload = File(fileKendaraan.path);
+      File fileToUpload = File(vehicleFile.path);
 
       UploadTask uploadTask = ref.putFile(fileToUpload);
 
       uploadTask.whenComplete(() async {
         String downloadURL = await ref.getDownloadURL();
-        uploadKendaraan.value = downloadURL;
+        vehicleImageLink.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto Kendaraan berhasil di unggah');
       });
     } catch (e) {
@@ -227,189 +219,43 @@ class ControllerFormJoin extends GetxController {
     }
   }
 
-  //Register with firebase register
-  firebaseRegister(BuildContext context) async {
+  Future handleApplyDriver() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: edtEmail.text, password: edtPassword.text);
-      firebasePhoneVerification(context);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'The email address is already in use by another account.') {
-        Fluttertoast.showToast(msg: 'This email already use by another user');
-      }
-    }
-  }
-
-  firebasePhoneVerification(BuildContext context) async {
-    try {
-      await firebase.verifyPhoneNumber(
-        phoneNumber: '+62${phone.text}',
-        verificationFailed: (error) {},
-        timeout: const Duration(minutes: 2),
-        codeAutoRetrievalTimeout: (verificationId) {},
-        verificationCompleted: (phoneAuthCredential) {},
-        codeSent: (verificationId, forceResendingToken) async {
-          showModalBottomSheet(
-            context: context,
-            isDismissible: false,
-            constraints:
-                BoxConstraints.expand(width: Get.width, height: Get.height),
-            builder: (context) => Column(
-              children: [
-                Text(
-                  "PIN OTP",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                      fontSize: 30,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: Text(
-                    "Kode OTP sudah kami kirimkan menuju nomor ${phone.text}\nJangan sebarkan kode ini kepada siapapun.",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                        fontSize: 12, color: Colors.black54),
-                  ),
-                ),
-                PinCodeTextField(
-                  length: 6,
-                  autoFocus: false,
-                  hintCharacter: '-',
-                  appContext: context,
-                  enableActiveFill: false,
-                  keyboardType: TextInputType.number,
-                  controller: edtOTP,
-                  textStyle: GoogleFonts.readexPro(
-                    fontSize: 12,
-                    color: const Color(0xFF4B39EF),
-                  ),
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  pinTheme: PinTheme(
-                    fieldHeight: 50.0,
-                    fieldWidth: 50.0,
-                    borderWidth: 2.0,
-                    borderRadius: BorderRadius.circular(12.0),
-                    shape: PinCodeFieldShape.box,
-                    activeColor: const Color(0xFF4B39EF),
-                    inactiveColor: const Color(0xFFF1F4F8),
-                    selectedColor: const Color(0xFF95A1AC),
-                    activeFillColor: const Color(0xFF4B39EF),
-                    inactiveFillColor: const Color(0xFFF1F4F8),
-                    selectedFillColor: const Color(0xFF95A1AC),
-                  ),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                    onPressed: () async {
-                      final credential = PhoneAuthProvider.credential(
-                          verificationId: verificationId, smsCode: edtOTP.text);
-                      firebase.currentUser
-                          ?.updatePhoneNumber(credential)
-                          .then((value) async {
-                        var useToken = await firebase.currentUser?.getIdToken();
-                        sendToken(context, useToken!);
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                        elevation: 5,
-                        fixedSize: Size(Get.width * 0.5, Get.height * 0.07),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(40)),
-                        backgroundColor: const Color(0xFF3978EF)),
-                    child: Text(
-                      "Lanhjutkan",
-                      style: GoogleFonts.readexPro(
-                          fontSize: 16, color: Colors.white),
-                    ))
-              ],
-            ),
-          );
-        },
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        Fluttertoast.showToast(msg: 'No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        Fluttertoast.showToast(msg: 'Wrong password provided for that user.');
-      }
-    }
-  }
-
-  sendToken(BuildContext context, String token) async {
-    try {
-      var r = await api.sendToken(sample: '', token: token);
-      if (r["message"] == "OK") {
-        joinLugo();
-      } else {
-        log('save token gagal');
-      }
-    } catch (e, stackTrace) {
-      log(e.toString());
-      log(stackTrace.toString());
-    }
-  }
-
-  joinLugo() async {
-    try {
-      final token = await firebase.currentUser!.getIdToken(true);
-
-      // final pattern = RegExp('.{1,800}');
-      // pattern.allMatches(token!).forEach((match) => debugPrint(match.group(0)));
+      final token = await _fbAuth.currentUser!.getIdToken(true);
+      print(referal.value);
       final body = {
         "details": {
           "driver_type": partnerType.value,
-          "address": completeAddress,
-          "license_image": uploadSIM.value,
-          "id_card_image": uploadKTP.value,
+          "address": completeAddress.text,
+          "license_image": drivingLicenseImageLink.value,
+          "id_card_image": idCardImageLink.value,
           "vehicle": {
             "create": {
               "vehicle_type": partnerType.value, // BIKE or CAR,
               "vehicle_brand": vehicleBrand.text,
               "vehicle_year": vehicleYear.text,
-              "vehicle_image": uploadKendaraan.value,
-              "vehicle_registration": uploadSTNK.value, // FOTO stnk
+              "vehicle_image": vehicleImageLink.value,
+              "vehicle_registration": vehicleRegistrationImageLink.value,
               "vehicle_rn": vehicleRn.text // plat nomor
             }
           }
         },
-        "referal": referal,
+        "referal": referal.value,
         "name": fullName.text,
+        "phone": _fbAuth.currentUser?.phoneNumber,
       };
+      print(body);
       final resp = await accountClient.applyToBeDriver(
         bearerToken: "Bearer $token",
         body: body,
       );
+      print(resp.message);
       if (resp.message == 'OK') {
         Get.offAndToNamed(Routes.main);
       }
     } catch (e, stackTrace) {
       log('$e');
       log('$stackTrace');
-    }
-  }
-
-  getFirebasetoken() async {
-    try {
-      final userCredential =
-          await FirebaseAuth.instance.currentUser?.getIdToken(true);
-      if (userCredential != null) {
-        await LocalService().setIsLogin(isLogin: true);
-        Get.offAllNamed(Routes.main);
-      }
-    } on FirebaseAuthException catch (e) {
-      switch (e.code) {
-        case "invalid-custom-token":
-          log("The supplied token is not a Firebase custom auth token.");
-          break;
-        case "custom-token-mismatch":
-          log("The supplied token is for a different Firebase project.");
-          break;
-        default:
-          log("Unkown error.");
-      }
     }
   }
 

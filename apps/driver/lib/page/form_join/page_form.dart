@@ -254,7 +254,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                       actions: [
                         OutlinedButton(
                             onPressed: () {
-                              controller.getKTPFromFile();
+                              controller.getIdCardFromFile();
                               Get.back();
                             },
                             child: Text(
@@ -263,7 +263,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                             )),
                         OutlinedButton(
                             onPressed: () {
-                              controller.getKTPFromCamera();
+                              controller.getIdCardFromCamera();
                               Get.back();
                             },
                             child: Text(
@@ -273,7 +273,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                       ],
                     ),
                   ),
-                  child: controller.viewKTP.value.isNotEmpty
+                  child: controller.viewIdCard.value.isNotEmpty
                       ? Padding(
                           padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                           child: ClipRRect(
@@ -282,7 +282,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                                 width: Get.width,
                                 height: Get.height * 0.25,
                                 fit: BoxFit.cover,
-                                File(controller.viewKTP.value)),
+                                File(controller.viewIdCard.value)),
                           ),
                         )
                       : Container(
@@ -305,67 +305,68 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                 ),
               ),
               SliverToBoxAdapter(
-                  child: GestureDetector(
-                onTap: () => showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog.adaptive(
-                    content: Text(
-                      'Ingin ambil gambar dari mana?',
-                      style: GoogleFonts.readexPro(fontSize: 12),
-                    ),
-                    actions: [
-                      OutlinedButton(
-                          onPressed: () {
-                            controller.getSTNKFromFile();
-                            Get.back();
-                          },
-                          child: Text(
-                            'Galeri',
-                            style: GoogleFonts.readexPro(fontSize: 12),
-                          )),
-                      OutlinedButton(
-                          onPressed: () {
-                            controller.getSTNKFromCamera();
-                            Get.back();
-                          },
-                          child: Text(
-                            'Kamera',
-                            style: GoogleFonts.readexPro(fontSize: 12),
-                          )),
-                    ],
-                  ),
-                ),
-                child: controller.viewSTNK.value.isEmpty
-                    ? Container(
-                        width: Get.width,
-                        height: Get.height * 0.25,
-                        margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(12)),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Upload STNK',
-                          style: GoogleFonts.readexPro(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xFF3978EF),
-                          ),
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.file(
-                            File(controller.viewSTNK.value),
-                            width: Get.width,
-                            height: Get.height * 0.25,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                child: GestureDetector(
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog.adaptive(
+                      content: Text(
+                        'Ingin ambil gambar dari mana?',
+                        style: GoogleFonts.readexPro(fontSize: 12),
                       ),
-              )),
+                      actions: [
+                        OutlinedButton(
+                            onPressed: () {
+                              controller.getVehicleRegistrationFromFile();
+                              Get.back();
+                            },
+                            child: Text(
+                              'Galeri',
+                              style: GoogleFonts.readexPro(fontSize: 12),
+                            )),
+                        OutlinedButton(
+                            onPressed: () {
+                              controller.getVehicleRegistrationFromCamera();
+                              Get.back();
+                            },
+                            child: Text(
+                              'Kamera',
+                              style: GoogleFonts.readexPro(fontSize: 12),
+                            )),
+                      ],
+                    ),
+                  ),
+                  child: controller.viewVehicleRegistration.value.isEmpty
+                      ? Container(
+                          width: Get.width,
+                          height: Get.height * 0.25,
+                          margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(12)),
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Upload STNK Kendaraan',
+                            style: GoogleFonts.readexPro(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF3978EF),
+                            ),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.file(
+                              File(controller.viewVehicleRegistration.value),
+                              width: Get.width,
+                              height: Get.height * 0.25,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                ),
+              ),
               SliverToBoxAdapter(
                 child: GestureDetector(
                   onTap: () => showDialog(
@@ -378,7 +379,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                       actions: [
                         OutlinedButton(
                             onPressed: () {
-                              controller.getSIMFromFile();
+                              controller.getDrivingLicenseFromFile();
                               Get.back();
                             },
                             child: Text(
@@ -387,7 +388,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                             )),
                         OutlinedButton(
                             onPressed: () {
-                              controller.getSIMFromCamera();
+                              controller.getDrivingLicenseFromCamera();
                               Get.back();
                             },
                             child: Text(
@@ -397,7 +398,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                       ],
                     ),
                   ),
-                  child: controller.viewSIM.value.isEmpty
+                  child: controller.viewVehicleRegistation.value.isEmpty
                       ? Container(
                           width: Get.width,
                           height: Get.height * 0.25,
@@ -420,7 +421,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.file(
-                              File(controller.viewSIM.value),
+                              File(controller.viewVehicleRegistation.value),
                               width: Get.width,
                               height: Get.height * 0.25,
                               fit: BoxFit.cover,
@@ -441,7 +442,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                       actions: [
                         OutlinedButton(
                             onPressed: () {
-                              controller.getKendaraanFromFile();
+                              controller.getVehicleImageFromFile();
                               Get.back();
                             },
                             child: Text(
@@ -450,7 +451,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                             )),
                         OutlinedButton(
                             onPressed: () {
-                              controller.getKendaraanFromCamera();
+                              controller.getVehicleImageFromCamera();
                               Get.back();
                             },
                             child: Text(
@@ -460,7 +461,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                       ],
                     ),
                   ),
-                  child: controller.viewKendaraan.value.isEmpty
+                  child: controller.viewVehicle.value.isEmpty
                       ? Container(
                           width: Get.width,
                           height: Get.height * 0.25,
@@ -483,7 +484,7 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(12),
                             child: Image.file(
-                              File(controller.viewKendaraan.value),
+                              File(controller.viewVehicle.value),
                               width: Get.width,
                               height: Get.height * 0.25,
                               fit: BoxFit.cover,
@@ -502,10 +503,10 @@ class PageFormJoin extends GetView<ControllerFormJoin> {
                     width: Get.width * 0.45,
                     height: Get.height * 0.07,
                     color: const Color(0xFF3978EF),
-                    onTap: () {
+                    onTap: () async {
                       if (controller.formkeyAuthRegister.currentState!
                           .validate()) {
-                        controller.firebaseRegister(context);
+                        await controller.handleApplyDriver();
                       }
                     },
                   ),

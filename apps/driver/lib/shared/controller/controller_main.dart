@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:lugo_driver/page/splash_screen/controller_splash.dart';
 import 'package:lugo_driver/shared/controller/controller_notification.dart';
 import 'package:lugo_driver/shared/controller/controller_user.dart';
@@ -14,7 +13,7 @@ class ControllerMain extends Bindings {
     Get.put(
       ControllerSplash(
         preferences: Preferences(
-          GetStorage(),
+          LocalStorage.instance,
         ),
       ),
     );
