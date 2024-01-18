@@ -40,6 +40,7 @@ export class DriverController {
       details: details.details,
       referal: details.referal,
       name: details.name,
+      phone: details.phone,
     })
   }
 

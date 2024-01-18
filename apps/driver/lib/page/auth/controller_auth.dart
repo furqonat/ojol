@@ -19,6 +19,8 @@ class ControllerAuth extends GetxController
 
   late TabController tabController;
 
+  final _fbAuth = FirebaseAuth.instance;
+
   final signInForm = GlobalKey<FormState>();
   final signUpForm = GlobalKey<FormState>();
 
@@ -45,12 +47,18 @@ class ControllerAuth extends GetxController
       return;
     }
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailSignIn.text,
-        password: passwordSignIn.text,
+      final credential = await _fbAuth.signInWithEmailAndPassword(
+        email: emailSignIn.value.text,
+        password: passwordSignIn.value.text,
       );
-      preferences.setIsSignIn(true);
-      Get.toNamed(Routes.phoneVerification);
+      final token = await credential.user?.getIdToken();
+      final resp = await authClient.driverSignIn("Bearer $token");
+      if (resp.message == 'OK') {
+        preferences.setPatnerType(partnerType.value);
+        Get.toNamed(Routes.phoneVerification);
+      } else {
+        Fluttertoast.showToast(msg: resp.message);
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         Fluttertoast.showToast(msg: 'No user found for that email.');
@@ -64,14 +72,20 @@ class ControllerAuth extends GetxController
     final formState = signUpForm.currentState!.validate();
     final isValidPatner = partnerType.value != "Bergabung sebagai?";
     if (formState && isValidPatner) {
-      preferences.setIsSignIn(false);
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailSignIn.text,
-          password: passwordSignIn.text,
+        final credential = await _fbAuth.createUserWithEmailAndPassword(
+          email: emailSignUp.text,
+          password: passwordSignUp.text,
         );
-        preferences.setIsSignIn(false);
-        Get.toNamed(Routes.phoneVerification);
+        final token = await credential.user?.getIdToken(true);
+        // print(token);
+        final resp = await authClient.driverSignIn("Bearer $token");
+        if (resp.message == 'OK') {
+          preferences.setReferal(referal.text);
+          Get.toNamed(Routes.phoneVerification);
+        } else {
+          Fluttertoast.showToast(msg: resp.message);
+        }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           Fluttertoast.showToast(msg: 'No user found for that email.');
@@ -79,8 +93,6 @@ class ControllerAuth extends GetxController
           Fluttertoast.showToast(msg: 'Wrong password provided for that user.');
         }
       }
-      preferences.setReferal(referal.text);
-      return;
     } else {
       Fluttertoast.showToast(msg: "please fill empty form");
     }
