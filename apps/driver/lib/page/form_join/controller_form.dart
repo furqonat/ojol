@@ -9,25 +9,33 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lugo_driver/api/local_serivce.dart';
 import 'package:lugo_driver/route/route_name.dart';
+import 'package:lugo_driver/shared/preferences.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:rest_client/account_client.dart';
 import 'api_form.dart';
 
 class ControllerFormJoin extends GetxController {
   final ApiFormJoin api;
-  ControllerFormJoin({required this.api});
+  final Preferences preferences;
+  final AccountClient accountClient;
+  ControllerFormJoin({
+    required this.api,
+    required this.preferences,
+    required this.accountClient,
+  });
 
   final formkeyAuthRegister = GlobalKey<FormState>();
 
   var partnerType = ''.obs;
   var referal = ''.obs;
 
-  var edtFullName = TextEditingController();
-  var edtCompleteAddress = TextEditingController();
-  var edtPhone = TextEditingController();
-  var edtTypeTransport = TextEditingController();
-  var edtBrandTransport = TextEditingController();
-  var edtYearTransport = TextEditingController();
-  var edtPlateTransport = TextEditingController();
+  var fullName = TextEditingController();
+  var completeAddress = TextEditingController();
+  var phone = TextEditingController();
+  var vehicle = TextEditingController();
+  var vehicleBrand = TextEditingController();
+  var vehicleYear = TextEditingController();
+  var vehicleRn = TextEditingController();
 
   var edtEmail = TextEditingController();
   var edtPassword = TextEditingController();
@@ -235,7 +243,7 @@ class ControllerFormJoin extends GetxController {
   firebasePhoneVerification(BuildContext context) async {
     try {
       await firebase.verifyPhoneNumber(
-        phoneNumber: '+62${edtPhone.text}',
+        phoneNumber: '+62${phone.text}',
         verificationFailed: (error) {},
         timeout: const Duration(minutes: 2),
         codeAutoRetrievalTimeout: (verificationId) {},
@@ -259,7 +267,7 @@ class ControllerFormJoin extends GetxController {
                 Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 10),
                   child: Text(
-                    "Kode OTP sudah kami kirimkan menuju nomor ${edtPhone.text}\nJangan sebarkan kode ini kepada siapapun.",
+                    "Kode OTP sudah kami kirimkan menuju nomor ${phone.text}\nJangan sebarkan kode ini kepada siapapun.",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.poppins(
                         fontSize: 12, color: Colors.black54),
@@ -346,27 +354,36 @@ class ControllerFormJoin extends GetxController {
 
   joinLugo() async {
     try {
-      var token = await firebase.currentUser!.getIdToken(true);
+      final token = await firebase.currentUser!.getIdToken(true);
 
-      final pattern = RegExp('.{1,800}');
-      pattern.allMatches(token!).forEach((match) => debugPrint(match.group(0)));
-
-      var r = await api.joinLugo(
-          driverType: partnerType.value,
-          address: edtCompleteAddress.text,
-          licenseImage: uploadSIM.value,
-          idCardImage: uploadKTP.value,
-          vehicleType: partnerType.value,
-          vehicleBrand: edtBrandTransport.text,
-          vehicleYear: edtYearTransport.text,
-          vehicleImage: uploadKendaraan.value,
-          vehicleRegistration: uploadSTNK.value,
-          vehicleRn: edtPlateTransport.text,
-          referal: referal.value,
-          name: edtFullName.text,
-          token: token);
-      if (r["message"] == "OK") {
-        getFirebasetoken();
+      // final pattern = RegExp('.{1,800}');
+      // pattern.allMatches(token!).forEach((match) => debugPrint(match.group(0)));
+      final body = {
+        "details": {
+          "driver_type": partnerType.value,
+          "address": completeAddress,
+          "license_image": uploadSIM.value,
+          "id_card_image": uploadKTP.value,
+          "vehicle": {
+            "create": {
+              "vehicle_type": partnerType.value, // BIKE or CAR,
+              "vehicle_brand": vehicleBrand.text,
+              "vehicle_year": vehicleYear.text,
+              "vehicle_image": uploadKendaraan.value,
+              "vehicle_registration": uploadSTNK.value, // FOTO stnk
+              "vehicle_rn": vehicleRn.text // plat nomor
+            }
+          }
+        },
+        "referal": referal,
+        "name": fullName.text,
+      };
+      final resp = await accountClient.applyToBeDriver(
+        bearerToken: "Bearer $token",
+        body: body,
+      );
+      if (resp.message == 'OK') {
+        Get.offAndToNamed(Routes.main);
       }
     } catch (e, stackTrace) {
       log('$e');
@@ -398,20 +415,20 @@ class ControllerFormJoin extends GetxController {
 
   @override
   void dispose() {
-    edtFullName.dispose();
-    edtCompleteAddress.dispose();
-    edtPhone.dispose();
-    edtTypeTransport.dispose();
-    edtBrandTransport.dispose();
-    edtYearTransport.dispose();
-    edtPlateTransport.dispose();
+    fullName.dispose();
+    completeAddress.dispose();
+    phone.dispose();
+    vehicle.dispose();
+    vehicleBrand.dispose();
+    vehicleYear.dispose();
+    vehicleRn.dispose();
     super.dispose();
   }
 
   @override
   void onInit() {
-    partnerType.value = Get.arguments["partner_type"];
-    referal.value = Get.arguments["referal"];
+    partnerType.value = preferences.getPatnerType();
+    referal.value = preferences.getReferal();
     super.onInit();
   }
 }

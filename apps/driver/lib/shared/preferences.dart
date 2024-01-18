@@ -1,35 +1,45 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_storage/get_storage.dart';
 
 const authStatus = 'authStatus';
 const authState = 'authState';
 const referal = 'referal';
+const patnerType = 'patnerType';
+const currentPage = 'currentPage';
 
 class Preferences {
-  final SharedPreferences preferences;
+  final GetStorage preferences;
 
   Preferences(this.preferences);
 
   String getReferal() {
-    return preferences.getString(referal) ?? '';
+    return preferences.read(referal) ?? '';
   }
 
   void setReferal(String ref) {
-    preferences.setString(referal, ref);
+    preferences.write(referal, ref);
   }
 
   bool getAuthstatus() {
-    return preferences.getBool(authStatus) ?? false;
+    return preferences.read(authStatus) ?? false;
   }
 
   void setAuthStatus(bool status) {
-    preferences.setBool(authStatus, status);
+    preferences.write(authStatus, status);
   }
 
-  bool getIsSignIn() {
-    return preferences.getBool(authState) ?? false;
+  String getPatnerType() {
+    return preferences.read(patnerType) ?? '';
   }
 
-  void setIsSignIn([isSignIn = false]) {
-    preferences.setBool(authState, isSignIn);
+  void setPatnerType(String type) {
+    preferences.write(patnerType, type);
+  }
+
+  String getCurrentPage() {
+    return preferences.read(currentPage) ?? '/start';
+  }
+
+  void setCurrentPage(String page) {
+    preferences.write(currentPage, page);
   }
 }

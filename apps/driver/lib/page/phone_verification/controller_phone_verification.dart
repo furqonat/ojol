@@ -20,8 +20,9 @@ class ControllerPhoneVerification extends GetxController {
   final AuthClient authClient;
   final AccountClient accountClient;
   final Preferences preferences;
-  final driver = Driver().obs;
 
+  final driver = Driver().obs;
+  final alreadyLink = false.obs;
   final phone = TextEditingController();
   final smsCode = TextEditingController();
 
@@ -29,6 +30,11 @@ class ControllerPhoneVerification extends GetxController {
 
   handleGetDriver() async {
     final token = await _fbAuth.currentUser?.getIdToken();
+    final currentPhone = _fbAuth.currentUser?.phoneNumber;
+    if (currentPhone != null) {
+      alreadyLink.value = true;
+      phone.value = TextEditingValue(text: currentPhone);
+    }
     final query = QueryBuilder()
       ..addQuery("id", "true")
       ..addQuery("driver_details", "true");
@@ -36,6 +42,7 @@ class ControllerPhoneVerification extends GetxController {
       bearerToken: "Bearer $token",
       queries: query.toMap(),
     );
+    print(resp);
     driver.value = Driver.fromJson(resp);
   }
 
@@ -94,7 +101,7 @@ class ControllerPhoneVerification extends GetxController {
   _reAuthUserWithPhoneNumber(PhoneAuthCredential credential) {
     final currentUser = _fbAuth.currentUser;
     currentUser?.reauthenticateWithCredential(credential).then((value) {
-      preferences.setAuthStatus(true);
+      // preferences.setAuthStatus(true);
       _handleMovePage();
     });
   }

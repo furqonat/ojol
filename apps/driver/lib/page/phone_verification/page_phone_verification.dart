@@ -13,69 +13,75 @@ class PagePhoneVerification extends GetView<ControllerPhoneVerification> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-            child: TextFormField(
-              autofocus: false,
-              keyboardType: TextInputType.phone,
-              controller: controller.phone,
-              style: GoogleFonts.readexPro(
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-                color: const Color(0xFF95A1AC),
-              ),
-              decoration: InputDecoration(
-                labelText: 'Nomor Ponsel',
-                labelStyle: GoogleFonts.readexPro(
+      body: Obx(
+        () => Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: TextFormField(
+                enabled: !controller.alreadyLink.value,
+                autofocus: false,
+                keyboardType: TextInputType.phone,
+                controller: controller.phone,
+                style: GoogleFonts.readexPro(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,
                   color: const Color(0xFF95A1AC),
                 ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                  borderSide: const BorderSide(
-                    width: 1,
-                    color: Color(0xFF4B39EF),
+                decoration: InputDecoration(
+                  labelText: 'Nomor Ponsel',
+                  labelStyle: GoogleFonts.readexPro(
+                    fontSize: 12,
+                    fontWeight: FontWeight.normal,
+                    color: const Color(0xFF95A1AC),
                   ),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                  borderSide: const BorderSide(width: 1, color: Colors.grey),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                  borderSide: const BorderSide(
-                    width: 1,
-                    color: Color(0xFF1D2428),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Color(0xFF4B39EF),
+                    ),
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    borderSide: const BorderSide(width: 1, color: Colors.grey),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    borderSide: const BorderSide(
+                      width: 1,
+                      color: Color(0xFF1D2428),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    borderSide: const BorderSide(width: 1, color: Colors.red),
+                  ),
+                  contentPadding: const EdgeInsets.all(24),
                 ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(40),
-                  borderSide: const BorderSide(width: 1, color: Colors.red),
-                ),
-                contentPadding: const EdgeInsets.all(24),
+                validator:
+                    Validatorless.required("Nomor ponsel tidak boleh kosong"),
               ),
-              validator:
-                  Validatorless.required("Nomor ponsel tidak boleh kosong"),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-            child: LugoButton(
-              textButton: "Lanjutkan",
-              textColor: Colors.white,
-              textSize: 20,
-              width: 90,
-              height: 80,
-              color: const Color(0xFF4B39EF),
-              onTap: () {
-                bottomSheet(context);
-              },
-            ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: LugoButton(
+                textButton: "Lanjutkan",
+                textColor: Colors.white,
+                textSize: 20,
+                width: Get.width * .5,
+                height: 80,
+                color: const Color(0xFF4B39EF),
+                onTap: () {
+                  bottomSheet(context);
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

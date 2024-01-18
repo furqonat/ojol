@@ -1,19 +1,19 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:lugo_driver/page/auth/controller_auth.dart';
 import 'package:lugo_driver/shared/preferences.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'controller_auth.dart';
 import 'package:rest_client/auth_client.dart';
 import 'package:dio/dio.dart';
 
 class BindingAuth implements Bindings {
   @override
-  void dependencies() async {
+  void dependencies() {
     final dio = Dio();
-    final preferences = await SharedPreferences.getInstance();
+    final pref = GetStorage();
     Get.lazyPut<ControllerAuth>(
       () => ControllerAuth(
         authClient: AuthClient(dio),
-        preferences: Preferences(preferences),
+        preferences: Preferences(pref),
       ),
     );
   }

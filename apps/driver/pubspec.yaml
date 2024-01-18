@@ -40,7 +40,6 @@ dependencies:
   rest_client:
     path: ../../libs/rest-client/
   dio: ^5.4.0
-  shared_preferences: ^2.2.2
   phone_number: ^2.0.1
 
 dev_dependencies:
