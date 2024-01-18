@@ -10,6 +10,7 @@ class ControllerSplash extends GetxController {
   void onInit() async {
     await Future.delayed(const Duration(seconds: 3));
     final currentPage = preferences.getCurrentPage();
+    print(currentPage);
     if (currentPage == Routes.index) {
       Get.offAllNamed(Routes.auth);
       return;

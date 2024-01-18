@@ -42,7 +42,6 @@ class ControllerPhoneVerification extends GetxController {
       bearerToken: "Bearer $token",
       queries: query.toMap(),
     );
-    print(resp);
     driver.value = Driver.fromJson(resp);
   }
 

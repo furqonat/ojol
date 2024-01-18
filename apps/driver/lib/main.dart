@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +17,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
+  await LocalStorage.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   LocalNotificationService.initialize();
   runApp(const MyApp());
@@ -37,7 +40,7 @@ class AppView extends StatefulWidget {
 
 class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   String pageName = '';
-  final Preferences preferences = Preferences(GetStorage());
+  final Preferences preferences = Preferences(LocalStorage.instance);
 
   @override
   void initState() {
@@ -56,6 +59,7 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
       var name = value!.route!.settings.name.toString();
       final page = value.current;
       preferences.setCurrentPage(page);
+      log("where :=> $page");
       setState(() {
         pageName = name;
       });

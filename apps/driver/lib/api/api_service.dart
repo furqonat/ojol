@@ -59,7 +59,7 @@ class ApiService {
     } on SocketException {
       data = "Tidak ada koneksi internet";
     } catch (e) {
-      data = "Terjadi kesalahan";
+      data = "Terjadi kesalahan $e";
     }
 
     return data;
