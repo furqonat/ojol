@@ -50,7 +50,7 @@ class ControllerAuth extends GetxController
       )
           .then((value) async {
         final token = await FirebaseAuth.instance.currentUser?.getIdToken();
-        final response = await api.claimToken(token: token!, body: null);
+        final response = await api.claimToken(token: token!, type: null);
         if (response.message == "OK") {
           final newToken =
               await FirebaseAuth.instance.currentUser?.getIdToken(true);
@@ -90,8 +90,9 @@ class ControllerAuth extends GetxController
           .then((value) async {
         if (value.user != null) {
           final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+          print(selectChip.value);
           final response = await api
-              .claimToken(token: token!, body: {"type": selectChip.value});
+              .claimToken(token: token!, type: selectChip.value);
           if (response.message == 'OK' && response.token != null) {
             signUpState.value = AuthState.done;
             await LocalService().setInVerification(true);
