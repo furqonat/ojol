@@ -36,12 +36,14 @@ export function Form() {
       redirect: false,
     })
       .then((resp) => {
+        console.log(resp)
         setLoading(false)
         if (resp?.error) {
           if (!toast.isActive('error')) {
             toast.error('username atau password salah', {
               toastId: 'error',
             })
+            return
           }
         } else {
           setLoading(false)
