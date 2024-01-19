@@ -144,6 +144,7 @@ function Actions(props: { data: User }) {
     }).then((e) => {
       if (e.ok) {
         setStatus(true)
+        window.location.reload()
       } else {
         setStatus(false)
       }

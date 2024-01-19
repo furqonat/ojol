@@ -138,6 +138,7 @@ function Actions(props: { checked: boolean; id: string }) {
       e.json().then(console.log)
       if (e.ok) {
         setStatus(true)
+        window.location.reload()
       } else {
         setStatus(false)
       }
