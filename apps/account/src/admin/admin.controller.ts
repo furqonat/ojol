@@ -174,6 +174,13 @@ export class AdminController {
     return this.adminService.updateDriver(driverId, data)
   }
 
+  // delete driver
+  @Roles(Role.SUPERADMIN, Role.ADMIN)
+  @Delete('driver/:id')
+  async deleteDriver(@Param('id') driverId: string) {
+    return this.adminService.deleteDriver(driverId)
+  }
+
   @Roles(Role.ADMIN, Role.SUPERADMIN)
   @Get('merchant/:id')
   async getMerchant(
@@ -191,6 +198,14 @@ export class AdminController {
   ) {
     return this.adminService.updateMerchant(merchantId, data)
   }
+
+  // delete merchant
+  @Roles(Role.SUPERADMIN)
+  @Delete('merchant/:id')
+  async deleteMerchant(@Param('id') merchantId: string) {
+    return this.adminService.deleteMerchant(merchantId)
+  }
+
   @Roles(Role.SUPERADMIN)
   @Delete(':id')
   async deleteAdmin(@Param('id') adminId: string) {
