@@ -1,10 +1,9 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-const authStatus = 'authStatus';
-const authState = 'authState';
 const referal = 'referal';
 const patnerType = 'patnerType';
-const currentPage = 'currentPage';
+const alreadyJoin = 'alreadyJoin';
+const alreadySignIn = 'alreadySignIn';
 
 class LocalStorage {
   static late final SharedPreferences instance;
@@ -30,14 +29,6 @@ class Preferences {
     preferences.setString(referal, ref);
   }
 
-  bool getAuthstatus() {
-    return preferences.getBool(authStatus) ?? false;
-  }
-
-  void setAuthStatus(bool status) {
-    preferences.setBool(authStatus, status);
-  }
-
   String getPatnerType() {
     return preferences.getString(patnerType) ?? '';
   }
@@ -46,12 +37,19 @@ class Preferences {
     preferences.setString(patnerType, type);
   }
 
-  String getCurrentPage() {
-    final page = preferences.getString(currentPage);
-    return page ?? '/start';
+  bool getAlreadyJoin() {
+    return preferences.getBool(alreadyJoin) ?? false;
   }
 
-  void setCurrentPage(String page) {
-    preferences.setString(currentPage, page);
+  void setAlreadyJoin(bool value) {
+    preferences.setBool(alreadyJoin, value);
+  }
+
+  bool getAlreadySignIn() {
+    return preferences.getBool(alreadySignIn) ?? false;
+  }
+
+  void setAlreadySignIn(bool value) {
+    preferences.setBool(alreadySignIn, value);
   }
 }

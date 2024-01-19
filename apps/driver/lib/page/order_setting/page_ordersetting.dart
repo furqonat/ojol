@@ -19,8 +19,7 @@ class PageOrderSetting extends GetView<ControllerOrderSetting> {
                     borderRadius: BorderRadius.circular(100))),
             icon: const Icon(Icons.chevron_left_rounded, color: Colors.white)),
       ),
-      body: Expanded(
-          child: ListView.builder(
+      body: ListView.builder(
         itemCount: controller.orderSetting.length,
         itemBuilder: (context, index) => Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -79,7 +78,7 @@ class PageOrderSetting extends GetView<ControllerOrderSetting> {
                 ],
               )),
         ),
-      )),
+      ),
     );
   }
 }

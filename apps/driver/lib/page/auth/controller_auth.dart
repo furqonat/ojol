@@ -54,6 +54,7 @@ class ControllerAuth extends GetxController
       final token = await credential.user?.getIdToken();
       final resp = await authClient.driverSignIn("Bearer $token");
       if (resp.message == 'OK') {
+        preferences.setAlreadySignIn(true);
         preferences.setPatnerType(partnerType.value);
         Get.toNamed(Routes.phoneVerification);
       } else {
@@ -83,6 +84,7 @@ class ControllerAuth extends GetxController
         if (resp.message == 'OK') {
           preferences.setPatnerType(partnerType.value);
           preferences.setReferal(referal.text);
+          preferences.setAlreadySignIn(true);
           Get.toNamed(Routes.phoneVerification);
         } else {
           Fluttertoast.showToast(msg: resp.message);

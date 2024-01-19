@@ -8,14 +8,17 @@ class ControllerSplash extends GetxController {
   ControllerSplash({required this.preferences});
   @override
   void onInit() async {
-    await Future.delayed(const Duration(seconds: 3));
-    final currentPage = preferences.getCurrentPage();
-    print(currentPage);
-    if (currentPage == Routes.index) {
-      Get.offAllNamed(Routes.auth);
-      return;
-    }
-    Get.offAllNamed(currentPage);
     super.onInit();
+    await Future.delayed(const Duration(seconds: 3));
+    final alreadyJoin = preferences.getAlreadyJoin();
+    final alreadySignIn = preferences.getAlreadySignIn();
+
+    if (alreadySignIn && alreadyJoin) {
+      Get.offAllNamed(Routes.main);
+    } else if (alreadySignIn && !alreadyJoin) {
+      Get.offAllNamed(Routes.phoneVerification);
+    } else {
+      Get.offAllNamed(Routes.auth);
+    }
   }
 }

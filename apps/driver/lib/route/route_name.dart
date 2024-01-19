@@ -9,4 +9,6 @@ abstract class Routes {
   static const orderSetting = '/order_setting';
   static const joinLugo = '/form_join';
   static const phoneVerification = "/phoneVerification";
+  static const forgotPassword = "/forgot_password";
+  static const wallet = "/wallet";
 }

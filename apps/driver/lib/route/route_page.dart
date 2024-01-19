@@ -1,6 +1,8 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:lugo_driver/page/auth/binding_auth.dart';
 import 'package:lugo_driver/page/auth/page_auth.dart';
+import 'package:lugo_driver/page/forgot_password/binding_forgot_password.dart';
+import 'package:lugo_driver/page/forgot_password/page_forgot_password.dart';
 import 'package:lugo_driver/page/main/binding_main.dart';
 import 'package:lugo_driver/page/main/page_main.dart';
 import 'package:lugo_driver/page/chat/binding_chat.dart';
@@ -19,6 +21,8 @@ import 'package:lugo_driver/page/room_chat/binding_roomchat.dart';
 import 'package:lugo_driver/page/room_chat/page_roomchat.dart';
 import 'package:lugo_driver/page/splash_screen/binding_splash.dart';
 import 'package:lugo_driver/page/splash_screen/page_splash.dart';
+import 'package:lugo_driver/page/wallet/binding_wallet.dart';
+import 'package:lugo_driver/page/wallet/page_wallet.dart';
 import 'package:lugo_driver/route/route_name.dart';
 
 class RoutingPages {
@@ -72,6 +76,16 @@ class RoutingPages {
       name: Routes.phoneVerification,
       page: () => const PagePhoneVerification(),
       binding: BindingPhoneVerification(),
+    ),
+    GetPage(
+      name: Routes.forgotPassword,
+      page: () => const PageForgotPassword(),
+      binding: BindingForgotPassword(),
+    ),
+    GetPage(
+      name: Routes.wallet,
+      page: () => const PageWallet(),
+      binding: BindingWallet(),
     ),
   ];
 }

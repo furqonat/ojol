@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_driver/route/route_name.dart';
 import 'package:lugo_driver/shared/utils.dart';
 import 'controller_historyorder.dart';
 
@@ -39,22 +40,27 @@ class PageHistoryOrder extends GetView<ControllerHistoryOrder> {
               child: Text("Pendapatan hari ini"),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: SizedBox(
-              width: Get.width,
-              height: Get.height * 0.1,
-              child: Card(
-                elevation: 5,
-                color: Colors.white,
-                surfaceTintColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: Center(
-                  child: Text(
-                    '${convertToIdr(10000, 0)}',
-                    style: GoogleFonts.readexPro(
-                        fontSize: 28, fontWeight: FontWeight.bold),
+          GestureDetector(
+            onTap: () {
+              Get.toNamed(Routes.wallet);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: SizedBox(
+                width: Get.width,
+                height: Get.height * 0.1,
+                child: Card(
+                  elevation: 5,
+                  color: Colors.white,
+                  surfaceTintColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Center(
+                    child: Text(
+                      '${convertToIdr(10000, 0)}',
+                      style: GoogleFonts.readexPro(
+                          fontSize: 28, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),

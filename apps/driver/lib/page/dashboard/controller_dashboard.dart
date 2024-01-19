@@ -1,27 +1,43 @@
 import 'dart:async';
 import 'dart:developer';
+
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geocoding/geocoding.dart' as geo;
+import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:lugo_driver/api/local_serivce.dart';
+import 'package:lugo_driver/response/driver.dart';
 import 'package:lugo_driver/response/order.dart';
 import 'package:lugo_driver/response/rider.dart';
 import 'package:lugo_driver/shared/controller/controller_user.dart';
+import 'package:lugo_driver/shared/query_builder.dart';
 import 'package:lugo_driver/shared/utils.dart';
+import 'package:rest_client/account_client.dart';
+import 'package:rest_client/order_client.dart';
+
 import 'api_dashboard.dart';
 
 class ControllerDashboard extends GetxController {
   final ApiDashboard api;
-  ControllerDashboard({required this.api});
+  final OrderClient orderClient;
+  final AccountClient accountClient;
+  final LocalService localService;
+  ControllerDashboard({
+    required this.api,
+    required this.orderClient,
+    required this.accountClient,
+    required this.localService,
+  });
 
-  var orderSetting = true.obs;
+  final autoBid = true.obs;
+  final driver = Driver().obs;
+
   var locationReady = false.obs;
   var docId = "".obs;
   var orderType = "".obs;
@@ -34,18 +50,18 @@ class ControllerDashboard extends GetxController {
 
   final Location location = Location();
 
-  var order = Order().obs;
+  final order = Order().obs;
 
-  Rx<LocationData> locationData =
+  final locationData =
       LocationData.fromMap({"latitude": 0.0, "longitude": 0.0}).obs;
 
   final Completer<GoogleMapController> mapController = Completer();
 
   PolylinePoints polylinePoints = PolylinePoints();
 
-  RxList<LatLng> rute = <LatLng>[].obs;
+  final rute = <LatLng>[].obs;
 
-  var address = ''.obs;
+  final address = ''.obs;
 
   late StreamSubscription<List<Order>> check;
 
@@ -53,12 +69,30 @@ class ControllerDashboard extends GetxController {
 
   RxList<Riders> riders = <Riders>[].obs;
 
-  // 1. cek status nerima order dari penyimpanan lokal
-  initialSetting() async {
-    var statusOrder = await LocalService().getOrderStatus();
-    if (statusOrder != null) {
-      orderSetting.value = statusOrder;
+  handleSetAutoBid() async {
+    final token = await firebase.currentUser?.getIdToken();
+    final resp = await accountClient.updateDriverOrderSetting(
+      bearerToken: "Bearer $token",
+      body: {
+        "autoBid": autoBid.value,
+      },
+    );
+    if (resp.message == 'OK') {
+      log("OK setAutoBid");
     }
+  }
+
+  handleGetAutoBid() async {
+    final token = await firebase.currentUser?.getIdToken();
+    final queries = QueryBuilder()
+      ..addQuery("id", "true")
+      ..addQuery("driver_settings", "true");
+    final resp = await accountClient.getDriver(
+      bearerToken: "Bearer $token",
+      queries: queries.toMap(),
+    );
+    driver.value = Driver.fromJson(resp);
+    autoBid.value = driver.value.setting?.autoBid ?? false;
   }
 
   // 2. sekarang kita track lokasi
@@ -69,46 +103,56 @@ class ControllerDashboard extends GetxController {
         permission != PermissionStatus.grantedLimited) {
       await location.requestPermission();
     }
+    if (permission == PermissionStatus.denied ||
+        permission == PermissionStatus.deniedForever) {
+      // continue;
+    }
     if (!service) {
       await location.requestService();
     }
+    try {
+      location.getLocation().then((location) {
+        locationData.value = LocationData.fromMap(
+            {"latitude": location.latitude, "longitude": location.longitude});
 
-    await location.getLocation().then((location) {
-      locationData.value = LocationData.fromMap(
-          {"latitude": location.latitude, "longitude": location.longitude});
+        geocoding
+            .placemarkFromCoordinates(location.latitude!, location.longitude!)
+            .then(
+              (value) => address(
+                "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}",
+              ),
+            );
+      });
 
-      geo
-          .placemarkFromCoordinates(location.latitude!, location.longitude!)
-          .then((value) => address(
-              "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"));
-    });
+      GoogleMapController googleMapController = await mapController.future;
 
-    GoogleMapController googleMapController = await mapController.future;
+      location.onLocationChanged.listen((it) async {
+        locationData.value = it;
 
-    location.onLocationChanged.listen((it) async {
-      locationData.value = it;
+        googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+            CameraPosition(
+                zoom: 17, target: LatLng(it.latitude!, it.longitude!))));
 
-      googleMapController.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(
-              zoom: 17, target: LatLng(it.latitude!, it.longitude!))));
+        geocoding.placemarkFromCoordinates(it.latitude!, it.longitude!).then(
+            (value) => address(
+                "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"));
 
-      geo.placemarkFromCoordinates(it.latitude!, it.longitude!).then((value) =>
-          address(
-              "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"));
-
-      await api.listenLocation(
-          id: controllerUser.user.value.id ?? "user id",
-          address: address.value,
-          isOnline: orderSetting.value,
-          latitude: num.parse(it.latitude.toString()),
-          longitude: num.parse(it.longitude.toString()),
-          name: controllerUser.user.value.name ?? "name",
-          type: orderType.value,
-          document: docId.value);
-    });
+        await api.listenLocation(
+            id: controllerUser.user.value.id ?? "user id",
+            address: address.value,
+            isOnline: autoBid.value,
+            latitude: num.parse(it.latitude.toString()),
+            longitude: num.parse(it.longitude.toString()),
+            name: controllerUser.user.value.name ?? "name",
+            type: orderType.value,
+            document: docId.value);
+      });
+    } catch (e, stackTrace) {
+      log("$e");
+      log("$stackTrace");
+    }
   }
 
-  // 3. get order berdasarkan status order setting dan tampilin order dialog kalau sesuai
   Stream<List<Order>> getOrder() {
     return api.getOrder(fromJson: (data) => Order.fromJson(data));
   }
@@ -159,11 +203,12 @@ class ControllerDashboard extends GetxController {
                         ),
                         const Spacer(),
                         AnimatedRatingStars(
-                            starSize: 20,
-                            onChanged: (p0) {},
-                            customFilledIcon: Icons.star_rounded,
-                            customHalfFilledIcon: Icons.star_rounded,
-                            customEmptyIcon: Icons.star_rounded)
+                          starSize: 20,
+                          onChanged: (p0) {},
+                          customFilledIcon: Icons.star_rounded,
+                          customHalfFilledIcon: Icons.star_rounded,
+                          customEmptyIcon: Icons.star_rounded,
+                        )
                       ],
                     ),
                   ),
@@ -207,26 +252,6 @@ class ControllerDashboard extends GetxController {
                       ],
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 5),
-                  //   child: Row(
-                  //     children: <Widget>[
-                  //       Text(
-                  //         "Jarak",
-                  //         style: GoogleFonts.readexPro(
-                  //           fontSize: 12,
-                  //         ),
-                  //       ),
-                  //       const Spacer(),
-                  //       Text(
-                  //         '1 KM',
-                  //         style: GoogleFonts.readexPro(
-                  //           fontSize: 12,
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: Row(
@@ -321,15 +346,17 @@ class ControllerDashboard extends GetxController {
     );
   }
 
-  // 4. kalau terima jalan method accept order, tunjukan bottom sheet, buat room chat dan pastikan order setting jadi false supaya nanti pas di jalan gk keganggu sama orderan lain
   acceptOrder() async {
     try {
       final token = await firebase.currentUser?.getIdToken();
-      var r = await api.acceptOrder(orderId: order.value.id!, token: token!);
-      if (r["message"] == 'OK') {
+      final resp = await orderClient.driverAcceptOrder(
+        bearerToken: "Bearer $token",
+        orderId: order.value.id!,
+      );
+      if (resp["message"] == 'OK') {
         showBottomSheet(true);
         initiateChat();
-        orderSetting(false);
+        autoBid(false);
         Get.back();
       } else {
         Fluttertoast.showToast(msg: "Ada yang salah");
@@ -379,8 +406,11 @@ class ControllerDashboard extends GetxController {
   rejectOrder() async {
     try {
       final token = await firebase.currentUser?.getIdToken();
-      var r = await api.rejectOrder(orderId: order.value.id!, token: token!);
-      if (r["message"] == 'OK') {
+      final resp = await orderClient.driverRejectOrder(
+        bearerToken: "Bearer $token",
+        orderId: order.value.id!,
+      );
+      if (resp["message"] == 'OK') {
         Fluttertoast.showToast(msg: "Anda telah membatalkan pesanan");
         Get.back();
       } else {
@@ -402,13 +432,13 @@ class ControllerDashboard extends GetxController {
       var r = await api.initialLocation(
           id: controllerUser.user.value.id ?? "user id",
           address: address.value,
-          isOnline: orderSetting.value,
+          isOnline: autoBid.value,
           latitude: locationData.value.latitude ?? 0,
           longitude: locationData.value.longitude ?? 0,
           name: controllerUser.user.value.name ?? "user name",
           type: orderType.value);
       docId(r);
-      await LocalService().setDocument(doc: r);
+      await localService.setDocument(doc: r);
     } catch (e, stackTrace) {
       log("$e");
       log("$stackTrace");
@@ -417,29 +447,30 @@ class ControllerDashboard extends GetxController {
 
   @override
   void onInit() async {
-    orderType.value = await LocalService().getOrderType() ?? "-";
+    orderType.value = await localService.getOrderType() ?? "-";
 
-    docId.value = await LocalService().getDocument() ?? "";
+    docId.value = await localService.getDocument() ?? "";
 
-    initialSetting();
+    // handleSetAutoBid();
+    handleGetAutoBid();
     getLocation();
-    if (orderSetting.value == true) {
-      check = getOrder().listen((event) {
-        if (event.last.id == controllerUser.user.value.id) {
-          orderDialog(Get.context!);
-        }
-      });
-    }
+    // if (orderSetting.value == true) {
+    //   check = getOrder().listen((event) {
+    //     if (event.last.id == controllerUser.user.value.id) {
+    //       orderDialog(Get.context!);
+    //     }
+    //   });
+    // }
 
-    checkLocation().then((it) {
-      locationReady.value = it.any((element) => element.id == "user id");
+    // checkLocation().then((it) {
+    //   locationReady.value = it.any((element) => element.id == "user id");
 
-      if (!locationReady.value) {
-        initiateLocation();
-      } else {
-        log("lokasi sudah terdaftar");
-      }
-    });
+    //   if (!locationReady.value) {
+    //     initiateLocation();
+    //   } else {
+    //     log("lokasi sudah terdaftar");
+    //   }
+    // });
 
     super.onInit();
   }
@@ -473,11 +504,10 @@ class ControllerDashboard extends GetxController {
                       const Spacer(),
                       Switch.adaptive(
                         activeColor: const Color(0xFF3978EF),
-                        value: orderSetting.value,
+                        value: autoBid.value,
                         onChanged: (value) async {
-                          orderSetting(value);
-                          await LocalService()
-                              .setOrderStatus(statusOrder: value);
+                          autoBid(value);
+                          await localService.setAutoBid(statusOrder: value);
                         },
                       )
                     ],

@@ -42,8 +42,7 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
           stream: controller.getRoomChat(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Expanded(
-                  child: ListView.builder(
+              return ListView.builder(
                 itemCount: 10,
                 itemBuilder: (context, index) => ListTile(
                   onTap: () => Get.toNamed(Routes.chat),
@@ -83,7 +82,7 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
                     ),
                   ),
                 ),
-              ));
+              );
             } else {
               return const Center(
                 child: Text("Ada yang salah"),

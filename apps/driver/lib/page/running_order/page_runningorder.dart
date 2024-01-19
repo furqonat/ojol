@@ -30,8 +30,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
             child: CircularProgressIndicator(),
           );
         } else if (controller.loading.value == Status.success) {
-          return Expanded(
-              child: ListView.builder(
+          return ListView.builder(
             itemCount: 5,
             itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -161,7 +160,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                 ),
               ),
             ),
-          ));
+          );
         } else if (controller.freeOrder.isEmpty) {
           return Center(
             child: Text(controller.empty.value),
