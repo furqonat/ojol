@@ -3,8 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lugo_driver/api/local_serivce.dart';
 import 'package:lugo_driver/page/main/controller_main.dart';
-import 'package:lugo_driver/page/history_order/api_historyorder.dart';
-import 'package:lugo_driver/page/history_order/controller_historyorder.dart';
+import 'package:lugo_driver/page/history_order/controller_history_order.dart';
 import 'package:lugo_driver/page/dashboard/api_dashboard.dart';
 import 'package:lugo_driver/page/profile/api_profile.dart';
 import 'package:lugo_driver/page/profile/controller_profile.dart';
@@ -13,6 +12,7 @@ import 'package:lugo_driver/page/running_order/api_runningorder.dart';
 import 'package:lugo_driver/page/running_order/controller_runningorder.dart';
 import 'package:rest_client/account_client.dart';
 import 'package:rest_client/order_client.dart';
+import 'package:rest_client/transaction_client.dart';
 import '../dashboard/controller_dashboard.dart';
 import '../room_chat/controller_roomchat.dart';
 
@@ -43,7 +43,7 @@ class BindingMain implements Bindings {
     );
     Get.lazyPut<ControllerHistoryOrder>(
       () => ControllerHistoryOrder(
-        api: ApiHistoryOrder(),
+        transactionClient: TransactionClient(dio),
       ),
     );
     Get.lazyPut<ControllerProfile>(
