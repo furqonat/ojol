@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lugo_driver/route/route_name.dart';
+
 import '../../shared/custom_widget/lugo_button.dart';
 import '../../shared/utils.dart';
 import 'controller_dashboard.dart';
@@ -21,47 +21,37 @@ class PageDashboard extends GetView<ControllerDashboard> {
         () => Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            // GoogleMap(
-            //   mapType: MapType.terrain,
-            //   zoomGesturesEnabled: true,
-            //   zoomControlsEnabled: false,
-            //   onMapCreated: (it) => controller.mapController.complete(it),
-            //   initialCameraPosition: CameraPosition(
-            //     zoom: 17,
-            //     target: LatLng(
-            //       controller.locationData.value.latitude ?? -7.8032485,
-            //       controller.locationData.value.longitude ?? 110.3336448,
-            //     ),
-            //   ),
-            //   polylines: {
-            //     Polyline(
-            //       polylineId: const PolylineId("Rute Perjalanan"),
-            //       points: controller.rute.toList(),
-            //       color: const Color(0xFF3978EF),
-            //       width: 5,
-            //       geodesic: false,
-            //     )
-            //   },
-            //   markers: {
-            //     Marker(
-            //       markerId: const MarkerId("Lokasi saya"),
-            //       position: LatLng(
-            //         controller.locationData.value.latitude!,
-            //         controller.locationData.value.longitude!,
-            //       ),
-            //       icon: BitmapDescriptor.defaultMarkerWithHue(
-            //         BitmapDescriptor.hueRed,
-            //       ),
-            //     )
-            //   },
-            // ),
-            const GoogleMap(
+            GoogleMap(
+              mapType: MapType.terrain,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: true,
+              onMapCreated: (it) => controller.mapController.complete(it),
               initialCameraPosition: CameraPosition(
+                zoom: 3,
                 target: LatLng(
-                  -7.8032485,
-                  110.3336448,
+                  controller.locationData.value.latitude ?? -7.8032485,
+                  controller.locationData.value.longitude ?? 110.3336448,
                 ),
               ),
+              polylines: {
+                Polyline(
+                  polylineId: const PolylineId("Rute Perjalanan"),
+                  points: controller.rute.toList(),
+                  color: const Color(0xFF3978EF),
+                  width: 5,
+                  geodesic: false,
+                )
+              },
+              markers: {
+                Marker(
+                  markerId: const MarkerId("Lokasi saya"),
+                  position: LatLng(
+                    controller.locationData.value.latitude!,
+                    controller.locationData.value.longitude!,
+                  ),
+                  icon: controller.marker.value,
+                )
+              },
             ),
             Visibility(
               visible: controller.showBottomSheet.value,

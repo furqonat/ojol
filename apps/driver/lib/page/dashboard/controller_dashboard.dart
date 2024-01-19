@@ -51,6 +51,7 @@ class ControllerDashboard extends GetxController {
   final Location location = Location();
 
   final order = Order().obs;
+  final marker = BitmapDescriptor.defaultMarker.obs;
 
   final locationData =
       LocationData.fromMap({"latitude": 0.0, "longitude": 0.0}).obs;
@@ -471,7 +472,15 @@ class ControllerDashboard extends GetxController {
     //     log("lokasi sudah terdaftar");
     //   }
     // });
-
+    BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(
+        devicePixelRatio: 2.0,
+        textDirection: TextDirection.ltr,
+      ),
+      'assets/images/driver-marker.png',
+    ).then((value) {
+      marker.value = value;
+    });
     super.onInit();
   }
 

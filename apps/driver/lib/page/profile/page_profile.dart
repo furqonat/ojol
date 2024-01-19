@@ -22,7 +22,7 @@ class PageProfile extends GetView<ControllerProfile> {
                     width: Get.width,
                     height: Get.height * 0.3,
                     fit: BoxFit.cover,
-                    imageUrl: '${controller.controllerUser.user.value.avatar}',
+                    imageUrl: '${controller.cUser.value.avatar}',
                     errorWidget: (context, url, error) => Image(
                         width: Get.width,
                         height: Get.height * 0.3,
@@ -49,8 +49,7 @@ class PageProfile extends GetView<ControllerProfile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              controller.controllerUser.user.value.name ??
-                                  "user name",
+                              controller.cUser.value.name ?? "user name",
                               style: GoogleFonts.readexPro(
                                 fontSize: 18,
                                 color: Colors.white,
@@ -58,8 +57,7 @@ class PageProfile extends GetView<ControllerProfile> {
                               ),
                             ),
                             Text(
-                              controller.controllerUser.user.value.email ??
-                                  "user@email.com",
+                              controller.cUser.value.email ?? "user@email.com",
                               style: GoogleFonts.readexPro(
                                   fontSize: 12,
                                   color: Colors.white,
