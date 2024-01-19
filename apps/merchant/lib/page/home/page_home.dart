@@ -183,24 +183,29 @@ class PageHome extends GetView<ControllerHome> {
                           height: Get.height * 0.06,
                           margin: const EdgeInsets.symmetric(horizontal: 20),
                         ),
-                        Column(
-                          children: [
-                            const Icon(
-                              Icons.account_balance_wallet_rounded,
-                              size: 26,
-                              color: Colors.black87,
-                            ),
-                            Obx(
-                              () => Text(
-                                intlNumberCurrency(
-                                  controller.merchant.value.wallet?.balance,
-                                ),
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 24,
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(Routes.balance);
+                          },
+                          child: Column(
+                            children: [
+                              const Icon(
+                                Icons.account_balance_wallet_rounded,
+                                size: 26,
+                                color: Colors.black87,
+                              ),
+                              Obx(
+                                () => Text(
+                                  intlNumberCurrency(
+                                    controller.merchant.value.wallet?.balance,
+                                  ),
+                                  style: GoogleFonts.readexPro(
+                                    fontSize: 24,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),

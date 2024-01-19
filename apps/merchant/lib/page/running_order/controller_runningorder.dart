@@ -17,6 +17,7 @@ class ControllerRunningOrder extends GetxController
   handleGetOrder() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getOrders(token: token!);
+    print(resp);
     newOrder(
       (resp['cancel'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
@@ -32,17 +33,18 @@ class ControllerRunningOrder extends GetxController
           .map((e) => e as Map<String, dynamic>)
           .toList(),
     );
-    print(done);
   }
 
   handleAcceptOrder(String orderId) async {
     final token = await _fbAuth.currentUser?.getIdToken();
     await api.acceptOrder(token: token!, orderId: orderId);
+    handleGetOrder();
   }
 
   handleReject(String orderId) async {
     final token = await _fbAuth.currentUser?.getIdToken();
     await api.rejectOrder(token: token!, orderId: orderId);
+    handleGetOrder();
   }
 
   @override

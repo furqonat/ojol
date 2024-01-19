@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { Prisma, customer } from '@prisma/client/users'
+import { Prisma, customer, dana_token } from '@prisma/client/users'
 import { UrlService } from '../../services/url.service'
 import { useSession } from 'next-auth/react'
 import { useEffect, useRef, useState } from 'react'
@@ -11,6 +11,7 @@ interface User extends customer {
     order: number
     dana_token: number
   }
+  dana_token?: dana_token
 }
 
 type Response = {
@@ -29,9 +30,10 @@ export function Users() {
       )
         .addQuery('id', 'true')
         .addQuery('name', 'true')
-        .addQuery('_count', '{select:{order:true, dana_token:true}}')
+        .addQuery('_count', '{select:{order:true}}')
         .addQuery('status', 'true')
         .addQuery('avatar', 'true')
+        .addQuery('dana_token', 'true')
       fetch(encodeURI(url.build()), {
         headers: {
           Authorization: `Bearer ${data.user.token}`,
@@ -42,7 +44,6 @@ export function Users() {
     }
   }, [data?.user?.token])
 
-  console.log(users)
   return (
     <section>
       <div className="overflow-x-auto">
@@ -58,7 +59,7 @@ export function Users() {
           </thead>
           <tbody>
             {/* row 1 */}
-            {users?.data.map((item, index) => {
+            {users?.data?.map((item, index) => {
               return (
                 <tr key={item.id}>
                   <th>{index + 1}</th>
@@ -80,7 +81,7 @@ export function Users() {
                   </td>
                   <td>
                     <span className="badge badge-ghost badge-sm capitalize">
-                      {item._count.dana_token > 0 ? (
+                      {item?.dana_token ? (
                         <span>Connected</span>
                       ) : (
                         <span>Not Connected </span>
@@ -108,6 +109,7 @@ function Actions(props: { checked: boolean; id: string }) {
 
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
+    setStatus(checked)
     const url =
       process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/customer/${props.id}`
     const body: Prisma.customerUpdateInput = {
@@ -123,6 +125,7 @@ function Actions(props: { checked: boolean; id: string }) {
     }).then((e) => {
       if (e.ok) {
         setStatus(true)
+        window.location.reload()
       } else {
         setStatus(false)
       }

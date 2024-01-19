@@ -1,1 +1,1 @@
-class ApiHistoryFood{}
+class ApiHistoryFood {}

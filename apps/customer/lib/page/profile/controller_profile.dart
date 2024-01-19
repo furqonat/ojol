@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 enum Status { idle, loading, success, failed }
 
-class ControllerProfile extends GetxController{
+class ControllerProfile extends GetxController {
   final ApiProfile api;
   ControllerProfile({required this.api});
 
@@ -23,21 +23,21 @@ class ControllerProfile extends GetxController{
 
   final firebase = FirebaseAuth.instance;
 
-  getUser()async{
-    try{
+  getUser() async {
+    try {
       loading(Status.loading);
       var firebaseToken = await FirebaseAuth.instance.currentUser?.getIdToken();
       var r = await api.userDetail(token: firebaseToken!);
-      if(r["id"] != "" || r["id"] != null){
+      if (r["id"] != "" || r["id"] != null) {
         var user = UserResponse.fromJson(r);
         controllerUser.user.value = user;
         await LocalService().setUser(user: user.toJson());
         loading(Status.success);
-      }else{
+      } else {
         Fluttertoast.showToast(msg: 'Something wrong');
         loading(Status.failed);
       }
-    }catch(e, stackTrace){
+    } catch (e, stackTrace) {
       loading(Status.failed);
       log('$e');
       log('$stackTrace');
@@ -48,84 +48,69 @@ class ControllerProfile extends GetxController{
     String phoneNumber = '+6282324640007';
     String url = 'https://wa.me/$phoneNumber';
     if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(
-          Uri.parse(url),
-          mode: LaunchMode.externalNonBrowserApplication
-      );
+      await launchUrl(Uri.parse(url),
+          mode: LaunchMode.externalNonBrowserApplication);
     } else {
       throw 'Tidak dapat membuka $url';
     }
   }
 
-  giveUsRate(BuildContext context){
+  giveUsRate(BuildContext context) {
     return showDialog(
-        context: context,
-        builder: (context) => AlertDialog.adaptive(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-          shadowColor: Colors.black12,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12)
-          ),
-          title: Text(
-              'Rate Us',
-              style: GoogleFonts.poppins(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              )
-          ),
-          content: SizedBox(
-            width: Get.width,
-            height: Get.height * 0.25,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                          width: 1,
-                          color: Colors.grey
-                      )
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        shadowColor: Colors.black12,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text('Rate Us',
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+            )),
+        content: SizedBox(
+          width: Get.width,
+          height: Get.height * 0.25,
+          child: Column(
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(width: 1, color: Colors.grey)),
+                padding: const EdgeInsets.all(10),
+                child: TextFormField(
+                  maxLines: 5,
+                  autofocus: false,
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
                   ),
-                  padding: const EdgeInsets.all(10),
-                  child: TextFormField(
-                    maxLines: 5,
-                    autofocus: false,
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                    ),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
                       hintText: 'Tell us what you think',
                       hintStyle: GoogleFonts.poppins(
                         fontSize: 12,
-                      )
-                    ),
-                  ),
+                      )),
                 ),
-                AnimatedRatingStars(
-                    starSize: 40,
-                    onChanged: (p0) {},
-                    customFilledIcon: Icons.star_rounded,
-                    customHalfFilledIcon: Icons.star_rounded,
-                    customEmptyIcon: Icons.star_rounded
-                )
-              ],
-            ),
+              ),
+              AnimatedRatingStars(
+                  starSize: 40,
+                  onChanged: (p0) {},
+                  customFilledIcon: Icons.star_rounded,
+                  customHalfFilledIcon: Icons.star_rounded,
+                  customEmptyIcon: Icons.star_rounded)
+            ],
           ),
-          actions: [
-            OutlinedButton(
-                onPressed: (){},
-                child: Text(
-                    'Rate',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    )
-                )
-            )
-          ],
         ),
+        actions: [
+          OutlinedButton(
+              onPressed: () {},
+              child: Text('Rate',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  )))
+        ],
+      ),
     );
   }
 
@@ -134,5 +119,4 @@ class ControllerProfile extends GetxController{
     getUser();
     super.onInit();
   }
-
 }

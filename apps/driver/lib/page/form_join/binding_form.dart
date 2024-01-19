@@ -1,10 +1,22 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
+import 'package:lugo_driver/shared/preferences.dart';
+import 'package:rest_client/account_client.dart';
+
 import 'api_form.dart';
 import 'controller_form.dart';
 
-class BindingFormJoin implements Bindings{
+class BindingFormJoin implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ControllerFormJoin>(() => ControllerFormJoin(api: ApiFormJoin()));
+    final preferences = LocalStorage.instance;
+    final dio = Dio();
+    Get.lazyPut<ControllerFormJoin>(
+      () => ControllerFormJoin(
+        api: ApiFormJoin(),
+        preferences: Preferences(preferences),
+        accountClient: AccountClient(dio),
+      ),
+    );
   }
 }

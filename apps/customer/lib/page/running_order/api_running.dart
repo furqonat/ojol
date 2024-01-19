@@ -1,1 +1,1 @@
-class ApiRunning{}
+class ApiRunning {}

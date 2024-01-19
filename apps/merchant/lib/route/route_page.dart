@@ -5,6 +5,8 @@ import 'package:lugo_marchant/page/auth/binding_auth.dart';
 import 'package:lugo_marchant/page/auth/binding_password.dart';
 import 'package:lugo_marchant/page/auth/forgot_password.dart';
 import 'package:lugo_marchant/page/auth/page_auth.dart';
+import 'package:lugo_marchant/page/balance/binding_balance.dart';
+import 'package:lugo_marchant/page/balance/page_balance.dart';
 import 'package:lugo_marchant/page/bottom_nav/binding_bottomnav.dart';
 import 'package:lugo_marchant/page/bottom_nav/page_bottomnav.dart';
 import 'package:lugo_marchant/page/category/binding_category.dart';
@@ -149,6 +151,11 @@ class RoutingPages {
       name: Routes.verification,
       page: () => const Verification(),
       binding: VerificationBinding(),
-    )
+    ),
+    GetPage(
+      name: Routes.balance,
+      page: () => const PageBalance(),
+      binding: BindingBalance(),
+    ),
   ];
 }

@@ -1,1 +1,1 @@
-class ApiRoomChat{}
+class ApiRoomChat {}

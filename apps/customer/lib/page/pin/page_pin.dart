@@ -6,7 +6,7 @@ import 'package:lugo_customer/page/pin/controller_pin.dart';
 import 'package:lugo_customer/route/route_name.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
-class PagePin extends GetView<ControllerPin>{
+class PagePin extends GetView<ControllerPin> {
   const PagePin({super.key});
 
   @override
@@ -58,9 +58,7 @@ class PagePin extends GetView<ControllerPin>{
                   activeFillColor: const Color(0xFF4B39EF),
                   inactiveFillColor: const Color(0xFFF1F4F8),
                   selectedFillColor: const Color(0xFF95A1AC),
-
                 ),
-
               ),
             ),
           ),
@@ -72,7 +70,7 @@ class PagePin extends GetView<ControllerPin>{
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   TextButton(
-                      onPressed: (){},
+                      onPressed: () {},
                       child: Text(
                         "Belum MenerimaCode Veritifikasi?",
                         style: GoogleFonts.readexPro(
@@ -80,26 +78,20 @@ class PagePin extends GetView<ControllerPin>{
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                         ),
-                      )
-                  ),
+                      )),
                   ElevatedButton(
-                      onPressed: ()=> Get.toNamed(Routes.home),
+                      onPressed: () => Get.toNamed(Routes.home),
                       style: ElevatedButton.styleFrom(
                           elevation: 5,
                           fixedSize: Size(Get.width * 0.5, Get.height * 0.07),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)
-                          ),
-                          backgroundColor: const Color(0xFF3978EF)
-                      ),
+                              borderRadius: BorderRadius.circular(12)),
+                          backgroundColor: const Color(0xFF3978EF)),
                       child: Text(
                         "Confirm & Lanjut",
                         style: GoogleFonts.readexPro(
-                            fontSize: 16,
-                            color: Colors.white
-                        ),
-                      )
-                  )
+                            fontSize: 16, color: Colors.white),
+                      ))
                 ],
               ),
             ),

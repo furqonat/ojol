@@ -1,1 +1,1 @@
-class ApiOrderFinish{}
+class ApiOrderFinish {}

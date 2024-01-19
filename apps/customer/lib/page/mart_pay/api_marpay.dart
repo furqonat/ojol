@@ -1,1 +1,1 @@
-class ApiMartPay{}
+class ApiMartPay {}

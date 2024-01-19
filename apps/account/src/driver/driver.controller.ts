@@ -10,6 +10,7 @@ import {
   Request,
   UnauthorizedException,
   UseGuards,
+  Param,
 } from '@nestjs/common'
 import { Prisma } from '@prisma/client/users'
 import { DriverService } from './driver.service'
@@ -39,6 +40,7 @@ export class DriverController {
       details: details.details,
       referal: details.referal,
       name: details.name,
+      phone: details.phone,
     })
   }
 
@@ -102,5 +104,13 @@ export class DriverController {
       data.latitude,
       data.longitude,
     )
+  }
+  @Roles(Role.DRIVER, Role.USER)
+  @Get('/:id')
+  async getDriverById(
+    @Param('id') driverId: string,
+    @Query() select?: Prisma.driverSelect,
+  ) {
+    return this.driverService.getDriver(driverId, str2obj(select))
   }
 }

@@ -7,7 +7,7 @@ import '../../response/cart.dart';
 
 enum Status { idle, loading, success, failed }
 
-class ControllerFoodPay extends GetxController{
+class ControllerFoodPay extends GetxController {
   final ApiFoodPay api;
   ControllerFoodPay({required this.api});
 
@@ -28,50 +28,49 @@ class ControllerFoodPay extends GetxController{
   RxList<Cart> carts = <Cart>[].obs;
   List<Map<String, dynamic>> listQuantity = <Map<String, dynamic>>[];
 
-  getCartMethod()async{
-    try{
+  getCartMethod() async {
+    try {
       loading(Status.loading);
       var token = await firebase.currentUser?.getIdToken();
       carts.clear();
       orderPrice(0);
       var r = await api.getCart(token: token!);
-      if(r["total"] != 0){
+      if (r["total"] != 0) {
         var items = r["data"]["cart_item"];
         carts(RxList<Cart>.from(items.map((e) => Cart.fromJson(e))));
         listQuantity = List.generate(carts.length, (i) {
-          return {
-            'quantity' : carts[i].quantity.obs
-          };
+          return {'quantity': carts[i].quantity.obs};
         });
-        for(var j = 0; j < carts.length ; j++){
+        for (var j = 0; j < carts.length; j++) {
           int price = carts[j].product!.price!;
           int quantity = listQuantity[j]['quantity'].value;
           orderPrice.value += quantity * price;
         }
         loading(Status.success);
-      }else{
+      } else {
         Get.back();
         loading(Status.failed);
       }
-    }catch(e, stackTrace){
+    } catch (e, stackTrace) {
       loading(Status.failed);
       log('$e');
       log('$stackTrace');
     }
   }
 
-  updateCartMethod(String product_id, int quantity)async{
-    try{
+  updateCartMethod(String product_id, int quantity) async {
+    try {
       var token = await firebase.currentUser?.getIdToken();
-      if(product_id.isNotEmpty){
-        var r = await api.updateCart(id_product: product_id, quantity: quantity, token: token!);
-        if(r["message"] == "OK"){
+      if (product_id.isNotEmpty) {
+        var r = await api.updateCart(
+            id_product: product_id, quantity: quantity, token: token!);
+        if (r["message"] == "OK") {
           getCartMethod();
-        }else{
+        } else {
           Fluttertoast.showToast(msg: "Anda gagal merubah daftar belanja anda");
         }
       }
-    }catch(e, stackTrace){
+    } catch (e, stackTrace) {
       log('$e');
       log('$stackTrace');
     }
@@ -82,5 +81,4 @@ class ControllerFoodPay extends GetxController{
     getCartMethod();
     super.onInit();
   }
-
-  }
+}

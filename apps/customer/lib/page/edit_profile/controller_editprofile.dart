@@ -15,7 +15,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 enum Status { idle, loading, success, failed }
 
-class ControllerEditProfile extends GetxController{
+class ControllerEditProfile extends GetxController {
   final ApiEditProfile api;
   ControllerEditProfile({required this.api});
 
@@ -42,7 +42,8 @@ class ControllerEditProfile extends GetxController{
   final ImagePicker picker = ImagePicker();
 
   getFromCamera() async {
-    final XFile? camImage = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    final XFile? camImage =
+        await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
     if (camImage != null) {
       imgPreview.value = camImage.path;
       file = camImage;
@@ -52,7 +53,7 @@ class ControllerEditProfile extends GetxController{
 
   getFromFile() async {
     final XFile? fileImage =
-    await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+        await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (fileImage != null) {
       imgPreview.value = fileImage.path;
       file = fileImage;
@@ -80,14 +81,13 @@ class ControllerEditProfile extends GetxController{
         avatar.value = downloadURL;
         Fluttertoast.showToast(msg: 'Foto profil berhasil di unggah');
       });
-
     } catch (e) {
       Fluttertoast.showToast(msg: 'Foto profil gagal di unggah');
     }
   }
 
-  updateUser()async{
-    try{
+  updateUser() async {
+    try {
       loading(Status.loading);
       var firebaseCurrentToken = await firebase.currentUser?.getIdToken();
       var r = await api.editUser(
@@ -95,17 +95,16 @@ class ControllerEditProfile extends GetxController{
           email: edtEmail.text,
           phone: '+62${edtPhone.text}',
           avatar: avatar.value == '' ? photoProfile.value : avatar.value,
-          token: firebaseCurrentToken!
-      );
-      if(r['message'] == 'OK'){
+          token: firebaseCurrentToken!);
+      if (r['message'] == 'OK') {
         Fluttertoast.showToast(msg: 'Data anda sudah berubah');
         Get.offAllNamed(Routes.home, arguments: 4);
         loading(Status.success);
-      }else{
+      } else {
         Fluttertoast.showToast(msg: 'Data anda tidak dapat dirubah');
         loading(Status.failed);
       }
-    }catch(e, stackTrace){
+    } catch (e, stackTrace) {
       loading(Status.failed);
       log('$e');
       log('$stackTrace');
@@ -125,7 +124,7 @@ class ControllerEditProfile extends GetxController{
             context: context,
             isDismissible: false,
             constraints:
-            BoxConstraints.expand(width: Get.width, height: Get.height),
+                BoxConstraints.expand(width: Get.width, height: Get.height),
             builder: (context) => Column(
               children: [
                 Text(
@@ -176,12 +175,17 @@ class ControllerEditProfile extends GetxController{
                 const Spacer(),
                 ElevatedButton(
                     onPressed: () async {
-                      final credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: edtOTP.text);
-                      firebase.currentUser?.updatePhoneNumber(credential).then((value) async {
+                      final credential = PhoneAuthProvider.credential(
+                          verificationId: verificationId, smsCode: edtOTP.text);
+                      firebase.currentUser
+                          ?.updatePhoneNumber(credential)
+                          .then((value) async {
                         var newToken = await firebase.currentUser?.getIdToken();
 
                         final pattern = RegExp('.{1,800}');
-                        pattern.allMatches(newToken!).forEach((match) => debugPrint(match.group(0)));
+                        pattern
+                            .allMatches(newToken!)
+                            .forEach((match) => debugPrint(match.group(0)));
 
                         updateUser();
                       });

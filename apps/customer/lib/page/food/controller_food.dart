@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:lugo_customer/page/food/api_food.dart';
 
-class ControllerFood extends GetxController{
+class ControllerFood extends GetxController {
   final ApiFood api;
   ControllerFood({required this.api});
 

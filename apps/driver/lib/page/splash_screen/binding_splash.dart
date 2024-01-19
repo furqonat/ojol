@@ -1,10 +1,15 @@
 import 'package:get/get.dart';
-import 'package:get/get_instance/src/bindings_interface.dart';
 import 'package:lugo_driver/page/splash_screen/controller_splash.dart';
+import 'package:lugo_driver/shared/preferences.dart';
 
-class BindingSplash implements Bindings{
+class BindingSplash implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ControllerSplash>(() => ControllerSplash());
+    final preferences = LocalStorage.instance;
+    Get.lazyPut<ControllerSplash>(
+      () => ControllerSplash(
+        preferences: Preferences(preferences),
+      ),
+    );
   }
 }

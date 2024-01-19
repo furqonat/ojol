@@ -19,7 +19,7 @@ func (s LugoRoutes) Setup() {
 	api := s.handler.Gin.Group("/lugo").Use(
 		s.rateLimit.Handle(),
 	).Use(
-		s.middleware.HandleAuthWithRoles(utils.USER, utils.DRIVER, utils.MERCHANT),
+		s.middleware.HandleAuthWithRoles(utils.MERCHANT, utils.DRIVER, utils.USER),
 	)
 	{
 		api.GET("/services", s.controller.GetAvailableService)
@@ -30,6 +30,8 @@ func (s LugoRoutes) Setup() {
 		api.POST("/merchant/wd", s.controller.MerchantRequestWithdraw)
 		api.POST("/driver/topup", s.controller.DriverTopUp)
 		api.POST("/merchant/topup", s.controller.MerchantTopUp)
+		api.GET("/banner", s.controller.GetBanners)
+		api.GET("/banner/:id", s.controller.GetBanner)
 	}
 }
 

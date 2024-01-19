@@ -1,10 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:lugo_driver/page/auth/api_auth.dart';
-import 'controller_auth.dart';
+import 'package:lugo_driver/page/auth/controller_auth.dart';
+import 'package:lugo_driver/shared/preferences.dart';
+import 'package:rest_client/auth_client.dart';
 
-class BindingAuth implements Bindings{
+class BindingAuth implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<ControllerAuth>(() => ControllerAuth(api: ApiAuth()));
+    final dio = Dio();
+    final pref = LocalStorage.instance;
+    Get.lazyPut<ControllerAuth>(
+      () => ControllerAuth(
+        authClient: AuthClient(dio),
+        preferences: Preferences(pref),
+      ),
+    );
   }
 }

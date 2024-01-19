@@ -1,1 +1,1 @@
-class ApiFoodFinish{}
+class ApiFoodFinish {}

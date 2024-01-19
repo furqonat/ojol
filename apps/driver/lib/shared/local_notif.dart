@@ -5,53 +5,45 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:lugo_driver/shared/utils.dart';
 
 class LocalNotificationService {
+  static final FlutterLocalNotificationsPlugin _notificationPlugin =
+      FlutterLocalNotificationsPlugin();
 
-  static final FlutterLocalNotificationsPlugin _notificationPlugin = FlutterLocalNotificationsPlugin();
+  static Future<void> initialize() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings("@mipmap/ic_launcher");
 
-  static void initialize() async {
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
-        "@mipmap/ic_launcher");
-
-    // =======================
-    // TODO ADD IOS CONFIG HERE
-    // =======================
-
-    final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
     await _notificationPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (payload) {
         log(payload.toString());
         try {
           var res = json.decode(payload.toString());
-          handleNotificationRoute(
-              res['screen'],
-              int.parse(res['id']),
+          handleNotificationRoute(res['screen'], int.parse(res['id']),
               secondId: res['idPackage'] != null
                   ? int.parse(res['idPackage'])
-                  : null
-          );
+                  : null);
         } catch (e) {
           log(e.toString());
         }
       },
     );
 
-    final NotificationAppLaunchDetails? notificationAppLaunchDetails = await _notificationPlugin
-        .getNotificationAppLaunchDetails();
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await _notificationPlugin.getNotificationAppLaunchDetails();
     if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
-      var selectedNotificationPayload = notificationAppLaunchDetails!
-          .notificationResponse;
+      var selectedNotificationPayload =
+          notificationAppLaunchDetails!.notificationResponse;
       log("From local notif : $selectedNotificationPayload");
     }
   }
 
   static void displayNotification(RemoteMessage message) async {
     try {
-      final id = DateTime
-          .now()
-          .millisecondsSinceEpoch ~/ 1000;
+      final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
       const AndroidNotificationDetails androidPlatformChannelSpecifics =
-      AndroidNotificationDetails(
+          AndroidNotificationDetails(
         'lugo',
         'lugo',
         channelDescription: 'lugo',
@@ -59,7 +51,7 @@ class LocalNotificationService {
         priority: Priority.high,
       );
       const NotificationDetails platformChannelSpecifics =
-      NotificationDetails(android: androidPlatformChannelSpecifics);
+          NotificationDetails(android: androidPlatformChannelSpecifics);
       await _notificationPlugin.show(
         id,
         message.notification?.title,
