@@ -127,6 +127,7 @@ function Actions(props: { data: User }) {
 
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
+    setStatus(checked)
     const url =
       process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL +
       `admin/merchant/${props.data.id}`
