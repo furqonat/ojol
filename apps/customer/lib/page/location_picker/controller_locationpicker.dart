@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:lugo_customer/page/location_picker/api_locationpicker.dart';
 
-class ControllerLocationPicker extends GetxController{
+class ControllerLocationPicker extends GetxController {
   final ApiLocationPicker api;
   ControllerLocationPicker({required this.api});
 
@@ -34,7 +34,7 @@ class ControllerLocationPicker extends GetxController{
     super.onInit();
   }
 
-  argumentChecker()=> Get.arguments['request_type'];
+  argumentChecker() => Get.arguments['request_type'];
 
   @override
   void dispose() {

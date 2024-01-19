@@ -34,6 +34,16 @@ dependencies:
   fluttertoast: ^8.2.4
   validatorless: ^1.2.3
   firebase_storage: ^11.5.6
+  geocoding: ^2.1.1
+  location:
+    path: ../../libs/location-service/packages/location/
+  flutter_polyline_points: ^2.0.0
+  rest_client:
+    path: ../../libs/rest-client/
+  dio: ^5.4.0
+  phone_number: ^2.0.1
+  shared_preferences: ^2.2.2
+  geolocator: ^10.1.0
 
 dev_dependencies:
   flutter_test:

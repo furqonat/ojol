@@ -61,6 +61,44 @@
           "other_platform_oauth_client": []
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319389880269:android:c4426646217e816a1dfe84",
+        "android_client_info": {
+          "package_name": "com.gentatechnology.driver"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319389880269:android:d00d8c917f6193931dfe84",
+        "android_client_info": {
+          "package_name": "com.gentatechnology.merchant"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
     }
   ],
   "configuration_version": "1"

@@ -1,1 +1,1 @@
-class ApiHistoryOrder{}
+class ApiHistoryOrder {}

@@ -42,6 +42,7 @@ export function Merchants() {
         .addQuery('status', 'true')
         .addQuery('avatar', 'true')
         .addQuery('details', '{select:{badge:true}}')
+        .addQuery('status', 'true')
       fetch(encodeURI(url.build()), {
         headers: {
           Authorization: `Bearer ${data.user.token}`,
@@ -68,40 +69,42 @@ export function Merchants() {
           </thead>
           <tbody>
             {/* row 1 */}
-            {users?.data?.map((item, index) => {
-              return (
-                <tr key={item.id}>
-                  <th>{index + 1}</th>
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
-                          <img
-                            src={item.avatar ?? '/lugo.png'}
-                            alt="Avatar Tailwind CSS Component"
-                          />
+            {users?.data
+              ?.filter((item) => item.status == 'ACTIVE')
+              .map((item, index) => {
+                return (
+                  <tr key={item.id}>
+                    <th>{index + 1}</th>
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div className="avatar">
+                          <div className="mask mask-squircle w-12 h-12">
+                            <img
+                              src={item.avatar ?? '/lugo.png'}
+                              alt="Avatar Tailwind CSS Component"
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <div className="font-bold">{item?.name}</div>
+                          <div className="text-sm opacity-50">
+                            {item?.status}{' '}
+                          </div>
                         </div>
                       </div>
-                      <div>
-                        <div className="font-bold">{item?.name}</div>
-                        <div className="text-sm opacity-50">
-                          {item?.status}{' '}
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="badge badge-primary badge-sm capitalize">
-                      {item?.details?.badge}
-                    </span>
-                  </td>
-                  <td>{item._count?.products}</td>
-                  <td>
-                    <Actions data={item} />
-                  </td>
-                </tr>
-              )
-            })}
+                    </td>
+                    <td>
+                      <span className="badge badge-primary badge-sm capitalize">
+                        {item?.details?.badge}
+                      </span>
+                    </td>
+                    <td>{item._count?.products}</td>
+                    <td>
+                      <Actions data={item} />
+                    </td>
+                  </tr>
+                )
+              })}
           </tbody>
         </table>
       </div>
@@ -124,6 +127,7 @@ function Actions(props: { data: User }) {
 
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
+    setStatus(checked)
     const url =
       process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL +
       `admin/merchant/${props.data.id}`
@@ -140,6 +144,7 @@ function Actions(props: { data: User }) {
     }).then((e) => {
       if (e.ok) {
         setStatus(true)
+        window.location.reload()
       } else {
         setStatus(false)
       }

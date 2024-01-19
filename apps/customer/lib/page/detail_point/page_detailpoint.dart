@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/detail_point/controller_detailpoint.dart';
 
-class PageDetailPoint extends GetView<ControllerDetailPoint>{
+class PageDetailPoint extends GetView<ControllerDetailPoint> {
   const PageDetailPoint({super.key});
 
   @override
@@ -17,7 +17,7 @@ class PageDetailPoint extends GetView<ControllerDetailPoint>{
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         leading: InkWell(
-            onTap: ()=> Get.back(),
+            onTap: () => Get.back(),
             child: SizedBox(
               width: 55,
               height: 55,
@@ -25,14 +25,13 @@ class PageDetailPoint extends GetView<ControllerDetailPoint>{
                 elevation: 0,
                 color: const Color(0xFF3978EF),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(100)
-                ),
+                    borderRadius: BorderRadius.circular(100)),
                 child: const Center(
-                  child: Icon(Icons.chevron_left, size: 24, color: Colors.white),
+                  child:
+                      Icon(Icons.chevron_left, size: 24, color: Colors.white),
                 ),
               ),
-            )
-        ),
+            )),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,15 +44,13 @@ class PageDetailPoint extends GetView<ControllerDetailPoint>{
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: const Color(0xFF3978EF),
-                borderRadius: BorderRadius.circular(12)
-            ),
+                borderRadius: BorderRadius.circular(12)),
             child: Text(
               "Poin | Rp 20.000",
               style: GoogleFonts.readexPro(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white
-              ),
+                  color: Colors.white),
             ),
           ),
           Padding(
@@ -77,8 +74,8 @@ class PageDetailPoint extends GetView<ControllerDetailPoint>{
                       width: Get.width,
                       height: Get.height * 0.25,
                       fit: BoxFit.cover,
-                      image: const AssetImage('assets/images/sample_point.jpg')
-                  ),
+                      image:
+                          const AssetImage('assets/images/sample_point.jpg')),
                 ),
                 Container(
                   width: Get.width,
@@ -93,9 +90,7 @@ class PageDetailPoint extends GetView<ControllerDetailPoint>{
                           colors: [
                             Colors.transparent,
                             Colors.black.withOpacity(0.7)
-                          ]
-                      )
-                  ),
+                          ])),
                   child: Text(
                     "2000 Point",
                     style: GoogleFonts.readexPro(
@@ -111,23 +106,18 @@ class PageDetailPoint extends GetView<ControllerDetailPoint>{
           Align(
             alignment: Alignment.center,
             child: ElevatedButton(
-                onPressed: ()=>controller.confirmDiaoog(context),
+                onPressed: () => controller.confirmDiaoog(context),
                 style: ElevatedButton.styleFrom(
                     elevation: 5,
                     fixedSize: Size(Get.width * 0.5, Get.height * 0.05),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)
-                    ),
-                    backgroundColor: const Color(0xFF3978EF)
-                ),
+                        borderRadius: BorderRadius.circular(12)),
+                    backgroundColor: const Color(0xFF3978EF)),
                 child: Text(
                   "Tukarkan Sekarang",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 14,
-                      color: Colors.white
-                  ),
-                )
-            ),
+                  style:
+                      GoogleFonts.readexPro(fontSize: 14, color: Colors.white),
+                )),
           )
         ],
       ),

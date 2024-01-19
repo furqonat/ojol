@@ -439,3 +439,24 @@ Authorization: Bearer ....
   "...."
 }
 ```
+
+## Mendapatkan History Order
+
+Berikut adalah cara mendapatkan history order
+
+### Contoh Request
+
+```http
+GET https://order.gentatechnology.com/customer
+Content-Type: application/json
+Authorization: Bearer ....
+```
+
+
+### Contoh Response
+```json
+{
+  "data": [],
+  "total": 0
+}
+```

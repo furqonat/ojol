@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import 'api_mart.dart';
 
-class ControllerMart extends GetxController{
+class ControllerMart extends GetxController {
   final ApiMart api;
   ControllerMart({required this.api});
 

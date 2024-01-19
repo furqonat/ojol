@@ -12,10 +12,10 @@ class Count {
   });
 
   factory Count.fromJson(Map<String, dynamic> json) => Count(
-    customerProductReview: json["customer_product_review"],
-  );
+        customerProductReview: json["customer_product_review"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "customer_product_review": customerProductReview,
-  };
+        "customer_product_review": customerProductReview,
+      };
 }

@@ -72,6 +72,9 @@ func (trx TrxService) GetTrxs(take, skip int) ([]db.TransactionsModel, int, erro
 func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]) error {
 	id := data.Request.Body.MerchantTransId
 	oType := strings.Split(id, "-")
+	trxService.logger.Info(oType)
+	trxService.logger.Info(id)
+
 	if oType[0] == "TPD" {
 		return trxService.adjustDriverBalance(oType[1], data.Request.Body.AcquirementStatus)
 	}
@@ -145,7 +148,7 @@ func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]
 func (trxService TrxService) adjustMerchantBalance(trxId string, statusTrx utils.AcquirementStatus) error {
 	status := trxService.assignTrxStatus(statusTrx)
 	if status == db.TransactionStatusPaid {
-		// isSuccess = &datetime
+		trxService.logger.Info(trxId)
 		trx, err := trxService.database.MerchantTrx.FindUnique(
 			db.MerchantTrx.ID.Equals(trxId),
 		).Update(
@@ -154,8 +157,9 @@ func (trxService TrxService) adjustMerchantBalance(trxId string, statusTrx utils
 		if err != nil {
 			return err
 		}
+		trxService.logger.Info(trx.MerchantID)
 		_, errB := trxService.database.MerchantWallet.FindUnique(
-			db.MerchantWallet.ID.Equals(trx.MerchantID),
+			db.MerchantWallet.MerchantID.Equals(trx.MerchantID),
 		).Update(
 			db.MerchantWallet.Balance.Increment(trx.Amount),
 		).Exec(context.Background())
@@ -185,7 +189,7 @@ func (trxService TrxService) adjustDriverBalance(trxId string, statusTrx utils.A
 			return err
 		}
 		_, errB := trxService.database.DriverWallet.FindUnique(
-			db.DriverWallet.ID.Equals(trx.DriverID),
+			db.DriverWallet.DriverID.Equals(trx.DriverID),
 		).Update(
 			db.DriverWallet.Balance.Increment(trx.Amount),
 		).Exec(context.Background())

@@ -1,1 +1,1 @@
-class ApiFood{}
+class ApiFood {}

@@ -4,7 +4,7 @@ const String CACHE_USER = 'user';
 const String CACHE_TOKEN = 'token';
 const String CHECK_LOGIN = "loginState";
 
-class LocalService{
+class LocalService {
   final local = GetStorage();
 
   //set get user
@@ -12,6 +12,7 @@ class LocalService{
     user ??= "";
     await local.write(CACHE_USER, user);
   }
+
   Future<dynamic> getUser() async {
     return local.read(CACHE_USER);
   }
@@ -21,6 +22,7 @@ class LocalService{
     token ??= "";
     await local.write(CACHE_TOKEN, token);
   }
+
   Future<String?> getToken() async {
     return local.read(CACHE_TOKEN);
   }
@@ -30,15 +32,14 @@ class LocalService{
     isLogin ??= false;
     await local.write(CHECK_LOGIN, isLogin);
   }
+
   Future<bool?> getLoginStatus() async {
     return local.read(CHECK_LOGIN);
   }
-
 
   Future removeStorageForLogout() async {
     await local.remove(CACHE_USER);
     await local.remove(CACHE_TOKEN);
     await local.remove(CHECK_LOGIN);
   }
-
 }

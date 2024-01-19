@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'api_ordersetting.dart';
 
-class ControllerOrderSetting extends GetxController{
+class ControllerOrderSetting extends GetxController {
   final ApiOrderSetting api;
   ControllerOrderSetting({required this.api});
 

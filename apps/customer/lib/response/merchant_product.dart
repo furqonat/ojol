@@ -1,8 +1,10 @@
 import 'dart:convert';
 
-MerchantProduct merchantProductFromJson(String str) => MerchantProduct.fromJson(json.decode(str));
+MerchantProduct merchantProductFromJson(String str) =>
+    MerchantProduct.fromJson(json.decode(str));
 
-String merchantProductToJson(MerchantProduct data) => json.encode(data.toJson());
+String merchantProductToJson(MerchantProduct data) =>
+    json.encode(data.toJson());
 
 class MerchantProduct {
   String? id;
@@ -25,25 +27,26 @@ class MerchantProduct {
     this.status,
   });
 
-  factory MerchantProduct.fromJson(Map<String, dynamic> json) => MerchantProduct(
-    id: json["id"],
-    merchantId: json["merchant_id"],
-    name: json["name"],
-    image: json["image"],
-    description: json["description"],
-    price: json["price"],
-    productType: json["product_type"],
-    status: json["status"],
-  );
+  factory MerchantProduct.fromJson(Map<String, dynamic> json) =>
+      MerchantProduct(
+        id: json["id"],
+        merchantId: json["merchant_id"],
+        name: json["name"],
+        image: json["image"],
+        description: json["description"],
+        price: json["price"],
+        productType: json["product_type"],
+        status: json["status"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "merchant_id": merchantId,
-    "name": name,
-    "image": image,
-    "description": description,
-    "price": price,
-    "product_type": productType,
-    "status": status,
-  };
+        "id": id,
+        "merchant_id": merchantId,
+        "name": name,
+        "image": image,
+        "description": description,
+        "price": price,
+        "product_type": productType,
+        "status": status,
+      };
 }

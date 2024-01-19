@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_driver/shared/custom_widget/lugo_button.dart';
 import 'controller_runningorder.dart';
 
-class PageRunningOrder extends GetView<ControllerRunningOrder>{
+class PageRunningOrder extends GetView<ControllerRunningOrder> {
   const PageRunningOrder({super.key});
 
   @override
@@ -21,14 +20,17 @@ class PageRunningOrder extends GetView<ControllerRunningOrder>{
         automaticallyImplyLeading: false,
         title: Text(
           'Pesanan Berjalan',
-          style: GoogleFonts.readexPro(
-              fontSize: 22,
-              fontWeight: FontWeight.w400
-          ),
+          style:
+              GoogleFonts.readexPro(fontSize: 22, fontWeight: FontWeight.w400),
         ),
       ),
-      body: Expanded(
-          child: ListView.builder(
+      body: Obx(() {
+        if (controller.loading.value == Status.loading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (controller.loading.value == Status.success) {
+          return ListView.builder(
             itemCount: 5,
             itemBuilder: (context, index) => Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -100,17 +102,16 @@ class PageRunningOrder extends GetView<ControllerRunningOrder>{
                                     style: GoogleFonts.readexPro(
                                       color: Colors.black87,
                                       fontWeight: FontWeight.bold,
-                                    )
-                                ),
-                              ]
-                          ),
+                                    )),
+                              ]),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                         child: Row(
                           children: [
-                            const Icon(CupertinoIcons.location_solid, color: Color(0xFF3978EF)),
+                            const Icon(CupertinoIcons.location_solid,
+                                color: Color(0xFF3978EF)),
                             const SizedBox(width: 10),
                             Text(
                               'Jalan jalan no. 123',
@@ -127,7 +128,8 @@ class PageRunningOrder extends GetView<ControllerRunningOrder>{
                         padding: const EdgeInsets.all(10),
                         child: Row(
                           children: [
-                            const Icon(CupertinoIcons.location_solid, color: Colors.deepOrangeAccent),
+                            const Icon(CupertinoIcons.location_solid,
+                                color: Colors.deepOrangeAccent),
                             const SizedBox(width: 10),
                             Text(
                               'Jalan jalan no. 123',
@@ -150,8 +152,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder>{
                               width: Get.width,
                               height: Get.height * 0.05,
                               color: const Color(0xFF3978EF),
-                              onTap: (){}
-                          ),
+                              onTap: () {}),
                         ),
                       ),
                     ],
@@ -159,8 +160,17 @@ class PageRunningOrder extends GetView<ControllerRunningOrder>{
                 ),
               ),
             ),
-          )
-      ),
+          );
+        } else if (controller.freeOrder.isEmpty) {
+          return Center(
+            child: Text(controller.empty.value),
+          );
+        } else {
+          return const Center(
+            child: Text("Ada yang salah"),
+          );
+        }
+      }),
     );
   }
 }

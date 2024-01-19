@@ -121,6 +121,7 @@ function Actions(props: { checked: boolean; id: string }) {
 
   function handleChangeToggle(e: React.ChangeEvent<HTMLInputElement>) {
     const { checked } = e.target
+    setStatus(checked)
     const url =
       process.env.NEXT_PUBLIC_ACCOUNT_BASE_URL + `admin/driver/${props.id}`
     const body: Prisma.driverUpdateInput = {
@@ -137,6 +138,7 @@ function Actions(props: { checked: boolean; id: string }) {
       e.json().then(console.log)
       if (e.ok) {
         setStatus(true)
+        window.location.reload()
       } else {
         setStatus(false)
       }
