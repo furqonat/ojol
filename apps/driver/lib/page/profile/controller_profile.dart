@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../../api/local_serivce.dart';
 import '../../response/user.dart';
-import '../../shared/controller/controller_user.dart';
 import 'api_profile.dart';
 
 enum Status { idle, loading, success, failed }
@@ -22,8 +22,7 @@ class ControllerProfile extends GetxController {
   final firebase = FirebaseAuth.instance;
 
   var orderSetting = false.obs;
-
-  ControllerUser controllerUser = Get.find<ControllerUser>();
+  final cUser = UserResponse().obs;
 
   userHelp(BuildContext context) {
     return showModalBottomSheet(
@@ -109,9 +108,10 @@ class ControllerProfile extends GetxController {
       loading(Status.loading);
       var firebaseToken = await FirebaseAuth.instance.currentUser?.getIdToken();
       var r = await api.userDetail(token: firebaseToken!);
+      log("HI => $r");
       if (r["id"] != "" || r["id"] != null) {
         var user = UserResponse.fromJson(r);
-        controllerUser.user.value = user;
+        cUser.value = user;
         await localService.setUser(user: user.toJson());
         loading(Status.success);
       } else {

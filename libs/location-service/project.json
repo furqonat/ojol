@@ -1,0 +1,114 @@
+{
+  "name": "location-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/location-service/src",
+  "projectType": "library",
+  "targets": {
+    "analyze": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter analyze",
+        "cwd": "libs/location-service"
+      }
+    },
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter clean",
+        "cwd": "libs/location-service"
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "dart format libs/location-service/*",
+        "cwd": "libs/location-service"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter test",
+        "cwd": "libs/location-service"
+      }
+    },
+    "doctor": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter doctor",
+        "cwd": "libs/location-service"
+      }
+    },
+    "build-aar": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build aar",
+        "cwd": "libs/location-service"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/location-service/build"
+      ]
+    },
+    "build-apk": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build apk",
+        "cwd": "libs/location-service"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/location-service/build"
+      ]
+    },
+    "build-appbundle": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build appbundle",
+        "cwd": "libs/location-service"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/location-service/build"
+      ]
+    },
+    "build-bundle": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build bundle",
+        "cwd": "libs/location-service"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/location-service/build"
+      ]
+    },
+    "build-ios": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build ios",
+        "cwd": "libs/location-service"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/location-service/build"
+      ]
+    },
+    "build-ios-framework": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build ios-framework",
+        "cwd": "libs/location-service"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/location-service/build"
+      ]
+    },
+    "build-ipa": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "flutter build ipa",
+        "cwd": "libs/location-service"
+      },
+      "outputs": [
+        "{workspaceRoot}/libs/location-service/build"
+      ]
+    }
+  },
+  "tags": []
+}

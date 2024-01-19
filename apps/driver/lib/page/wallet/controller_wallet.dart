@@ -29,32 +29,32 @@ class ControllerWallet extends GetxController {
 
   final _fbAuth = FirebaseAuth.instance;
 
-  Future<void> handleGetDriver() async {
-    final token = _fbAuth.currentUser?.getIdToken();
-    final query = QueryBuilder()
-      ..addQuery("id", "true")
-      ..addQuery("driver_wallet", "true");
-    if (token != null) {
-      final resp = await accountClient.getDriver(
-        bearerToken: "Bearer $token",
-        queries: query.toMap(),
-      );
-      driver.value = Driver.fromJson(resp);
-    }
+  final orderValue = "Bulan Ini".obs;
+  final orderList = [
+    "Bulan Ini",
+    "Minggu Ini",
+    "Hari Ini",
+  ].obs;
+
+  handleGetTrx([trxIn = "month"]) async {
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final resp = await trxClient.getDriverTransactions(
+      bearerToken: "Bearer $token",
+      queries: {"trxIn": trxIn},
+    );
+    trx.value = resp;
   }
 
-  Future<void> handleGetDriverTransaction() async {
-    final token = _fbAuth.currentUser?.getIdToken();
+  Future<void> handleGetDriver() async {
+    final token = await _fbAuth.currentUser?.getIdToken(true);
     final query = QueryBuilder()
       ..addQuery("id", "true")
       ..addQuery("driver_wallet", "true");
-    if (token != null) {
-      final resp = await trxClient.getDriverTransactions(
-        bearerToken: "Bearer $token",
-        queries: query.toMap(),
-      );
-      trx.value = resp;
-    }
+    final resp = await accountClient.getDriver(
+      bearerToken: "Bearer $token",
+      queries: query.toMap(),
+    );
+    driver.value = Driver.fromJson(resp);
   }
 
   Future<void> handleDriverWithdraw() async {
@@ -77,7 +77,7 @@ class ControllerWallet extends GetxController {
       Fluttertoast.showToast(msg: "insufficient balance");
       return;
     }
-    final token = _fbAuth.currentUser?.getIdToken();
+    final token = await _fbAuth.currentUser?.getIdToken();
     if (token != null) {
       final resp = await gateClient.driverWithdraw(
         bearerToken: "Bearer $token",
@@ -87,7 +87,7 @@ class ControllerWallet extends GetxController {
       );
       if (resp['message'] == "OK") {
         handleGetDriver();
-        handleGetDriverTransaction();
+        handleGetTrx();
         amountWd.clear();
         Get.back();
       }
@@ -110,7 +110,7 @@ class ControllerWallet extends GetxController {
       return;
     }
 
-    final token = _fbAuth.currentUser?.getIdToken();
+    final token = await _fbAuth.currentUser?.getIdToken();
     if (token != null) {
       final resp = await gateClient.driverTopUp(
         bearerToken: "Bearer $token",
@@ -127,9 +127,9 @@ class ControllerWallet extends GetxController {
   }
 
   @override
-  void onInit() {
-    super.onInit();
-    handleGetDriver();
-    handleGetDriverTransaction();
+  void onReady() async {
+    await handleGetDriver();
+    await handleGetTrx();
+    super.onReady();
   }
 }
