@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_driver/route/route_name.dart';
 import 'package:lugo_driver/shared/utils.dart';
-import 'controller_historyorder.dart';
+import 'controller_history_order.dart';
 
 class PageHistoryOrder extends GetView<ControllerHistoryOrder> {
   const PageHistoryOrder({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lugo_driver/page/history_order/page_historyorder.dart';
+import 'package:lugo_driver/page/history_order/page_history_order.dart';
 import 'package:lugo_driver/page/dashboard/page_dashboard.dart';
 import 'package:lugo_driver/page/profile/page_profile.dart';
 import 'package:lugo_driver/page/room_chat/page_roomchat.dart';
