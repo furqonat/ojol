@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_driver/route/route_name.dart';
 import 'controller_auth.dart';
 import 'package:lugo_driver/shared/custom_widget/lugo_button.dart';
 import 'package:validatorless/validatorless.dart';
@@ -179,13 +180,16 @@ class PageAuth extends GetView<ControllerAuth> {
                             ),
                           ),
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.toNamed(Routes.forgotPassword);
+                            },
                             child: Text(
                               "Lupa Password",
                               style: GoogleFonts.readexPro(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xFF14181B)),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF14181B),
+                              ),
                             ),
                           ),
                         ],

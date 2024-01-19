@@ -222,7 +222,6 @@ class ControllerFormJoin extends GetxController {
   Future handleApplyDriver() async {
     try {
       final token = await _fbAuth.currentUser!.getIdToken(true);
-      print(referal.value);
       final body = {
         "details": {
           "driver_type": partnerType.value,
@@ -244,13 +243,12 @@ class ControllerFormJoin extends GetxController {
         "name": fullName.text,
         "phone": _fbAuth.currentUser?.phoneNumber,
       };
-      print(body);
       final resp = await accountClient.applyToBeDriver(
         bearerToken: "Bearer $token",
         body: body,
       );
-      print(resp.message);
       if (resp.message == 'OK') {
+        preferences.setAlreadyJoin(true);
         Get.offAndToNamed(Routes.main);
       }
     } catch (e, stackTrace) {

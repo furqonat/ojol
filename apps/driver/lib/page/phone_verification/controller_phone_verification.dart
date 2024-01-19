@@ -100,7 +100,6 @@ class ControllerPhoneVerification extends GetxController {
   _reAuthUserWithPhoneNumber(PhoneAuthCredential credential) {
     final currentUser = _fbAuth.currentUser;
     currentUser?.reauthenticateWithCredential(credential).then((value) {
-      // preferences.setAuthStatus(true);
       _handleMovePage();
     });
   }
@@ -108,9 +107,11 @@ class ControllerPhoneVerification extends GetxController {
   _handleMovePage() {
     final details = driver.value.details;
     if (details == null) {
+      preferences.setAlreadyJoin(false);
       Get.offAndToNamed(Routes.joinLugo);
       return;
     }
+    preferences.setAlreadyJoin(true);
     Get.offAndToNamed(Routes.main);
   }
 

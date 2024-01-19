@@ -2,13 +2,15 @@ import 'package:get_storage/get_storage.dart';
 
 const String cacheUser = 'user';
 const String cacheToken = 'token';
-const String cacheGetOrder = 'get_order';
+const String autoBid = 'autoBid';
 const String checkLogin = "loginState";
 const String checkOrder = "check_order";
 const String documentRider = "document_rider";
 
 class LocalService {
-  final local = GetStorage();
+  final GetStorage local;
+
+  LocalService(this.local);
 
   //set get user
   Future setUser({dynamic user}) async {
@@ -41,13 +43,13 @@ class LocalService {
   }
 
   //set get status order
-  Future setOrderStatus({bool? statusOrder}) async {
+  Future setAutoBid({bool? statusOrder}) async {
     statusOrder ??= true;
-    await local.write(cacheGetOrder, statusOrder);
+    await local.write(autoBid, statusOrder);
   }
 
-  Future<bool?> getOrderStatus() async {
-    return local.read(cacheGetOrder);
+  Future<bool?> getAutoBid() async {
+    return local.read(autoBid);
   }
 
   //set get order type
@@ -74,7 +76,7 @@ class LocalService {
     await local.remove(cacheUser);
     await local.remove(cacheToken);
     await local.remove(checkLogin);
-    await local.remove(cacheGetOrder);
+    await local.remove(autoBid);
     await local.remove(checkOrder);
     await local.remove(documentRider);
   }

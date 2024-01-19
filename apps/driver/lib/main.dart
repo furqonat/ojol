@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,12 +17,12 @@ void main() async {
   await GetStorage.init();
   await LocalStorage.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  LocalNotificationService.initialize();
-  runApp(const MyApp());
+  await LocalNotificationService.initialize();
+  runApp(const AppEntry());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class AppEntry extends StatelessWidget {
+  const AppEntry({super.key});
   @override
   Widget build(BuildContext context) {
     return const AppView();
@@ -40,7 +38,6 @@ class AppView extends StatefulWidget {
 
 class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   String pageName = '';
-  final Preferences preferences = Preferences(LocalStorage.instance);
 
   @override
   void initState() {
@@ -57,9 +54,6 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
   updatePageRoute(Routing? value) {
     try {
       var name = value!.route!.settings.name.toString();
-      final page = value.current;
-      preferences.setCurrentPage(page);
-      log("where :=> $page");
       setState(() {
         pageName = name;
       });
@@ -80,7 +74,7 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
       designSize: const Size(393, 830),
       builder: (BuildContext context, Widget? child) => GetMaterialApp(
         navigatorKey: Get.key,
-        title: 'Transisi',
+        title: 'Lugo Driver',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           platform: TargetPlatform.android,

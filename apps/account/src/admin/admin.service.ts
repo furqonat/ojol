@@ -472,7 +472,9 @@ export class AdminService {
   async getRegistrations(take?: number, skip?: number) {
     const merchant = this.prismaService.merchant.findMany({
       where: {
-        status: 'PROCESS',
+        status: {
+          not: 'ACTIVE',
+        },
       },
       select: {
         id: true,

@@ -14,7 +14,8 @@ enum Status { idle, loading, success, failed }
 
 class ControllerProfile extends GetxController {
   final ApiProfile api;
-  ControllerProfile({required this.api});
+  final LocalService localService;
+  ControllerProfile({required this.api, required this.localService});
 
   var loading = Status.idle.obs;
 
@@ -111,7 +112,7 @@ class ControllerProfile extends GetxController {
       if (r["id"] != "" || r["id"] != null) {
         var user = UserResponse.fromJson(r);
         controllerUser.user.value = user;
-        await LocalService().setUser(user: user.toJson());
+        await localService.setUser(user: user.toJson());
         loading(Status.success);
       } else {
         Fluttertoast.showToast(msg: 'Something wrong');
