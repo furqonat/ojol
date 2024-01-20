@@ -35,7 +35,6 @@ dependencies:
   validatorless: ^1.2.3
   firebase_storage: ^11.5.6
   phone_number: ^2.0.1
-  firebase_app_check: ^0.2.1+8
   shared_preferences: ^2.2.2
   easy_stepper: ^0.8.3
   geocoding: ^2.1.1

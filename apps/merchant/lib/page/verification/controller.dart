@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -207,7 +208,8 @@ class VerificationController extends GetxController {
     _fbAuth.verifyPhoneNumber(
       phoneNumber: phone.e164,
       verificationCompleted: (phoneAuthCredential) {
-        if (verificationState == "1") {
+        if (verificationState == VerificationState.full.toString()) {
+          log("AUTH TEST RUN ON IT");
           _fbAuth.currentUser
               ?.linkWithCredential(phoneAuthCredential)
               .then((value) {
@@ -246,7 +248,7 @@ class VerificationController extends GetxController {
       codeSent: (verificationId, forceResendingToken) {
         final credential = PhoneAuthProvider.credential(
             verificationId: verificationId, smsCode: smsCode.text);
-        if (verificationState == "1") {
+        if (verificationState == VerificationState.full.toString()) {
           _fbAuth.currentUser?.linkWithCredential(credential).then((value) {
             verificationStatus.value = PhoneVerificationStatus(
               status: true,
