@@ -56,7 +56,7 @@ export function AddAdmin() {
       return
     }
     let body
-    if (roleName === 'KORLAP' || roleName === 'KORCAP') {
+    if (roleName === 'KORLAP' || roleName === 'KORCAB') {
       body = {
         name: name,
         email: email,

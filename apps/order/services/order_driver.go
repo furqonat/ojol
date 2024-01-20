@@ -129,7 +129,7 @@ func (order OrderService) FinishOrder(orderId string) error {
 			return err
 		}
 	}
-	if err := order.processAdmin(amount, driver); err != nil {
+	if err := order.processAdmin(amount, driver, orderDb); err != nil {
 		return err
 	}
 	return nil
@@ -353,7 +353,7 @@ func (order OrderService) checkOwnerOfProduct(items []db.OrderItemModel) error {
 	return nil
 }
 
-func (order OrderService) processAdmin(amount float64, driver *db.DriverModel) error {
+func (order OrderService) processAdmin(amount float64, driver *db.DriverModel, orderM *db.OrderModel) error {
 	referralId, okReferralID := driver.ReferalID()
 	if okReferralID {
 		referral, err := order.database.Referal.FindUnique(
@@ -368,6 +368,9 @@ func (order OrderService) processAdmin(amount float64, driver *db.DriverModel) e
 			return err
 		}
 		role := referral.Admin().Role()
+		if role[0].Name == "KORLAP" && orderM.OrderType != db.ServiceTypeBike || orderM.OrderType != db.ServiceTypeCar {
+			return nil
+		}
 		korlapFee, errK := order.database.KorlapFee.FindFirst(
 			db.KorlapFee.AdminType.Equals(db.AdminType(role[0].Name)),
 		).Exec(context.Background())

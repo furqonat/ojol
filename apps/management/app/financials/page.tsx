@@ -90,7 +90,7 @@ export default function FinancialPage() {
             <div className="stat">
               <div className={'stat-title'}>Gross Profit</div>
               <div className={'stat-value text-2xl'}>89,400</div>
-              <div className={'stat-desc'}>before korlap & korcap fee</div>
+              <div className={'stat-desc'}>before korlap & korcab fee</div>
             </div>
           </div>
           <div

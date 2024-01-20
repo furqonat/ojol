@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import { useRef, useState } from 'react'
 import Select, { SingleValue } from 'react-select'
 
-const accountType = ['KORLAP', 'KORCAP']
+const accountType = ['KORLAP', 'KORCAB']
 const accountOptions = accountType.map((item) => {
   return {
     label: item,
@@ -83,7 +83,7 @@ export function EditKorlapFee(props: { data: korlap_fee }) {
       </button>
       <dialog className="modal" ref={dialogRef}>
         <div className="modal-box flex flex-col gap-4">
-          <h3 className="font-bold text-lg">Add new Korlap & Korcap fee</h3>
+          <h3 className="font-bold text-lg">Add new Korlap & Korcab fee</h3>
           <form onSubmit={handleCreateKorlapFee}>
             <label className="form-control w-full">
               <div className="label">

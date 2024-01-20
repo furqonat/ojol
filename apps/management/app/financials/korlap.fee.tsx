@@ -30,7 +30,7 @@ export function KorlapFee() {
   return (
     <section>
       <div className={'flex w-full items-center'}>
-        <h2 className={'text-xl font-semibold flex-1'}>Korlap & Korcap Fee</h2>
+        <h2 className={'text-xl font-semibold flex-1'}>Korlap & Korcab Fee</h2>
         <AddKorlapFee />
       </div>
       <div className={'flex flex-col gap-6'}>
