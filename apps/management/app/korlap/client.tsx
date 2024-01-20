@@ -298,7 +298,7 @@ function DetailsAdmin(props: { data: Admin }) {
               </div>
               <div className={'flex w-full gap-6'}>
                 <h3 className={'flex-1 font-semibold'}>
-                  Korlap or Korcap Status
+                  Korlap or Korcab Status
                 </h3>
                 <input
                   className={'toggle toggle-sm'}

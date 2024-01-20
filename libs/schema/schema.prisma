@@ -350,7 +350,7 @@ model korlap_fee {
 
 enum admin_type {
   KORLAP
-  KORCAP
+  KORCAB
 }
 
 model service_fee {
