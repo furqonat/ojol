@@ -29,7 +29,7 @@ export function isSuperAdmin(session: Session | null) {
 export function isKorcapOrKorlap(session: Session | null) {
   if (
     session?.user.role.at(0)?.name == 'KORLAP' ||
-    session?.user.role.at(0)?.name == 'KORCAP'
+    session?.user.role.at(0)?.name == 'KORCAB'
   ) {
     return true
   }
