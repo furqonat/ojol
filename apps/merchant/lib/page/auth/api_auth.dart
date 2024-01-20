@@ -11,10 +11,11 @@ class ApiAuth {
   ApiAuth({required this.authClient, required this.accountClient});
   Future<AuthClaims> claimToken({
     required String token,
-    required Map<String, dynamic>? body,
+    required String? type,
   }) async {
     final resp = await authClient.merchantSignIn(
       token: "Bearer $token",
+      body: MerchantBody(type: "$type"),
     );
     return AuthClaims(message: resp.message, token: resp.token);
   }

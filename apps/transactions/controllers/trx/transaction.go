@@ -78,6 +78,10 @@ func (trxRouter TransactionRouter) FinishOrder(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
+func (trxRoute TransactionRouter) FinishPayment(ctx *gin.Context) {
+	ctx.HTML(http.StatusOK, "index.html", nil)
+}
+
 func (trxRouter TransactionRouter) GetMerchantTrx(ctx *gin.Context) {
 	trxIn := ctx.Query("trxIn")
 	merchantId := ctx.GetString(utils.UID)

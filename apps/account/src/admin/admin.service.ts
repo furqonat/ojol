@@ -92,14 +92,6 @@ export class AdminService {
     }
   }
 
-  async deleteAdmin(id: string) {
-    return this.prismaService.admin.delete({
-      where: {
-        id: id,
-      },
-    })
-  }
-
   async updateAdmin(id: string, data: Prisma.adminUpdateInput) {
     return this.prismaService.admin.update({
       where: {
@@ -545,5 +537,29 @@ export class AdminService {
         driver: dCount,
       },
     }
+  }
+
+  async deleteMerchant(merchantId: string) {
+    return this.prismaService.merchant.delete({
+      where: {
+        id: merchantId,
+      },
+    })
+  }
+
+  async deleteDriver(driverId: string) {
+    return this.prismaService.driver.delete({
+      where: {
+        id: driverId,
+      },
+    })
+  }
+
+  async deleteAdmin(adminId: string) {
+    return this.prismaService.admin.delete({
+      where: {
+        id: adminId,
+      },
+    })
   }
 }

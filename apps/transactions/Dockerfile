@@ -1,13 +1,13 @@
 FROM golang:1.21.5
 
 COPY apps/transactions/ ./apps/transactions
+COPY apps/transactions/templates/index.html ./templates/index.html
 
 COPY .env ./.env
 
 COPY libs/schema/schema.prisma apps/transactions/schema.prisma
 
 RUN go version
-# RUN cd apps/transactions && rm -r vendor
 RUN cd apps/transactions && go get .
 RUN cd apps/transactions && go get github.com/steebchen/prisma-client-go
 
