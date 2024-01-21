@@ -6,7 +6,6 @@ import (
 	"apps/order/utils"
 )
 
-// OrderRoutes struct
 type OrderRoutes struct {
 	logger              utils.Logger
 	handler             utils.RequestHandler
@@ -15,7 +14,6 @@ type OrderRoutes struct {
 	orderController     order.OrderController
 }
 
-// Setup Misc routes
 func (s OrderRoutes) Setup() {
 	s.logger.Info("Setting up routes")
 	orderApi := s.handler.Gin.Group("/").Use(s.rateLimitMiddleware.Handle())
@@ -41,7 +39,6 @@ func (s OrderRoutes) Setup() {
 	}
 }
 
-// NewOrderRoutes creates new Misc controller
 func NewOrderRoutes(
 	logger utils.Logger,
 	handler utils.RequestHandler,

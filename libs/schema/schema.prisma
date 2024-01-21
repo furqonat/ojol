@@ -110,6 +110,7 @@ model driver {
   referal_id             String?
   driver_trx             driver_trx[]
   dana_token             dana_token_driver?
+  bonus_driver           bonus_driver[]
 }
 
 model referal {
@@ -533,6 +534,7 @@ model order {
   showable       Boolean          @default(false)
   order_detail   order_detail?
   order_rejected order_rejected[]
+  bonus_driver   bonus_driver?
 }
 
 model order_rejected {
@@ -690,14 +692,32 @@ model trx_admin {
   amount     Int
   note       String?
   created_at DateTime @default(now())
-  admin      admin    @relation(fields: [admin_id], references: [id])
-  admin_id   String
+  admin      admin?   @relation(fields: [admin_id], references: [id], onDelete: SetNull)
+  admin_id   String?
 }
 
 model trx_company {
-  id         String   @id @default(cuid())
+  id         String           @id @default(cuid())
   trx_type   trx_type
+  trx_from   trx_company_type
   amount     Int
   note       String?
-  created_at DateTime @default(now())
+  created_at DateTime         @default(now())
+}
+
+model bonus_driver {
+  id         String       @id @default(cuid())
+  drivers    driver?      @relation(fields: [driver_id], references: [id], onDelete: SetNull)
+  driver_id  String?
+  order      order?       @relation(fields: [order_id], references: [id], onDelete: SetNull)
+  order_id   String?      @unique
+  trx_type   service_type
+  amount     Int
+  created_at DateTime     @default(now())
+}
+
+enum trx_company_type {
+  DRIVER
+  MERCHANT
+  ADMIN
 }
