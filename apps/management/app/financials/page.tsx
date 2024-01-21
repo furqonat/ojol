@@ -88,6 +88,18 @@ export default function FinancialPage() {
             }
           >
             <div className="stat">
+              <div className={'stat-title'}>Bonus Driver </div>
+              <div className={'stat-value text-2xl'}>89,400</div>
+              <div className={'stat-desc'}>total bonus driver in month</div>
+            </div>
+          </div>
+
+          <div
+            className={
+              'stats stats-vertical shadow-sm border border-gray-200 border-solid'
+            }
+          >
+            <div className="stat">
               <div className={'stat-title'}>Gross Profit</div>
               <div className={'stat-value text-2xl'}>89,400</div>
               <div className={'stat-desc'}>before korlap & korcab fee</div>

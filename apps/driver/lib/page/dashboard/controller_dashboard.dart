@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:animated_rating_stars/animated_rating_stars.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -13,7 +14,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:lugo_driver/api/local_serivce.dart';
 import 'package:lugo_driver/response/driver.dart';
-import 'package:lugo_driver/response/order.dart';
+import 'package:lugo_driver/response/order.dart' as od;
 import 'package:lugo_driver/response/rider.dart';
 import 'package:lugo_driver/shared/controller/controller_user.dart';
 import 'package:lugo_driver/shared/query_builder.dart';
@@ -22,6 +23,23 @@ import 'package:rest_client/account_client.dart';
 import 'package:rest_client/order_client.dart';
 
 import 'api_dashboard.dart';
+
+class OrderFirestore {
+  final String? driverId;
+  final String? orderId;
+
+  OrderFirestore({
+    this.driverId,
+    this.orderId,
+  });
+
+  factory OrderFirestore.fromJson(Map<String, dynamic> json) {
+    return OrderFirestore(
+      driverId: json['driverId'],
+      orderId: json['orderId'],
+    );
+  }
+}
 
 class ControllerDashboard extends GetxController {
   final ApiDashboard api;
@@ -47,10 +65,12 @@ class ControllerDashboard extends GetxController {
   var showDropDownLocation = false.obs;
 
   final firebase = FirebaseAuth.instance;
+  final _db = FirebaseFirestore.instance;
 
   final Location location = Location();
 
-  final order = Order().obs;
+  final order = od.Order().obs;
+  final orderFrs = OrderFirestore().obs;
   final marker = BitmapDescriptor.defaultMarker.obs;
 
   final locationData =
@@ -154,8 +174,8 @@ class ControllerDashboard extends GetxController {
     }
   }
 
-  Stream<List<Order>> getOrder() {
-    return api.getOrder(fromJson: (data) => Order.fromJson(data));
+  Stream<List<od.Order>> getOrder() {
+    return api.getOrder(fromJson: (data) => od.Order.fromJson(data));
   }
 
   orderDialog(BuildContext context) {
@@ -527,6 +547,21 @@ class ControllerDashboard extends GetxController {
         actionsAlignment: MainAxisAlignment.center,
       ),
     );
+  }
+
+  @override
+  void onReady() {
+    getRealtimeOrder();
+    super.onReady();
+  }
+
+  void getRealtimeOrder() {
+    _db
+        .collection("order")
+        .snapshots()
+        .listen((event) {
+        orderFrs.value = OrderFirestore.fromJson(event.docs.first.data());
+    });
   }
 
   ControllerUser controllerUser = Get.find<ControllerUser>();

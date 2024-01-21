@@ -262,3 +262,26 @@ func (order OrderController) CustomerGetOrders(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": orderDb, "total": total})
 }
+
+func (order OrderController) DriverGetOrders(ctx *gin.Context) {
+	customerId := ctx.GetString(utils.UID)
+	takeQuery := ctx.Query("take")
+	skipQuery := ctx.Query("skip")
+	take, errConv := strconv.Atoi(takeQuery)
+	if errConv != nil {
+		take = 20
+	}
+	skip, errSkip := strconv.Atoi(skipQuery)
+	if errSkip != nil {
+		skip = 0
+	}
+
+	orderDb, total, err := order.service.DriverGetOrders(take, skip, customerId)
+	if err != nil {
+		order.logger.Infof("unable finish order %s", err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"data": orderDb, "total": total})
+}
