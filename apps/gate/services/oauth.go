@@ -28,11 +28,11 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 	if err != nil {
 		return nil, err
 	}
-	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ExpiresIn)
+	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenExpiryTime)
 	if errExpr != nil {
 		return nil, errExpr
 	}
-	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ReExpiresIn)
+	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.RefreshTokenExpiryTime)
 	if errReExpr != nil {
 		return nil, errReExpr
 	}
@@ -41,12 +41,12 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 		tkn, errTkn := auth.database.DanaToken.FindUnique(
 			db.DanaToken.ID.Equals(ava.ID),
 		).Update(
-			db.DanaToken.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+			db.DanaToken.AccessToken.Set(resp.AccessToken),
 			db.DanaToken.ExpiresIn.Set(expiredIn),
-			db.DanaToken.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+			db.DanaToken.RefreshToken.Set(resp.RefreshToken),
 			db.DanaToken.ReExpiresIn.Set(reExpired),
-			db.DanaToken.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
-			db.DanaToken.DanaUserID.Set(resp.UserInfo.PublicUserId),
+			db.DanaToken.TokenStatus.Set(resp.TokenType),
+			db.DanaToken.DanaUserID.Set(resp.AdditionalInfo.UserInfo.PublicUserId),
 		).Exec(context.Background())
 		if errTkn != nil {
 			auth.logger.Info(errTkn)
@@ -59,12 +59,12 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 	}
 	dbToken, errDanaToken := auth.database.DanaToken.CreateOne(
 		db.DanaToken.Customer.Link(db.Customer.ID.Equals(customerId)),
-		db.DanaToken.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+		db.DanaToken.AccessToken.Set(resp.AccessToken),
 		db.DanaToken.ExpiresIn.Set(expiredIn),
-		db.DanaToken.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+		db.DanaToken.RefreshToken.Set(resp.RefreshToken),
 		db.DanaToken.ReExpiresIn.Set(reExpired),
-		db.DanaToken.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
-		db.DanaToken.DanaUserID.Set(resp.UserInfo.PublicUserId),
+		db.DanaToken.TokenStatus.Set(resp.TokenType),
+		db.DanaToken.DanaUserID.Set(resp.AdditionalInfo.UserInfo.PublicUserId),
 	).Exec(context.Background())
 	if errDanaToken != nil {
 		auth.logger.Info(errDanaToken)
@@ -108,11 +108,11 @@ func (auth OAuthService) MerchantApplyAccessToken(accessToken string, merchantId
 	if err != nil {
 		return nil, err
 	}
-	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ExpiresIn)
+	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenExpiryTime)
 	if errExpr != nil {
 		return nil, errExpr
 	}
-	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ReExpiresIn)
+	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.RefreshTokenExpiryTime)
 	if errReExpr != nil {
 		return nil, errReExpr
 	}
@@ -121,12 +121,12 @@ func (auth OAuthService) MerchantApplyAccessToken(accessToken string, merchantId
 		tkn, errTkn := auth.database.DanaTokenMerchant.FindUnique(
 			db.DanaTokenMerchant.ID.Equals(ava.ID),
 		).Update(
-			db.DanaTokenMerchant.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+			db.DanaTokenMerchant.AccessToken.Set(resp.AccessToken),
 			db.DanaTokenMerchant.ExpiresIn.Set(expiredIn),
-			db.DanaTokenMerchant.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+			db.DanaTokenMerchant.RefreshToken.Set(resp.RefreshToken),
 			db.DanaTokenMerchant.ReExpiresIn.Set(reExpired),
-			db.DanaTokenMerchant.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
-			db.DanaTokenMerchant.DanaUserID.Set(resp.UserInfo.PublicUserId),
+			db.DanaTokenMerchant.TokenStatus.Set(resp.TokenType),
+			db.DanaTokenMerchant.DanaUserID.Set(resp.AdditionalInfo.UserInfo.PublicUserId),
 		).Exec(context.Background())
 		if errTkn != nil {
 			auth.logger.Info(errTkn)
@@ -138,12 +138,12 @@ func (auth OAuthService) MerchantApplyAccessToken(accessToken string, merchantId
 		return &tkn.ID, nil
 	}
 	dbToken, errDanaToken := auth.database.DanaTokenMerchant.CreateOne(
-		db.DanaTokenMerchant.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+		db.DanaTokenMerchant.AccessToken.Set(resp.AccessToken),
 		db.DanaTokenMerchant.ExpiresIn.Set(expiredIn),
-		db.DanaTokenMerchant.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+		db.DanaTokenMerchant.RefreshToken.Set(resp.RefreshToken),
 		db.DanaTokenMerchant.ReExpiresIn.Set(reExpired),
-		db.DanaTokenMerchant.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
-		db.DanaTokenMerchant.DanaUserID.Set(resp.UserInfo.PublicUserId),
+		db.DanaTokenMerchant.TokenStatus.Set(resp.TokenType),
+		db.DanaTokenMerchant.DanaUserID.Set(resp.AdditionalInfo.UserInfo.PublicUserId),
 		db.DanaTokenMerchant.Merchant.Link(db.Merchant.ID.Equals(merchantId)),
 	).Exec(context.Background())
 	if errDanaToken != nil {
@@ -188,11 +188,11 @@ func (auth OAuthService) DriverApplyAccessToken(accessToken string, driverId str
 	if err != nil {
 		return nil, err
 	}
-	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ExpiresIn)
+	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenExpiryTime)
 	if errExpr != nil {
 		return nil, errExpr
 	}
-	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenInfo.ReExpiresIn)
+	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.RefreshTokenExpiryTime)
 	if errReExpr != nil {
 		return nil, errReExpr
 	}
@@ -203,12 +203,12 @@ func (auth OAuthService) DriverApplyAccessToken(accessToken string, driverId str
 		tkn, errTkn := auth.database.DanaTokenDriver.FindUnique(
 			db.DanaTokenDriver.ID.Equals(ava.ID),
 		).Update(
-			db.DanaTokenDriver.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+			db.DanaTokenDriver.AccessToken.Set(resp.AccessToken),
 			db.DanaTokenDriver.ExpiresIn.Set(expiredIn),
-			db.DanaTokenDriver.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+			db.DanaTokenDriver.RefreshToken.Set(resp.RefreshToken),
 			db.DanaTokenDriver.ReExpiresIn.Set(reExpired),
-			db.DanaTokenDriver.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
-			db.DanaTokenDriver.DanaUserID.Set(resp.UserInfo.PublicUserId),
+			db.DanaTokenDriver.TokenStatus.Set(resp.TokenType),
+			db.DanaTokenDriver.DanaUserID.Set(resp.AdditionalInfo.UserInfo.PublicUserId),
 		).Exec(context.Background())
 		if errTkn != nil {
 			auth.logger.Info(errTkn)
@@ -220,12 +220,12 @@ func (auth OAuthService) DriverApplyAccessToken(accessToken string, driverId str
 		return &tkn.ID, nil
 	}
 	dbToken, errDanaToken := auth.database.DanaTokenDriver.CreateOne(
-		db.DanaTokenDriver.AccessToken.Set(resp.AccessTokenInfo.AccessToken),
+		db.DanaTokenDriver.AccessToken.Set(resp.AccessToken),
 		db.DanaTokenDriver.ExpiresIn.Set(expiredIn),
-		db.DanaTokenDriver.RefreshToken.Set(resp.AccessTokenInfo.RefreshToken),
+		db.DanaTokenDriver.RefreshToken.Set(resp.RefreshToken),
 		db.DanaTokenDriver.ReExpiresIn.Set(reExpired),
-		db.DanaTokenDriver.TokenStatus.Set(resp.AccessTokenInfo.TokenStatus),
-		db.DanaTokenDriver.DanaUserID.Set(resp.UserInfo.PublicUserId),
+		db.DanaTokenDriver.TokenStatus.Set(resp.TokenType),
+		db.DanaTokenDriver.DanaUserID.Set(resp.AdditionalInfo.UserInfo.PublicUserId),
 		db.DanaTokenDriver.Driver.Link(db.Driver.ID.Equals(driverId)),
 	).Exec(context.Background())
 	if errDanaToken != nil {

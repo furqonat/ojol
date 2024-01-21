@@ -35,38 +35,27 @@ func (dana DanaService) GenerateSignInUrl(state string) string {
 	return uri
 }
 
-func (dana DanaService) ApplyAccessToken(authCode string) (*utils.ApplyToken, error) {
-	timestamp := dana.danaApi.GetDateNow()
-	guid := dana.danaApi.GenerateGUID()
+func (dana DanaService) ApplyAccessToken(authCode string) (*utils.SnapApplyToken, error) {
 	requestData := map[string]interface{}{
-		"head": map[string]interface{}{
-			"version":      "2.0",
-			"function":     "dana.oauth.auth.applyToken",
-			"clientId":     utils.ClientID,
-			"clientSecret": utils.ClientSecret,
-			"reqTime":      timestamp,
-			"reqMsgId":     guid,
-			"accessToken":  "",
-			"reserve":      "{}",
-		},
-		"body": map[string]interface{}{
-			"grantType": "AUTHORIZATION_CODE",
-			"authCode":  authCode,
-		},
+		"grantType":      "AUTHORIZATION_CODE",
+		"authCode":       authCode,
+		"refreshToken":   "",
+		"additionalInfo": map[string]interface{}{},
 	}
-	response, err := dana.danaApi.New("/dana/oauth/auth/applyToken.htm", requestData)
+	response, err := dana.danaApi.SnapApplyToken("/v1.0/access-token/b2b2c.htm", requestData)
 	if err != nil {
 		return nil, err
 	}
-	result := utils.Result[utils.ApplyToken]{}
+	result := utils.SnapApplyToken{}
 	parser := json.Unmarshal(response, &result)
 	if parser != nil {
 		return nil, parser
 	}
-	if result.Response.Body.ResultInfo.ResultCode != "SUCCESS" {
-		return nil, errors.New("unable apply access token")
+	if result.ResponseMessage != "Successful" {
+		errMsg := fmt.Sprintf("Error: %s", result.ResponseMessage)
+		return nil, errors.New(errMsg)
 	}
-	return &result.Response.Body, nil
+	return &result, nil
 }
 
 func (dana DanaService) GetUserProfile(accessToken string) (*utils.UserProfile, error) {

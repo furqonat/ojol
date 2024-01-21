@@ -17,6 +17,21 @@ type ApplyToken struct {
 	UserInfo        UserInfo        `json:"userInfo"`
 }
 
+type SnapApplyToken struct {
+	ResponseCode           string         `json:"responseCode"`
+	ResponseMessage        string         `json:"responseMessage"`
+	AccessToken            string         `json:"accessToken"`
+	AccessTokenExpiryTime  string         `json:"accessTokenExpiryTime"`
+	TokenType              string         `json:"tokenType"`
+	RefreshToken           string         `json:"refreshToken"`
+	RefreshTokenExpiryTime string         `json:"refreshTokenExpiryTime"`
+	AdditionalInfo         AdditionalInfo `json:"additionalInfo"`
+}
+
+type AdditionalInfo struct {
+	UserInfo UserInfo `json:"userInfo"`
+}
+
 type RequestWithdrawType struct {
 	ResultInfo  ResultInfo `json:"resultInfo"`
 	FundOrderId string     `json:"fundOrderId"`
