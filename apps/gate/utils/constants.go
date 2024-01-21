@@ -14,7 +14,7 @@ const (
 	KORLAP           = "KORLAP"
 	KORCAP           = "KORCAP"
 	ClientID         = "2023121413443087131578"
-	OAuthScope       = "CASHIER,QUERY_BALANCE,DEFAULT_BASIC_PROFILE,MINI_DANA"
+	OAuthScope       = "QUERY_BALANCE,PUBLIC_ID"
 	OAuthRedirectURL = "https://oauth.gentatechnology.com/oauth"
 	TerminalType     = "WEB"
 	MerchantID       = "216620020011023088828"

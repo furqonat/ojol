@@ -7,7 +7,7 @@ export function OAuthClient() {
   const router = useRouter()
   const queryParams = useSearchParams()
 
-  const authCode = queryParams.get('auth_code')
+  const authCode = queryParams.get('authCode')
   const state = queryParams.get('state')
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -27,7 +27,7 @@ export function OAuthClient() {
           dialogRef.current?.close()
         })
     } else {
-      router.push('/')
+      // router.push('/')
     }
   }, [authCode, router, state])
 
