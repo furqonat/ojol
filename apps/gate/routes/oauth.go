@@ -18,7 +18,7 @@ func (s OAuthRoutes) Setup() {
 	s.logger.Info("Setting up routes")
 	api := s.handler.Gin.Group("/oauth").Use(s.rateLimit.Handle())
 	{
-		api.GET("/", s.controller.GenerateSignIn)
+		api.GET("/", s.authMiddleware.HandleAuthWithRoles(utils.USER), s.controller.GenerateSignIn)
 		api.POST("/", s.controller.ApplyAccessToken)
 		api.GET("/profile", s.authMiddleware.HandleAuthWithRoles(utils.USER), s.controller.GetDanaProfile)
 
