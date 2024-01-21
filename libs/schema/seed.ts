@@ -22,6 +22,13 @@ async function main() {
     ],
   })
 
+  await prisma.company_balance.create({
+    data: {
+      balance: 0,
+      id: 'LUGO_BALANCE'
+    }
+  })
+
 
 
   await prisma.admin.create({
