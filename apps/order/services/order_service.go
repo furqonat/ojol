@@ -382,6 +382,34 @@ func (order OrderService) CustomerGetOrders(take, skip int, customerId string) (
 	return orders, len(total), nil
 }
 
+func (order OrderService) DriverGetOrders(take, skip int, driverId string) ([]db.OrderModel, int, error) {
+	orders, errOrders := order.database.Order.FindMany(
+		db.Order.DriverID.Equals(driverId),
+	).Take(take).Skip(skip).With(
+		db.Order.OrderItems.Fetch().With(
+			db.OrderItem.Product.Fetch(),
+		),
+		db.Order.Customer.Fetch(),
+		db.Order.Driver.Fetch().With(
+			db.Driver.DriverDetails.Fetch().With(
+				db.DriverDetails.Vehicle.Fetch(),
+			),
+		),
+		db.Order.OrderDetail.Fetch(),
+	).Exec(context.Background())
+	if errOrders != nil {
+		return nil, 0, errOrders
+	}
+	total, erTotal := order.database.Order.FindMany(
+		db.Order.DriverID.Equals(driverId),
+	).Exec(context.Background())
+
+	if erTotal != nil {
+		return nil, 0, erTotal
+	}
+	return orders, len(total), nil
+}
+
 func (order OrderService) FindGoodAndNearlyDriver(orderId string, latitude, longitude float64) error {
 	orderDb, err := order.database.Order.FindUnique(db.Order.ID.Equals(orderId)).Exec(context.Background())
 	if err != nil {

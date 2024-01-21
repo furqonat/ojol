@@ -21,6 +21,7 @@ func (s OrderRoutes) Setup() {
 		orderApi.POST("/", s.authMiddleware.HandleAuthWithRoles(utils.USER), s.orderController.CreateOrder)
 
 		orderApi.GET("/driver", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.FindOrders)
+		orderApi.GET("/driver/history", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.DriverGetOrders)
 		orderApi.PUT("/driver/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.USER, utils.MERCHANT), s.orderController.FindDriver)
 		orderApi.PUT("/driver/sign/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.DriverSignOnOrder)
 		orderApi.PUT("/driver/reject/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.DriverRejectOrder)
