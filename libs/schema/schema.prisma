@@ -371,10 +371,12 @@ model services {
 }
 
 model company_balance {
-  id         String   @id @default(cuid())
-  created_at DateTime @default(now())
-  remark     String?
-  balance    Int
+  id                 String   @id @default(cuid())
+  created_at         DateTime @default(now())
+  remark             String?
+  balance            Int
+  balanceBeforeFee   Int
+  balanceDriverBonus Int
 }
 
 model discount {

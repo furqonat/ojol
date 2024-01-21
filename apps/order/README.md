@@ -460,3 +460,24 @@ Authorization: Bearer ....
   "total": 0
 }
 ```
+
+## Mendapatkan History Order
+
+Berikut adalah cara mendapatkan history order
+
+### Contoh Request
+
+```http
+GET https://order.gentatechnology.com/driver/history
+Content-Type: application/json
+Authorization: Bearer ....
+```
+
+
+### Contoh Response
+```json
+{
+  "data": [],
+  "total": 0
+}
+```
