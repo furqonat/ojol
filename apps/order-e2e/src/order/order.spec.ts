@@ -57,10 +57,10 @@ describe('Test Autentication Api', () => {
         {
           order_type: 'CAR',
           payment_type: 'CASH',
-          gross_amount: 70000,
+          gross_amount: 75000,
           net_amount: 75000,
           total_amount: 75000,
-          shipping_cost: 5000,
+          shipping_cost: 75000,
           // product: [
           //   {
           //     quantity: 1,
@@ -89,6 +89,7 @@ describe('Test Autentication Api', () => {
       expect(resp.status).toBe(HttpStatusCode.Created)
     })
   })
+  //driver
   describe('GET /order/ getvaliable order', () => {
     it('Test Create Order from user', async () => {
       const token = await getIdToken(driCred.user)
