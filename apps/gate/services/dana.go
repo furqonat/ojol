@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/url"
+	"time"
 )
 
 type DanaService struct {
@@ -21,16 +21,15 @@ func NewDanaService(dana utils.Dana, logger utils.Logger) DanaService {
 }
 
 func (dana DanaService) GenerateSignInUrl(state string) string {
-	guid := dana.danaApi.GenerateGUID()
 
-	uri := fmt.Sprintf("%s/d/portal/oauth?clientId=%s&scopes=%s&requestId=%s&state=%s&terminalType=%s&redirectUrl=%s",
+	uri := fmt.Sprintf("%s/v1.0/get-auth-code?timestamp=%s&partnerId=%s&scopes=%s&state=%s&channelId=DANAID&externalId=%s&redirectUrl=%s",
 		dana.danaApi.GetWebURL(),
+		time.Now().Format(utils.DanaDateFormat),
 		utils.ClientID,
 		utils.OAuthScope,
-		guid,
 		state,
-		utils.TerminalType,
-		url.QueryEscape(utils.OAuthRedirectURL),
+		utils.MerchantID,
+		utils.OAuthRedirectURL,
 	)
 
 	return uri
