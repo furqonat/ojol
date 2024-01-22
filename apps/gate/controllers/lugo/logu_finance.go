@@ -344,3 +344,15 @@ func (c Controller) DriverTopUp(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, res)
 }
+
+func (c Controller) GetTrxCompany(ctx *gin.Context) {
+
+	trxType := ctx.Query("type")
+	res, err := c.service.GetCompanyBalanceTrx(trxType)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}
