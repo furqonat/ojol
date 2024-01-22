@@ -13,6 +13,14 @@ type LugoService struct {
 	dana      DanaService
 }
 
+type SearchResult struct {
+	Merchant    []db.MerchantModel     `json:"merchant"`
+	Customer    []db.CustomerModel     `json:"customer"`
+	Driver      []db.DriverModel       `json:"driver"`
+	Order       []db.OrderModel        `json:"order"`
+	Transaction []db.TransactionsModel `json:"transaction"`
+}
+
 func NewLogoService(db utils.Database, msg *Messaging, logger utils.Logger, dana DanaService) LugoService {
 	return LugoService{
 		db:        db,
@@ -55,4 +63,45 @@ func (u LugoService) DeleteService(serviceId string) (*string, error) {
 		return nil, err
 	}
 	return &service.ID, nil
+}
+
+func (u LugoService) SearchAny(query string) (*SearchResult, error) {
+	merchants, err := u.db.Merchant.FindMany(
+		db.Merchant.Name.Contains(query),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	customers, err := u.db.Customer.FindMany(
+		db.Customer.Name.Contains(query),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	drivers, err := u.db.Driver.FindMany(
+		db.Driver.Name.Contains(query),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	orders, err := u.db.Order.FindMany(
+		db.Order.ID.Contains(query),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	transactions, err := u.db.Transactions.FindMany(
+		db.Transactions.ID.Contains(query),
+	).Exec(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return &SearchResult{
+		Merchant:    merchants,
+		Customer:    customers,
+		Driver:      drivers,
+		Order:       orders,
+		Transaction: transactions,
+	}, nil
+
 }
