@@ -188,12 +188,7 @@ func (order OrderService) processDriver(orderDb *db.OrderModel) (*db.DriverModel
 		if errDriverTrx != nil {
 			return nil, 0, errDriverTrx
 		}
-		errAdjustCmpBalance := order.adjustCompanyBalance(int(amount), orderDb.OrderType)
-		if errAdjustCmpBalance != nil {
-			return nil, 0, errAdjustCmpBalance
-		}
-
-		errTrxCmp := order.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeMerchant, int(amount))
+		errTrxCmp := order.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeDriver, int(amount))
 		if errTrxCmp != nil {
 			return nil, 0, errTrxCmp
 		}
@@ -219,12 +214,8 @@ func (order OrderService) processDriver(orderDb *db.OrderModel) (*db.DriverModel
 	if errDriverTrx1 != nil {
 		return nil, 0, errDriverTrx
 	}
-	errAdjustCmpBalance := order.adjustCompanyBalance(int(amount), orderDb.OrderType)
-	if errAdjustCmpBalance != nil {
-		return nil, 0, errAdjustCmpBalance
-	}
 
-	errTrxCmp := order.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeMerchant, int(amount))
+	errTrxCmp := order.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeDriver, int(amount))
 	if errTrxCmp != nil {
 		return nil, 0, errTrxCmp
 	}
@@ -306,11 +297,6 @@ func (order OrderService) processMerchant(orderDb *db.OrderModel) error {
 			return errCreateTrxMerch
 		}
 
-		errAdjustCmpBalance := order.adjustCompanyBalance(int(orderFee), orderDb.OrderType)
-		if errAdjustCmpBalance != nil {
-			return errAdjustCmpBalance
-		}
-
 		errTrxCmp := order.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeMerchant, int(orderFee))
 		if errTrxCmp != nil {
 			return errTrxCmp
@@ -336,10 +322,6 @@ func (order OrderService) processMerchant(orderDb *db.OrderModel) error {
 	errCreateTrxMerch := order.createTrxMerchant(merchant, db.TrxTypeAdjustment, totalIncomeMerchant)
 	if errCreateTrxMerch != nil {
 		return errCreateTrxMerch
-	}
-	errAdjustCmpBalance := order.adjustCompanyBalance(int(orderFee), orderDb.OrderType)
-	if errAdjustCmpBalance != nil {
-		return errAdjustCmpBalance
 	}
 
 	errTrxCmp := order.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeMerchant, int(orderFee))
@@ -462,65 +444,12 @@ func (order OrderService) processAdmin(amount float64, driver *db.DriverModel, o
 		if errCreateTrxAdmin != nil {
 			return errCreateTrxAdmin
 		}
-		errAdjustCmpBalance := order.decrementCompanyBalance(int(fee), orderM.OrderType)
-		if errAdjustCmpBalance != nil {
-			return errAdjustCmpBalance
-		}
 
-		errTrxCmp := order.createTrxCompnay(db.TrxTypeReduction, db.TrxCompanyTypeMerchant, int(fee))
+		errTrxCmp := order.createTrxCompnay(db.TrxTypeReduction, db.TrxCompanyTypeAdmin, int(fee))
 		if errTrxCmp != nil {
 			return errTrxCmp
 		}
 
-	}
-	return nil
-}
-
-func (order OrderService) adjustCompanyBalance(amount int, serviceType db.ServiceType) error {
-	_, errUpdateBalance := order.database.CompanyBalance.FindUnique(
-		db.CompanyBalance.ID.Equals("LUGO_BALANCE"),
-	).Update(
-		db.CompanyBalance.Balance.Increment(amount),
-	).Exec(context.Background())
-	if errUpdateBalance != nil {
-		return errUpdateBalance
-	}
-	return nil
-}
-
-func (order OrderService) decrementCompanyBalance(amount int, serviceType db.ServiceType) error {
-	_, errUpdateBalance := order.database.CompanyBalance.FindUnique(
-		db.CompanyBalance.ID.Equals("LUGO_BALANCE"),
-	).Update(
-		db.CompanyBalance.Balance.Decrement(amount),
-	).Exec(context.Background())
-	if errUpdateBalance != nil {
-		return errUpdateBalance
-	}
-	return nil
-}
-
-func (order OrderService) createTrxCompnay(trxType db.TrxType, trxFrom db.TrxCompanyType, amount int) error {
-	_, err := order.database.TrxCompany.CreateOne(
-		db.TrxCompany.TrxType.Set(trxType),
-		db.TrxCompany.TrxFrom.Set(trxFrom),
-		db.TrxCompany.Amount.Set(amount),
-	).Exec(context.Background())
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (order OrderService) driverBonus(serviceType db.ServiceType, orderId string, driverId string, amount int) error {
-	_, err := order.database.BonusDriver.CreateOne(
-		db.BonusDriver.TrxType.Set(serviceType),
-		db.BonusDriver.Amount.Set(amount),
-		db.BonusDriver.Order.Link(db.Order.ID.Equals(orderId)),
-		db.BonusDriver.Drivers.Link(db.Driver.ID.Equals(driverId)),
-	).Exec(context.Background())
-	if err != nil {
-		return err
 	}
 	return nil
 }

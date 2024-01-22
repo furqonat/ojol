@@ -11,16 +11,19 @@ import (
 	"time"
 )
 
+type CompantTrx struct {
+	Balance          int `json:"balance"`
+	BalanceBeforeFee int `json:"balance_before_fee"`
+	BonusDriver      int `json:"bonus_driver"`
+	NetProfit        int `json:"net_profit"`
+}
+
 func (u LugoService) DriverTopUp(driverId string, amount int) (*utils.CreateOrder, error) {
 	trx, _ := u.db.DriverTrx.FindFirst(
 		db.DriverTrx.DriverID.Equals(driverId),
 		db.DriverTrx.Status.Equals(db.TrxStatusProcess),
 		db.DriverTrx.TrxType.Equals(db.TrxTypeTopup),
 	).Exec(context.Background())
-	// if errTrx != nil {
-	// 	return nil, errTrx
-	// }
-
 	if trx != nil {
 		checkoutUrl, ok := trx.CheckoutURL()
 		if !ok {
@@ -137,6 +140,56 @@ func (u LugoService) GetCompanyBallance() (*utils.MerchantQuery, error) {
 		return nil, err
 	}
 	return resp, nil
+}
+
+func (u LugoService) GetCompanyBalanceTrx(trxIn string) ([]db.TrxCompanyModel, error) {
+
+	if trxIn == "day" {
+		return u.GetCompanyBallanceInDay()
+	}
+
+	if trxIn == "week" {
+		return u.GetCompanyBallanceInWeek()
+	}
+
+	return u.GetCompanyBallanceInMonth()
+}
+
+func (u LugoService) GetCompanyBallanceInDay() ([]db.TrxCompanyModel, error) {
+	data, err := u.db.TrxCompany.FindMany(
+		db.TrxCompany.CreatedAt.Lte(u.getNextDay()),
+		db.TrxCompany.CreatedAt.Gte(u.getPreviousDay()),
+	).Exec(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
+func (u LugoService) GetCompanyBallanceInWeek() ([]db.TrxCompanyModel, error) {
+	data, err := u.db.TrxCompany.FindMany(
+		db.TrxCompany.CreatedAt.Lte(u.getNextWeek()),
+		db.TrxCompany.CreatedAt.Gte(u.getPreviousWeek()),
+	).Exec(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func (u LugoService) GetCompanyBallanceInMonth() ([]db.TrxCompanyModel, error) {
+	data, err := u.db.TrxCompany.FindMany(
+		db.TrxCompany.CreatedAt.Lte(u.getNextMonth()),
+		db.TrxCompany.CreatedAt.Gte(u.getPreviousMonth()),
+	).Exec(context.Background())
+
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
 func (u LugoService) CreateDiscount(model *db.DiscountModel) (*string, error) {
@@ -262,6 +315,9 @@ func (u LugoService) AdminRequestWithdraw(adminId string, amount int) (*utils.Re
 		u.logger.Info(u.formatPhoneNumber(u.sanitizePhone(phone)))
 		return nil, err
 	}
+	if err := u.createTrxCompnay(db.TrxTypeReduction, db.TrxCompanyTypeAdmin, amount); err != nil {
+		return nil, err
+	}
 	return result, nil
 }
 
@@ -344,7 +400,9 @@ func (u LugoService) MerchantRequestWithdraw(merchantId string, amount int) (*ut
 		}
 		return nil, err
 	}
-
+	if err := u.createTrxCompnay(db.TrxTypeReduction, db.TrxCompanyTypeMerchant, amount); err != nil {
+		return nil, err
+	}
 	return result, nil
 }
 
@@ -433,7 +491,9 @@ func (u LugoService) DriverRequestWithdraw(driverId string, amount int) (*utils.
 		}
 		return nil, err
 	}
-
+	if err := u.createTrxCompnay(db.TrxTypeReduction, db.TrxCompanyTypeDriver, amount); err != nil {
+		return nil, err
+	}
 	return result, nil
 }
 
@@ -462,4 +522,77 @@ func (u LugoService) formatPhoneNumber(phone string) string {
 	// Insert a hyphen at the appropriate position
 	formattedPhone := numericPhone[:2] + "-" + numericPhone[2:]
 	return formattedPhone
+}
+
+func (u LugoService) createTrxCompnay(trxType db.TrxType, trxFrom db.TrxCompanyType, amount int) error {
+	_, err := u.db.TrxCompany.CreateOne(
+		db.TrxCompany.TrxType.Set(trxType),
+		db.TrxCompany.TrxFrom.Set(trxFrom),
+		db.TrxCompany.Amount.Set(amount),
+	).Exec(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u LugoService) driverBonus(serviceType db.ServiceType, orderId string, driverId string, amount int) error {
+	_, err := u.db.BonusDriver.CreateOne(
+		db.BonusDriver.TrxType.Set(serviceType),
+		db.BonusDriver.Amount.Set(amount),
+		db.BonusDriver.Order.Link(db.Order.ID.Equals(orderId)),
+		db.BonusDriver.Drivers.Link(db.Driver.ID.Equals(driverId)),
+	).Exec(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u LugoService) getPreviousDay() time.Time {
+	currentTime := time.Now()
+
+	currentHour := currentTime.Hour()
+
+	adjustedTime := currentTime.Add(-time.Duration(currentHour) * time.Hour)
+	return adjustedTime
+}
+
+func (u LugoService) getNextDay() time.Time {
+	currentTime := time.Now()
+
+	currentHour := currentTime.Hour()
+
+	adjustedTime := currentTime.Add(time.Duration(currentHour) * time.Hour)
+	return adjustedTime
+}
+
+func (u LugoService) getPreviousWeek() time.Time {
+	currentTime := time.Now()
+	currentDay := currentTime.Day()
+
+	previousWeek := currentTime.AddDate(0, 0, -7-currentDay)
+	return previousWeek
+}
+
+func (u LugoService) getNextWeek() time.Time {
+	currentTime := time.Now()
+	currentDay := currentTime.Day()
+
+	nextWeek := currentTime.AddDate(0, 0, 7-currentDay)
+	return nextWeek
+}
+
+func (u LugoService) getPreviousMonth() time.Time {
+	currentTime := time.Now()
+
+	previousMonth := currentTime.AddDate(0, -1, 0)
+	return previousMonth
+}
+
+func (u LugoService) getNextMonth() time.Time {
+	currentTime := time.Now()
+
+	nextMonth := currentTime.AddDate(0, 1, 0)
+	return nextMonth
 }
