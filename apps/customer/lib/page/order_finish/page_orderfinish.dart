@@ -1,6 +1,5 @@
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/order_finish/controller_orderfinish.dart';
@@ -83,7 +82,7 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                  TextSpan(text: 'ID Transaksi'),
+                  const TextSpan(text: 'ID Transaksi'),
                   TextSpan(
                       text: ' 1234567899',
                       style: GoogleFonts.readexPro(
@@ -99,7 +98,7 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                  TextSpan(text: 'ID Order'),
+                  const TextSpan(text: 'ID Order'),
                   TextSpan(
                       text: ' 1234567899',
                       style: GoogleFonts.readexPro(
@@ -115,7 +114,7 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                  TextSpan(text: 'Pembayaran'),
+                  const TextSpan(text: 'Pembayaran'),
                   TextSpan(
                       text: ' | cash',
                       style: GoogleFonts.readexPro(

@@ -13,11 +13,11 @@ class ControllerHome extends GetxController {
   var currentPage = 0.obs;
 
   final List<Widget> pages = [
-    PageMain(),
-    PageRunning(),
-    PageHistory(),
-    PageRoomChat(),
-    PageProfile(),
+    const PageMain(),
+    const PageRunning(),
+    const PageHistory(),
+    const PageRoomChat(),
+    const PageProfile(),
   ];
 
   @override

@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -552,7 +551,7 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                     children: <Widget>[
                                       const Icon(
                                         Icons.redeem_rounded,
-                                        color: const Color(0xFF3978EF),
+                                        color: Color(0xFF3978EF),
                                         size: 24.0,
                                       ),
                                       Text(
