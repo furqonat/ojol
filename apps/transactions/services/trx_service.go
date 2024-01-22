@@ -167,7 +167,9 @@ func (trxService TrxService) adjustMerchantBalance(trxId string, statusTrx utils
 		if errB != nil {
 			return errB
 		}
-
+		if err := trxService.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeMerchant, trx.Amount); err != nil {
+			return err
+		}
 	}
 	if status == db.TransactionStatusDone || status == db.TransactionStatusCanceled {
 		// isExpired = &datetime
@@ -197,6 +199,9 @@ func (trxService TrxService) adjustDriverBalance(trxId string, statusTrx utils.A
 		if errB != nil {
 			return errB
 		}
+		if err := trxService.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeDriver, trx.Amount); err != nil {
+			return err
+		}
 
 	}
 	if status == db.TransactionStatusDone || status == db.TransactionStatusCanceled {
@@ -205,6 +210,18 @@ func (trxService TrxService) adjustDriverBalance(trxId string, statusTrx utils.A
 	}
 	return nil
 
+}
+
+func (trx TrxService) createTrxCompnay(trxType db.TrxType, trxFrom db.TrxCompanyType, amount int) error {
+	_, err := trx.database.TrxCompany.CreateOne(
+		db.TrxCompany.TrxType.Set(trxType),
+		db.TrxCompany.TrxFrom.Set(trxFrom),
+		db.TrxCompany.Amount.Set(amount),
+	).Exec(context.Background())
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (trxService TrxService) SuccessTrxOnFirestore(paymentAt *time.Time, orderId string, status db.TransactionStatus) error {

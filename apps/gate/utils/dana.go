@@ -87,6 +87,10 @@ func (dana Dana) SnapApplyToken(url string, payloadObject map[string]interface{}
 	return body, nil
 }
 
+func (dana Dana) SnapTransaction() {
+
+}
+
 func (dana Dana) New(url string, payloadObject map[string]interface{}) ([]byte, error) {
 	jsonPayload := dana.composeRequest(payloadObject)
 
