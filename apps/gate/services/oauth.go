@@ -26,15 +26,18 @@ func NewOauthService(logger utils.Logger, database utils.Database, dana DanaServ
 func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string) (*string, error) {
 	resp, err := auth.dana.ApplyAccessToken(accessToken)
 	if err != nil {
-		return nil, err
+		errMsg := fmt.Sprintf("Error: %s", err.Error())
+		return nil, errors.New(errMsg)
 	}
 	expiredIn, errExpr := time.Parse(utils.DanaDateFormat, resp.AccessTokenExpiryTime)
 	if errExpr != nil {
-		return nil, errExpr
+		errMsg := fmt.Sprintf("Error ExpiredIn: %s", errExpr.Error())
+		return nil, errors.New(errMsg)
 	}
 	reExpired, errReExpr := time.Parse(utils.DanaDateFormat, resp.RefreshTokenExpiryTime)
 	if errReExpr != nil {
-		return nil, errReExpr
+		errMsg := fmt.Sprintf("Error ReExpired: %s", errReExpr.Error())
+		return nil, errors.New(errMsg)
 	}
 	ava, errT := auth.database.DanaToken.FindUnique(db.DanaToken.CustomerID.Equals(customerId)).Exec(context.Background())
 	if errT == nil {
@@ -50,8 +53,8 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 		).Exec(context.Background())
 		if errTkn != nil {
 			auth.logger.Info(errTkn)
-
-			return nil, errTkn
+			errMsg := fmt.Sprintf("Error Tkn: %s", errTkn.Error())
+			return nil, errors.New(errMsg)
 		}
 		auth.logger.Info(tkn)
 
@@ -68,8 +71,8 @@ func (auth OAuthService) ApplyAccessToken(accessToken string, customerId string)
 	).Exec(context.Background())
 	if errDanaToken != nil {
 		auth.logger.Info(errDanaToken)
-
-		return nil, errDanaToken
+		errMsg := fmt.Sprintf("Error Tkn: %s", errDanaToken.Error())
+		return nil, errors.New(errMsg)
 	}
 
 	auth.logger.Info(dbToken)
