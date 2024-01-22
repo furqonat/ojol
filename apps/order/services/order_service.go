@@ -505,6 +505,14 @@ func (order OrderService) FindGoodAndNearlyDriver(orderId string, latitude, long
 
 		return nil
 	}
+	_, errUpdateOrder := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Update(
+		db.Order.Showable.Set(true),
+	).Exec(context.Background())
+	if errUpdateOrder != nil {
+		return errUpdateOrder
+	}
 	return nil
 }
 
