@@ -4,17 +4,29 @@ import { signOut } from 'next-auth/react'
 /* eslint-disable @next/next/no-img-element */
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 /* eslint-disable-next-line */
 export class NavbarProps {}
 
 export function Navbar(props: NavbarProps) {
   const pathname = usePathname()
+  const router = useRouter()
+  const [search, setSearch] = useState('')
 
   function handleSignOut(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
     signOut().then()
+  }
+
+  function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearch(e.target.value)
+  }
+  function handleKeydownSearch(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === 'Enter') {
+      router.push(`/search?q=${search}`)
+    }
   }
 
   return (
@@ -394,6 +406,10 @@ export function Navbar(props: NavbarProps) {
         <div className={'flex-1 flex justify-end items-end'}>
           <div className={'form-control'}>
             <input
+              type="text"
+              value={search}
+              onChange={handleSearchChange}
+              onKeyDown={handleKeydownSearch}
               className={'input input-bordered input-sm'}
               placeholder={'Search ...'}
             />
