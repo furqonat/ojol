@@ -61,10 +61,10 @@ class ControllerFoodMenu extends GetxController {
     }
   }
 
-  postLikeProductMethod(String Id_product, int index) async {
+  postLikeProductMethod(String idProduct, int index) async {
     try {
       var token = await firebase.currentUser?.getIdToken();
-      var r = await api.postLikeProduct(id_product: Id_product, token: token!);
+      var r = await api.postLikeProduct(id_product: idProduct, token: token!);
       if (r["message"] == "OK") {
         if (favoriteStatus[index]['status'].value == true) {
           favoriteStatus[index]['status'].value = false;
@@ -80,12 +80,12 @@ class ControllerFoodMenu extends GetxController {
     }
   }
 
-  cartMethod(String id_product, int quantity, int price) async {
+  cartMethod(String idProduct, int quantity, int price) async {
     try {
       var firebaseToken = await firebase.currentUser?.getIdToken();
-      if (id_product.isNotEmpty && quantity != 0) {
+      if (idProduct.isNotEmpty && quantity != 0) {
         var r = await api.cart(
-            id_product: id_product, quantity: quantity, token: firebaseToken!);
+            id_product: idProduct, quantity: quantity, token: firebaseToken!);
         if (r['message'] == "OK") {
           total.value = total.value + (price * quantity);
         } else {
@@ -114,7 +114,7 @@ class ControllerFoodMenu extends GetxController {
             Container(
               height: 5,
               width: Get.width * 0.3,
-              margin: EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.grey, borderRadius: BorderRadius.circular(12)),
             ),
@@ -165,7 +165,7 @@ class ControllerFoodMenu extends GetxController {
                 ),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Align(
               alignment: Alignment.bottomRight,
               child: Padding(
@@ -176,8 +176,8 @@ class ControllerFoodMenu extends GetxController {
                   child: Card(
                     color: status
                         ? Colors.pink.withOpacity(0.7)
-                        : Color(0xFF3978EF).withOpacity(0.7),
-                    child: Icon(Icons.favorite_border_rounded,
+                        : const Color(0xFF3978EF).withOpacity(0.7),
+                    child: const Icon(Icons.favorite_border_rounded,
                         color: Colors.white),
                   ),
                 ),

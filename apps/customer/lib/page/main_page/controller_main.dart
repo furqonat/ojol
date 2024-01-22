@@ -17,8 +17,4 @@ class ControllerMain extends GetxController {
     'assets/images/2023-05-12_(1).jpg'
   ];
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 }

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/food_order_hisory/controller_historyfood.dart';
-import 'package:flutter/cupertino.dart';
 
 class PageHistoryFood extends GetView<ControllerHistoryFood> {
   const PageHistoryFood({super.key});
@@ -126,7 +124,7 @@ class PageHistoryFood extends GetView<ControllerHistoryFood> {
                           const Icon(
                               size: 16,
                               Icons.fastfood_rounded,
-                              color: const Color(0xFF3978EF)),
+                              color: Color(0xFF3978EF)),
                           const SizedBox(width: 5),
                           Text(
                             'Jalan jalan no. 123',
