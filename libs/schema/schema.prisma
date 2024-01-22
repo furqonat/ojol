@@ -370,14 +370,15 @@ model services {
   price_in_min_km Int          @default(0)
 }
 
-model company_balance {
-  id                 String   @id @default(cuid())
-  created_at         DateTime @default(now())
-  remark             String?
-  balance            Int
-  balanceBeforeFee   Int
-  balanceDriverBonus Int
-}
+// model company_balance {
+//   id                        String   @id @default(cuid())
+//   created_at                DateTime @default(now())
+//   remark                    String?
+//   balance                   Int
+//   balance_before_fee        Int
+//   balance_driver_bonus      Int
+//   balance_before_korcab_fee Int
+// }
 
 model discount {
   id              String       @id @default(cuid())
@@ -722,4 +723,5 @@ enum trx_company_type {
   DRIVER
   MERCHANT
   ADMIN
+  BONUS_DRIVER
 }
