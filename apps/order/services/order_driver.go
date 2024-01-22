@@ -221,6 +221,9 @@ func (order OrderService) processDriver(orderDb *db.OrderModel) (*db.DriverModel
 	}
 
 	order.driverBonus(orderDb.OrderType, orderDb.ID, driver.ID, int(amountBonus))
+	if err := order.createTrxCompnay(db.TrxTypeReduction, db.TrxCompanyTypeBonusDriver, int(amountBonus)); err != nil {
+		return nil, 0, err
+	}
 
 	return driver, amount, nil
 }
