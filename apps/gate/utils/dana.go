@@ -47,24 +47,23 @@ func (dana Dana) GenerateGUID() string {
 }
 
 func (dana Dana) SnapApplyToken(url string, payloadObject map[string]interface{}) ([]byte, error) {
-	jsonPayload := dana.composeRequest(payloadObject)
-
+	payload := dana.composeRequestSnap(payloadObject)
 	client := &http.Client{}
-	req, errReq := http.NewRequest("POST", dana.GetWebURL()+url, bytes.NewBuffer([]byte(jsonPayload)))
+	req, errReq := http.NewRequest("POST", dana.GetApiURL()+url, bytes.NewBuffer([]byte(payload)))
 	if errReq != nil {
 		return []byte{}, errReq
 	}
 	now := dana.GetDateNow()
 	// <X-CLIENT-KEY> + “|“ + <X-TIMESTAMP>
 	encodedString := ClientID + "|" + now
+	signature := dana.GenerateSignature(encodedString, PrivateKey)
+
+	dana.Logger.Info("Signature : %s", signature)
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Cache-control", "no-cache")
-	req.Header.Set("X-DANA-SDK", "Go")
-	req.Header.Set("X-DANA-SDK-VERSION", "1.0")
-	req.Header.Set("X-SIGNATURE", dana.GenerateSignature(encodedString, PrivateKey))
-	req.Header.Set("X-CLIENT-KEY", ClientID)
 	req.Header.Set("X-TIMESTAMP", now)
+	req.Header.Set("X-SIGNATURE", signature)
+	req.Header.Set("X-CLIENT-KEY", ClientID)
 
 	resp, errClient := client.Do(req)
 	if errClient != nil {
@@ -159,6 +158,15 @@ func (dana Dana) composeRequest(requestData map[string]interface{}) string {
 	}
 
 	return string(bytes.ReplaceAll(requestPayloadText, []byte("\\\""), []byte("\"")))
+}
+
+func (dana Dana) composeRequestSnap(requestData map[string]interface{}) string {
+	requestDataText, err := json.Marshal(requestData)
+	if err != nil {
+		dana.Panic(err)
+	}
+
+	return string(bytes.ReplaceAll(requestDataText, []byte("\\\""), []byte("\"")))
 }
 
 func (dana Dana) GenerateSignature(data, privateKey string) string {

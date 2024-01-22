@@ -68,6 +68,9 @@ func (u LugoService) DeleteService(serviceId string) (*string, error) {
 func (u LugoService) SearchAny(query string) (*SearchResult, error) {
 	merchants, err := u.db.Merchant.FindMany(
 		db.Merchant.Name.Contains(query),
+	).With(
+	  db.Merchant.MerchantWallet.Fetch(),
+	  db.Merchant.Details.Fetch(),
 	).Exec(context.Background())
 	if err != nil {
 		return nil, err
@@ -80,6 +83,11 @@ func (u LugoService) SearchAny(query string) (*SearchResult, error) {
 	}
 	drivers, err := u.db.Driver.FindMany(
 		db.Driver.Name.Contains(query),
+	).With(
+	  db.Driver.DriverDetails.Fetch().With(
+	    db.DriverDetails.Vehicle.Fetch(),
+	  ),
+	  db.Driver.DriverWallet.Fetch(),
 	).Exec(context.Background())
 	if err != nil {
 		return nil, err
@@ -92,6 +100,8 @@ func (u LugoService) SearchAny(query string) (*SearchResult, error) {
 	}
 	transactions, err := u.db.Transactions.FindMany(
 		db.Transactions.ID.Contains(query),
+	).With(
+	  db.Transactions.Order.Fetch(),
 	).Exec(context.Background())
 	if err != nil {
 		return nil, err
