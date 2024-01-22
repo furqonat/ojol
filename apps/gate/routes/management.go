@@ -71,6 +71,8 @@ func (s ManagementRoutes) Setup() {
 		api.DELETE("/discount/:id", s.controller.DeleteDiscount)
 
 		api.POST("/admin/wd", s.controller.AdminRequestWithdraw)
+
+		api.POST("/trx/company", s.controller.GetTrxCompany)
 	}
 }
 

@@ -142,9 +142,17 @@ func (u LugoService) GetCompanyBallance() (*utils.MerchantQuery, error) {
 	return resp, nil
 }
 
-func (u LugoService) GetCompanyBalanceTrx(trxIn string) (*CompantTrx, error) {
+func (u LugoService) GetCompanyBalanceTrx(trxIn string) ([]db.TrxCompanyModel, error) {
 
-	return nil, nil
+	if trxIn == "day" {
+		return u.GetCompanyBallanceInDay()
+	}
+
+	if trxIn == "week" {
+		return u.GetCompanyBallanceInWeek()
+	}
+
+	return u.GetCompanyBallanceInMonth()
 }
 
 func (u LugoService) GetCompanyBallanceInDay() ([]db.TrxCompanyModel, error) {
