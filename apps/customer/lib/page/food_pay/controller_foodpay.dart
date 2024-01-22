@@ -58,12 +58,12 @@ class ControllerFoodPay extends GetxController {
     }
   }
 
-  updateCartMethod(String product_id, int quantity) async {
+  updateCartMethod(String productId, int quantity) async {
     try {
       var token = await firebase.currentUser?.getIdToken();
-      if (product_id.isNotEmpty) {
+      if (productId.isNotEmpty) {
         var r = await api.updateCart(
-            id_product: product_id, quantity: quantity, token: token!);
+            id_product: productId, quantity: quantity, token: token!);
         if (r["message"] == "OK") {
           getCartMethod();
         } else {

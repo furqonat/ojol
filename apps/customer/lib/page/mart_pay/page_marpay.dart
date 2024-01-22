@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/mart_pay/controller_marpay.dart';
@@ -306,7 +305,7 @@ class PageMartPay extends GetView<ControllerMartPay> {
               onChanged: (String? value) => controller.categoryType(value),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Row(

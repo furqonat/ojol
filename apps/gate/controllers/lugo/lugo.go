@@ -84,3 +84,15 @@ func (c Controller) DeleteService(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, service)
 }
+
+func (c Controller) SearchAny(ctx *gin.Context) {
+	query := ctx.Query("q")
+
+	res, err := c.service.SearchAny(query)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "internal server error " + err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, res)
+}
