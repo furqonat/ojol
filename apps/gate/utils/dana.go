@@ -46,6 +46,51 @@ func (dana Dana) GenerateGUID() string {
 	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:])
 }
 
+func (dana Dana) SnapApplyToken(url string, payloadObject map[string]interface{}) ([]byte, error) {
+	jsonPayload := dana.composeRequest(payloadObject)
+
+	client := &http.Client{}
+	req, errReq := http.NewRequest("POST", dana.GetWebURL()+url, bytes.NewBuffer([]byte(jsonPayload)))
+	if errReq != nil {
+		return []byte{}, errReq
+	}
+	now := dana.GetDateNow()
+	// <X-CLIENT-KEY> + “|“ + <X-TIMESTAMP>
+	encodedString := ClientID + "|" + now
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Cache-control", "no-cache")
+	req.Header.Set("X-DANA-SDK", "Go")
+	req.Header.Set("X-DANA-SDK-VERSION", "1.0")
+	req.Header.Set("X-SIGNATURE", dana.GenerateSignature(encodedString, PrivateKey))
+	req.Header.Set("X-CLIENT-KEY", ClientID)
+	req.Header.Set("X-TIMESTAMP", now)
+
+	resp, errClient := client.Do(req)
+	if errClient != nil {
+		errMsg := fmt.Sprintf("Error : %s %s", dana.GetApiURL(), url)
+		return []byte{}, errors.New(errMsg)
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			dana.Panicf("Unuxpected error: %s", err.Error())
+		}
+	}(resp.Body)
+
+	body, errIO := io.ReadAll(resp.Body)
+	if errIO != nil {
+		return []byte{}, errIO
+	}
+
+	return body, nil
+}
+
+func (dana Dana) SnapTransaction() {
+
+}
+
 func (dana Dana) New(url string, payloadObject map[string]interface{}) ([]byte, error) {
 	jsonPayload := dana.composeRequest(payloadObject)
 
