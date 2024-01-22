@@ -72,7 +72,7 @@ func (s ManagementRoutes) Setup() {
 
 		api.POST("/admin/wd", s.controller.AdminRequestWithdraw)
 
-		api.POST("/trx/company", s.controller.GetTrxCompany)
+		api.GET("/trx/company", s.controller.GetTrxCompany)
 	}
 }
 
