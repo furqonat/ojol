@@ -208,6 +208,50 @@ func (u LugoService) CreateDiscount(model *db.DiscountModel) (*string, error) {
 	return &result.ID, nil
 }
 
+// func (u LugoService) GetBonusDrivers() ([]db.DriverModel, error) {
+// 	result, err := u.db.Driver.FindMany(
+// 		db.Driver.Name.Order(db.ASC),
+// 	).With(
+// 		db.Driver.BonusDriver.Fetch().With(
+// 			db.BonusDriver.Order.Fetch().With(
+// 				db.Order.OrderDetail.Fetch(),
+// 				db.Order.OrderItems.Fetch().With(
+// 					db.OrderItem.Product.Fetch(),
+// 				),
+// 			),
+// 		),
+// 		db.Driver.DriverDetails.Fetch(),
+// 		db.Driver.DriverWallet.Fetch(),
+// 		// db.Driver.DanaToken.Fetch(),
+// 	).Exec(context.Background())
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return result, nil
+// }
+
+// func (u LugoService) GetBonusDriver(driverId string) ([]db.DriverModel, error) {
+// 	result, err := u.db.Driver.FindMany(
+// 		db.Driver.ID.Equals(driverId),
+// 	).With(
+// 		db.Driver.BonusDriver.Fetch().With(
+// 			db.BonusDriver.Order.Fetch().With(
+// 				db.Order.OrderDetail.Fetch(),
+// 				db.Order.OrderItems.Fetch().With(
+// 					db.OrderItem.Product.Fetch(),
+// 				),
+// 			),
+// 		),
+// 		db.Driver.DriverDetails.Fetch(),
+// 		db.Driver.DriverWallet.Fetch(),
+// 		db.Driver.DanaToken.Fetch(),
+// 	).Exec(context.Background())
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return result, nil
+// }
+
 func (u LugoService) assignPtrTimeIfTrue(value time.Time, condition bool) *time.Time {
 	if condition {
 		return &value

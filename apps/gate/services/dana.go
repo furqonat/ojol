@@ -35,6 +35,29 @@ func (dana DanaService) GenerateSignInUrl(state string) string {
 	return uri
 }
 
+func (dana DanaService) GetAccessToken() (*utils.SnapGetToken, error) {
+
+	requestData := map[string]interface{}{
+		"grantType": "client_credentials",
+	}
+
+	response, err := dana.danaApi.SnapApplyToken("/v1.0/access-token/b2b2c.htm", requestData)
+	if err != nil {
+		return nil, err
+	}
+	result := utils.SnapGetToken{}
+	parser := json.Unmarshal(response, &result)
+	if parser != nil {
+		return nil, parser
+	}
+	if result.ResponseMessage != "Successful" {
+		errMsg := fmt.Sprintf("Error: %s", result.ResponseMessage)
+		return nil, errors.New(errMsg)
+	}
+	return &result, nil
+
+}
+
 func (dana DanaService) ApplyAccessToken(authCode string) (*utils.SnapApplyToken, error) {
 	requestData := map[string]interface{}{
 		"grantType":      "AUTHORIZATION_CODE",

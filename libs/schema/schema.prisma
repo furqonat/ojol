@@ -717,6 +717,7 @@ model bonus_driver {
   trx_type   service_type
   amount     Int
   created_at DateTime     @default(now())
+  paid       Boolean      @default(false)
 }
 
 enum trx_company_type {

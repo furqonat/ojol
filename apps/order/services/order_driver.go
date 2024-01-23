@@ -107,6 +107,35 @@ func (order OrderService) ShippingOrder(orderId string) error {
 		if errUpdateOrder != nil {
 			return errUpdateOrder
 		}
+
+		if err := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusOtw)); err != nil {
+			return err
+		}
+		return nil
+	}
+	return nil
+}
+
+func (order OrderService) DriverClose(orderId string) error {
+	orderDb, errGetOrderDb := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Exec(context.Background())
+	if errGetOrderDb != nil {
+		return errGetOrderDb
+	}
+	if orderDb.OrderStatus == db.OrderStatusDriverOtw {
+		_, errUpdateOrder := order.database.Order.FindUnique(
+			db.Order.ID.Equals(orderId),
+		).Update(
+			db.Order.OrderStatus.Set(db.OrderStatusDriverClose),
+		).Exec(context.Background())
+		if errUpdateOrder != nil {
+			return errUpdateOrder
+		}
+
+		if err := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusDriverClose)); err != nil {
+			return err
+		}
 		return nil
 	}
 	return nil

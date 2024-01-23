@@ -17,15 +17,26 @@ type ApplyToken struct {
 	UserInfo        UserInfo        `json:"userInfo"`
 }
 
+type BaseSnapResponse struct {
+	ResponseCode    string `json:"responseCode"`
+	ResponseMessage string `json:"responseMessage"`
+}
+
 type SnapApplyToken struct {
-	ResponseCode           string         `json:"responseCode"`
-	ResponseMessage        string         `json:"responseMessage"`
+	BaseSnapResponse
 	AccessToken            string         `json:"accessToken"`
 	AccessTokenExpiryTime  string         `json:"accessTokenExpiryTime"`
 	TokenType              string         `json:"tokenType"`
 	RefreshToken           string         `json:"refreshToken"`
 	RefreshTokenExpiryTime string         `json:"refreshTokenExpiryTime"`
 	AdditionalInfo         AdditionalInfo `json:"additionalInfo"`
+}
+
+type SnapGetToken struct {
+	BaseSnapResponse
+	AccessToken string `json:"accessToken"`
+	TokenType   string `json:"tokenType"`
+	ExpiresIn   string `json:"expiresIn"`
 }
 
 type AdditionalInfo struct {
