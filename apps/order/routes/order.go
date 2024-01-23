@@ -27,6 +27,8 @@ func (s OrderRoutes) Setup() {
 		orderApi.PUT("/driver/reject/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.DriverRejectOrder)
 		orderApi.PUT("/driver/accept/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.DriverAccpetOrder)
 		orderApi.PUT("/driver/finish/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.FinishOrder)
+		orderApi.PUT("/driver/close/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.DriverClose)
+		orderApi.PUT("/driver/shipping/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.DRIVER), s.orderController.DriverShipping)
 
 		orderApi.PUT("/merchant/reject/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.orderController.MerchantRejectOrder)
 		orderApi.PUT("/merchant/accept/:orderId", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.orderController.MerchantAcceptOrder)

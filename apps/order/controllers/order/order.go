@@ -144,6 +144,26 @@ func (order OrderController) DriverAccpetOrder(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
+func (order OrderController) DriverShipping(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+	if err := order.service.ShippingOrder(orderId); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
+func (order OrderController) DriverClose(ctx *gin.Context) {
+	orderId := ctx.Param("orderId")
+	if err := order.service.DriverClose(orderId); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+}
+
 func (order OrderController) MerchantAcceptOrder(ctx *gin.Context) {
 	orderId := ctx.Param("orderId")
 	if err := order.service.MerchantAcceptOrder(orderId); err != nil {
