@@ -502,6 +502,27 @@ Authorization: Bearer ....
 }
 ```
 
+
+## Finsih Order
+
+Berikut adalah cara mendapatkan history order
+
+### Contoh Request
+
+```http
+GET https://order.gentatechnology.com/driver/finish/<order_id>
+Content-Type: application/json
+Authorization: Bearer ....
+```
+
+
+### Contoh Response
+```json
+{
+  "message": "OK"
+}
+```
+
 ## Mendapatkan History Order
 
 Berikut adalah cara mendapatkan history order
