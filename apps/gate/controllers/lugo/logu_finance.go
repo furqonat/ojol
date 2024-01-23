@@ -356,3 +356,25 @@ func (c Controller) GetTrxCompany(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, res)
 }
+
+// func (c Controller) GetBonusDrivers(ctx *gin.Context) {
+// 	res, err := c.service.GetBonusDrivers()
+// 	if err != nil {
+// 		c.logger.Info(err.Error())
+// 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+// 		ctx.Abort()
+// 		return
+// 	}
+// 	ctx.JSON(http.StatusOK, res)
+// }
+
+// func (c Controller) GetBonusDriver(ctx *gin.Context) {
+// 	id := ctx.Param("id")
+// 	res, err := c.service.GetBonusDriver(id)
+// 	if err != nil {
+// 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Unexpected error :" + err.Error()})
+// 		ctx.Abort()
+// 		return
+// 	}
+// 	ctx.JSON(http.StatusOK, res)
+// }
