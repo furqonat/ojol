@@ -27,7 +27,7 @@ describe('Test Autentication Api', () => {
     it('test apply token', async () => {
       const userId = cusCred.user.uid
       const resp = await axios.post(`/oauth?customerId=${userId}`, {
-        access_token: 't7KniZ4YB3qSM7aGCPbDDVZNevDw6kl8sU1B2000',
+        access_token: 'lQUn6P6d1HrSQ8PFaG4DvYdGrgiuSkovZl9i2000',
       })
       expect(resp.status).toBe(HttpStatusCode.Ok)
     })
