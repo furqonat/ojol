@@ -302,6 +302,47 @@ Authorization: Bearer ....
 }
 ```
 
+## Driver Sudah Sampai
+Berikut adalah cara menggunakan api.
+
+### Contoh Request
+
+```http
+PUT https://order.gentatechnology.com/driver/close/<order_id>
+Content-Type: application/json
+Authorization: Bearer ....
+
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK"
+}
+```
+
+## Proses perjalanan
+Berikut adalah cara menggunakan api.
+
+### Contoh Request
+
+```http
+PUT https://order.gentatechnology.com/driver/shipping/<order_id>
+Content-Type: application/json
+Authorization: Bearer ....
+
+```
+
+### Contoh Response
+
+```json
+{
+  "message": "OK"
+}
+```
+
+
 ## Merchant Mendapatkan Order
 
 Setelah pengguna menyelesaikan pembayaran pada order `FOOD` dan `MART` maka merchant akan mendapatkan notifikasi dan melihat order.
