@@ -74,6 +74,8 @@ func (s ManagementRoutes) Setup() {
 
 		api.GET("/trx/company", s.controller.GetTrxCompany)
 		api.GET("/search", s.controller.SearchAny)
+		// api.GET("/bonus", s.controller.GetBonusDrivers)
+		// api.GET("/bonus/:id", s.controller.GetBonusDriver)
 	}
 }
 

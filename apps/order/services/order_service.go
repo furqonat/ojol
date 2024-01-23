@@ -188,7 +188,7 @@ func (order OrderService) CreateOrder(
 	}
 	_, errCreateOrderDetail := order.database.OrderDetail.CreateOne(
 		db.OrderDetail.Order.Link(db.Order.ID.Equals(createOrderResult.ID)),
-		db.OrderDetail.Latitude.Set(ptrOrderModel.Location.Longitude),
+		db.OrderDetail.Latitude.Set(ptrOrderModel.Location.Latitude),
 		db.OrderDetail.Longitude.Set(ptrOrderModel.Location.Longitude),
 		db.OrderDetail.Address.Set(ptrOrderModel.Location.Address),
 		db.OrderDetail.DstLatitude.Set(ptrOrderModel.Destination.Latitude),
