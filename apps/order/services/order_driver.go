@@ -175,6 +175,19 @@ func (order OrderService) FinishOrder(orderId string) error {
 		return errDriver
 	}
 
+	_, errUpdateOrder := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Update(
+		db.Order.OrderStatus.Set(db.OrderStatusDone),
+	).Exec(context.Background())
+	if errUpdateOrder != nil {
+		return errUpdateOrder
+	}
+
+	if err := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusDone)); err != nil {
+		return err
+	}
+
 	if orderDb.OrderType == db.ServiceTypeFood || orderDb.OrderType == db.ServiceTypeMart {
 		if err := order.processMerchant(orderDb); err != nil {
 			return err
