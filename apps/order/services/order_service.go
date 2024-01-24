@@ -149,10 +149,40 @@ func (order OrderService) CreateOrder(
 	if ptrOrderModel.OrderType == db.ServiceTypeFood || ptrOrderModel.OrderType == db.ServiceTypeMart {
 		prod, errProd := order.database.Product.FindUnique(
 			db.Product.ID.Equals(*ptrOrderModel.Product[0].ProductId),
+		).With(
+			db.Product.Merchant.Fetch().With(
+				db.Merchant.Details.Fetch(),
+				db.Merchant.MerchantWallet.Fetch(),
+			),
 		).Exec(context.Background())
 		if errProd != nil {
 			order.deleteOrder(createOrderResult.ID)
 			return nil, nil, errProd
+		}
+
+		merchant := prod.Merchant()
+		merchantWallet, okWallet := merchant.MerchantWallet()
+
+		if !okWallet {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("unable fetch merchant wallet")
+		}
+
+		if !merchant.IsOpen {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("merchant not open")
+		}
+
+		_, okDetail := merchant.Details()
+
+		if !okDetail {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("merchant not verified yet")
+		}
+
+		if merchantWallet.Balance < createOrderResult.TotalAmount {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("insufficient balance")
 		}
 
 		if err := order.sendMessageToMerchant(prod.MerchantID, "Pesanan Baru!", "segera siapkan pesanan nya sebelum driver datang!"); err != nil {

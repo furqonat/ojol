@@ -8,6 +8,19 @@ import (
 )
 
 func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
+	driver, errDriver := order.database.Driver.FindUnique(
+		db.Driver.ID.Equals(driverId),
+	).With(
+		db.Driver.DriverWallet.Fetch(),
+	).Exec(context.Background())
+	if errDriver != nil {
+		return errDriver
+	}
+	wallet, ok := driver.DriverWallet()
+	if !ok {
+		return errors.New("wallet not found")
+	}
+
 	query := fmt.Sprintf(`
 	UPDATE "order"
 	SET "driver_id" = '%s'
@@ -25,6 +38,15 @@ func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
 			db.OrderItem.Product.Fetch(),
 		),
 	).Exec(context.Background())
+
+	if errGetOrderDb != nil {
+		return errGetOrderDb
+	}
+
+	if wallet.Balance < orderDb.TotalAmount {
+		return errors.New("balance not enough")
+	}
+
 	_, errUpdateOrder := order.database.Order.FindUnique(
 		db.Order.ID.Equals(orderId),
 	).Update(
@@ -33,9 +55,7 @@ func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
 	if errUpdateOrder != nil {
 		return errUpdateOrder
 	}
-	if errGetOrderDb != nil {
-		return errGetOrderDb
-	}
+
 	if err := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusDriverOtw)); err != nil {
 		return err
 	}
