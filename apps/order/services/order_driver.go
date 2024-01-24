@@ -25,7 +25,14 @@ func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
 			db.OrderItem.Product.Fetch(),
 		),
 	).Exec(context.Background())
-
+	_, errUpdateOrder := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Update(
+		db.Order.OrderStatus.Set(db.OrderStatusDriverOtw),
+	).Exec(context.Background())
+	if errUpdateOrder != nil {
+		return errUpdateOrder
+	}
 	if errGetOrderDb != nil {
 		return errGetOrderDb
 	}
@@ -79,7 +86,7 @@ func (order OrderService) DriverAcceptOrder(orderId, driverId string) error {
 		SET driver_id = '%s'
 		WHERE id = '%s'
 		AND driver_id IS NULL
-	`, driverId, driverId)
+	`, driverId, orderId)
 	_, errUpdateOrder := order.database.Prisma.ExecuteRaw(query).Exec(context.Background())
 	if errUpdateOrder != nil {
 		return errUpdateOrder
@@ -87,6 +94,14 @@ func (order OrderService) DriverAcceptOrder(orderId, driverId string) error {
 	err := order.assignDriverOnFirestore(driverId, orderId)
 	if err != nil {
 		return err
+	}
+	_, errUpdateOrderUpdate := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Update(
+		db.Order.OrderStatus.Set(db.OrderStatusDriverOtw),
+	).Exec(context.Background())
+	if errUpdateOrderUpdate != nil {
+		return errUpdateOrder
 	}
 	errF := order.DeleteOrderForDriver(driverId, orderId)
 	if errF != nil {
