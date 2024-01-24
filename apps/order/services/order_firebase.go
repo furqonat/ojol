@@ -78,7 +78,8 @@ func (order OrderService) firebaseSendMessage(token, title, msg string) error {
 	}
 	_, err := order.messaging.Send(context.Background(), message)
 	if err != nil {
-		return err
+		fmt.Printf("error send message to firebase: %s\n", err.Error())
+		return nil
 	}
 	return nil
 }

@@ -15,12 +15,12 @@ describe('Test Autentication Api', () => {
   beforeAll(async () => {
     const app = initializeApp(getFirebaseConfig())
     const auth = getAuth(app)
-    const resCus = await customerSignIn(
-      auth,
-      process.env.EMAILCUSTOMER,
-      process.env.PASSWORDCUSTOMER,
-    )
-    cusCred = resCus
+    // const resCus = await customerSignIn(
+    //   auth,
+    //   process.env.EMAILCUSTOMER,
+    //   process.env.PASSWORDCUSTOMER,
+    // )
+    // cusCred = resCus
 
     const resDri = await driverSignIn(
       auth,
@@ -29,12 +29,12 @@ describe('Test Autentication Api', () => {
     )
     driCred = resDri
 
-    const resMerch = await merchantSignIn(
-      auth,
-      process.env.TEST_EMAIL_MERCH,
-      process.env.TEST_PSW_MERCH,
-    )
-    merCred = resMerch
+    // const resMerch = await merchantSignIn(
+    //   auth,
+    //   process.env.TEST_EMAIL_MERCH,
+    //   process.env.TEST_PSW_MERCH,
+    // )
+    // merCred = resMerch
   })
 
   describe('GET /order/merchant get order for merchant', () => {
@@ -103,10 +103,10 @@ describe('Test Autentication Api', () => {
     })
   })
   describe('PUT /order/ driver sign on order', () => {
-    it('Test assign driver id on order', async () => {
+    it('Test assign driver id on order idd', async () => {
       const token = await getIdToken(driCred.user)
       const resp = await axios.put(
-        '/order/driver/sign/clqje77u90000dmkc57v4ytmj',
+        '/driver/sign/clrrexkyv0008k63341mddk1q',
         {},
         {
           headers: {
