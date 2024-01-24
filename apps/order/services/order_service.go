@@ -16,7 +16,7 @@ import (
 type OrderService struct {
 	database    utils.Database
 	firestore   Firestore
-	messaging   Messaging
+	messaging   *Messaging
 	danaService DanaService
 }
 
@@ -46,10 +46,12 @@ type QueryRawNearly struct {
 	Distance        float64 `json:"distance"`
 }
 
-func NewOrderService(database utils.Database, firestore Firestore) *OrderService {
+func NewOrderService(database utils.Database, firestore Firestore, messaging *Messaging, danaService DanaService) *OrderService {
 	return &OrderService{
-		database:  database,
-		firestore: firestore,
+		database:    database,
+		firestore:   firestore,
+		messaging:   messaging,
+		danaService: danaService,
 	}
 }
 

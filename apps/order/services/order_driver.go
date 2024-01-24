@@ -13,12 +13,12 @@ func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
 	SET "driver_id" = '%s'
 	WHERE "id" = '%s'
 	AND "driver_id" IS NULL
-	`, driverId, driverId)
+	`, driverId, orderId)
 	_, err := order.database.Prisma.ExecuteRaw(query).Exec(context.Background())
 	if err != nil {
 		return err
 	}
-	_, errGetOrderDb := order.database.Order.FindUnique(
+	orderDb, errGetOrderDb := order.database.Order.FindUnique(
 		db.Order.ID.Equals(orderId),
 	).With(
 		db.Order.OrderItems.Fetch().With(
@@ -32,10 +32,13 @@ func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
 	if err := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusDriverOtw)); err != nil {
 		return err
 	}
-	// if err := order.sendMessageToApp(orderDb); err != nil {
-	// 	fmt.Printf("error send message to app: %s\n", err.Error())
-	// 	return nil
-	// }
+	if err := order.assignDriverOnFirestore(driverId, orderId); err != nil {
+		return err
+	}
+	if err := order.sendMessageToApp(orderDb); err != nil {
+		fmt.Printf("error send message to app: %s\n", err.Error())
+		return nil
+	}
 	return nil
 }
 
