@@ -185,6 +185,18 @@ func (order OrderService) DriverClose(orderId string) error {
 
 func (order OrderService) FinishOrder(orderId string) error {
 
+	orderStatus, errOrderStatus := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Exec(context.Background())
+
+	if errOrderStatus != nil {
+		return errOrderStatus
+	}
+
+	if orderStatus.OrderStatus == db.OrderStatusDone {
+		return errors.New("order already done")
+	}
+
 	orderDb, errOrder := order.fetchOrder(orderId)
 	if errOrder != nil {
 		return errOrder
