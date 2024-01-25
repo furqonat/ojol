@@ -51,6 +51,7 @@ func (controller OrderController) CancelOrder(ctx *gin.Context) {
 	orderId := ctx.Param("id")
 	cancelOrder := CancelOrder{}
 	if err := ctx.BindJSON(&cancelOrder); err != nil {
+		controller.logger.Info(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": err.Error()})
 		ctx.Abort()
 		return
@@ -58,6 +59,7 @@ func (controller OrderController) CancelOrder(ctx *gin.Context) {
 	result, err := controller.service.CancelOrder(orderId, cancelOrder.Raseon)
 
 	if err != nil {
+		controller.logger.Info(err.Error())
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": err.Error()})
 		ctx.Abort()
 		return

@@ -143,7 +143,38 @@ func (dana DanaService) CancelOrder(orderId string, reason string) (*utils.Cance
 	}, nil
 }
 
-func (dana DanaService) RefundOrder(orderId string, reason string) error {
+func (dana DanaService) RefundOrder(orderId string, reason string, amount int) (*utils.SnapRefundOrder, error) {
+	amountString := fmt.Sprintf("%.2f", float64(amount)/100)
+	requestData := map[string]interface{}{
+		"merchantId":                 utils.MerchantID,
+		"originalPartnerReferenceNo": orderId,
+		"partnerRefundNo":            dana.danaApi.GenerateGUID(),
+		"refundAmount": map[string]interface{}{
+			"value":    amountString,
+			"currency": "IDR",
+		},
+		"reason": reason,
+	}
 
-	return nil
+	resp, err := dana.GetAccessToken()
+	if err != nil {
+		println("get access token error", err.Error())
+		return nil, err
+	}
+	response, err := dana.danaApi.SnapTransaction("/v1.0/debit/refund.htm", requestData, "", resp.AccessToken)
+
+	if err != nil {
+		println("snap transaction error", err.Error())
+		return nil, err
+	}
+	result := utils.SnapRefundOrder{}
+	errParse := json.Unmarshal(response, &result)
+	if errParse != nil {
+		return nil, errParse
+	}
+	if result.ResponseMessage != "Successful" {
+		errMsg := fmt.Sprintf("Error: %s, message: %s", result.BaseSnapResponse.ResponseCode, result.ResponseMessage)
+		return nil, errors.New(errMsg)
+	}
+	return &result, nil
 }

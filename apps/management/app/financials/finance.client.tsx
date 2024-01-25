@@ -49,11 +49,18 @@ export function Finance() {
               return a
             }
           }, 0)
+          const bonusDriverGross = e.reduce((a, b) => {
+            if (b.trx_type === 'ADJUSTMENT' && b.trx_from == 'DRIVER') {
+              return a + b.amount
+            } else {
+              return a
+            }
+          }, 0)
           setTrx({
-            total: total - beforeFee - bonusDriver,
             beforeFee: total,
+            total: total - beforeFee - bonusDriver,
+            netProfit: bonusDriverGross,
             bonusDriver: bonusDriver,
-            netProfit: total - beforeFee - bonusDriver,
           })
         })
     }
@@ -117,8 +124,8 @@ export function Finance() {
           }
         >
           <div className="stat">
-            <div className={'stat-title'}>Total Balance </div>
-            <div className={'stat-value text-2xl'}>{trx?.total}</div>
+            <div className={'stat-title'}>Gross Profit </div>
+            <div className={'stat-value text-2xl'}>{trx?.beforeFee}</div>
             <div className={'stat-desc'}>total balance in month</div>
           </div>
         </div>
@@ -128,7 +135,7 @@ export function Finance() {
           }
         >
           <div className="stat">
-            <div className={'stat-title'}>Bonus Driver </div>
+            <div className={'stat-title'}>Gross Profit 5%</div>
             <div className={'stat-value text-2xl'}>{trx?.bonusDriver}</div>
             <div className={'stat-desc'}>total bonus driver in month</div>
           </div>
@@ -140,9 +147,9 @@ export function Finance() {
           }
         >
           <div className="stat">
-            <div className={'stat-title'}>Gross Profit</div>
-            <div className={'stat-value text-2xl'}>{trx?.beforeFee}</div>
-            <div className={'stat-desc'}>before fees</div>
+            <div className={'stat-title'}>Gross Profit 15%</div>
+            <div className={'stat-value text-2xl'}>{trx?.netProfit}</div>
+            <div className={'stat-desc'}>income from driver</div>
           </div>
         </div>
         <div
@@ -152,7 +159,7 @@ export function Finance() {
         >
           <div className="stat">
             <div className={'stat-title'}>Total Net Profit</div>
-            <div className={'stat-value text-2xl'}>{trx?.netProfit}</div>
+            <div className={'stat-value text-2xl'}>{trx?.total}</div>
             <div className={'stat-desc'}>total net profit in month</div>
           </div>
         </div>
