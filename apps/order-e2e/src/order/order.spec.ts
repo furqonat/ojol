@@ -15,24 +15,24 @@ describe('Test Autentication Api', () => {
   beforeAll(async () => {
     const app = initializeApp(getFirebaseConfig())
     const auth = getAuth(app)
-    // const resCus = await customerSignIn(
-    //   auth,
-    //   process.env.EMAILCUSTOMER,
-    //   process.env.PASSWORDCUSTOMER,
-    // )
-    // cusCred = resCus
-
-    const resDri = await driverSignIn(
+    const resCus = await customerSignIn(
       auth,
-      process.env.EMAILDRIVER,
-      process.env.PASSWORDDRIVER,
+      'email@test.com',
+      'password123',
     )
-    driCred = resDri
+    cusCred = resCus
+
+    // const resDri = await driverSignIn(
+    //   auth,
+    //   process.env.EMAILDRIVER + 1,
+    //   process.env.PASSWORDDRIVER + 1,
+    // )
+    // driCred = resDri
 
     // const resMerch = await merchantSignIn(
     //   auth,
-    //   process.env.TEST_EMAIL_MERCH,
-    //   process.env.TEST_PSW_MERCH,
+    //   process.env.TEST_EMAIL_MERCH + 1,
+    //   process.env.TEST_PSW_MERCH + 1,
     // )
     // merCred = resMerch
   })
@@ -55,8 +55,8 @@ describe('Test Autentication Api', () => {
       const resp = await axios.post(
         '/',
         {
-          order_type: 'CAR',
-          payment_type: 'CASH',
+          order_type: 'BIKE',
+          payment_type: 'DANA',
           gross_amount: 75000,
           net_amount: 75000,
           total_amount: 75000,

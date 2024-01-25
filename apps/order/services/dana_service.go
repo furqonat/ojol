@@ -19,105 +19,102 @@ func NewDanaService(dana utils.DanaApi, logger utils.Logger) DanaService {
 	}
 }
 
-func (dana DanaService) CreateNewOrder(expiryTime, transactionType, title, orderID string, amountInCent int, riskObjectID, riskObjectCode, riskObjectOperator, accessToken string) (*utils.CreateOrder, error) {
-	timestam := dana.danaApi.GetDateNow()
-	guid := dana.danaApi.GenerateGUID()
-
+func (dana DanaService) CreateNewOrder(
+	expiryTime,
+	transactionType,
+	title,
+	orderID string,
+	amountInCent int,
+	riskObjectID,
+	riskObjectCode,
+	riskObjectOperator,
+	accessToken string,
+) (*utils.CreateOrder, error) {
+	amountString := fmt.Sprintf("%.2f", float64(amountInCent)/100)
 	requestData := map[string]interface{}{
-		"head": map[string]interface{}{
-			"version":      "2.0",
-			"function":     "dana.acquiring.order.createOrder",
-			"clientId":     utils.ClientID,
-			"clientSecret": utils.ClientSecret,
-			"reqTime":      timestam,
-			"reqMsgId":     guid,
-			"accessToken":  accessToken,
-			"reserve":      "{}",
+		"partnerReferenceNo": orderID,
+		"merchantId":         utils.MerchantID,
+		"amount": map[string]interface{}{
+			"value":    amountString,
+			"currency": "IDR",
 		},
-		"body": map[string]interface{}{
-			"envInfo": map[string]interface{}{
-				"terminalType":       "SYSTEM",
-				"osType":             "",
-				"extendInfo":         "",
-				"orderOsType":        "",
-				"sdkVersion":         "",
-				"websiteLanguage":    "",
-				"tokenId":            "",
-				"sessionId":          "",
-				"appVersion":         "",
-				"merchantAppVersion": "",
-				"clientKey":          "",
-				"orderTerminalType":  "SYSTEM",
-				"clientIp":           "",
-				"sourcePlatform":     "IPG",
-			},
+		"validUpTo":         expiryTime,
+		"pointOfInitiation": "Mobile App",
+		"additionalInfo": map[string]interface{}{
+			"supportDeepLinkCheckoutUrl": true,
+			"productCode":                "51051000100000000001",
 			"order": map[string]interface{}{
-				"expiryTime":        expiryTime,
-				"merchantTransType": transactionType,
 				"orderTitle":        title,
-				"merchantTransId":   orderID,
-				"orderMemo":         "",
-				"createdTime":       timestam,
-				"orderAmount": map[string]interface{}{
-					"value":    amountInCent,
-					"currency": "IDR",
-				},
-				"goods": []map[string]interface{}{
-					{
-						"unit":     "",
-						"category": "",
-						"price": map[string]interface{}{
-							"value":    amountInCent,
-							"currency": "IDR",
-						},
-						"merchantShippingId": "",
-						"merchantGoodsId":    "",
-						"description":        title,
-						"snapshotUrl":        "",
-						"quantity":           "",
-						"extendInfo":         fmt.Sprintf("{'objectId':'%s','objectCode':'%s','objectOperator':'%s'}", riskObjectID, riskObjectCode, riskObjectOperator),
-					},
-				},
+				"merchantTransType": "type",
+				"orderMemo":         "Memo",
+				"createdTime":       "2020-12-23T08:31:11+07:00",
+				"extendInfo":        "",
 			},
-			"productCode": "51051000100000000001",
-			"mcc":         utils.MerchantMCC,
-			"merchantId":  utils.MerchantID,
-			"extendInfo":  "",
-			"notificationUrls": []map[string]interface{}{
-				{
-					"type": "PAY_RETURN",
-					"url":  utils.AcquirementPayReturnURL,
-				},
-				{
-					"type": "NOTIFICATION",
-					"url":  utils.AcquirementNotificationURL,
-				},
+			"mcc": utils.MerchantMCC,
+			"envInfo": map[string]interface{}{
+				"sourcePlatform":    "IPG",
+				"terminalType":      "SYSTEM",
+				"orderTerminalType": "WEB",
 			},
+			"extendInfo": "",
 		},
 	}
 
-	response, err := dana.danaApi.New("/dana/acquiring/order/createOrder.htm", requestData)
+	resp, err := dana.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := dana.danaApi.SnapTransaction("/v1.0/debit/payment.htm", requestData, accessToken, resp.AccessToken)
 
 	if err != nil {
 		return nil, err
 	}
 
-	result := utils.Result[utils.CreateOrder]{}
+	result := utils.DirectDebit{}
 	errParse := json.Unmarshal(response, &result)
 	if errParse != nil {
 		return nil, errParse
 	}
 
-	if result.Response.Body.ResultInfo.ResultCode != "SUCCESS" {
-		return nil, errors.New("unable create order")
+	if result.ResponseMessage != "Successful" {
+		errMsg := fmt.Sprintf("Error: %s, message: %s", result.BaseSnapResponse.ResponseCode, result.ResponseMessage)
+		return nil, errors.New(errMsg)
 	}
 
-	return &result.Response.Body, nil
+	return &utils.CreateOrder{
+		CheckoutUrl:     result.WebRedirectUrl,
+		MerchantTransId: result.PartnerReferenceNo,
+		AcquirementId:   result.ReferenceNo,
+	}, nil
+
+}
+
+func (dana DanaService) GetAccessToken() (*utils.SnapGetToken, error) {
+
+	requestData := map[string]interface{}{
+		"grantType": "client_credentials",
+	}
+
+	response, err := dana.danaApi.SnapApplyToken("/v1.0/access-token/b2b.htm", requestData)
+	if err != nil {
+		return nil, err
+	}
+	result := utils.SnapGetToken{}
+	parser := json.Unmarshal(response, &result)
+	if parser != nil {
+		return nil, parser
+	}
+	if result.ResponseMessage != "Successful" {
+		errMsg := fmt.Sprintf("Error: %s", result.ResponseMessage)
+		return nil, errors.New(errMsg)
+	}
+	return &result, nil
 
 }
 
 func (dana DanaService) CancelOrder(orderId string, reason string) (*utils.CancelOrder, error) {
-	timestam := dana.danaApi.GetDateNow()
+	timestamp := dana.danaApi.GetDateNow()
 	guid := dana.danaApi.GenerateGUID()
 	requestData := map[string]interface{}{
 		"head": map[string]interface{}{
@@ -125,7 +122,7 @@ func (dana DanaService) CancelOrder(orderId string, reason string) (*utils.Cance
 			"function":     "dana.acquiring.order.cancel",
 			"clientId":     utils.ClientID,
 			"clientSecret": utils.ClientSecret,
-			"reqTime":      timestam,
+			"reqTime":      timestamp,
 			"reqMsgId":     guid,
 			"reserve":      "{}",
 		},

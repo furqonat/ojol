@@ -9,6 +9,39 @@ type InnerResult[T any] struct {
 	Body T                      `json:"body"`
 }
 
+type BaseSnapResponse struct {
+	ResponseCode    string `json:"responseCode"`
+	ResponseMessage string `json:"responseMessage"`
+}
+
+type SnapApplyToken struct {
+	BaseSnapResponse
+	AccessToken            string         `json:"accessToken"`
+	AccessTokenExpiryTime  string         `json:"accessTokenExpiryTime"`
+	TokenType              string         `json:"tokenType"`
+	RefreshToken           string         `json:"refreshToken"`
+	RefreshTokenExpiryTime string         `json:"refreshTokenExpiryTime"`
+	AdditionalInfo         AdditionalInfo `json:"additionalInfo"`
+}
+
+type AdditionalInfo struct {
+	UserInfo UserInfo `json:"userInfo"`
+}
+
+type SnapGetToken struct {
+	BaseSnapResponse
+	AccessToken string `json:"accessToken"`
+	TokenType   string `json:"tokenType"`
+	ExpiresIn   string `json:"expiresIn"`
+}
+
+type DirectDebit struct {
+	BaseSnapResponse
+	ReferenceNo        string `json:"referenceNo"`
+	PartnerReferenceNo string `json:"partnerReferenceNo"`
+	WebRedirectUrl     string `json:"webRedirectUrl"`
+}
+
 type ApplyToken struct {
 	ResultInfo      ResultInfo      `json:"resultInfo"`
 	AccessTokenInfo AccessTokenInfo `json:"accessTokenInfo"`
