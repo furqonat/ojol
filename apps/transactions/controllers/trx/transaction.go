@@ -60,7 +60,7 @@ func (trxRouter TransactionRouter) GetTrx(ctx *gin.Context) {
 }
 
 func (trxRouter TransactionRouter) FinishOrder(ctx *gin.Context) {
-	model := utils.Request[utils.FinishNotify]{}
+	model := utils.FinishNotifySnap{}
 	if err := ctx.BindJSON(&model); err != nil {
 		trxRouter.logger.Info(err)
 		errMsg := fmt.Sprintf("unable to bind object order %s", err.Error())

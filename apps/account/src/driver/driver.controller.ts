@@ -48,8 +48,9 @@ export class DriverController {
   @Put()
   async updateApplyDriver(
     @Request() token: { uid?: string },
-    @Body() data: Prisma.driver_detailsUpdateInput,
+    @Body() data: unknown,
   ) {
+    console.log(data)
     return this.driverService.updateDriverDetail(token.uid, data)
   }
 

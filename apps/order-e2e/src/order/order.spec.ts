@@ -17,24 +17,24 @@ describe('Test Autentication Api', () => {
     const auth = getAuth(app)
     const resCus = await customerSignIn(
       auth,
-      process.env.EMAILCUSTOMER,
-      process.env.PASSWORDCUSTOMER,
+      'email@test.com',
+      'password123',
     )
     cusCred = resCus
 
-    const resDri = await driverSignIn(
-      auth,
-      process.env.EMAILDRIVER,
-      process.env.PASSWORDDRIVER,
-    )
-    driCred = resDri
+    // const resDri = await driverSignIn(
+    //   auth,
+    //   process.env.EMAILDRIVER + 1,
+    //   process.env.PASSWORDDRIVER + 1,
+    // )
+    // driCred = resDri
 
-    const resMerch = await merchantSignIn(
-      auth,
-      process.env.TEST_EMAIL_MERCH,
-      process.env.TEST_PSW_MERCH,
-    )
-    merCred = resMerch
+    // const resMerch = await merchantSignIn(
+    //   auth,
+    //   process.env.TEST_EMAIL_MERCH + 1,
+    //   process.env.TEST_PSW_MERCH + 1,
+    // )
+    // merCred = resMerch
   })
 
   describe('GET /order/merchant get order for merchant', () => {
@@ -55,8 +55,8 @@ describe('Test Autentication Api', () => {
       const resp = await axios.post(
         '/',
         {
-          order_type: 'CAR',
-          payment_type: 'CASH',
+          order_type: 'BIKE',
+          payment_type: 'DANA',
           gross_amount: 75000,
           net_amount: 75000,
           total_amount: 75000,
@@ -103,10 +103,10 @@ describe('Test Autentication Api', () => {
     })
   })
   describe('PUT /order/ driver sign on order', () => {
-    it('Test assign driver id on order', async () => {
+    it('Test assign driver id on order idd', async () => {
       const token = await getIdToken(driCred.user)
       const resp = await axios.put(
-        '/order/driver/sign/clqje77u90000dmkc57v4ytmj',
+        '/driver/sign/clrrexkyv0008k63341mddk1q',
         {},
         {
           headers: {
@@ -159,6 +159,23 @@ describe('Test Autentication Api', () => {
       const token = await getIdToken(driCred.user)
       const resp = await axios.put(
         '/order/driver/accept/clqje77u90000dmkc57v4ytmj',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      console.info(resp.data)
+      expect(resp.status).toBe(HttpStatusCode.Ok)
+    })
+  })
+
+  describe('PUT /cancel/<order_id>', () => {
+    it('Test Cancel Order', async () => {
+      const token = await getIdToken(cusCred.user)
+      const resp = await axios.put(
+        '/clrsvy9vk0000o5etcinlox0r',
         {},
         {
           headers: {

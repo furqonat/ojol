@@ -54,16 +54,16 @@ func (dana Dana) SnapApplyToken(url string, payloadObject map[string]interface{}
 		return []byte{}, errReq
 	}
 	now := dana.GetDateNow()
-	// <X-CLIENT-KEY> + “|“ + <X-TIMESTAMP>
 	encodedString := ClientID + "|" + now
 	signature := dana.GenerateSignature(encodedString, PrivateKey)
 
-	dana.Logger.Info("Signature : %s", signature)
+	// dana.Logger.Info("Signature : %s", signature)
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("X-TIMESTAMP", now)
 	req.Header.Set("X-SIGNATURE", signature)
 	req.Header.Set("X-CLIENT-KEY", ClientID)
+	req.Header.Set("CHANNEL-ID", dana.GenerateGUID())
 
 	resp, errClient := client.Do(req)
 	if errClient != nil {
@@ -86,8 +86,54 @@ func (dana Dana) SnapApplyToken(url string, payloadObject map[string]interface{}
 	return body, nil
 }
 
-func (dana Dana) SnapTransaction() {
+func (dana Dana) SnapTransaction(url string, payloadObject map[string]interface{}, accessToken string, b2bAccessToken string) ([]byte, error) {
+	payload := dana.composeRequestSnap(payloadObject)
+	client := &http.Client{}
 
+	req, errReq := http.NewRequest("POST", dana.GetApiURL()+url, bytes.NewBuffer([]byte(payload)))
+	if errReq != nil {
+		return []byte{}, errReq
+	}
+	hash := sha256.New()
+	hash.Write([]byte(payload))
+	hashedBody := fmt.Sprintf("%x", hash.Sum(nil))
+	now := dana.GetDateNow()
+	encodedString := fmt.Sprintf("POST:%s:%s:%s", url, hashedBody, now)
+	signature := dana.GenerateSignature(encodedString, PrivateKey)
+
+	req.Header.Set("X-TIMESTAMP", now)
+	req.Header.Set("X-SIGNATURE", signature)
+	req.Header.Set("X-PARTNER-ID", ClientID)
+	req.Header.Set("X-EXTERNAL-ID", dana.GenerateGUID())
+	req.Header.Set("X-DEVICE-ID", "android-20013adf6cdd8123f")
+	req.Header.Set("CHANNEL-ID", dana.GenerateGUID())
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-DANA-SDK", "Go")
+	req.Header.Set("X-DANA-SDK-VERSION", "1.0")
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", b2bAccessToken))
+	if accessToken != "" {
+		req.Header.Set("Authorization-Customer", fmt.Sprintf("Bearer %s", accessToken))
+	}
+
+	resp, errClient := client.Do(req)
+	if errClient != nil {
+		errMsg := fmt.Sprintf("Error : %s %s", dana.GetApiURL(), url)
+		return []byte{}, errors.New(errMsg)
+	}
+
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			dana.Panicf("Unuxpected error: %s", err.Error())
+		}
+	}(resp.Body)
+
+	body, errIO := io.ReadAll(resp.Body)
+	if errIO != nil {
+		return []byte{}, errIO
+	}
+
+	return body, nil
 }
 
 func (dana Dana) New(url string, payloadObject map[string]interface{}) ([]byte, error) {

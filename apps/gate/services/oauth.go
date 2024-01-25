@@ -84,7 +84,7 @@ func (auth OAuthService) GenerateSignUrl(customerId string) string {
 	return auth.dana.GenerateSignInUrl(customerId)
 }
 
-func (auth OAuthService) GetDanaProfile(customerId string) ([]utils.UserResourcesInfo, error) {
+func (auth OAuthService) GetDanaProfile(customerId string) (*utils.AccountInfo, error) {
 	customer, err := auth.database.Customer.FindUnique(
 		db.Customer.ID.Equals(customerId),
 	).With(
@@ -97,13 +97,13 @@ func (auth OAuthService) GetDanaProfile(customerId string) ([]utils.UserResource
 	if !ok {
 		return nil, errors.New("unable fetch dana token")
 	}
-	auth.logger.Info(danaToken)
-	dana, errDana := auth.dana.GetUserProfile(danaToken.AccessToken)
+	// auth.logger.Info(danaToken)
+	dana, errDana := auth.dana.BalanceInquiry(danaToken.AccessToken)
 	if errDana != nil {
-		auth.logger.Info(err)
+		auth.logger.Info(errDana.Error())
 		return nil, errDana
 	}
-	return dana.UserResourcesInfo, nil
+	return &dana.AccountInfo[0], nil
 }
 
 func (auth OAuthService) MerchantApplyAccessToken(accessToken string, merchantId string) (*string, error) {
@@ -164,7 +164,7 @@ func (auth OAuthService) MerchantGenerateSignUrl(merchantId string) string {
 	return auth.dana.GenerateSignInUrl(fmt.Sprintf("merch-%s", merchantId))
 }
 
-func (auth OAuthService) MerchantGetDanaProfile(merchantId string) ([]utils.UserResourcesInfo, error) {
+func (auth OAuthService) MerchantGetDanaProfile(merchantId string) (*utils.AccountInfo, error) {
 	customer, err := auth.database.Merchant.FindUnique(
 		db.Merchant.ID.Equals(merchantId),
 	).With(
@@ -178,12 +178,12 @@ func (auth OAuthService) MerchantGetDanaProfile(merchantId string) ([]utils.User
 		return nil, errors.New("unable fetch dana token")
 	}
 	auth.logger.Info(danaToken)
-	dana, errDana := auth.dana.GetUserProfile(danaToken.AccessToken)
+	dana, errDana := auth.dana.BalanceInquiry(danaToken.AccessToken)
 	if errDana != nil {
 		auth.logger.Info(err)
 		return nil, errDana
 	}
-	return dana.UserResourcesInfo, nil
+	return &dana.AccountInfo[0], nil
 }
 
 func (auth OAuthService) DriverApplyAccessToken(accessToken string, driverId string) (*string, error) {
@@ -246,7 +246,7 @@ func (auth OAuthService) DriverGenerateSignUrl(driverId string) string {
 	return auth.dana.GenerateSignInUrl(fmt.Sprintf("dri-%s", driverId))
 }
 
-func (auth OAuthService) DriverGetDanaProfile(driverId string) ([]utils.UserResourcesInfo, error) {
+func (auth OAuthService) DriverGetDanaProfile(driverId string) (*utils.AccountInfo, error) {
 	driver, err := auth.database.Driver.FindUnique(
 		db.Driver.ID.Equals(driverId),
 	).With(
@@ -260,10 +260,10 @@ func (auth OAuthService) DriverGetDanaProfile(driverId string) ([]utils.UserReso
 		return nil, errors.New("unable fetch dana token")
 	}
 	auth.logger.Info(danaToken)
-	dana, errDana := auth.dana.GetUserProfile(danaToken.AccessToken)
+	dana, errDana := auth.dana.BalanceInquiry(danaToken.AccessToken)
 	if errDana != nil {
 		auth.logger.Info(err)
 		return nil, errDana
 	}
-	return dana.UserResourcesInfo, nil
+	return &dana.AccountInfo[0], nil
 }

@@ -8,12 +8,25 @@ import (
 )
 
 func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
+	driver, errDriver := order.database.Driver.FindUnique(
+		db.Driver.ID.Equals(driverId),
+	).With(
+		db.Driver.DriverWallet.Fetch(),
+	).Exec(context.Background())
+	if errDriver != nil {
+		return errDriver
+	}
+	wallet, ok := driver.DriverWallet()
+	if !ok {
+		return errors.New("wallet not found")
+	}
+
 	query := fmt.Sprintf(`
 	UPDATE "order"
-	SET driver_id = '%s'
-	WHERE id = '%s'
-	AND driver_id IS NULL
-	`, driverId, driverId)
+	SET "driver_id" = '%s'
+	WHERE "id" = '%s'
+	AND "driver_id" IS NULL
+	`, driverId, orderId)
 	_, err := order.database.Prisma.ExecuteRaw(query).Exec(context.Background())
 	if err != nil {
 		return err
@@ -29,10 +42,31 @@ func (order OrderService) DriverSignOnOrder(orderId, driverId string) error {
 	if errGetOrderDb != nil {
 		return errGetOrderDb
 	}
+
+	if wallet.Balance < orderDb.TotalAmount {
+		return errors.New("balance not enough")
+	}
+
+	_, errUpdateOrder := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Update(
+		db.Order.OrderStatus.Set(db.OrderStatusDriverOtw),
+	).Exec(context.Background())
+	if errUpdateOrder != nil {
+		return errUpdateOrder
+	}
+
 	if err := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusDriverOtw)); err != nil {
 		return err
 	}
-	return order.sendMessageToApp(orderDb)
+	if err := order.assignDriverOnFirestore(driverId, orderId); err != nil {
+		return err
+	}
+	if err := order.sendMessageToApp(orderDb); err != nil {
+		fmt.Printf("error send message to app: %s\n", err.Error())
+		return nil
+	}
+	return nil
 }
 
 func (order OrderService) DriverRejectOrder(orderId string, driverId string) error {
@@ -72,7 +106,7 @@ func (order OrderService) DriverAcceptOrder(orderId, driverId string) error {
 		SET driver_id = '%s'
 		WHERE id = '%s'
 		AND driver_id IS NULL
-	`, driverId, driverId)
+	`, driverId, orderId)
 	_, errUpdateOrder := order.database.Prisma.ExecuteRaw(query).Exec(context.Background())
 	if errUpdateOrder != nil {
 		return errUpdateOrder
@@ -80,6 +114,14 @@ func (order OrderService) DriverAcceptOrder(orderId, driverId string) error {
 	err := order.assignDriverOnFirestore(driverId, orderId)
 	if err != nil {
 		return err
+	}
+	_, errUpdateOrderUpdate := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Update(
+		db.Order.OrderStatus.Set(db.OrderStatusDriverOtw),
+	).Exec(context.Background())
+	if errUpdateOrderUpdate != nil {
+		return errUpdateOrder
 	}
 	errF := order.DeleteOrderForDriver(driverId, orderId)
 	if errF != nil {
@@ -143,6 +185,18 @@ func (order OrderService) DriverClose(orderId string) error {
 
 func (order OrderService) FinishOrder(orderId string) error {
 
+	orderStatus, errOrderStatus := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Exec(context.Background())
+
+	if errOrderStatus != nil {
+		return errOrderStatus
+	}
+
+	if orderStatus.OrderStatus == db.OrderStatusDone {
+		return errors.New("order already done")
+	}
+
 	orderDb, errOrder := order.fetchOrder(orderId)
 	if errOrder != nil {
 		return errOrder
@@ -151,6 +205,19 @@ func (order OrderService) FinishOrder(orderId string) error {
 
 	if errDriver != nil {
 		return errDriver
+	}
+
+	_, errUpdateOrder := order.database.Order.FindUnique(
+		db.Order.ID.Equals(orderId),
+	).Update(
+		db.Order.OrderStatus.Set(db.OrderStatusDone),
+	).Exec(context.Background())
+	if errUpdateOrder != nil {
+		return errUpdateOrder
+	}
+
+	if err := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusDone)); err != nil {
+		return err
 	}
 
 	if orderDb.OrderType == db.ServiceTypeFood || orderDb.OrderType == db.ServiceTypeMart {
