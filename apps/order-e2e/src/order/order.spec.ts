@@ -170,4 +170,21 @@ describe('Test Autentication Api', () => {
       expect(resp.status).toBe(HttpStatusCode.Ok)
     })
   })
+
+  describe('PUT /cancel/<order_id>', () => {
+    it('Test Cancel Order', async () => {
+      const token = await getIdToken(cusCred.user)
+      const resp = await axios.put(
+        '/clrstxqeu0004cey8w6y3k2ql',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      console.info(resp.data)
+      expect(resp.status).toBe(HttpStatusCode.Ok)
+    })
+  })
 })

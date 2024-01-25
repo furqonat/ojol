@@ -94,7 +94,7 @@ export class DriverService {
   }
 
   async updateDriverDetail(driverId: string, options: unknown) {
-    console.log(options)
+    console.log(JSON.stringify(options, undefined, 2))
     try {
       const driver = await this.prismaService.driver_details.update({
         where: {
