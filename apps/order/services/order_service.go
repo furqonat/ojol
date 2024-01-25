@@ -319,6 +319,13 @@ func (order OrderService) CancelOrder(orderId string, reason string) (*string, e
 	if errOrder != nil {
 		return nil, errOrder
 	}
+
+	_, errRefund := order.danaService.RefundOrder(orderId, reason, orderDb.TotalAmount)
+
+	if errRefund != nil {
+		println("refund error", errRefund.Error())
+		return nil, errRefund
+	}
 	trx, okTrx := orderDb.Transactions()
 
 	if !okTrx {

@@ -44,6 +44,15 @@ type SnapGetToken struct {
 	ExpiresIn   string `json:"expiresIn"`
 }
 
+type SnapRefundOrder struct {
+	BaseSnapResponse
+	OriginalPartnerReferenceNo string `json:"originalPartnerReferenceNo"`
+	OriginalReferenceNo        string `json:"originalReferenceNo"`
+	OriginalExternalId         string `json:"originalExternalId"`
+	RefundNo                   string `json:"refundNo"`
+	RefundTime                 string `json:"refundTime"`
+}
+
 type DirectDebit struct {
 	BaseSnapResponse
 	ReferenceNo        string `json:"referenceNo"`
