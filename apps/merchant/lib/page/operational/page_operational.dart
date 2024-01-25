@@ -2,7 +2,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:lugo_marchant/page/operational/controller_operational.dart';
 
 class PageOperational extends GetView<ControllerOperational> {
@@ -32,7 +31,7 @@ class PageOperational extends GetView<ControllerOperational> {
       ),
       body: ListView.builder(
         shrinkWrap: true,
-        itemCount: controller.aInput.length,
+        itemCount: controller.aInput().length,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(10),
@@ -44,7 +43,7 @@ class PageOperational extends GetView<ControllerOperational> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        controller.aInput[index]['Hari'],
+                        controller.aInput()[index]['Hari'],
                         style: GoogleFonts.readexPro(
                           fontSize: 20,
                           fontWeight: FontWeight.w500,
@@ -59,49 +58,38 @@ class PageOperational extends GetView<ControllerOperational> {
                           children: <TextSpan>[
                             const TextSpan(text: 'Jam buka: '),
                             TextSpan(
-                                text:
-                                    controller.aInput[index]["Jam buka"].value,
-                                style: GoogleFonts.readexPro(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: const Color(0xFF3978EF),
-                                ),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () async {
-                                    final selectedTime = await showTimePicker(
-                                      context: context,
-                                      initialTime: controller.timeOpen.value,
+                              text: controller.getOpenTime(
+                                controller.aInput()[index]["Hari"],
+                              ),
+                              style: GoogleFonts.readexPro(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: const Color(0xFF3978EF),
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  final selectedTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: controller.timeOpen.value,
+                                  );
+
+                                  if (selectedTime != null) {
+                                    controller
+                                            .aInput()[index]["Jam buka"]
+                                            .value =
+                                        selectedTime.format(context).toString();
+                                    controller.setOpenTime(
+                                      controller.aInput()[index]['Hari'],
+                                      selectedTime.format(context).toString(),
                                     );
-
-                                    if (selectedTime != null) {
-                                      DateTime currentDate = DateTime.now();
-
-                                      DateTime combinedDateTime = DateTime(
-                                        currentDate.year,
-                                        currentDate.month,
-                                        currentDate.day,
-                                        selectedTime.hour,
-                                        selectedTime.minute,
-                                      );
-
-                                      String formattedDateTime =
-                                          DateFormat("yyyy-MM-ddTHH:mm:ss")
-                                              .format(combinedDateTime);
-
-                                      controller.handleSetOpTime(
-                                        controller.aInput[index]['Hari'],
-                                        openTime: formattedDateTime,
-                                      );
-                                      controller
-                                              .aInput[index]["Jam buka"].value =
-                                          selectedTime
-                                              .format(context)
-                                              .toString();
-                                    }
-                                  }),
+                                  }
+                                },
+                            ),
                             const TextSpan(text: ' - Jam tutup: '),
                             TextSpan(
-                              text: controller.aInput[index]["Jam tutup"].value,
+                              text: controller.getCloseTime(
+                                controller.aInput()[index]["Hari"],
+                              ),
                               style: GoogleFonts.readexPro(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -116,8 +104,13 @@ class PageOperational extends GetView<ControllerOperational> {
 
                                   if (selectedTime != null) {
                                     controller
-                                            .aInput[index]["Jam tutup"].value =
+                                            .aInput()[index]["Jam tutup"]
+                                            .value =
                                         selectedTime.format(context).toString();
+                                    controller.setCloseTime(
+                                      controller.aInput()[index]['Hari'],
+                                      selectedTime.format(context).toString(),
+                                    );
                                   }
                                 },
                             ),
@@ -129,28 +122,22 @@ class PageOperational extends GetView<ControllerOperational> {
                   const Spacer(),
                   Switch.adaptive(
                     activeColor: const Color(0xFF3978EF),
-                    value: controller.aInput[index]['Status'].value,
+                    value: controller.getStatus(
+                      controller.aInput()[index]['Hari'],
+                    ),
                     onChanged: (value) {
-                      if (controller.aInput[index]["Jam tutup"].value != null &&
-                          controller.aInput[index]["Jam buka"].value != null) {
-                        DateTime dateTimeOpen = DateFormat.jm()
-                            .parse(controller.aInput[index]['Jam buka'].value);
-
-                        String openTime =
-                            DateFormat("HH:mm:ss").format(dateTimeOpen);
-
-                        DateTime dateTimeClose = DateFormat.jm()
-                            .parse(controller.aInput[index]['Jam buka'].value);
-
-                        String closeTime =
-                            DateFormat("HH:mm:ss").format(dateTimeClose);
+                      if (controller.aInput()[index]["Jam tutup"].value !=
+                              null &&
+                          controller.aInput()[index]["Jam buka"].value !=
+                              null) {
                         controller.handleSetOpTime(
-                          controller.aInput[index]['Hari'],
-                          openTime: openTime,
-                          closeTime: closeTime,
-                          status: value,
+                          controller.aInput()[index]['Hari'],
                         );
-                        controller.aInput[index]['Status'].value = value;
+                        controller.setStatus(
+                          controller.aInput()[index]['Hari'],
+                          value,
+                        );
+                        controller.aInput()[index]['Status'].value = value;
                       }
                     },
                   )
