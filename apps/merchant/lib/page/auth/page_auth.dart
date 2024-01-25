@@ -360,7 +360,7 @@ class PageAuth extends GetView<ControllerAuth> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    controller.signInstate.value ==
+                                    controller.signUpState.value ==
                                             AuthState.loading
                                         ? const CircularProgressIndicator(
                                             color: Colors.white,

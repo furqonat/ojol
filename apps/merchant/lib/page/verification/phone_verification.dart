@@ -90,7 +90,8 @@ Widget phoneVerificationView(
               if (controller.formPhoneVerification.currentState!.validate()) {
                 final user = FirebaseAuth.instance.currentUser;
                 if (user?.phoneNumber != null &&
-                    controller.verificationState == "1") {
+                    controller.verificationState ==
+                        VerificationState.full.toString()) {
                   controller.handleActiveStep(1);
                 } else {
                   bottomSheet(context, controller);
@@ -173,7 +174,8 @@ void bottomSheet(BuildContext context, VerificationController controller) {
             onPressed: () {
               controller.handleVerificationPhone().then((value) {
                 if (controller.verificationStatus.value.status) {
-                  if (controller.verificationState == "1") {
+                  if (controller.verificationState ==
+                      VerificationState.full.toString()) {
                     Get.back();
                     controller.activeStep.value = 1;
                   } else {

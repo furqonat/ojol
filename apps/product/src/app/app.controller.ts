@@ -31,6 +31,7 @@ export class AppController {
     @Query('type') type: 'FOOD' | 'MART' = 'FOOD',
     @Query('filter') filter: string,
     @Query('merchant_id') merchantId: string,
+    @Query('productStatus') status: boolean,
     @Query() select: Prisma.productSelect,
   ) {
     return this.appService.getProducts(
@@ -41,6 +42,7 @@ export class AppController {
       filter,
       query,
       merchantId,
+      status,
     )
   }
 
