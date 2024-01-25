@@ -70,18 +70,21 @@ class ControllerHome extends GetxController {
     loadingDana.value = false;
   }
 
+  handleGetBanner() async {
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final resp = await api.getBanner(token: token!);
+    print("banner => ${resp[0]['images']}");
+    listImg.value = (resp[0]['images'] as List).map((e) => e['link']).toList();
+  }
+
   @override
   void onReady() {
     loadingDana.value = true;
     handleGetMerchant();
     handleGetSell();
-
+    handleGetBanner();
     super.onReady();
   }
 
-  var listImg = [
-    'assets/images/pamflet_1.jpg',
-    'assets/images/pamflet_2.jpg',
-    'assets/images/pamflet_3.jpg',
-  ];
+  var listImg = [].obs;
 }

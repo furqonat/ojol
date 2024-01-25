@@ -69,4 +69,9 @@ class ApiHome {
     );
     return DanaProfile.fromJson(resp);
   }
+
+  Future getBanner({required String token}) async {
+    final resp = await gateClient.bannerMerchant(bearerToken: "Bearer $token");
+    return resp;
+  }
 }
