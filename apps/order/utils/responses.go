@@ -24,6 +24,15 @@ type SnapApplyToken struct {
 	AdditionalInfo         AdditionalInfo `json:"additionalInfo"`
 }
 
+type SnapCancelOrder struct {
+	BaseSnapResponse
+	OriginalPartnerReferenceNo string `json:"originalPartnerReferenceNo"`
+	OriginalReferenceNo        string `json:"originalReferenceNo"`
+	OriginalExternalId         string `json:"originalExternalId"`
+	CancelTime                 string `json:"cancelTime"`
+	TransactionDate            string `json:"transactionDate"`
+}
+
 type AdditionalInfo struct {
 	UserInfo UserInfo `json:"userInfo"`
 }
