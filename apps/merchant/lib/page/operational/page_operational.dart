@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lugo_marchant/page/operational/controller_operational.dart';
 
 class PageOperational extends GetView<ControllerOperational> {
@@ -35,52 +36,31 @@ class PageOperational extends GetView<ControllerOperational> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.all(10),
-            child: Obx(() => Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          controller.aInput[index]['Hari'],
-                          style: GoogleFonts.readexPro(
-                              fontSize: 20, fontWeight: FontWeight.w500),
+            child: Obx(
+              () => Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        controller.aInput[index]['Hari'],
+                        style: GoogleFonts.readexPro(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
                         ),
-                        RichText(
-                          text: TextSpan(
-                            style: GoogleFonts.readexPro(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
-                            children: <TextSpan>[
-                              const TextSpan(text: 'Jam buka: '),
-                              TextSpan(
-                                  text: controller
-                                      .aInput[index]["Jam buka"].value,
-                                  style: GoogleFonts.readexPro(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: const Color(0xFF3978EF),
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () async {
-                                      final selectedTime = await showTimePicker(
-                                        context: context,
-                                        initialTime: controller.timeOpen.value,
-                                      );
-
-                                      if (selectedTime != null) {
-                                        controller.aInput[index]["Jam buka"]
-                                                .value =
-                                            selectedTime
-                                                .format(context)
-                                                .toString();
-                                      }
-                                    }),
-                              const TextSpan(text: ' - Jam tutup: '),
-                              TextSpan(
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          style: GoogleFonts.readexPro(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500),
+                          children: <TextSpan>[
+                            const TextSpan(text: 'Jam buka: '),
+                            TextSpan(
                                 text:
-                                    controller.aInput[index]["Jam tutup"].value,
+                                    controller.aInput[index]["Jam buka"].value,
                                 style: GoogleFonts.readexPro(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -90,32 +70,95 @@ class PageOperational extends GetView<ControllerOperational> {
                                   ..onTap = () async {
                                     final selectedTime = await showTimePicker(
                                       context: context,
-                                      initialTime: controller.timeClose.value,
+                                      initialTime: controller.timeOpen.value,
                                     );
 
                                     if (selectedTime != null) {
-                                      controller.aInput[index]["Jam tutup"]
-                                              .value =
+                                      DateTime currentDate = DateTime.now();
+
+                                      DateTime combinedDateTime = DateTime(
+                                        currentDate.year,
+                                        currentDate.month,
+                                        currentDate.day,
+                                        selectedTime.hour,
+                                        selectedTime.minute,
+                                      );
+
+                                      String formattedDateTime =
+                                          DateFormat("yyyy-MM-ddTHH:mm:ss")
+                                              .format(combinedDateTime);
+
+                                      controller.handleSetOpTime(
+                                        controller.aInput[index]['Hari'],
+                                        openTime: formattedDateTime,
+                                      );
+                                      controller
+                                              .aInput[index]["Jam buka"].value =
                                           selectedTime
                                               .format(context)
                                               .toString();
                                     }
-                                  },
+                                  }),
+                            const TextSpan(text: ' - Jam tutup: '),
+                            TextSpan(
+                              text: controller.aInput[index]["Jam tutup"].value,
+                              style: GoogleFonts.readexPro(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: const Color(0xFF3978EF),
                               ),
-                            ],
-                          ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  final selectedTime = await showTimePicker(
+                                    context: context,
+                                    initialTime: controller.timeClose.value,
+                                  );
+
+                                  if (selectedTime != null) {
+                                    DateTime currentDate = DateTime.now();
+
+                                    DateTime combinedDateTime = DateTime(
+                                      currentDate.year,
+                                      currentDate.month,
+                                      currentDate.day,
+                                      selectedTime.hour,
+                                      selectedTime.minute,
+                                    );
+
+                                    String formattedDateTime =
+                                        DateFormat("yyyy-MM-ddTHH:mm:ss")
+                                            .format(combinedDateTime);
+
+                                    controller.handleSetOpTime(
+                                      controller.aInput[index]['Hari'],
+                                      closeTime: formattedDateTime,
+                                    );
+                                    controller
+                                            .aInput[index]["Jam tutup"].value =
+                                        selectedTime.format(context).toString();
+                                  }
+                                },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Switch.adaptive(
-                      activeColor: const Color(0xFF3978EF),
-                      value: controller.aInput[index]['Status'].value,
-                      onChanged: (value) =>
-                          controller.aInput[index]['Status'].value = value,
-                    )
-                  ],
-                )),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Switch.adaptive(
+                    activeColor: const Color(0xFF3978EF),
+                    value: controller.aInput[index]['Status'].value,
+                    onChanged: (value) {
+                      controller.handleSetOpTime(
+                        controller.aInput[index]['Hari'],
+                        status: value,
+                      );
+                      controller.aInput[index]['Status'].value = value;
+                    },
+                  )
+                ],
+              ),
+            ),
           );
         },
       ),

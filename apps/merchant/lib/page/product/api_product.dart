@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:lugo_marchant/response/category.dart';
 import 'package:lugo_marchant/shared/servinces/url_service.dart';
 import 'package:rest_client/product_client.dart';
+import 'package:rest_client/shared.dart';
 
 class ApiProduct {
   final ProductClient productClient;
@@ -39,5 +40,16 @@ class ApiProduct {
     return (resp['data'] as List<dynamic>)
         .map((e) => Category(id: e['id'], name: e['name']))
         .toList();
+  }
+
+  Future<Response> setEmptyProduct(
+      {required String token, required String productId}) async {
+    final body = {"status": "false"};
+    final resp = await productClient.updateProduct(
+      bearerToken: "Bearer $token",
+      productId: productId,
+      body: body,
+    );
+    return resp;
   }
 }

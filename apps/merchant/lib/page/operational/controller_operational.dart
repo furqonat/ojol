@@ -1,15 +1,47 @@
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'api_operational.dart';
+import 'package:lugo_marchant/shared/servinces/url_service.dart';
+import 'package:rest_client/account_client.dart';
 
 class ControllerOperational extends GetxController {
-  ControllerOperational({required this.api});
-  final ApiOperational api;
-
+  ControllerOperational({
+    required this.accountClient,
+  });
+  final AccountClient accountClient;
+  final _fbAuth = FirebaseAuth.instance;
   var shopStatus = false.obs;
 
   Rx<TimeOfDay> timeOpen = TimeOfDay.now().obs;
   Rx<TimeOfDay> timeClose = TimeOfDay.now().obs;
+
+  handleGetMerchant() async {
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final query = QueryBuilder()
+      ..addQuery("id", "true")
+      ..addQuery("details", "{include: {operation_time: true}}");
+    final resp = await accountClient.getMerchant(
+        bearerToken: "Bearer $token", queries: query.toMap());
+    log("$resp");
+  }
+
+  handleSetOpTime(String day, {openTime, closeTime, status = false}) async {
+    final body = {
+      "day": day,
+      "open_time": openTime,
+      "close_time": closeTime,
+      "status": status
+    };
+    log(body.toString());
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final resp = await accountClient.createOperationTime(
+      bearerToken: "Bearer $token",
+      body: body,
+    );
+    log(resp.message);
+  }
 
   static String getDay(int index) {
     switch (index) {
@@ -41,4 +73,10 @@ class ControllerOperational extends GetxController {
       'Status': false.obs,
     };
   });
+
+  @override
+  void onInit() {
+    super.onInit();
+    handleGetMerchant();
+  }
 }
