@@ -13,6 +13,7 @@ export class AppService {
       select: select ? select : { id: true, name: true },
     })
   }
+
   async getProducts(
     take: number,
     skip: number,
@@ -21,7 +22,27 @@ export class AppService {
     filter?: string,
     query?: string,
     merchantId?: string,
-    status: boolean,
+  ) {
+    return this.getMerchantProducts(
+      take,
+      skip,
+      select,
+      type,
+      filter,
+      query,
+      merchantId,
+      true,
+    )
+  }
+  async getMerchantProducts(
+    take: number,
+    skip: number,
+    select?: Prisma.productSelect,
+    type?: 'FOOD' | 'MART',
+    filter?: string,
+    query?: string,
+    merchantId?: string,
+    status?: boolean,
   ) {
     const product = await this.prisma.product.findMany({
       where: {
