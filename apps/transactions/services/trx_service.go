@@ -25,6 +25,11 @@ func NewTrxService(database utils.Database, logger utils.Logger, firestore Fires
 	}
 }
 
+const (
+	OK      = "00"
+	EXPIRED = "05"
+)
+
 func (trx TrxService) GetTrx(trxId string) (*db.TransactionsModel, error) {
 	transaction, err := trx.database.Transactions.FindUnique(
 		db.Transactions.ID.Equals(trxId),
@@ -69,17 +74,17 @@ func (trx TrxService) GetTrxs(take, skip int) ([]db.TransactionsModel, int, erro
 	return transaction, len(total), nil
 }
 
-func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]) error {
-	id := data.Request.Body.MerchantTransId
+func (trxService TrxService) FinishOrder(data *utils.FinishNotifySnap) error {
+	id := data.OriginalReferenceNo
 	oType := strings.Split(id, "-")
 	trxService.logger.Info(oType)
 	trxService.logger.Info(id)
 
 	if oType[0] == "TPD" {
-		return trxService.adjustDriverBalance(oType[1], data.Request.Body.AcquirementStatus)
+		return trxService.adjustDriverBalance(oType[1], data.LatestTransactionStatus)
 	}
 	if oType[0] == "TPM" {
-		return trxService.adjustMerchantBalance(oType[1], data.Request.Body.AcquirementStatus)
+		return trxService.adjustMerchantBalance(oType[1], data.LatestTransactionStatus)
 	}
 	order, errOrder := trxService.database.Order.FindUnique(
 		db.Order.ID.Equals(oType[len(oType)-1]),
@@ -93,14 +98,14 @@ func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]
 	if !okTrx {
 		return errors.New("unable fetch transactions")
 	}
-	dateTimeString := data.Request.Body.FinishedTime
+	dateTimeString := data.FinishedTime
 	datetime, errParse := time.Parse(utils.DanaDateFormat, dateTimeString)
 	if errParse != nil {
 		return errParse
 	}
 	var isSuccess *time.Time
 	var isExpired *time.Time
-	status := trxService.assignTrxStatus(data.Request.Body.AcquirementStatus)
+	status := trxService.assignTrxStatus(data.LatestTransactionStatus)
 	if status == db.TransactionStatusPaid {
 		isSuccess = &datetime
 	}
@@ -108,7 +113,7 @@ func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]
 		isExpired = &datetime
 	}
 
-	orderStatus := trxService.assignOrderStatus(data.Request.Body.AcquirementStatus, order)
+	orderStatus := trxService.assignOrderStatus(data.LatestTransactionStatus, order)
 
 	_, errUpdateOrder := trxService.database.Order.FindUnique(
 		db.Order.ID.Equals(order.ID),
@@ -145,7 +150,7 @@ func (trxService TrxService) FinishOrder(data *utils.Request[utils.FinishNotify]
 	return nil
 }
 
-func (trxService TrxService) adjustMerchantBalance(trxId string, statusTrx utils.AcquirementStatus) error {
+func (trxService TrxService) adjustMerchantBalance(trxId string, statusTrx string) error {
 	status := trxService.assignTrxStatus(statusTrx)
 	if status == db.TransactionStatusPaid {
 		trxService.logger.Info(trxId)
@@ -179,7 +184,7 @@ func (trxService TrxService) adjustMerchantBalance(trxId string, statusTrx utils
 
 }
 
-func (trxService TrxService) adjustDriverBalance(trxId string, statusTrx utils.AcquirementStatus) error {
+func (trxService TrxService) adjustDriverBalance(trxId string, statusTrx string) error {
 	status := trxService.assignTrxStatus(statusTrx)
 	if status == db.TransactionStatusPaid {
 		trx, err := trxService.database.DriverTrx.FindUnique(
@@ -258,24 +263,21 @@ func (trxService TrxService) ExpiredTrxOnFirestore(paymentAt *time.Time, orderId
 	return nil
 }
 
-func (trxService TrxService) assignTrxStatus(status utils.AcquirementStatus) db.TransactionStatus {
-	if status == utils.CLOSED {
+func (trxService TrxService) assignTrxStatus(status string) db.TransactionStatus {
+	if status == EXPIRED {
 		return db.TransactionStatusExpired
 	}
-	if status == utils.CANCELLED {
-		return db.TransactionStatusCanceled
-	}
-	if status == utils.SUCCESS {
+	if status == OK {
 		return db.TransactionStatusPaid
 	}
 	return db.TransactionStatusProcess
 }
 
-func (trxService TrxService) assignOrderStatus(status utils.AcquirementStatus, order *db.OrderModel) db.OrderStatus {
-	if status == utils.CLOSED {
+func (trxService TrxService) assignOrderStatus(status string, order *db.OrderModel) db.OrderStatus {
+	if status == OK {
 		return db.OrderStatusDone
 	}
-	if status == utils.SUCCESS {
+	if status == EXPIRED {
 		if order.OrderType == db.ServiceTypeFood || order.OrderType == db.ServiceTypeMart {
 			return db.OrderStatusWaitingMerchant
 		}

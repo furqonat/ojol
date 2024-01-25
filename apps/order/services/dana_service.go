@@ -114,35 +114,31 @@ func (dana DanaService) GetAccessToken() (*utils.SnapGetToken, error) {
 }
 
 func (dana DanaService) CancelOrder(orderId string, reason string) (*utils.CancelOrder, error) {
-	timestamp := dana.danaApi.GetDateNow()
-	guid := dana.danaApi.GenerateGUID()
 	requestData := map[string]interface{}{
-		"head": map[string]interface{}{
-			"version":      "2.0",
-			"function":     "dana.acquiring.order.cancel",
-			"clientId":     utils.ClientID,
-			"clientSecret": utils.ClientSecret,
-			"reqTime":      timestamp,
-			"reqMsgId":     guid,
-			"reserve":      "{}",
-		},
-		"body": map[string]interface{}{
-			"merchantId":      utils.MerchantID,
-			"merchantTransId": orderId,
-			"cancelReason":    reason,
-		},
+		"originalPartnerReferenceNo": orderId,
+		"merchantId":                 utils.MerchantID,
+		"reason":                     reason,
 	}
-	response, errResp := dana.danaApi.New("/dana/acquiring/order/cancel.htm", requestData)
+
+	resp, err := dana.GetAccessToken()
+	if err != nil {
+		return nil, err
+	}
+	response, errResp := dana.danaApi.SnapTransaction("/v1.0/debit/cancel.htm", requestData, "", resp.AccessToken)
 
 	if errResp != nil {
 		return nil, errResp
 	}
 
-	result := utils.Result[utils.CancelOrder]{}
+	result := utils.SnapCancelOrder{}
 
 	errParse := json.Unmarshal(response, &result)
 	if errParse != nil {
 		return nil, errParse
 	}
-	return &result.Response.Body, nil
+	return &utils.CancelOrder{
+		AcquirementId:   result.OriginalPartnerReferenceNo,
+		MerchantTransId: result.OriginalReferenceNo,
+		CancelTime:      result.CancelTime,
+	}, nil
 }
