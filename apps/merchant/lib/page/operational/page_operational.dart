@@ -115,24 +115,6 @@ class PageOperational extends GetView<ControllerOperational> {
                                   );
 
                                   if (selectedTime != null) {
-                                    DateTime currentDate = DateTime.now();
-
-                                    DateTime combinedDateTime = DateTime(
-                                      currentDate.year,
-                                      currentDate.month,
-                                      currentDate.day,
-                                      selectedTime.hour,
-                                      selectedTime.minute,
-                                    );
-
-                                    String formattedDateTime =
-                                        DateFormat("yyyy-MM-ddTHH:mm:ss")
-                                            .format(combinedDateTime);
-
-                                    controller.handleSetOpTime(
-                                      controller.aInput[index]['Hari'],
-                                      closeTime: formattedDateTime,
-                                    );
                                     controller
                                             .aInput[index]["Jam tutup"].value =
                                         selectedTime.format(context).toString();
@@ -149,11 +131,27 @@ class PageOperational extends GetView<ControllerOperational> {
                     activeColor: const Color(0xFF3978EF),
                     value: controller.aInput[index]['Status'].value,
                     onChanged: (value) {
-                      controller.handleSetOpTime(
-                        controller.aInput[index]['Hari'],
-                        status: value,
-                      );
-                      controller.aInput[index]['Status'].value = value;
+                      if (controller.aInput[index]["Jam tutup"].value != null &&
+                          controller.aInput[index]["Jam buka"].value != null) {
+                        DateTime dateTimeOpen = DateFormat.jm()
+                            .parse(controller.aInput[index]['Jam buka'].value);
+
+                        String openTime =
+                            DateFormat("HH:mm:ss").format(dateTimeOpen);
+
+                        DateTime dateTimeClose = DateFormat.jm()
+                            .parse(controller.aInput[index]['Jam buka'].value);
+
+                        String closeTime =
+                            DateFormat("HH:mm:ss").format(dateTimeClose);
+                        controller.handleSetOpTime(
+                          controller.aInput[index]['Hari'],
+                          openTime: openTime,
+                          closeTime: closeTime,
+                          status: value,
+                        );
+                        controller.aInput[index]['Status'].value = value;
+                      }
                     },
                   )
                 ],

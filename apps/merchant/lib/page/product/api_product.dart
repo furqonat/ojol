@@ -25,7 +25,7 @@ class ApiProduct {
       ..addQuery("image", "true")
       ..addQuery("category", "true")
       ..addQuery("_count", "{select: {customer_product_review: true}}");
-    final resp = await productClient.getProducts(
+    final resp = await productClient.getMerchantProducts(
       bearerToken: "Bearer $token",
       queries: queryBuilder.toMap(),
     );
@@ -42,9 +42,11 @@ class ApiProduct {
         .toList();
   }
 
-  Future<Response> setEmptyProduct(
-      {required String token, required String productId}) async {
-    final body = {"status": "false"};
+  Future<Response> setEmptyProduct({
+    required String token,
+    required String productId,
+  }) async {
+    final body = {"status": false};
     final resp = await productClient.updateProduct(
       bearerToken: "Bearer $token",
       productId: productId,

@@ -1,10 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-generator client {
-  provider = "prisma-client-js"
-  output   = "../../node_modules/@prisma/client/users"
-}
 
 datasource db {
   provider  = "postgresql"
@@ -12,6 +8,9 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+generator db {
+ provider ="go run github.com/steebchen/prisma-client-go" 
+}
 model customer {
   id                      String                    @id @default(cuid())
   name                    String?
