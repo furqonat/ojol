@@ -1,25 +1,16 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirestoreService {
-  Future<dynamic> FirestorePost(
-      String collection, String documents, Map<String, dynamic> params) async {
-    final r = FirebaseFirestore.instance.collection(collection).doc(documents);
+class FirestoreService{
+
+  Future<dynamic> FirestorePost (String collection, Map<String, dynamic> params) async {
+    final r = FirebaseFirestore.instance.collection(collection).doc();
     await r.set(params);
+    return r.id;
   }
 
-  Stream<String> FirestoreStreamGet(String collection) {
-    final r = FirebaseFirestore.instance.collection(collection).snapshots();
-
-    return r.map((QuerySnapshot querySnapshot) {
-      final List<Map<String, dynamic>> dataList = [];
-
-      for (var doc in querySnapshot.docs) {
-        final Map<String, dynamic> dataMap = doc.data() as Map<String, dynamic>;
-        dataList.add(dataMap);
-      }
-
-      return json.encode(dataList);
-    });
+  Stream<List<T>> FirestoreStreamGet<T>(String collection, {T Function(Map<String, dynamic> data)? fromJson}) {
+    return FirebaseFirestore.instance.collection(collection).snapshots().map((querySnapshot) =>
+        querySnapshot.docs.map<T>((doc) => fromJson?.call(doc.data()) as T ?? doc.data() as T).toList());
   }
+
 }

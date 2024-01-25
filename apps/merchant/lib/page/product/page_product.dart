@@ -118,24 +118,34 @@ class PageProduct extends GetView<ControllerProduct> {
                                   children: [
                                     OutlinedButton(
                                       onPressed: () => Get.toNamed(
-                                          Routes.editProduct,
-                                          arguments: {
-                                            "id": controller.product[index].id
-                                          }),
+                                        Routes.editProduct,
+                                        arguments: {
+                                          "id": controller.product[index].id
+                                        },
+                                      ),
                                       style: OutlinedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8))),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
                                       child: const Text("Edit"),
                                     ),
                                     const SizedBox(width: 10),
                                     OutlinedButton(
-                                        onPressed: () {},
-                                        style: OutlinedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8))),
-                                        child: const Text("Habis")),
+                                      onPressed: () {
+                                        controller.handleSetEmptyProduct(
+                                          controller.product[index].id ?? '',
+                                        );
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      child: const Text("Habis"),
+                                    ),
                                   ],
                                 )
                               ],

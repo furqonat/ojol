@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +17,7 @@ class ControllerHome extends GetxController {
 
   final _fbAuth = FirebaseAuth.instance;
   final merchant = UserResponse().obs;
-  final danaProfile = <DanaProfile>[].obs;
+  final danaProfile = DanaProfile().obs;
   final sell = MerchantSellInDay(
     totalCancel: 0,
     totalDone: 0,
@@ -27,6 +29,8 @@ class ControllerHome extends GetxController {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getMerchant(token);
     merchant.value = resp;
+    loadingDana.value = false;
+    log("dana token ${resp.danaToken == null}");
     if (merchant.value.danaToken != null) {
       handleGetDanaProfile();
     }
@@ -35,6 +39,7 @@ class ControllerHome extends GetxController {
   Future<void> handleGetSell() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getMerchantSellInDay(token!);
+    log("resp ${resp.totalIncome}");
     sell.value = resp;
   }
 

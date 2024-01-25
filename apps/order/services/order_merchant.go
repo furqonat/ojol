@@ -194,6 +194,8 @@ func (order OrderService) getMerchantIncomeInDay(merchantId string) (int, error)
 		db.MerchantTrx.CreatedAt.Gte(oneDayAgo),
 		db.MerchantTrx.CreatedAt.Lte(nextDay),
 		db.MerchantTrx.MerchantID.Equals(merchantId),
+		db.MerchantTrx.TrxType.Equals(db.TrxTypeAdjustment),
+		db.MerchantTrx.Status.Equals(db.TrxStatusSuccess),
 	).Exec(context.Background())
 	if errOrder != nil {
 		return 0, errOrder

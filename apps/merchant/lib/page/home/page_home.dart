@@ -352,13 +352,11 @@ class PageHome extends GetView<ControllerHome> {
   }
 
   Widget displayDanaBalance() {
-    final balance = controller.danaProfile.where((dana) {
-      return dana.resourceType == 'BALANCE';
-    }).first;
+    final balance = controller.danaProfile;
     return Column(
       children: [
         Text(
-          intlNumberCurrency(int.parse(balance.value)),
+          intlNumberCurrency(double.parse(balance.value.value?.value ?? '0.0')),
           style: GoogleFonts.readexPro(
             fontSize: 24,
           ),

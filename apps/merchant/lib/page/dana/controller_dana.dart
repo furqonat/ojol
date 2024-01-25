@@ -17,19 +17,14 @@ class ControllerDana extends GetxController {
 
   final orderValue = "Bulan Ini".obs;
   final phoneNumber = ''.obs;
-  final balance = 0.obs;
+  final balance = 0.0.obs;
 
   handleGetDanaProfile() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getDanaProfile(token: token!);
-    final b = resp.where((element) => element.resourceType == 'BALANCE').first;
-    balance.value = int.parse(b.value);
-    final phone = resp
-        .where(
-          (element) => element.resourceType == 'MASK_DANA_ID',
-        )
-        .first;
-    phoneNumber.value = phone.value;
+    final b = resp.value;
+    balance.value = double.parse(b?.value ?? '0.0');
+    phoneNumber.value = _fbAuth.currentUser?.phoneNumber ?? '';
   }
 
   handleGetTrx([trxIn = "month"]) async {
@@ -39,7 +34,6 @@ class ControllerDana extends GetxController {
       trxIn: trxIn,
     );
     transaction.value = resp;
-    print(transaction.length);
   }
 
   @override

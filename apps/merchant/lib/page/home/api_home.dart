@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:lugo_marchant/response/commont.dart';
 import 'package:lugo_marchant/response/dana.dart';
 import 'package:lugo_marchant/response/user.dart';
@@ -30,6 +32,7 @@ class ApiHome {
       bearerToken: "Bearer $token",
       queries: query.toMap(),
     );
+    log("$resp");
     return UserResponse.fromJson(resp);
   }
 
@@ -60,11 +63,10 @@ class ApiHome {
     return resp;
   }
 
-  Future<List<DanaProfile>> getDanaProfile({required String token}) async {
+  Future<DanaProfile> getDanaProfile({required String token}) async {
     final resp = await gateClient.merchantGetDanaProfile(
       bearerToken: "Bearer $token",
     );
-    print(resp);
-    return (resp as List).map((e) => DanaProfile.fromJson(e)).toList();
+    return DanaProfile.fromJson(resp);
   }
 }
