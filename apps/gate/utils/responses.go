@@ -32,11 +32,38 @@ type SnapApplyToken struct {
 	AdditionalInfo         AdditionalInfo `json:"additionalInfo"`
 }
 
+type BalanceInquiry struct {
+	BaseSnapResponse
+	Name               string        `json:"name"`
+	ReferenceNo        string        `json:"referenceNo"`
+	PartnerReferenceNo string        `json:"partnerReferenceNo"`
+	AccountInfo        []AccountInfo `json:"accountInfos"`
+}
+
+type AccountInfo struct {
+	BalanceType string `json:"balanceType"`
+	Amount      Amount `json:"amount"`
+	FloatAmount Amount `json:"floatAmount"`
+	HoldAmount  Amount `json:"holdAmount"`
+}
+
+type Amount struct {
+	Value    string `json:"value"`
+	Currency string `json:"currency"`
+}
+
 type SnapGetToken struct {
 	BaseSnapResponse
 	AccessToken string `json:"accessToken"`
 	TokenType   string `json:"tokenType"`
 	ExpiresIn   string `json:"expiresIn"`
+}
+
+type DirectDebit struct {
+	BaseSnapResponse
+	ReferenceNo        string `json:"referenceNo"`
+	PartnerReferenceNo string `json:"partnerReferenceNo"`
+	WebRedirectUrl     string `json:"webRedirectUrl"`
 }
 
 type AdditionalInfo struct {

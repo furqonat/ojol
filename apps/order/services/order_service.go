@@ -46,7 +46,12 @@ type QueryRawNearly struct {
 	Distance        float64 `json:"distance"`
 }
 
-func NewOrderService(database utils.Database, firestore Firestore, messaging *Messaging, danaService DanaService) *OrderService {
+func NewOrderService(
+	database utils.Database,
+	firestore Firestore,
+	messaging *Messaging,
+	danaService DanaService,
+) *OrderService {
 	return &OrderService{
 		database:    database,
 		firestore:   firestore,
@@ -69,7 +74,6 @@ func (order OrderService) CreateOrder(
 ) (*string, *db.TransactionDetailModel, error) {
 	currentTime := time.Now()
 
-	// Add 15 minutes to the current time
 	fifteenMinutesLater := currentTime.Add(15 * time.Minute)
 	orderExists, err := order.database.Order.FindMany(
 		db.Order.CustomerID.Equals(customerId),
@@ -186,8 +190,6 @@ func (order OrderService) CreateOrder(
 		}
 
 		if err := order.sendMessageToMerchant(prod.MerchantID, "Pesanan Baru!", "segera siapkan pesanan nya sebelum driver datang!"); err != nil {
-			// order.deleteOrder(createOrderResult.ID)
-			// return nil, nil, errors.New("unable send message to merchant")
 			fmt.Printf("Unable send message to merchant %s", err.Error())
 		}
 		for _, product := range ptrOrderModel.Product {
@@ -271,6 +273,7 @@ func (order OrderService) CreateOrder(
 			"",
 		)
 		if errDana != nil {
+			println(errDana.Error())
 			order.deleteTrx(trx.ID)
 			order.deleteOrder(createOrderResult.ID)
 			return nil, nil, errDana
