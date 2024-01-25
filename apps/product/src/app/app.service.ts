@@ -21,10 +21,11 @@ export class AppService {
     filter?: string,
     query?: string,
     merchantId?: string,
+    status: boolean,
   ) {
     const product = await this.prisma.product.findMany({
       where: {
-        status: true,
+        status: status ?? undefined,
         product_type: type ?? 'FOOD',
         category: filter
           ? {
