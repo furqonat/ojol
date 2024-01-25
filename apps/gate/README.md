@@ -58,13 +58,12 @@ Authorization: Bearer ....
 #### Contoh Response
 
 ```json
-[
-  { "resourceType": "BALANCE", "value": "10366" },
-  { "resourceType": "MASK_DANA_ID", "value": "62-******1234" },
-  { "resourceType": "OTT", "value": "MTA3MTQ1NTI2NjE4OTQ3MDQwOTgxMTMzNDg5MTcyMTY3M" },
-  { "resourceType": "TOPUP_URL", "value": "https://url.dana.id/m/portal/topup" },
-  { "resourceType": "TRANSACTION_URL", "value": "https://url.m.dana.id/m/ipg?sourcePlatform=IPG" }
-]
+{
+  "balanceType": "BALANCE",
+  "amount": { "value": "0.00", "currency": "IDR" },
+  "floatAmount": { "value": "0.00", "currency": "IDR" },
+  "holdAmount": { "value": "0.00", "currency": "IDR" }
+}
 ```
 
 ## Lugo Services

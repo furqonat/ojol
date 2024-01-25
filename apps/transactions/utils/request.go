@@ -10,6 +10,13 @@ type FinishNotify struct {
 	Body BodyNotify             `json:"body"`
 }
 
+type FinishNotifySnap struct {
+	OriginalPartnerReferenceNo string `json:"originalPartnerReferenceNo"`
+	OriginalReferenceNo        string `json:"originalReferenceNo"`
+	LatestTransactionStatus    string `json:"latestTransactionStatus"`
+	FinishedTime               string `json:"finishedTime"`
+}
+
 type BodyNotify struct {
 	AcquirementId     string            `json:"acquirementId"`
 	MerchantTransId   string            `json:"merchantTransId"`

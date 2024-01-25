@@ -16,7 +16,7 @@ import (
 type OrderService struct {
 	database    utils.Database
 	firestore   Firestore
-	messaging   Messaging
+	messaging   *Messaging
 	danaService DanaService
 }
 
@@ -46,10 +46,17 @@ type QueryRawNearly struct {
 	Distance        float64 `json:"distance"`
 }
 
-func NewOrderService(database utils.Database, firestore Firestore) *OrderService {
+func NewOrderService(
+	database utils.Database,
+	firestore Firestore,
+	messaging *Messaging,
+	danaService DanaService,
+) *OrderService {
 	return &OrderService{
-		database:  database,
-		firestore: firestore,
+		database:    database,
+		firestore:   firestore,
+		messaging:   messaging,
+		danaService: danaService,
 	}
 }
 
@@ -67,7 +74,6 @@ func (order OrderService) CreateOrder(
 ) (*string, *db.TransactionDetailModel, error) {
 	currentTime := time.Now()
 
-	// Add 15 minutes to the current time
 	fifteenMinutesLater := currentTime.Add(15 * time.Minute)
 	orderExists, err := order.database.Order.FindMany(
 		db.Order.CustomerID.Equals(customerId),
@@ -147,15 +153,43 @@ func (order OrderService) CreateOrder(
 	if ptrOrderModel.OrderType == db.ServiceTypeFood || ptrOrderModel.OrderType == db.ServiceTypeMart {
 		prod, errProd := order.database.Product.FindUnique(
 			db.Product.ID.Equals(*ptrOrderModel.Product[0].ProductId),
+		).With(
+			db.Product.Merchant.Fetch().With(
+				db.Merchant.Details.Fetch(),
+				db.Merchant.MerchantWallet.Fetch(),
+			),
 		).Exec(context.Background())
 		if errProd != nil {
 			order.deleteOrder(createOrderResult.ID)
 			return nil, nil, errProd
 		}
 
+		merchant := prod.Merchant()
+		merchantWallet, okWallet := merchant.MerchantWallet()
+
+		if !okWallet {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("unable fetch merchant wallet")
+		}
+
+		if !merchant.IsOpen {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("merchant not open")
+		}
+
+		_, okDetail := merchant.Details()
+
+		if !okDetail {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("merchant not verified yet")
+		}
+
+		if merchantWallet.Balance < createOrderResult.TotalAmount {
+			order.deleteOrder(createOrderResult.ID)
+			return nil, nil, errors.New("insufficient balance")
+		}
+
 		if err := order.sendMessageToMerchant(prod.MerchantID, "Pesanan Baru!", "segera siapkan pesanan nya sebelum driver datang!"); err != nil {
-			// order.deleteOrder(createOrderResult.ID)
-			// return nil, nil, errors.New("unable send message to merchant")
 			fmt.Printf("Unable send message to merchant %s", err.Error())
 		}
 		for _, product := range ptrOrderModel.Product {
@@ -239,6 +273,7 @@ func (order OrderService) CreateOrder(
 			"",
 		)
 		if errDana != nil {
+			println(errDana.Error())
 			order.deleteTrx(trx.ID)
 			order.deleteOrder(createOrderResult.ID)
 			return nil, nil, errDana
@@ -283,6 +318,13 @@ func (order OrderService) CancelOrder(orderId string, reason string) (*string, e
 	).Exec(context.Background())
 	if errOrder != nil {
 		return nil, errOrder
+	}
+
+	_, errRefund := order.danaService.RefundOrder(orderId, reason, orderDb.TotalAmount)
+
+	if errRefund != nil {
+		println("refund error", errRefund.Error())
+		return nil, errRefund
 	}
 	trx, okTrx := orderDb.Transactions()
 

@@ -69,16 +69,19 @@ func (order OrderService) sendMessageToCustomer(customerId string, message strin
 }
 
 func (order OrderService) firebaseSendMessage(token, title, msg string) error {
-	message := &messaging.Message{
+	message := messaging.Message{
 		Data: map[string]string{
 			"title":   title,
 			"message": msg,
 		},
 		Token: token,
 	}
-	_, err := order.messaging.Send(context.Background(), message)
+	// println(token, msg)
+	s, err := order.messaging.Send(context.Background(), &message)
+	println(s)
 	if err != nil {
-		return err
+		fmt.Printf("error send message to firebase: %s\n", err.Error())
+		return nil
 	}
 	return nil
 }
