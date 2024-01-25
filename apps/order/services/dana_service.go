@@ -142,3 +142,8 @@ func (dana DanaService) CancelOrder(orderId string, reason string) (*utils.Cance
 		CancelTime:      result.CancelTime,
 	}, nil
 }
+
+func (dana DanaService) RefundOrder(orderId string, reason string) error {
+
+	return nil
+}
