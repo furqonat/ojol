@@ -273,7 +273,7 @@ class PageHome extends GetView<ControllerHome> {
                   Padding(
                     padding: const EdgeInsets.all(5),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () => Get.toNamed(Routes.balance),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
