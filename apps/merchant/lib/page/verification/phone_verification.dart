@@ -13,7 +13,7 @@ Widget phoneVerification(
   VerificationController controller,
 ) {
   return Scaffold(
-    body: Obx(() => phoneVerificationView(context, controller)),
+    body: phoneVerificationView(context, controller),
   );
 }
 
@@ -54,61 +54,77 @@ Widget phoneVerificationView(
             controller: controller.phoneNumber,
             keyboardType: TextInputType.phone,
             decoration: InputDecoration(
-                labelText: 'Nomor Telepon',
-                labelStyle: GoogleFonts.readexPro(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: const Color(0xFF95A1AC),
+              labelText: 'Nomor Telepon',
+              labelStyle: GoogleFonts.readexPro(
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+                color: const Color(0xFF95A1AC),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: const BorderSide(
+                  width: 1,
+                  color: Color(0xFF4B39EF),
                 ),
-                focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                    borderSide:
-                        const BorderSide(width: 1, color: Color(0xFF4B39EF))),
-                enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                    borderSide: const BorderSide(width: 1, color: Colors.grey)),
-                focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                    borderSide:
-                        const BorderSide(width: 1, color: Color(0xFF1D2428))),
-                errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(40),
-                    borderSide: const BorderSide(width: 1, color: Colors.red)),
-                contentPadding: const EdgeInsets.all(24)),
-            validator: Validatorless.multiple([
-              Validatorless.required('Ponsel tidak boleh kosong'),
-              Validatorless.regex(RegExp(r'^[1-9][0-9]{8,}$'),
-                  'Ponsel tidak sesuai, cukup gunakan 813xxxxxxxx'),
-            ]),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: const BorderSide(
+                  width: 1,
+                  color: Colors.grey,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: const BorderSide(
+                  width: 1,
+                  color: Color(0xFF1D2428),
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(40),
+                borderSide: const BorderSide(width: 1, color: Colors.red),
+              ),
+              contentPadding: const EdgeInsets.all(24),
+            ),
+            validator: Validatorless.multiple(
+              [
+                Validatorless.required('Ponsel tidak boleh kosong'),
+                Validatorless.regex(RegExp(r'^[1-9][0-9]{8,}$'),
+                    'Ponsel tidak sesuai, cukup gunakan 813xxxxxxxx'),
+              ],
+            ),
           ),
         ),
       ),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
         child: ElevatedButton(
-            onPressed: () {
-              if (controller.formPhoneVerification.currentState!.validate()) {
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.phoneNumber != null &&
-                    controller.verificationState == "1") {
-                  controller.handleActiveStep(1);
-                } else {
-                  bottomSheet(context, controller);
-                }
+          onPressed: () {
+            if (controller.formPhoneVerification.currentState!.validate()) {
+              final user = FirebaseAuth.instance.currentUser;
+              if (user?.phoneNumber != null &&
+                  controller.verificationState ==
+                      VerificationState.full.toString()) {
+                controller.handleActiveStep(1);
+              } else {
+                bottomSheet(context, controller);
               }
-            },
-            style: ElevatedButton.styleFrom(
-              elevation: 5,
-              fixedSize: Size(Get.width * 0.5, Get.height * 0.07),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40),
-              ),
-              backgroundColor: const Color(0xFF3978EF),
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            elevation: 5,
+            fixedSize: Size(Get.width * 0.5, Get.height * 0.07),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40),
             ),
-            child: Text(
-              "Masuk",
-              style: GoogleFonts.readexPro(fontSize: 16, color: Colors.white),
-            )),
+            backgroundColor: const Color(0xFF3978EF),
+          ),
+          child: Text(
+            "Masuk",
+            style: GoogleFonts.readexPro(fontSize: 16, color: Colors.white),
+          ),
+        ),
       )
     ],
   );
@@ -173,7 +189,8 @@ void bottomSheet(BuildContext context, VerificationController controller) {
             onPressed: () {
               controller.handleVerificationPhone().then((value) {
                 if (controller.verificationStatus.value.status) {
-                  if (controller.verificationState == "1") {
+                  if (controller.verificationState ==
+                      VerificationState.full.toString()) {
                     Get.back();
                     controller.activeStep.value = 1;
                   } else {

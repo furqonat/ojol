@@ -9,11 +9,11 @@ class ApiDana {
 
   ApiDana({required this.gateClient, required this.trxClient});
 
-  Future<List<DanaProfile>> getDanaProfile({required String token}) async {
+  Future<DanaProfile> getDanaProfile({required String token}) async {
     final resp = await gateClient.merchantGetDanaProfile(
       bearerToken: "Bearer $token",
     );
-    return (resp as List).map((e) => DanaProfile.fromJson(e)).toList();
+    return DanaProfile.fromJson(resp);
   }
 
   Future<List<Transaction>> getMerchantTransactions({

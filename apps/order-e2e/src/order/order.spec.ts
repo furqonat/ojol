@@ -175,7 +175,7 @@ describe('Test Autentication Api', () => {
     it('Test Cancel Order', async () => {
       const token = await getIdToken(cusCred.user)
       const resp = await axios.put(
-        '/clrsvy9vk0000o5etcinlox0r',
+        '/clrsxw1ms0000enaiossa1j9o',
         {},
         {
           headers: {

@@ -13,6 +13,12 @@ class ControllerNotification extends GetxController {
     initToken();
     refreshToken();
     initNotificationHandler();
+    subscribeFmcTopic();
+  }
+
+  subscribeFmcTopic() async {
+    log("did i run");
+    await FirebaseMessaging.instance.subscribeToTopic("MERCHANT");
   }
 
   initToken() async {
@@ -31,11 +37,13 @@ class ControllerNotification extends GetxController {
     final dio = Dio();
     final client = AccountClient(dio);
     final token = await FirebaseAuth.instance.currentUser?.getIdToken();
-    final resp = await client.merchantAssignDeviceToken(
-      bearerToken: "Bearer $token",
-      body: DeviceToken(token: fcmToken),
-    );
-    print(resp.message);
+    if (token != null) {
+      final resp = await client.merchantAssignDeviceToken(
+        bearerToken: "Bearer $token",
+        body: DeviceToken(token: fcmToken),
+      );
+      log(resp.message);
+    }
   }
 
   initNotificationHandler() async {
@@ -43,6 +51,9 @@ class ControllerNotification extends GetxController {
 
     final token = await FirebaseMessaging.instance.getToken();
     log('token = $token');
+    if (token != null) {
+      handleSendApplyToken(token);
+    }
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       log("instance");

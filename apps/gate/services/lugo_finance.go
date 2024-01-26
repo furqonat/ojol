@@ -54,7 +54,7 @@ func (u LugoService) DriverTopUp(driverId string, amount int) (*utils.CreateOrde
 		"transactionType",
 		"TOPUP",
 		fmt.Sprintf("TPD-%s", mTrx.ID),
-		amount,
+		amount*100,
 		"riskObjectId",
 		"riskObjectCode",
 		"riskObjectOperator",
@@ -114,7 +114,7 @@ func (u LugoService) MerchantTopUp(merchantId string, amount int) (*utils.Create
 		"transactionType",
 		"TOPUP",
 		fmt.Sprintf("TPM-%s", mTrx.ID),
-		amount,
+		amount*100,
 		"riskObjectId",
 		"riskObjectCode",
 		"riskObjectOperator",
@@ -541,17 +541,17 @@ func (u LugoService) DriverRequestWithdraw(driverId string, amount int) (*utils.
 	return result, nil
 }
 
-func (u LugoService) sanitizePhone(phone string) string {
-	phone = strings.ReplaceAll(phone, " ", "")
+func (u LugoService) sanitizePhone(phoneNumber string) string {
+	// Remove leading '+' and '0'
+	re := regexp.MustCompile(`^[+0]*`)
+	result := re.ReplaceAllString(phoneNumber, "")
 
-	if strings.HasPrefix(phone, "062+8") {
-		suffix := phone[len("062+8"):]
-		sanitized := "062+8" + regexp.MustCompile("\\D").ReplaceAllString(suffix, "")
-		return sanitized
+	// Check if the remaining string starts with "62"
+	if len(result) >= 2 && result[:2] != "62" {
+		return phoneNumber
 	}
 
-	sanitized := regexp.MustCompile("\\D").ReplaceAllString(phone, "")
-	return sanitized
+	return result
 }
 
 func (u LugoService) formatPhoneNumber(phone string) string {

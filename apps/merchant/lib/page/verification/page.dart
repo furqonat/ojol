@@ -11,7 +11,8 @@ class Verification extends GetView<VerificationController> {
 
   @override
   Widget build(BuildContext context) {
-    if (controller.verificationState == "0") {
+    if (controller.verificationState ==
+        VerificationState.phoneOnly.toString()) {
       return phoneVerification(context, controller);
     }
     return Scaffold(
@@ -19,7 +20,7 @@ class Verification extends GetView<VerificationController> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            controller.verificationState == "1"
+            controller.verificationState == VerificationState.full.toString()
                 ? Column(
                     children: [
                       Obx(

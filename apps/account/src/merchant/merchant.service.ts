@@ -98,11 +98,16 @@ export class MerchantService {
     opId: string,
     data: Prisma.merchant_operation_timeUpdateInput,
   ) {
-    const res = this.prismaService.merchant_operation_time.update({
+    const res = await this.prismaService.merchant_operation_time.update({
       where: {
         id: opId,
       },
-      data: data,
+      data: {
+        day: data.day,
+        open_time: data.open_time,
+        close_time: data.close_time,
+        status: data.status,
+      },
     })
     return {
       message: 'OK',

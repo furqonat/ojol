@@ -32,6 +32,8 @@ func (s LugoRoutes) Setup() {
 		api.POST("/merchant/topup", s.controller.MerchantTopUp)
 		api.GET("/banner", s.controller.GetBanners)
 		api.GET("/banner/:id", s.controller.GetBanner)
+		api.GET("/settings", s.controller.GetSettings)
+		api.GET("/settings/:id", s.controller.GetSetting)
 	}
 }
 

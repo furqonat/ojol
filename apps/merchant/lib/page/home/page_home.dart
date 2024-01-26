@@ -273,7 +273,7 @@ class PageHome extends GetView<ControllerHome> {
                   Padding(
                     padding: const EdgeInsets.all(5),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () => Get.toNamed(Routes.balance),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -325,24 +325,26 @@ class PageHome extends GetView<ControllerHome> {
             ),
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: CarouselSlider.builder(
-                itemCount: controller.listImg.length,
-                options: CarouselOptions(
-                    viewportFraction: 1,
-                    autoPlay: true,
-                    aspectRatio: 1.7,
-                    initialPage: 0),
-                itemBuilder: (context, index, realIndex) {
-                  return Image(
-                    fit: BoxFit.fill,
-                    width: Get.width,
-                    image: AssetImage(
-                      controller.listImg[index],
-                    ),
-                  );
-                },
+            child: Obx(
+              () => Padding(
+                padding: const EdgeInsets.all(10),
+                child: controller.listImg.isNotEmpty
+                    ? CarouselSlider.builder(
+                        itemCount: controller.listImg.length,
+                        options: CarouselOptions(
+                            viewportFraction: 1,
+                            autoPlay: true,
+                            aspectRatio: 1.7,
+                            initialPage: 0),
+                        itemBuilder: (context, index, realIndex) {
+                          return Image.network(
+                            controller.listImg[index],
+                            fit: BoxFit.fill,
+                            width: Get.width,
+                          );
+                        },
+                      )
+                    : Container(),
               ),
             ),
           ),
@@ -352,13 +354,11 @@ class PageHome extends GetView<ControllerHome> {
   }
 
   Widget displayDanaBalance() {
-    final balance = controller.danaProfile.where((dana) {
-      return dana.resourceType == 'BALANCE';
-    }).first;
+    final balance = controller.danaProfile;
     return Column(
       children: [
         Text(
-          intlNumberCurrency(int.parse(balance.value)),
+          intlNumberCurrency(double.parse(balance.value.value?.value ?? '0.0')),
           style: GoogleFonts.readexPro(
             fontSize: 24,
           ),

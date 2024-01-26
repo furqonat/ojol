@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:lugo_marchant/page/auth/api_auth.dart';
 import 'package:lugo_marchant/page/verification/controller.dart';
+import 'package:lugo_marchant/shared/exceptions.dart';
 
 import '../../api/local_service.dart';
 
@@ -67,14 +70,15 @@ class ControllerAuth extends GetxController
             Get.offAllNamed("/verification/${VerificationState.phoneOnly}");
           }
         }
+      }).catchError((error) {
+        signInstate.value = AuthState.done;
+        if (error is FirebaseAuthMultiFactorException) {
+          FirebaseAuthError.signInError(error);
+        }
       });
     } on FirebaseAuthException catch (e) {
       signInstate.value = AuthState.done;
-      if (e.code == 'auth/user-not-found') {
-        Fluttertoast.showToast(msg: 'No user found for that email.');
-      } else if (e.code == 'auth/invalid-password') {
-        Fluttertoast.showToast(msg: 'Wrong password provided for that user.');
-      }
+      FirebaseAuthError.signInError(e);
     }
   }
 
@@ -90,9 +94,8 @@ class ControllerAuth extends GetxController
           .then((value) async {
         if (value.user != null) {
           final token = await FirebaseAuth.instance.currentUser?.getIdToken();
-          print(selectChip.value);
-          final response = await api
-              .claimToken(token: token!, type: selectChip.value);
+          final response =
+              await api.claimToken(token: token!, type: selectChip.value);
           if (response.message == 'OK' && response.token != null) {
             signUpState.value = AuthState.done;
             await LocalService().setInVerification(true);
@@ -100,15 +103,16 @@ class ControllerAuth extends GetxController
             Get.offAllNamed("/verification/${VerificationState.full}");
           } else {
             signUpState.value = AuthState.done;
-            Fluttertoast.showToast(msg: "unable to signup");
+            Fluttertoast.showToast(msg: "unable to signup ${response.message}");
           }
         }
+      }).catchError((error) {
+        signUpState.value = AuthState.done;
+        FirebaseAuthError.signInError(error);
       });
     } on FirebaseAuthException catch (e) {
       signUpState.value = AuthState.done;
-      if (e.code == 'auth/email-already-exists') {
-        Fluttertoast.showToast(msg: 'This email already use by another user');
-      }
+      FirebaseAuthError.signInError(e);
     }
   }
 

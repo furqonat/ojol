@@ -17,7 +17,6 @@ class ControllerHistory extends GetxController {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getOrders(token: token!);
     orders.value = resp['data'];
-    print(orders.length);
     loading.value = Status.success;
   }
 

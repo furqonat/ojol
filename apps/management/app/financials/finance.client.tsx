@@ -59,7 +59,7 @@ export function Finance() {
           setTrx({
             beforeFee: total,
             total: total - beforeFee - bonusDriver,
-            netProfit: bonusDriverGross,
+            netProfit: bonusDriverGross - bonusDriver,
             bonusDriver: bonusDriver,
           })
         })
@@ -125,7 +125,12 @@ export function Finance() {
         >
           <div className="stat">
             <div className={'stat-title'}>Gross Profit </div>
-            <div className={'stat-value text-2xl'}>{trx?.beforeFee}</div>
+            <div className={'stat-value text-2xl'}>
+              {Number(trx?.beforeFee).toLocaleString('id-Id', {
+                style: 'currency',
+                currency: 'IDR',
+              })}
+            </div>
             <div className={'stat-desc'}>total balance in month</div>
           </div>
         </div>
@@ -136,7 +141,12 @@ export function Finance() {
         >
           <div className="stat">
             <div className={'stat-title'}>Gross Profit 5%</div>
-            <div className={'stat-value text-2xl'}>{trx?.bonusDriver}</div>
+            <div className={'stat-value text-2xl'}>
+              {Number(trx?.bonusDriver).toLocaleString('id-Id', {
+                style: 'currency',
+                currency: 'IDR',
+              })}
+            </div>
             <div className={'stat-desc'}>total bonus driver in month</div>
           </div>
         </div>
@@ -148,7 +158,12 @@ export function Finance() {
         >
           <div className="stat">
             <div className={'stat-title'}>Gross Profit 15%</div>
-            <div className={'stat-value text-2xl'}>{trx?.netProfit}</div>
+            <div className={'stat-value text-2xl'}>
+              {Number(trx?.netProfit).toLocaleString('id-Id', {
+                style: 'currency',
+                currency: 'IDR',
+              })}
+            </div>
             <div className={'stat-desc'}>income from driver</div>
           </div>
         </div>
@@ -159,7 +174,12 @@ export function Finance() {
         >
           <div className="stat">
             <div className={'stat-title'}>Total Net Profit</div>
-            <div className={'stat-value text-2xl'}>{trx?.total}</div>
+            <div className={'stat-value text-2xl'}>
+              {Number(trx?.total).toLocaleString('id-Id', {
+                style: 'currency',
+                currency: 'IDR',
+              })}
+            </div>
             <div className={'stat-desc'}>total net profit in month</div>
           </div>
         </div>

@@ -63,7 +63,6 @@ class ControllerAccountInfo extends GetxController {
   handleGetUser() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     api.getUser(token: token!).then((value) {
-      print("on this => ${value.products}");
       fullName.value = TextEditingValue(text: value.name ?? '');
       address.value = TextEditingValue(text: value.detail?.address ?? '');
       phone.value = TextEditingValue(text: value.phone ?? '');
