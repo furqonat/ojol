@@ -67,24 +67,23 @@ class PageOperational extends GetView<ControllerOperational> {
                                 color: const Color(0xFF3978EF),
                               ),
                               recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  final selectedTime = await showTimePicker(
+                                ..onTap = () {
+                                  showTimePicker(
                                     context: context,
                                     initialTime: controller.timeOpen.value,
-                                  );
-
-                                  if (selectedTime != null) {
-                                    controller
-                                            .aInput()[index]["Jam buka"]
-                                            .value =
-                                        // ignore: use_build_context_synchronously
-                                        selectedTime.format(context).toString();
-                                    controller.setOpenTime(
-                                      controller.aInput()[index]['Hari'],
-                                      // ignore: use_build_context_synchronously
-                                      selectedTime.format(context).toString(),
-                                    );
-                                  }
+                                  ).then((value) {
+                                    if (value != null) {
+                                      final formatedDateTime =
+                                          value.format(context).toString();
+                                      final state = controller.aInput()[index]
+                                          ["Jam buka"];
+                                      state.value = formatedDateTime;
+                                      controller.setOpenTime(
+                                        controller.aInput()[index]['Hari'],
+                                        formatedDateTime,
+                                      );
+                                    }
+                                  });
                                 },
                             ),
                             const TextSpan(text: ' - Jam tutup: '),
@@ -99,23 +98,22 @@ class PageOperational extends GetView<ControllerOperational> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () async {
-                                  final selectedTime = await showTimePicker(
+                                  showTimePicker(
                                     context: context,
                                     initialTime: controller.timeClose.value,
-                                  );
-
-                                  if (selectedTime != null) {
-                                    controller
-                                            .aInput()[index]["Jam tutup"]
-                                            .value =
-                                        // ignore: use_build_context_synchronously
-                                        selectedTime.format(context).toString();
-                                    controller.setCloseTime(
-                                      controller.aInput()[index]['Hari'],
-                                      // ignore: use_build_context_synchronously
-                                      selectedTime.format(context).toString(),
-                                    );
-                                  }
+                                  ).then((value) {
+                                    if (value != null) {
+                                      controller.timeClose.value = value;
+                                      controller
+                                              .aInput()[index]["Jam tutup"]
+                                              .value =
+                                          value.format(context).toString();
+                                      controller.setCloseTime(
+                                        controller.aInput()[index]['Hari'],
+                                        value.format(context).toString(),
+                                      );
+                                    }
+                                  });
                                 },
                             ),
                           ],
