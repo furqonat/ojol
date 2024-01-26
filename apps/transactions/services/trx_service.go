@@ -75,7 +75,7 @@ func (trx TrxService) GetTrxs(take, skip int) ([]db.TransactionsModel, int, erro
 }
 
 func (trxService TrxService) FinishOrder(data *utils.FinishNotifySnap) error {
-	id := data.OriginalReferenceNo
+	id := data.OriginalPartnerReferenceNo
 	oType := strings.Split(id, "-")
 	trxService.logger.Info(oType)
 	trxService.logger.Info(id)

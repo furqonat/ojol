@@ -8,7 +8,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:lugo_marchant/api/local_service.dart';
 import 'package:lugo_marchant/shared/controller/controller_user.dart';
 
 import '../../response/chat.dart';
@@ -45,7 +44,7 @@ class ControllerChat extends GetxController {
         .snapshots()
         .map((event) => event.docs
             .map((e) {
-              print(e.data());
+              log(e.data().toString());
               return Chat.fromJson(e.data());
             })
             .toList()
@@ -57,7 +56,7 @@ class ControllerChat extends GetxController {
     try {
       await api.sendChat(
           msg: edtChat.text,
-          id_sender: idUser.value,
+          senderId: idUser.value,
           chatFor: 'MERCHANT',
           time: DateTime.now(),
           orderTransaksiId: orderTransaksiId.value,
@@ -144,7 +143,7 @@ class ControllerChat extends GetxController {
   @override
   void onInit() async {
     orderTransaksiId.value = Get.arguments["orderTransaksiId"];
-    var value = await _fbAuth.currentUser?.uid;
+    var value = _fbAuth.currentUser?.uid;
     if (value != null) {
       idUser(value);
     }

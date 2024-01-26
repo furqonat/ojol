@@ -320,7 +320,7 @@ class PageBalance extends GetView<ControllerBalance> {
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
               child: TextFormField(
                 autofocus: false,
-                controller: controller.amountTp,
+                controller: controller.amountWd,
                 style: GoogleFonts.readexPro(
                   fontSize: 12,
                   fontWeight: FontWeight.normal,

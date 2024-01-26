@@ -276,7 +276,7 @@ func (u LugoService) DeleteDiscount(discountId string) error {
 	return nil
 }
 
-func (u LugoService) AdminRequestWithdraw(adminId string, amount int) (*utils.RequestWithdrawType, error) {
+func (u LugoService) AdminRequestWithdraw(adminId string, amount int) (*utils.WithdrawRequest, error) {
 	admin, errAdmin := u.db.Admin.FindUnique(
 		db.Admin.ID.Equals(adminId),
 	).With(
@@ -340,7 +340,7 @@ func (u LugoService) AdminRequestWithdraw(adminId string, amount int) (*utils.Re
 		}
 		return nil, errors.New("unable fetch admin phone number")
 	}
-	result, err := u.dana.RequestWithdraw(u.formatPhoneNumber(u.sanitizePhone(phone)), amount, mTrx.ID)
+	result, err := u.dana.RequestWithdraw(u.sanitizePhone(phone), amount*100, mTrx.ID)
 	if err != nil {
 		_, errDel := u.db.AdminWallet.FindUnique(
 			db.AdminWallet.ID.Equals(mWallet.ID),
@@ -365,7 +365,7 @@ func (u LugoService) AdminRequestWithdraw(adminId string, amount int) (*utils.Re
 	return result, nil
 }
 
-func (u LugoService) MerchantRequestWithdraw(merchantId string, amount int) (*utils.RequestWithdrawType, error) {
+func (u LugoService) MerchantRequestWithdraw(merchantId string, amount int) (*utils.WithdrawRequest, error) {
 	merchant, errMerchant := u.db.Merchant.FindUnique(
 		db.Merchant.ID.Equals(merchantId),
 	).With(
@@ -426,7 +426,7 @@ func (u LugoService) MerchantRequestWithdraw(merchantId string, amount int) (*ut
 		}
 		return nil, errors.New("unable fetch merchant phone number")
 	}
-	result, err := u.dana.RequestWithdraw(u.formatPhoneNumber(u.sanitizePhone(phone)), amount, mTrx.ID)
+	result, err := u.dana.RequestWithdraw(u.sanitizePhone(phone), amount*100, mTrx.ID)
 	if err != nil {
 		_, errDel := u.db.MerchantWallet.FindUnique(
 			db.MerchantWallet.ID.Equals(mWallet.ID),
@@ -450,7 +450,7 @@ func (u LugoService) MerchantRequestWithdraw(merchantId string, amount int) (*ut
 	return result, nil
 }
 
-func (u LugoService) DriverRequestWithdraw(driverId string, amount int) (*utils.RequestWithdrawType, error) {
+func (u LugoService) DriverRequestWithdraw(driverId string, amount int) (*utils.WithdrawRequest, error) {
 	driver, errDriver := u.db.Driver.FindUnique(
 		db.Driver.ID.Equals(driverId),
 	).With(
@@ -517,7 +517,7 @@ func (u LugoService) DriverRequestWithdraw(driverId string, amount int) (*utils.
 		}
 		return nil, errors.New("unable fetch driver phone number")
 	}
-	result, err := u.dana.RequestWithdraw(u.formatPhoneNumber(u.sanitizePhone(phone)), amount, mTrx.ID)
+	result, err := u.dana.RequestWithdraw(u.sanitizePhone(phone), amount*100, mTrx.ID)
 	if err != nil {
 		_, errDel := u.db.DriverWallet.FindUnique(
 			db.DriverWallet.ID.Equals(mWallet.ID),
