@@ -47,12 +47,12 @@ class PageProduct extends GetView<ControllerProduct> {
                               borderRadius: BorderRadius.circular(12),
                               child: Image.network(
                                 '${controller.product[index].image}',
-                                width: 150,
+                                width: 120,
                                 height: 150,
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, url, error) =>
                                     const Image(
-                                  width: 150,
+                                  width: 120,
                                   height: 150,
                                   fit: BoxFit.cover,
                                   image: AssetImage(
@@ -63,7 +63,7 @@ class PageProduct extends GetView<ControllerProduct> {
                             ),
                           ),
                           SizedBox(
-                            width: Get.width * 0.45,
+                            width: Get.width * 0.50,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

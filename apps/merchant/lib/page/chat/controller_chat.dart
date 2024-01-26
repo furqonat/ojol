@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lugo_marchant/api/local_service.dart';
 import 'package:lugo_marchant/shared/controller/controller_user.dart';
 
 import '../../response/chat.dart';
@@ -26,6 +26,8 @@ class ControllerChat extends GetxController {
 
   ControllerUser controllerUser = Get.find<ControllerUser>();
 
+  var idUser = ''.obs;
+
   var view = ''.obs;
   var upload = ''.obs;
   late XFile? file;
@@ -38,11 +40,12 @@ class ControllerChat extends GetxController {
     return FirebaseFirestore.instance
         .collection('chat')
         .where('chatFor', isEqualTo: 'MERCHANT')
-        .where('orderTransaksiId', isEqualTo: orderTransaksiId.value)
+        .where('orderTransaksiId', isEqualTo: idUser.value)
         .orderBy('time', descending: false)
         .snapshots()
         .map((event) => event.docs
             .map((e) {
+              print(e.data());
               return Chat.fromJson(e.data());
             })
             .toList()
@@ -54,7 +57,7 @@ class ControllerChat extends GetxController {
     try {
       await api.sendChat(
           msg: edtChat.text,
-          senderId: _fbAuth.currentUser?.uid ?? '',
+          id_sender: idUser.value,
           chatFor: 'MERCHANT',
           time: DateTime.now(),
           orderTransaksiId: orderTransaksiId.value,
@@ -139,8 +142,12 @@ class ControllerChat extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     orderTransaksiId.value = Get.arguments["orderTransaksiId"];
+    var value = await _fbAuth.currentUser?.uid;
+    if (value != null) {
+      idUser(value);
+    }
     super.onInit();
   }
 
