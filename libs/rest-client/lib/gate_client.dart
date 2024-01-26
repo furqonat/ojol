@@ -68,4 +68,16 @@ abstract class GateClient {
     @Header("Authorization") required String bearerToken,
     @Body() required Map<String, dynamic> body,
   });
+
+  @GET("lugo/banner")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future bannerMerchant({
+    @Header("Authorization") required String bearerToken,
+  });
+
+  @GET("lugo/settings/sk-merchant")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future getSkMerchant({
+    @Header("Authorization") required String bearerToken,
+  });
 }

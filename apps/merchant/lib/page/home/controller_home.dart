@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +17,7 @@ class ControllerHome extends GetxController {
 
   final _fbAuth = FirebaseAuth.instance;
   final merchant = UserResponse().obs;
-  final danaProfile = <DanaProfile>[].obs;
+  final danaProfile = DanaProfile().obs;
   final sell = MerchantSellInDay(
     totalCancel: 0,
     totalDone: 0,
@@ -27,6 +29,8 @@ class ControllerHome extends GetxController {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getMerchant(token);
     merchant.value = resp;
+    loadingDana.value = false;
+    log("dana token ${resp.danaToken == null}");
     if (merchant.value.danaToken != null) {
       handleGetDanaProfile();
     }
@@ -35,6 +39,7 @@ class ControllerHome extends GetxController {
   Future<void> handleGetSell() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getMerchantSellInDay(token!);
+    log("resp ${resp.totalIncome}");
     sell.value = resp;
   }
 
@@ -55,7 +60,7 @@ class ControllerHome extends GetxController {
       token: token!,
       deviceToken: deviceToken!,
     );
-    print(resp.message);
+    log("resp $resp");
   }
 
   handleGetDanaProfile() async {
@@ -65,18 +70,20 @@ class ControllerHome extends GetxController {
     loadingDana.value = false;
   }
 
+  handleGetBanner() async {
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final resp = await api.getBanner(token: token!);
+    listImg.value = (resp[0]['images'] as List).map((e) => e['link']).toList();
+  }
+
   @override
   void onReady() {
     loadingDana.value = true;
     handleGetMerchant();
     handleGetSell();
-
+    handleGetBanner();
     super.onReady();
   }
 
-  var listImg = [
-    'assets/images/pamflet_1.jpg',
-    'assets/images/pamflet_2.jpg',
-    'assets/images/pamflet_3.jpg',
-  ];
+  var listImg = [].obs;
 }

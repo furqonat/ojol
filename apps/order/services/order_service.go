@@ -320,7 +320,7 @@ func (order OrderService) CancelOrder(orderId string, reason string) (*string, e
 		return nil, errOrder
 	}
 
-	_, errRefund := order.danaService.RefundOrder(orderId, reason, orderDb.TotalAmount)
+	_, errRefund := order.danaService.RefundOrder(orderId, reason, orderDb.TotalAmount*100)
 
 	if errRefund != nil {
 		println("refund error", errRefund.Error())

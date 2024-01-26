@@ -283,3 +283,37 @@ Authorization: Bearer ....
 | `for_app`  | `boolean`      | apabila `true` digunakan untuk aplikasi `customer` apabila `false` untuk `merchant` |
 | `images`   | `string array` |                                                                                     |
 | `link`     | `String`       | Gambar banner                                                                       |
+
+
+## Mendapatkan Syarat Ketentuan
+
+Berikut adalah cara Menggunakan API
+
+### Contoh Request SK User
+
+```http
+GET http://localhost:3000/lugo/settings/sk-user
+Content-Type: application/json
+Authorization: Bearer ....
+```
+
+
+
+### Contoh Request SK Merchant
+
+```http
+GET http://localhost:3000/lugo/settings/sk-merchant
+Content-Type: application/json
+Authorization: Bearer ....
+```
+
+
+
+### Contoh Request SK Driver
+
+```http
+GET http://localhost:3000/lugo/settings/sk-driver
+Content-Type: application/json
+Authorization: Bearer ....
+```
+

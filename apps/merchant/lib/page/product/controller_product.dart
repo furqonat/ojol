@@ -28,7 +28,6 @@ class ControllerProduct extends GetxController {
     final resp = await api.getCategories(token: token!);
     resp.add(Category(id: "", name: "Kategori"));
     categories(resp.map((e) => Category(id: e.id, name: e.name)).toList());
-    print(categories.map((e) => e.name));
   }
 
   Future getProducts() async {
@@ -54,6 +53,17 @@ class ControllerProduct extends GetxController {
       log('$e');
       log('$stackTrace');
       loading(Status.failed);
+    }
+  }
+
+  handleSetEmptyProduct(String productId) async {
+    final token = await firebase.currentUser?.getIdToken();
+    final resp = await api.setEmptyProduct(
+      token: token!,
+      productId: productId,
+    );
+    if (resp.message == "OK") {
+      await getProducts();
     }
   }
 

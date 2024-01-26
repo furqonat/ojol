@@ -240,7 +240,7 @@ Widget detailVerification(
         ),
       ),
       Padding(
-        padding: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: LugoButton(
           textButton: "Daftar Sekarang",
           textColor: Colors.white,

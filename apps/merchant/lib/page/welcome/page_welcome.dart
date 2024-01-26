@@ -24,33 +24,36 @@ class PageWelcome extends GetView<ControllerWelcome> {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: SizedBox(
-        width: Get.width,
-        height: Get.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: Image(
-                    width: Get.width * 0.7,
-                    alignment: Alignment.center,
-                    image: const AssetImage('assets/images/logo_merchant.png')),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          width: Get.width,
+          height: Get.height * 0.87,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: Center(
+                  child: Image(
+                      width: Get.width * 0.5,
+                      alignment: Alignment.center,
+                      image:
+                          const AssetImage('assets/images/logo_merchant.png')),
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: LugoButton(
-                  textButton: 'Lanjutkan',
-                  textColor: Colors.white,
-                  textSize: 16,
-                  width: Get.width,
-                  height: Get.height * 0.06,
-                  color: const Color(0xFF3978EF),
-                  onTap: () => Get.toNamed(Routes.auth)),
-            )
-          ],
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: LugoButton(
+                    textButton: 'Lanjutkan',
+                    textColor: Colors.white,
+                    textSize: 16,
+                    width: Get.width,
+                    height: Get.height * 0.06,
+                    color: const Color(0xFF3978EF),
+                    onTap: () => Get.toNamed(Routes.auth)),
+              )
+            ],
+          ),
         ),
       ),
     );

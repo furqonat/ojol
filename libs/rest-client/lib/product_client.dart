@@ -31,6 +31,13 @@ abstract class ProductClient {
     @Queries() Map<String, dynamic>? queries,
   });
 
+  @GET("merchants/products")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<dynamic> getMerchantProducts({
+    @Header("Authorization") required String bearerToken,
+    @Queries() Map<String, dynamic>? queries,
+  });
+
   @PUT("{id}")
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<Response> updateProduct({

@@ -1,5 +1,4 @@
 import 'package:animated_rating_stars/animated_rating_stars.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,23 +45,25 @@ class PageProduct extends GetView<ControllerProduct> {
                             padding: const EdgeInsets.only(right: 10),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: CachedNetworkImage(
-                                width: 150,
+                              child: Image.network(
+                                '${controller.product[index].image}',
+                                width: 120,
                                 height: 150,
                                 fit: BoxFit.cover,
-                                imageUrl: '${controller.product[index].image}',
-                                errorWidget: (context, url, error) =>
+                                errorBuilder: (context, url, error) =>
                                     const Image(
-                                        width: 150,
-                                        height: 150,
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                            'assets/images/sample_food.png')),
+                                  width: 120,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(
+                                    'assets/images/sample_food.png',
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                           SizedBox(
-                            width: Get.width * 0.45,
+                            width: Get.width * 0.50,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -118,24 +119,34 @@ class PageProduct extends GetView<ControllerProduct> {
                                   children: [
                                     OutlinedButton(
                                       onPressed: () => Get.toNamed(
-                                          Routes.editProduct,
-                                          arguments: {
-                                            "id": controller.product[index].id
-                                          }),
+                                        Routes.editProduct,
+                                        arguments: {
+                                          "id": controller.product[index].id
+                                        },
+                                      ),
                                       style: OutlinedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8))),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
                                       child: const Text("Edit"),
                                     ),
                                     const SizedBox(width: 10),
                                     OutlinedButton(
-                                        onPressed: () {},
-                                        style: OutlinedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(8))),
-                                        child: const Text("Habis")),
+                                      onPressed: () {
+                                        controller.handleSetEmptyProduct(
+                                          controller.product[index].id ?? '',
+                                        );
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                      ),
+                                      child: const Text("Habis"),
+                                    ),
                                   ],
                                 )
                               ],

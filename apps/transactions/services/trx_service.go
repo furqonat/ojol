@@ -80,6 +80,8 @@ func (trxService TrxService) FinishOrder(data *utils.FinishNotifySnap) error {
 	trxService.logger.Info(oType)
 	trxService.logger.Info(id)
 
+	trxService.logger.Info(data)
+
 	if oType[0] == "TPD" {
 		return trxService.adjustDriverBalance(oType[1], data.LatestTransactionStatus)
 	}
