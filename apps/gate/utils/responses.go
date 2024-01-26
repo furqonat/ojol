@@ -52,6 +52,22 @@ type Amount struct {
 	Currency string `json:"currency"`
 }
 
+type WithdrawRequest struct {
+	ResponseCode           string `json:"responseCode"`
+	ResponseMessage        string `json:"responseMessage"`
+	ReferenceNo            string `json:"referenceNo"`
+	PartnerReferenceNo     string `json:"partnerReferenceNo"`
+	SessionID              string `json:"sessionId"`
+	CustomerNumber         string `json:"customerNumber"`
+	CustomerName           string `json:"customerName"`
+	CustomerMonthlyInLimit string `json:"customerMonthlyInLimit"`
+	MinAmount              Amount `json:"minAmount"`
+	MaxAmount              Amount `json:"maxAmount"`
+	Amount                 Amount `json:"amount"`
+	FeeAmount              Amount `json:"feeAmount"`
+	FeeType                string `json:"feeType"`
+}
+
 type SnapGetToken struct {
 	BaseSnapResponse
 	AccessToken string `json:"accessToken"`
