@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -70,7 +72,9 @@ class ControllerAuth extends GetxController
         }
       }).catchError((error) {
         signInstate.value = AuthState.done;
-        FirebaseAuthError.signInError(error);
+        if (error is FirebaseAuthMultiFactorException) {
+          FirebaseAuthError.signInError(error);
+        }
       });
     } on FirebaseAuthException catch (e) {
       signInstate.value = AuthState.done;
