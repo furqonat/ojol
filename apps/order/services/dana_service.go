@@ -38,7 +38,19 @@ func (dana DanaService) CreateNewOrder(
 			"value":    amountString,
 			"currency": "IDR",
 		},
-		"validUpTo":         expiryTime,
+		"validUpTo": expiryTime,
+		"urlParams": []map[string]interface{}{
+			{
+				"url":        utils.AcquirementPayReturnURL,
+				"type":       "PAY_RETURN",
+				"isDeeplink": "Y",
+			},
+			{
+				"url":        utils.AcquirementPayReturnURL,
+				"type":       "NOTIFICATION",
+				"isDeeplink": "Y",
+			},
+		},
 		"pointOfInitiation": "Mobile App",
 		"additionalInfo": map[string]interface{}{
 			"supportDeepLinkCheckoutUrl": true,

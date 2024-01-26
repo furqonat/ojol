@@ -141,6 +141,8 @@ func (dana DanaApi) SnapTransaction(url string, payloadObject map[string]interfa
 	req.Header.Set("X-DANA-SDK-VERSION", "1.0")
 	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", b2bAccessToken))
 
+	logRequestDetails(req, []byte(payload))
+
 	resp, errClient := client.Do(req)
 	if errClient != nil {
 		errMsg := fmt.Sprintf("Error : %s %s", dana.GetApiURL(), url)
@@ -160,6 +162,20 @@ func (dana DanaApi) SnapTransaction(url string, payloadObject map[string]interfa
 	}
 
 	return body, nil
+}
+
+func logRequestDetails(req *http.Request, payloadJSON []byte) {
+	fmt.Printf("%s %s\n", req.Method, req.URL)
+
+	// Log headers
+	for key, values := range req.Header {
+		for _, value := range values {
+			fmt.Printf("%s: %s\n", key, value)
+		}
+	}
+
+	// Log payload
+	fmt.Println(string(payloadJSON))
 }
 
 func (dana DanaApi) GetApiURL() string {
