@@ -107,8 +107,11 @@ class ControllerAuth extends GetxController
           }
         }
       }).catchError((error) {
-        signUpState.value = AuthState.done;
-        FirebaseAuthError.signInError(error);
+        if (error is FirebaseAuthException) {
+          FirebaseAuthError.signInError(error);
+          signUpState.value = AuthState.done;
+        }
+        log("Error $error");
       });
     } on FirebaseAuthException catch (e) {
       signUpState.value = AuthState.done;

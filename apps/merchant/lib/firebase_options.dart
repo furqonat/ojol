@@ -47,29 +47,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD48SQUoAlU32Ryi_dm1Wr3GjnhYtGk150',
-    appId: '1:319389880269:web:35bc6743ee7593101dfe84',
-    messagingSenderId: '319389880269',
-    projectId: 'lumajanglugo',
-    authDomain: 'lumajanglugo.firebaseapp.com',
-    storageBucket: 'lumajanglugo.appspot.com',
-    measurementId: 'G-DXV71QRQYF',
+    apiKey: 'AIzaSyDilMOyvhtYIxKK2sBUXNx3xNSoIZajLV8',
+    appId: '1:484579186038:web:04a290b57ad82b7f241657',
+    messagingSenderId: '484579186038',
+    projectId: 'lumajanglugo-c6269',
+    authDomain: 'lumajanglugo-c6269.firebaseapp.com',
+    storageBucket: 'lumajanglugo-c6269.appspot.com',
+    measurementId: 'G-3HEEXDWB5H',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU',
-    appId: '1:319389880269:android:d00d8c917f6193931dfe84',
-    messagingSenderId: '319389880269',
-    projectId: 'lumajanglugo',
-    storageBucket: 'lumajanglugo.appspot.com',
+    apiKey: 'AIzaSyBsqiBE9DPIRakTYuDQttsxmt8o1P2Gv-Q',
+    appId: '1:484579186038:android:4bee4fbaea04f076241657',
+    messagingSenderId: '484579186038',
+    projectId: 'lumajanglugo-c6269',
+    storageBucket: 'lumajanglugo-c6269.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD1DxONCHTiZQfN4GRz9hvppede3mz7Sq4',
-    appId: '1:319389880269:ios:2cb8eeedde1b7dd91dfe84',
-    messagingSenderId: '319389880269',
-    projectId: 'lumajanglugo',
-    storageBucket: 'lumajanglugo.appspot.com',
+    apiKey: 'AIzaSyCmhutFMiWs35htsllf8nHuoW0JQlDf6AU',
+    appId: '1:484579186038:ios:02e85df0033160c5241657',
+    messagingSenderId: '484579186038',
+    projectId: 'lumajanglugo-c6269',
+    storageBucket: 'lumajanglugo-c6269.appspot.com',
     iosBundleId: 'com.gentatechnology.merchant',
   );
 }

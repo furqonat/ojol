@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../../response/room.dart';
@@ -30,11 +29,8 @@ class ControllerRoomChat extends GetxController {
           .toList());
 
   @override
-  void onInit() async {
-    var value = await firebase.currentUser?.uid;
-    if (value != null) {
-      idUser(value);
-    }
+  void onInit() {
+    idUser.value = firebase.currentUser?.uid ?? '';
     super.onInit();
   }
 
