@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_marchant/api/local_service.dart';
@@ -102,14 +102,11 @@ Widget phoneVerificationView(
         child: ElevatedButton(
           onPressed: () {
             if (controller.formPhoneVerification.currentState!.validate()) {
-              final user = FirebaseAuth.instance.currentUser;
-              if (user?.phoneNumber != null &&
-                  controller.verificationState ==
-                      VerificationState.full.toString()) {
-                controller.handleActiveStep(1);
-              } else {
+              controller.handleVerificationPhone((verification) {
+                controller.verificationId.value = verification;
+              }).then((value) {
                 bottomSheet(context, controller);
-              }
+              });
             }
           },
           style: ElevatedButton.styleFrom(
@@ -187,7 +184,14 @@ void bottomSheet(BuildContext context, VerificationController controller) {
           ),
           ElevatedButton(
             onPressed: () {
-              controller.handleVerificationPhone().then((value) {
+              if (controller.verificationId.isEmpty) {
+                Fluttertoast.showToast(msg: "Please wait until sms send");
+                return;
+              }
+              controller
+                  .handleContinueVerification(
+                      controller.smsCode.text, controller.verificationId.value)
+                  .then((value) {
                 if (controller.verificationStatus.value.status) {
                   if (controller.verificationState ==
                       VerificationState.full.toString()) {

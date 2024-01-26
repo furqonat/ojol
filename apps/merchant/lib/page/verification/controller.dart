@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -67,6 +66,7 @@ class VerificationController extends GetxController {
       PhoneVerificationStatus(status: false, message: "").obs;
 
   final _fbAuth = FirebaseAuth.instance;
+  final verificationId = "".obs;
 
   void handleActiveStep(int index) {
     activeStep.value = index;
@@ -199,7 +199,9 @@ class VerificationController extends GetxController {
     }
   }
 
-  Future<void> handleVerificationPhone() async {
+  Future<void> handleVerificationPhone(
+    Function(String verificationId) callback,
+  ) async {
     const regionInfo = RegionInfo(name: "Indonesia", code: "ID", prefix: 62);
     final phone = await PhoneNumberUtil().parse(
       phoneNumber.text,
@@ -209,7 +211,6 @@ class VerificationController extends GetxController {
       phoneNumber: phone.e164,
       verificationCompleted: (phoneAuthCredential) {
         if (verificationState == VerificationState.full.toString()) {
-          log("AUTH TEST RUN ON IT");
           _fbAuth.currentUser
               ?.linkWithCredential(phoneAuthCredential)
               .then((value) {
@@ -217,6 +218,7 @@ class VerificationController extends GetxController {
               status: true,
               message: "OK",
             );
+            activeStep.value = 1;
           }).catchError((error) {
             verificationStatus.value = PhoneVerificationStatus(
               status: false,
@@ -231,6 +233,10 @@ class VerificationController extends GetxController {
               status: true,
               message: "OK",
             );
+            LocalService().setIsLogin(isLogin: true);
+            LocalService().setInVerification(false);
+            LocalService().setInVerificationStep(VerificationState.phoneOnly);
+            Get.offAllNamed(Routes.bottomNav);
           }).catchError((error) {
             verificationStatus.value = PhoneVerificationStatus(
               status: false,
@@ -246,39 +252,53 @@ class VerificationController extends GetxController {
         );
       },
       codeSent: (verificationId, forceResendingToken) {
-        final credential = PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: smsCode.text);
-        if (verificationState == VerificationState.full.toString()) {
-          _fbAuth.currentUser?.linkWithCredential(credential).then((value) {
-            verificationStatus.value = PhoneVerificationStatus(
-              status: true,
-              message: "OK",
-            );
-          }).catchError((error) {
-            verificationStatus.value = PhoneVerificationStatus(
-              status: false,
-              message: error.code,
-            );
-          });
-        } else {
-          _fbAuth.currentUser
-              ?.reauthenticateWithCredential(credential)
-              .then((value) {
-            verificationStatus.value = PhoneVerificationStatus(
-              status: true,
-              message: "OK",
-            );
-          }).catchError((error) {
-            verificationStatus.value = PhoneVerificationStatus(
-              status: false,
-              message: error.code,
-            );
-          });
-        }
+        callback(verificationId);
       },
       codeAutoRetrievalTimeout: (verificationId) {},
       timeout: const Duration(seconds: 60),
     );
+  }
+
+  Future handleContinueVerification(
+    String smsCode,
+    String verificationId,
+  ) async {
+    final credential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+    if (verificationState == VerificationState.full.toString()) {
+      _fbAuth.currentUser?.linkWithCredential(credential).then((value) {
+        verificationStatus.value = PhoneVerificationStatus(
+          status: true,
+          message: "OK",
+        );
+        activeStep.value = 1;
+      }).catchError((error) {
+        verificationStatus.value = PhoneVerificationStatus(
+          status: false,
+          message: error.code,
+        );
+      });
+    } else {
+      _fbAuth.currentUser
+          ?.reauthenticateWithCredential(credential)
+          .then((value) {
+        verificationStatus.value = PhoneVerificationStatus(
+          status: true,
+          message: "OK",
+        );
+        LocalService().setIsLogin(isLogin: true);
+        LocalService().setInVerification(false);
+        LocalService().setInVerificationStep(VerificationState.phoneOnly);
+        Get.offAllNamed(Routes.bottomNav);
+      }).catchError((error) {
+        verificationStatus.value = PhoneVerificationStatus(
+          status: false,
+          message: error.code,
+        );
+      });
+    }
   }
 
   @override

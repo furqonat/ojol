@@ -1,10 +1,15 @@
-import { customerSignIn, getFirebaseConfig } from '@lugo/firebase-e2e'
+import {
+  customerSignIn,
+  getFirebaseConfig,
+  merchantSignIn,
+} from '@lugo/firebase-e2e'
 import axios, { HttpStatusCode } from 'axios'
 import { initializeApp } from 'firebase/app'
 import { UserCredential, getAuth, getIdToken } from 'firebase/auth'
 
 describe('Test Autentication Api', () => {
   let cusCred: UserCredential
+  let merchCred: UserCredential
   beforeAll(async () => {
     const app = initializeApp(getFirebaseConfig())
     const auth = getAuth(app)
@@ -14,6 +19,12 @@ describe('Test Autentication Api', () => {
       process.env.PASSWORDCUSTOMER,
     )
     cusCred = resCus
+    const merchCus = await merchantSignIn(
+      auth,
+      'testmerch2@gmail.com',
+      'password1234',
+    )
+    merchCred = merchCus
   })
 
   describe('GET /lugo/services/', () => {
@@ -48,6 +59,25 @@ describe('Test Autentication Api', () => {
           Authorization: `Bearer ${token}`,
         },
       })
+      console.info(resp.data)
+      expect(resp.status).toBe(HttpStatusCode.Ok)
+    })
+  })
+
+  describe('POST /merchant/wd', () => {
+    it('test request withrawal', async () => {
+      const token = await getIdToken(merchCred.user)
+      const resp = await axios.post(
+        '/lugo/merchant/wd',
+        {
+          amount: 10000,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       console.info(resp.data)
       expect(resp.status).toBe(HttpStatusCode.Ok)
     })
