@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyD1DxONCHTiZQfN4GRz9hvppede3mz7Sq4</string>
+	<string>AIzaSyCmhutFMiWs35htsllf8nHuoW0JQlDf6AU</string>
 	<key>GCM_SENDER_ID</key>
-	<string>319389880269</string>
+	<string>484579186038</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.lugoMarchant</string>
+	<string>com.gentatechnology.merchant</string>
 	<key>PROJECT_ID</key>
-	<string>lumajanglugo</string>
+	<string>lumajanglugo-c6269</string>
 	<key>STORAGE_BUCKET</key>
-	<string>lumajanglugo.appspot.com</string>
+	<string>lumajanglugo-c6269.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:319389880269:ios:4013c6833d4716481dfe84</string>
+	<string>1:484579186038:ios:02e85df0033160c5241657</string>
 </dict>
 </plist>

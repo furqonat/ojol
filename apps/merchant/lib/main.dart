@@ -86,15 +86,16 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
           brightness: Brightness.light,
         ),
         builder: (context, child) => MediaQuery(
-            data: MediaQuery.of(context)
-                .copyWith(textScaler: const TextScaler.linear(1)),
-            child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-              child: Stack(
-                children: [child!],
-              ),
-            )),
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(1)),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Stack(
+              children: [child!],
+            ),
+          ),
+        ),
         getPages: RoutingPages.pages,
         initialBinding: MainController(),
         initialRoute: Routes.init,

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreService {
-  Future<dynamic> FirestorePost(
+  Future<dynamic> firestorePost(
       String collection, Map<String, dynamic> params) async {
     final r = FirebaseFirestore.instance.collection(collection).doc();
     await r.set(params);

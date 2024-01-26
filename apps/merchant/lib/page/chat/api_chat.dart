@@ -10,7 +10,7 @@ class ApiChat {
 
   Future<dynamic> sendChat({
     required String msg,
-    required String id_sender,
+    required String senderId,
     required String chatFor,
     required DateTime time,
     required String orderTransaksiId,
@@ -18,14 +18,14 @@ class ApiChat {
   }) async {
     final body = {
       "msg": msg,
-      "id_sender": id_sender,
+      "id_sender": senderId,
       "chatFor": chatFor,
       "time": time,
       "orderTransaksiId": orderTransaksiId,
       "attachment": attachment
     };
 
-    var r = await FirestoreService().FirestorePost("chat", body);
+    var r = await FirestoreService().firestorePost("chat", body);
     return r;
   }
 }
