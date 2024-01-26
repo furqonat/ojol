@@ -237,6 +237,18 @@ func (dana DanaService) CreateNewOrder(expiryTime, transactionType, title, order
 		},
 		"validUpTo":         expiryTime,
 		"pointOfInitiation": "Mobile App",
+		"urlParams": []map[string]interface{}{
+			{
+				"url":        utils.AcquirementPayReturnURL,
+				"type":       "PAY_RETURN",
+				"isDeeplink": "Y",
+			},
+			{
+				"url":        utils.AcquirementPayReturnURL,
+				"type":       "NOTIFICATION",
+				"isDeeplink": "Y",
+			},
+		},
 		"additionalInfo": map[string]interface{}{
 			"supportDeepLinkCheckoutUrl": true,
 			"productCode":                "51051000100000000001",
