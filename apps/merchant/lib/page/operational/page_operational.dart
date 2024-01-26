@@ -77,9 +77,11 @@ class PageOperational extends GetView<ControllerOperational> {
                                     controller
                                             .aInput()[index]["Jam buka"]
                                             .value =
+                                        // ignore: use_build_context_synchronously
                                         selectedTime.format(context).toString();
                                     controller.setOpenTime(
                                       controller.aInput()[index]['Hari'],
+                                      // ignore: use_build_context_synchronously
                                       selectedTime.format(context).toString(),
                                     );
                                   }
@@ -106,9 +108,11 @@ class PageOperational extends GetView<ControllerOperational> {
                                     controller
                                             .aInput()[index]["Jam tutup"]
                                             .value =
+                                        // ignore: use_build_context_synchronously
                                         selectedTime.format(context).toString();
                                     controller.setCloseTime(
                                       controller.aInput()[index]['Hari'],
+                                      // ignore: use_build_context_synchronously
                                       selectedTime.format(context).toString(),
                                     );
                                   }

@@ -68,6 +68,9 @@ class ControllerAuth extends GetxController
             Get.offAllNamed("/verification/${VerificationState.phoneOnly}");
           }
         }
+      }).catchError((error) {
+        signInstate.value = AuthState.done;
+        FirebaseAuthError.signInError(error);
       });
     } on FirebaseAuthException catch (e) {
       signInstate.value = AuthState.done;
@@ -99,6 +102,9 @@ class ControllerAuth extends GetxController
             Fluttertoast.showToast(msg: "unable to signup ${response.message}");
           }
         }
+      }).catchError((error) {
+        signUpState.value = AuthState.done;
+        FirebaseAuthError.signInError(error);
       });
     } on FirebaseAuthException catch (e) {
       signUpState.value = AuthState.done;

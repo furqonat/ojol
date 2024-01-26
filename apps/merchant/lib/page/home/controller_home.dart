@@ -60,7 +60,7 @@ class ControllerHome extends GetxController {
       token: token!,
       deviceToken: deviceToken!,
     );
-    print(resp.message);
+    log("resp $resp");
   }
 
   handleGetDanaProfile() async {
@@ -73,7 +73,6 @@ class ControllerHome extends GetxController {
   handleGetBanner() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getBanner(token: token!);
-    print("banner => ${resp[0]['images']}");
     listImg.value = (resp[0]['images'] as List).map((e) => e['link']).toList();
   }
 

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,12 +18,12 @@ class PageProfile extends GetView<ControllerProfile> {
           automaticallyImplyLeading: false,
           flexibleSpace: Obx(() => Stack(
                 children: <Widget>[
-                  CachedNetworkImage(
+                  Image.network(
+                    controller.merchant.value.avatar ?? "",
                     width: Get.width,
                     height: Get.height * 0.25,
                     fit: BoxFit.cover,
-                    imageUrl: controller.merchant.value.avatar ?? "",
-                    errorWidget: (context, url, error) => Image(
+                    errorBuilder: (context, url, error) => Image(
                       width: Get.width,
                       height: Get.height * 0.25,
                       fit: BoxFit.cover,
