@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -250,8 +251,11 @@ class VerificationController extends GetxController {
           status: false,
           message: error.code,
         );
+        log("verificationFailed: ${error.code}");
+        Fluttertoast.showToast(msg: error.code);
       },
       codeSent: (verificationId, forceResendingToken) {
+        log("verificationId: $verificationId");
         callback(verificationId);
       },
       codeAutoRetrievalTimeout: (verificationId) {},
