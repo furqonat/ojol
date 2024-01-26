@@ -189,7 +189,7 @@ func (dana DanaService) GetCompanyBallance() (*utils.MerchantQuery, error) {
 	return &result.Response.Body, nil
 }
 
-func (dana DanaService) RequestWithdraw(phoneNumber string, amount int, trxId string) (*utils.RequestWithdrawType, error) {
+func (dana DanaService) RequestWithdraw(phoneNumber string, amount int, trxId string) (*utils.WithdrawRequest, error) {
 	timestamp := dana.danaApi.GetDateNow()
 	amountString := fmt.Sprintf("%.2f", float64(amount)/100)
 	requestData := map[string]interface{}{
@@ -213,17 +213,17 @@ func (dana DanaService) RequestWithdraw(phoneNumber string, amount int, trxId st
 	if err != nil {
 		return nil, err
 	}
-	result := utils.Result[utils.RequestWithdrawType]{}
+	result := utils.WithdrawRequest{}
 	if errParse := json.Unmarshal(response, &result); errParse != nil {
 		return nil, errParse
 	}
 
-	if result.Response.Body.ResultInfo.ResultCode != "SUCCESS" {
-		dana.logger.Info(result.Response)
+	if result.ResponseMessage != "Successful" {
+		dana.logger.Info(result)
 		return nil, errors.New(fmt.Sprintf("Error: %s", response))
 	}
 
-	return &result.Response.Body, nil
+	return &result, nil
 }
 
 func (dana DanaService) CreateNewOrder(expiryTime, transactionType, title, orderID string, amountInCent int, riskObjectID, riskObjectCode, riskObjectOperator, accessToken string) (*utils.CreateOrder, error) {
