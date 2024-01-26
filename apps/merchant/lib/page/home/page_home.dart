@@ -328,21 +328,23 @@ class PageHome extends GetView<ControllerHome> {
             child: Obx(
               () => Padding(
                 padding: const EdgeInsets.all(10),
-                child: CarouselSlider.builder(
-                  itemCount: controller.listImg.length,
-                  options: CarouselOptions(
-                      viewportFraction: 1,
-                      autoPlay: true,
-                      aspectRatio: 1.7,
-                      initialPage: 0),
-                  itemBuilder: (context, index, realIndex) {
-                    return Image.network(
-                      controller.listImg[index],
-                      fit: BoxFit.fill,
-                      width: Get.width,
-                    );
-                  },
-                ),
+                child: controller.listImg.isNotEmpty
+                    ? CarouselSlider.builder(
+                        itemCount: controller.listImg.length,
+                        options: CarouselOptions(
+                            viewportFraction: 1,
+                            autoPlay: true,
+                            aspectRatio: 1.7,
+                            initialPage: 0),
+                        itemBuilder: (context, index, realIndex) {
+                          return Image.network(
+                            controller.listImg[index],
+                            fit: BoxFit.fill,
+                            width: Get.width,
+                          );
+                        },
+                      )
+                    : Container(),
               ),
             ),
           ),

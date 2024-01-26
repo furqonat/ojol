@@ -169,7 +169,10 @@ class PageAuth extends GetView<ControllerAuth> {
                                 onPressed: () {
                                   if (controller.formkeyAuthLogin.currentState!
                                       .validate()) {
-                                    controller.handleSignIn();
+                                    if (controller.signInstate.value !=
+                                        AuthState.loading) {
+                                      controller.handleSignIn();
+                                    }
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -189,14 +192,13 @@ class PageAuth extends GetView<ControllerAuth> {
                                             color: Colors.white,
                                             strokeWidth: 2,
                                           )
-                                        : const SizedBox(),
-                                    Text(
-                                      "Masuk",
-                                      style: GoogleFonts.readexPro(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                        : Text(
+                                            "Masuk",
+                                            style: GoogleFonts.readexPro(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                   ],
                                 ),
                               ),
@@ -346,7 +348,10 @@ class PageAuth extends GetView<ControllerAuth> {
                                   if (controller
                                       .formkeyAuthRegister.currentState!
                                       .validate()) {
-                                    controller.handleSignUp();
+                                    if (controller.signUpState.value !=
+                                        AuthState.loading) {
+                                      controller.handleSignUp();
+                                    }
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -366,14 +371,13 @@ class PageAuth extends GetView<ControllerAuth> {
                                             color: Colors.white,
                                             strokeWidth: 2,
                                           )
-                                        : const SizedBox(),
-                                    Text(
-                                      "Daftar",
-                                      style: GoogleFonts.readexPro(
-                                        fontSize: 16,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                        : Text(
+                                            "Daftar",
+                                            style: GoogleFonts.readexPro(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
                                   ],
                                 ),
                               ),

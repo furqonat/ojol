@@ -1,5 +1,4 @@
 import 'package:animated_rating_stars/animated_rating_stars.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,18 +45,20 @@ class PageProduct extends GetView<ControllerProduct> {
                             padding: const EdgeInsets.only(right: 10),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: CachedNetworkImage(
+                              child: Image.network(
+                                '${controller.product[index].image}',
                                 width: 150,
                                 height: 150,
                                 fit: BoxFit.cover,
-                                imageUrl: '${controller.product[index].image}',
-                                errorWidget: (context, url, error) =>
+                                errorBuilder: (context, url, error) =>
                                     const Image(
-                                        width: 150,
-                                        height: 150,
-                                        fit: BoxFit.cover,
-                                        image: AssetImage(
-                                            'assets/images/sample_food.png')),
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(
+                                    'assets/images/sample_food.png',
+                                  ),
+                                ),
                               ),
                             ),
                           ),

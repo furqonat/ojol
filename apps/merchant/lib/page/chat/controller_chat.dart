@@ -54,7 +54,7 @@ class ControllerChat extends GetxController {
     try {
       await api.sendChat(
           msg: edtChat.text,
-          id_sender: _fbAuth.currentUser?.uid ?? '',
+          senderId: _fbAuth.currentUser?.uid ?? '',
           chatFor: 'MERCHANT',
           time: DateTime.now(),
           orderTransaksiId: orderTransaksiId.value,

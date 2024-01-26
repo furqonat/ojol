@@ -37,15 +37,12 @@ class ControllerOperational extends GetxController {
     final token = await _fbAuth.currentUser?.getIdToken();
     final opTime = operationalTime.firstWhereOrNull((p0) => p0.day == day);
     if (opTime != null && opTime.id != null) {
-      log("run on it, ${opTime.id}, ${opTime.endTime}, ${opTime.status}");
-
       final body = {
         "day": day,
         "open_time": opTime.startTime,
         "close_time": opTime.endTime,
         "status": opTime.status
       };
-      log(body.toString());
       final resp = await accountClient.updateOperationTime(
         bearerToken: "Bearer $token",
         operationTimeId: opTime.id!,
@@ -63,8 +60,6 @@ class ControllerOperational extends GetxController {
           "status": opTime?.status,
         }
       };
-      log("run at new");
-      log(body.toString());
       final resp = await accountClient.createOperationTime(
         bearerToken: "Bearer $token",
         body: body,

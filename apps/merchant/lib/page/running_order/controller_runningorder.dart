@@ -17,7 +17,6 @@ class ControllerRunningOrder extends GetxController
   handleGetOrder() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getOrders(token: token!);
-    print(resp);
     newOrder(
       (resp['cancel'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
