@@ -611,3 +611,51 @@ func (order OrderService) rejectedDriver(driverIds []string) string {
 	}
 	return ""
 }
+
+func (order OrderService) getPreviousDay() time.Time {
+	currentTime := time.Now()
+
+	currentHour := currentTime.Hour()
+
+	adjustedTime := currentTime.Add(-time.Duration(currentHour) * time.Hour)
+	return adjustedTime
+}
+
+func (order OrderService) getNextDay() time.Time {
+	currentTime := time.Now()
+
+	currentHour := currentTime.Hour()
+
+	adjustedTime := currentTime.Add(time.Duration(currentHour) * time.Hour)
+	return adjustedTime
+}
+
+func (order OrderService) getPreviousWeek() time.Time {
+	currentTime := time.Now()
+	currentDay := currentTime.Day()
+
+	previousWeek := currentTime.AddDate(0, 0, -7-currentDay)
+	return previousWeek
+}
+
+func (order OrderService) getNextWeek() time.Time {
+	currentTime := time.Now()
+	currentDay := currentTime.Day()
+
+	nextWeek := currentTime.AddDate(0, 0, 7-currentDay)
+	return nextWeek
+}
+
+func (order OrderService) getPreviousMonth() time.Time {
+	currentTime := time.Now()
+
+	previousMonth := currentTime.AddDate(0, -1, 0)
+	return previousMonth
+}
+
+func (order OrderService) getNextMonth() time.Time {
+	currentTime := time.Now()
+
+	nextMonth := currentTime.AddDate(0, 1, 0)
+	return nextMonth
+}

@@ -364,11 +364,12 @@ class PageBalance extends GetView<ControllerBalance> {
             ),
             ElevatedButton(
               onPressed: () {
-                controller.handleWithdraw(() {
-                  Get.back();
-                });
+                if (controller.isRequestWd.value) return;
+                controller.handleWithdraw();
               },
-              child: const Text("Lanjutkan"),
+              child: controller.isRequestWd.value
+                  ? const CircularProgressIndicator()
+                  : const Text("Lanjutkan"),
             )
           ],
         );
