@@ -132,9 +132,7 @@ func (order OrderService) MerchantGetSellInDay(merchantId string) ([]db.OrderMod
 		db.Order.OrderStatus.NotIn([]db.OrderStatus{
 			db.OrderStatusDone,
 			db.OrderStatusCanceled,
-			db.OrderStatusCreated,
 			db.OrderStatusExpired,
-			db.OrderStatusWaitingMerchant,
 		}),
 	).With(
 		db.Order.OrderItems.Fetch().With(
