@@ -86,12 +86,12 @@ func (order OrderService) GetOrderMerchants(merchantId string, take, skip int) (
 }
 
 func (order OrderService) MerchantGetSellStatusInDay(merchantId string) (*TotalOrder, error) {
-	totalCanceled, errorCancel := order.getSellStatusInDay(merchantId, db.OrderStatusCanceled)
+	totalCanceled, errorCancel := order.getSellStatusInDay(merchantId, []db.OrderStatus{db.OrderStatusCanceled})
 	if errorCancel != nil {
 		return nil, errorCancel
 	}
 
-	totalDone, errorDone := order.getSellStatusInDay(merchantId, db.OrderStatusDone)
+	totalDone, errorDone := order.getSellStatusInDay(merchantId, []db.OrderStatus{db.OrderStatusDone})
 	if errorDone != nil {
 		return nil, errorCancel
 	}
@@ -109,12 +109,12 @@ func (order OrderService) MerchantGetSellStatusInDay(merchantId string) (*TotalO
 }
 
 func (order OrderService) MerchantGetSellInDay(merchantId string) ([]db.OrderModel, []db.OrderModel, []db.OrderModel, error) {
-	canceled, errorCancel := order.getSellStatusInDay(merchantId, db.OrderStatusWaitingMerchant)
+	canceled, errorCancel := order.getSellStatusInDay(merchantId, []db.OrderStatus{db.OrderStatusWaitingMerchant, db.OrderStatusCreated})
 	if errorCancel != nil {
 		return nil, nil, nil, errorCancel
 	}
 
-	done, errorDone := order.getSellStatusInDay(merchantId, db.OrderStatusDone)
+	done, errorDone := order.getSellStatusInDay(merchantId, []db.OrderStatus{db.OrderStatusDone})
 	if errorDone != nil {
 		return nil, nil, nil, errorCancel
 	}
@@ -250,7 +250,7 @@ func (order OrderService) merchantGetOrderInMonth(merchantId string) ([]db.Order
 	return orderDb, nil
 }
 
-func (order OrderService) getSellStatusInDay(merchantId string, status db.OrderStatus) ([]db.OrderModel, error) {
+func (order OrderService) getSellStatusInDay(merchantId string, status []db.OrderStatus) ([]db.OrderModel, error) {
 	currentTime := time.Now()
 	oneDayAgo := currentTime.Add(-24 * time.Hour)
 	nextDay := currentTime.Add(24 * time.Hour)
@@ -262,7 +262,7 @@ func (order OrderService) getSellStatusInDay(merchantId string, status db.OrderS
 				db.Product.MerchantID.Equals(merchantId),
 			),
 		),
-		db.Order.OrderStatus.In([]db.OrderStatus{status, db.OrderStatusCreated}),
+		db.Order.OrderStatus.In(status),
 	).With(
 		db.Order.OrderItems.Fetch().With(
 			db.OrderItem.Product.Fetch(),
