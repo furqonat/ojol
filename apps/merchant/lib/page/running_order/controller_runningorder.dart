@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:lugo_marchant/page/running_order/api_runningorder.dart';
 
@@ -15,6 +16,8 @@ class ControllerRunningOrder extends GetxController
   final newOrder = <Map<String, dynamic>>[].obs;
   final proccess = <Map<String, dynamic>>[].obs;
   final done = <Map<String, dynamic>>[].obs;
+  final loadingAccept = false.obs;
+  final loadingReject = false.obs;
 
   handleGetOrder() async {
     final token = await _fbAuth.currentUser?.getIdToken();
@@ -37,16 +40,55 @@ class ControllerRunningOrder extends GetxController
     );
   }
 
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
   handleAcceptOrder(String orderId) async {
-    log(orderId);
+    loadingAccept.value = true;
     final token = await _fbAuth.currentUser?.getIdToken();
     await api.acceptOrder(token: token!, orderId: orderId);
-    handleGetOrder();
+    _determinePosition().then((value) {
+      final body = {
+        "latitude": value.latitude,
+        "longitude": value.longitude,
+      };
+      api.findDriver(token: token, orderId: orderId, body: body).then((value) {
+        loadingAccept.value = false;
+        handleGetOrder();
+      });
+    }).catchError((error) {
+      loadingAccept.value = false;
+      Get.snackbar("Error", error.toString());
+    });
   }
 
   handleReject(String orderId) async {
+    loadingReject.value = true;
     final token = await _fbAuth.currentUser?.getIdToken();
     await api.rejectOrder(token: token!, orderId: orderId);
+    loadingReject.value = false;
     handleGetOrder();
   }
 

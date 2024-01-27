@@ -33,8 +33,12 @@ class ControllerBottomNav extends GetxController {
     if (pageArg != null) {
       changePage(pageArg);
       pageController.jumpToPage(pageArg);
+      update();
     }
   }
 
-  void changePage(index) => currentPage.value = index;
+  void changePage(index) {
+    update();
+    currentPage.value = index;
+  }
 }

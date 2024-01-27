@@ -27,6 +27,7 @@ abstract class OrderClient {
   Future orderFindDriver({
     @Header("Authorization") required String bearerToken,
     @Path("orderId") required String orderId,
+    @Body() required Map<String, dynamic> body,
   });
 
   @PUT("driver/sign/{orderId}")
