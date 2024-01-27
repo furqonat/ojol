@@ -15,26 +15,22 @@ describe('Test Autentication Api', () => {
   beforeAll(async () => {
     const app = initializeApp(getFirebaseConfig())
     const auth = getAuth(app)
-    const resCus = await customerSignIn(
-      auth,
-      'email@test.com',
-      'password123',
-    )
+    const resCus = await customerSignIn(auth, 'email@test.com', 'password123')
     cusCred = resCus
 
-    // const resDri = await driverSignIn(
-    //   auth,
-    //   process.env.EMAILDRIVER + 1,
-    //   process.env.PASSWORDDRIVER + 1,
-    // )
-    // driCred = resDri
+    const resDri = await driverSignIn(
+      auth,
+      process.env.EMAILDRIVER + 1,
+      process.env.PASSWORDDRIVER + 1,
+    )
+    driCred = resDri
 
-    // const resMerch = await merchantSignIn(
-    //   auth,
-    //   process.env.TEST_EMAIL_MERCH + 1,
-    //   process.env.TEST_PSW_MERCH + 1,
-    // )
-    // merCred = resMerch
+    const resMerch = await merchantSignIn(
+      auth,
+      'admoscop@gmail.com',
+      'test1234',
+    )
+    merCred = resMerch
   })
 
   describe('GET /order/merchant get order for merchant', () => {
@@ -176,6 +172,23 @@ describe('Test Autentication Api', () => {
       const token = await getIdToken(cusCred.user)
       const resp = await axios.put(
         '/clrsxw1ms0000enaiossa1j9o',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      console.info(resp.data)
+      expect(resp.status).toBe(HttpStatusCode.Ok)
+    })
+  })
+
+  describe('PUT /merchant/accept/<order_id>', () => {
+    it('Test Accept Order merchant', async () => {
+      const token = await getIdToken(merCred.user)
+      const resp = await axios.put(
+        '/merchant/accept/aacvasda',
         {},
         {
           headers: {

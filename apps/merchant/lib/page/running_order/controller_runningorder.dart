@@ -38,6 +38,7 @@ class ControllerRunningOrder extends GetxController
   }
 
   handleAcceptOrder(String orderId) async {
+    log(orderId);
     final token = await _fbAuth.currentUser?.getIdToken();
     await api.acceptOrder(token: token!, orderId: orderId);
     handleGetOrder();
