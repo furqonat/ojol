@@ -79,8 +79,9 @@ class LocalService {
   }
 
   Future cleanUpLogout() async {
-    await local.remove(loginState);
-    await local.remove(inVerification);
-    await local.remove(verificationStep);
+    final prefs = await preferences;
+    await prefs.remove(loginState);
+    await prefs.remove(inVerification);
+    await prefs.remove(verificationStep);
   }
 }
