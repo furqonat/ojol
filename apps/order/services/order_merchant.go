@@ -29,7 +29,7 @@ func (order OrderService) MerchantAcceptOrder(orderId string) error {
 }
 
 func (order OrderService) MerchantRejectOrder(orderId string) error {
-	_, errGetOrder := order.database.Order.FindUnique(
+	orderDb, errGetOrder := order.database.Order.FindUnique(
 		db.Order.ID.Equals(orderId),
 	).Update(
 		db.Order.OrderStatus.Set(db.OrderStatusCanceled),
@@ -37,10 +37,15 @@ func (order OrderService) MerchantRejectOrder(orderId string) error {
 	if errGetOrder != nil {
 		return nil
 	}
-
-	_, err := order.CancelOrder(orderId, "Merchant rejected or not responding")
-	if err != nil {
-		return err
+	if orderDb.PaymentType == db.PaymentTypeDana {
+		_, err := order.CancelOrder(orderId, "Merchant rejected or not responding")
+		if err != nil {
+			return err
+		}
+		errFrs := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusCanceled))
+		if errFrs != nil {
+			return errFrs
+		}
 	}
 	errFrs := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusCanceled))
 	if errFrs != nil {
