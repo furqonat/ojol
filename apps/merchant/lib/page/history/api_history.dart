@@ -5,10 +5,9 @@ class ApiHistory {
 
   ApiHistory({required this.orderClient});
 
-  Future getOrders({required String token}) async {
-    final resp = await orderClient.merchantGetOrders(
-      bearerToken: "Bearer $token",
-    );
+  Future getOrders({required String token, required String time}) async {
+    final resp = await orderClient.merchantGetOrderPeriod(
+        bearerToken: "Bearer $token", time: time);
     return resp;
   }
 }
