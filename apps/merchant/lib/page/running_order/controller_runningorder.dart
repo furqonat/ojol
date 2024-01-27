@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +19,7 @@ class ControllerRunningOrder extends GetxController
   handleGetOrder() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getOrders(token: token!);
+    log("response $resp");
     newOrder(
       (resp['cancel'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
