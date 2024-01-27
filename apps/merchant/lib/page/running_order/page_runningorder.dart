@@ -255,50 +255,50 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                         color: Colors.grey,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'PPN',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Rp 0',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.red,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Potongan jasa',
-                                            style: GoogleFonts.readexPro(
-                                              color: const Color(0xFF3978EF),
-                                            ),
-                                          ),
-                                          Text(
-                                            'Rp 0',
-                                            style: GoogleFonts.readexPro(
-                                              color: const Color(0xFF3978EF),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.fromLTRB(
+                                    //       10, 5, 10, 0),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: <Widget>[
+                                    //       Text(
+                                    //         'PPN',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: Colors.red,
+                                    //         ),
+                                    //       ),
+                                    //       Text(
+                                    //         'Rp 0',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: Colors.red,
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.fromLTRB(
+                                    //       10, 5, 10, 0),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: <Widget>[
+                                    //       Text(
+                                    //         'Potongan jasa',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: const Color(0xFF3978EF),
+                                    //         ),
+                                    //       ),
+                                    //       Text(
+                                    //         'Rp 0',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: const Color(0xFF3978EF),
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
                                     const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Divider(
@@ -444,78 +444,78 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                         ],
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Nama Driver',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['name']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Plat Nomor',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['driver_details']['vehicle']['vehicle_rn']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Kendaraan',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['driver_details']['vehicle']['vehicle_brand']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.fromLTRB(
+                                    //       10, 5, 10, 0),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: <Widget>[
+                                    //       Text(
+                                    //         'Nama Driver',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: Colors.black87,
+                                    //           fontWeight: FontWeight.bold,
+                                    //         ),
+                                    //       ),
+                                    //       Text(
+                                    //         '${element['driver']['name']}',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: Colors.black87,
+                                    //           fontWeight: FontWeight.bold,
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.fromLTRB(
+                                    //       10, 5, 10, 0),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: <Widget>[
+                                    //       Text(
+                                    //         'Plat Nomor',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: Colors.black87,
+                                    //           fontWeight: FontWeight.bold,
+                                    //         ),
+                                    //       ),
+                                    //       Text(
+                                    //         '${element['driver']['driver_details']['vehicle']['vehicle_rn']}',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: Colors.black87,
+                                    //           fontWeight: FontWeight.bold,
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+                                    // Padding(
+                                    //   padding: const EdgeInsets.fromLTRB(
+                                    //       10, 5, 10, 0),
+                                    //   child: Row(
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceBetween,
+                                    //     children: <Widget>[
+                                    //       Text(
+                                    //         'Kendaraan',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: Colors.black87,
+                                    //           fontWeight: FontWeight.bold,
+                                    //         ),
+                                    //       ),
+                                    //       Text(
+                                    //         '${element['driver']['driver_details']['vehicle']['vehicle_brand']}',
+                                    //         style: GoogleFonts.readexPro(
+                                    //           color: Colors.black87,
+                                    //           fontWeight: FontWeight.bold,
+                                    //         ),
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
                                     const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Divider(

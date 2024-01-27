@@ -19,7 +19,7 @@ class ControllerRunningOrder extends GetxController
   handleGetOrder() async {
     final token = await _fbAuth.currentUser?.getIdToken();
     final resp = await api.getOrders(token: token!);
-    log("response $resp");
+    log("response running order ${resp['process']}");
     newOrder(
       (resp['cancel'] as List<dynamic>)
           .map((e) => e as Map<String, dynamic>)
@@ -52,6 +52,7 @@ class ControllerRunningOrder extends GetxController
   @override
   void onInit() {
     tabController = TabController(length: 3, vsync: this);
+    log("on init running order");
     handleGetOrder();
     super.onInit();
   }
