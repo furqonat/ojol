@@ -65,6 +65,9 @@ class VerificationController extends GetxController {
   final activeStep = 0.obs;
   final verificationStatus =
       PhoneVerificationStatus(status: false, message: "").obs;
+  final loadingVerification = false.obs;
+  final loadingPhoneVerification = false.obs;
+  final isSuccesVerification = false.obs;
 
   final _fbAuth = FirebaseAuth.instance;
   final verificationId = "".obs;
@@ -168,6 +171,17 @@ class VerificationController extends GetxController {
   }
 
   void handleSaveDetail() async {
+    loadingVerification.value = true;
+    if (fullName.text.isEmpty || address.text.isEmpty) {
+      Fluttertoast.showToast(msg: "Please fill all field");
+      loadingVerification.value = false;
+      return;
+    }
+    if (shopImages1.value.isEmpty || shopImages2.value.isEmpty) {
+      Fluttertoast.showToast(msg: "Please fill all field");
+      loadingVerification.value = false;
+      return;
+    }
     final body = {
       "name": fullName.value.text,
       "phone": _fbAuth.currentUser?.phoneNumber,
@@ -192,10 +206,12 @@ class VerificationController extends GetxController {
     final token = await _fbAuth.currentUser?.getIdToken(true);
     final result = await apiService.applyMerchant(body: body, token: token);
     if (result.message == 'OK') {
+      loadingVerification.value = false;
       LocalService().setIsLogin(isLogin: true);
       LocalService().setInVerification(false);
       Get.offAllNamed(Routes.bottomNav);
     } else {
+      loadingVerification.value = false;
       Fluttertoast.showToast(msg: "unable apply merchant");
     }
   }
@@ -203,6 +219,7 @@ class VerificationController extends GetxController {
   Future<void> handleVerificationPhone(
     Function(String verificationId) callback,
   ) async {
+    loadingPhoneVerification.value = true;
     const regionInfo = RegionInfo(name: "Indonesia", code: "ID", prefix: 62);
     final phone = await PhoneNumberUtil().parse(
       phoneNumber.text,
@@ -211,6 +228,8 @@ class VerificationController extends GetxController {
     _fbAuth.verifyPhoneNumber(
       phoneNumber: phone.e164,
       verificationCompleted: (phoneAuthCredential) {
+        isSuccesVerification.value = true;
+        loadingPhoneVerification.value = false;
         if (verificationState == VerificationState.full.toString()) {
           _fbAuth.currentUser
               ?.linkWithCredential(phoneAuthCredential)
@@ -247,6 +266,8 @@ class VerificationController extends GetxController {
         }
       },
       verificationFailed: (error) {
+        loadingPhoneVerification.value = false;
+        isSuccesVerification.value = false;
         verificationStatus.value = PhoneVerificationStatus(
           status: false,
           message: error.code,
@@ -255,6 +276,7 @@ class VerificationController extends GetxController {
         Fluttertoast.showToast(msg: error.code);
       },
       codeSent: (verificationId, forceResendingToken) {
+        loadingPhoneVerification.value = false;
         log("verificationId: $verificationId");
         callback(verificationId);
       },

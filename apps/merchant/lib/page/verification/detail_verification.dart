@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lugo_marchant/shared/custom_widget/lugo_btn.dart';
 
 import 'controller.dart';
 
@@ -241,16 +240,32 @@ Widget detailVerification(
       ),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 20),
-        child: LugoButton(
-          textButton: "Daftar Sekarang",
-          textColor: Colors.white,
-          textSize: 12,
-          width: Get.width * 0.45,
-          height: Get.height * 0.07,
-          color: const Color(0xFF3978EF),
-          onTap: () {
+        child: ElevatedButton(
+          onPressed: () {
+            if (controller.loadingVerification.value) {
+              return;
+            }
             controller.handleSaveDetail();
           },
+          style: ElevatedButton.styleFrom(
+              elevation: 5,
+              fixedSize: Size(Get.width * 0.5, Get.height * 0.07),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40)),
+              backgroundColor: const Color(0xFF3978EF)),
+          child: controller.loadingVerification.value
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : Text(
+                  "Daftar Sekarang",
+                  style: GoogleFonts.readexPro(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
         ),
       )
     ],
