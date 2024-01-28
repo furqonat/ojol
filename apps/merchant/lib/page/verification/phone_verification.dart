@@ -105,7 +105,9 @@ Widget phoneVerificationView(
               controller.handleVerificationPhone((verification) {
                 controller.verificationId.value = verification;
               }).then((value) {
-                bottomSheet(context, controller);
+                if (!controller.loadingPhoneVerification.value) {
+                  bottomSheet(context, controller);
+                }
               });
             }
           },
@@ -117,10 +119,17 @@ Widget phoneVerificationView(
             ),
             backgroundColor: const Color(0xFF3978EF),
           ),
-          child: Text(
-            "Masuk",
-            style: GoogleFonts.readexPro(fontSize: 16, color: Colors.white),
-          ),
+          child: controller.loadingPhoneVerification.value
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : Text(
+                  "Masuk",
+                  style:
+                      GoogleFonts.readexPro(fontSize: 16, color: Colors.white),
+                ),
         ),
       )
     ],
