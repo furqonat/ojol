@@ -63,173 +63,172 @@ class PageAuth extends GetView<ControllerAuth> {
                     ),
                   ]),
             ),
-            Obx(() => SliverToBoxAdapter(
-                  child: SizedBox(
-                    width: Get.width,
-                    child: TabBarView(
-                      controller: controller.tabController,
-                      children: [
-                        Form(
-                          key: controller.formSignIn,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                                child: Input(
-                                  controller: controller.edtEmail,
-                                  labelText: 'Email',
-                                  validator: Validatorless.multiple([
-                                    Validatorless.email('Email tidak valid'),
-                                    Validatorless.required(
-                                      'Email harus diisi',
-                                    ),
-                                  ]),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
-                                child: Input(
-                                  controller: controller.edtPassword,
-                                  obscureText: controller.showPass.value,
-                                  keyboardType: TextInputType.visiblePassword,
-                                  labelText: 'Password',
-                                  suffixIcon: GestureDetector(
-                                    onTap: () => controller.showPass.value
-                                        ? controller.showPass(false)
-                                        : controller.showPass(true),
-                                    child: Icon(
-                                        controller.showPass.value
-                                            ? Icons.visibility_rounded
-                                            : Icons.visibility_off_rounded,
-                                        color: const Color(0xFF95A1AC)),
+            Obx(
+              () => SliverToBoxAdapter(
+                child: SizedBox(
+                  width: Get.width,
+                  height: Get.height * 0.6,
+                  child: TabBarView(
+                    controller: controller.tabController,
+                    children: [
+                      Form(
+                        key: controller.formSignIn,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                              child: Input(
+                                controller: controller.edtEmail,
+                                labelText: 'Email',
+                                validator: Validatorless.multiple([
+                                  Validatorless.email('Email tidak valid'),
+                                  Validatorless.required(
+                                    'Email harus diisi',
                                   ),
-                                  validator: Validatorless.multiple([
-                                    Validatorless.required(
-                                      'Password tidak boleh kosong',
-                                    ),
-                                    Validatorless.min(
-                                      6,
-                                      'Password tidak boleh kurang dari 6',
-                                    ),
-                                  ]),
-                                ),
+                                ]),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                child: Button(
-                                  onPressed: () {
-                                    final okForm = controller
-                                        .formSignIn.currentState!
-                                        .validate();
-                                    final isLoading =
-                                        controller.loadingSignIn.value;
-                                    if (okForm && !isLoading) {
-                                      controller.handlSignIn();
-                                    }
-                                  },
-                                  child: controller.loadingSignIn.value
-                                      ? const Center(
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      : Text(
-                                          "Masuk",
-                                          style: GoogleFonts.readexPro(
-                                              fontSize: 16,
-                                              color: Colors.white),
-                                        ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+                              child: Input(
+                                controller: controller.edtPassword,
+                                obscureText: controller.showPass.value,
+                                keyboardType: TextInputType.visiblePassword,
+                                labelText: 'Password',
+                                suffixIcon: GestureDetector(
+                                  onTap: () => controller.showPass.value
+                                      ? controller.showPass(false)
+                                      : controller.showPass(true),
+                                  child: Icon(
+                                      controller.showPass.value
+                                          ? Icons.visibility_rounded
+                                          : Icons.visibility_off_rounded,
+                                      color: const Color(0xFF95A1AC)),
                                 ),
-                              ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "Lupa Password",
-                                  style: GoogleFonts.readexPro(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: const Color(0xFF14181B)),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Form(
-                          key: controller.formSignUp,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                                child: Input(
-                                  controller: controller.edtEmailDaftar,
-                                  labelText: "Email",
-                                  validator: Validatorless.multiple([
-                                    Validatorless.required(
-                                        'Email tidak boleh kosong'),
-                                    Validatorless.email('Email tidak sesuai')
-                                  ]),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
-                                child: Input(
-                                  obscureText: controller.showPass.value,
-                                  controller: controller.edtPasswordDaftar,
-                                  hintText: 'Passowrd',
-                                  suffixIcon: GestureDetector(
-                                    onTap: () => controller.showPass.value
-                                        ? controller.showPass(false)
-                                        : controller.showPass(true),
-                                    child: Icon(
-                                        controller.showPass.value
-                                            ? Icons.visibility_rounded
-                                            : Icons.visibility_off_rounded,
-                                        color: const Color(0xFF95A1AC)),
+                                validator: Validatorless.multiple([
+                                  Validatorless.required(
+                                    'Password tidak boleh kosong',
                                   ),
-                                  validator: Validatorless.multiple([
-                                    Validatorless.required(
-                                        'Password tidak boleh kosong'),
-                                    Validatorless.min(6,
-                                        'Password tidak boleh kurang dari 6'),
-                                  ]),
-                                ),
+                                  Validatorless.min(
+                                    6,
+                                    'Password tidak boleh kurang dari 6',
+                                  ),
+                                ]),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 20),
-                                child: Button(
-                                  onPressed: () {
-                                    final okForm = controller
-                                        .formSignUp.currentState!
-                                        .validate();
-                                    final isLoading =
-                                        controller.loadingSignUp.value;
-                                    if (okForm && !isLoading) {
-                                      controller.handleSignUp();
-                                    }
-                                  },
-                                  child: controller.loadingSignUp.value
-                                      ? const Center(
-                                          child: CircularProgressIndicator(
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      : Text(
-                                          "Daftar",
-                                          style: GoogleFonts.readexPro(
-                                              fontSize: 16,
-                                              color: Colors.white),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              child: Button(
+                                onPressed: () {
+                                  final okForm = controller
+                                      .formSignIn.currentState!
+                                      .validate();
+                                  final isLoading =
+                                      controller.loadingSignIn.value;
+                                  if (okForm && !isLoading) {
+                                    controller.handlSignIn();
+                                  }
+                                },
+                                child: controller.loadingSignIn.value
+                                    ? const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
                                         ),
-                                ),
+                                      )
+                                    : Text(
+                                        "Masuk",
+                                        style: GoogleFonts.readexPro(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
                               ),
-                            ],
-                          ),
+                            ),
+                            TextButton(
+                              onPressed: () {},
+                              child: Text(
+                                "Lupa Password",
+                                style: GoogleFonts.readexPro(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF14181B)),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Form(
+                        key: controller.formSignUp,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                              child: Input(
+                                controller: controller.edtEmailDaftar,
+                                labelText: "Email",
+                                validator: Validatorless.multiple([
+                                  Validatorless.required(
+                                      'Email tidak boleh kosong'),
+                                  Validatorless.email('Email tidak sesuai')
+                                ]),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
+                              child: Input(
+                                obscureText: controller.showPass.value,
+                                controller: controller.edtPasswordDaftar,
+                                labelText: 'Passowrd',
+                                suffixIcon: GestureDetector(
+                                  onTap: () => controller.showPass.value
+                                      ? controller.showPass(false)
+                                      : controller.showPass(true),
+                                  child: Icon(
+                                      controller.showPass.value
+                                          ? Icons.visibility_rounded
+                                          : Icons.visibility_off_rounded,
+                                      color: const Color(0xFF95A1AC)),
+                                ),
+                                validator: Validatorless.multiple([
+                                  Validatorless.required(
+                                      'Password tidak boleh kosong'),
+                                  Validatorless.min(
+                                      6, 'Password tidak boleh kurang dari 6'),
+                                ]),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 20),
+                              child: Button(
+                                onPressed: () {
+                                  final okForm = controller
+                                      .formSignUp.currentState!
+                                      .validate();
+                                  final isLoading =
+                                      controller.loadingSignUp.value;
+                                  if (okForm && !isLoading) {
+                                    controller.handleSignUp();
+                                  }
+                                },
+                                child: controller.loadingSignUp.value
+                                    ? const Center(
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                    : Text(
+                                        "Daftar",
+                                        style: GoogleFonts.readexPro(
+                                            fontSize: 16, color: Colors.white),
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ))
+                ),
+              ),
+            )
           ],
         ),
       ),

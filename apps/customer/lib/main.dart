@@ -14,10 +14,10 @@ import 'package:lugo_customer/shared/local_notif.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   LocalNotificationService.initialize();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  await GetStorage.init();
   runApp(const MyApp());
 }
 

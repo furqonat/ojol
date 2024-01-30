@@ -23,6 +23,32 @@ class DeviceToken {
       };
 }
 
+class Verification {
+  final String phoneNumber;
+
+  Verification({required this.phoneNumber});
+
+  factory Verification.fromJson(Map<String, dynamic> json) =>
+      Verification(phoneNumber: json['phone']);
+
+  Map<String, dynamic> toJson() => {
+        "phone": phoneNumber,
+      };
+}
+
+class VerifyPhoneNumber {
+  final String smsCode;
+
+  VerifyPhoneNumber({required this.smsCode});
+
+  factory VerifyPhoneNumber.fromJson(Map<String, dynamic> json) =>
+      VerifyPhoneNumber(smsCode: json['code']);
+
+  Map<String, dynamic> toJson() => {
+        "code": smsCode,
+      };
+}
+
 @RestApi(baseUrl: 'https://account.gentatechnology.com/')
 abstract class AccountClient {
   factory AccountClient(Dio dio, {String baseUrl}) = _AccountClient;
@@ -46,6 +72,21 @@ abstract class AccountClient {
   Future<Response> basicUpdateCustomer({
     @Header("Authorization") required String bearerToken,
     @Body() required Map<String, dynamic> body,
+  });
+
+  @POST('customer/phone/verification')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<Response> customerVerifyPhoneNumber({
+    @Header("Authorization") required String bearerToken,
+    @Body() required Verification body,
+  });
+
+  @POST("customer/phone/verification/{id}")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<Response> customerFinishVerifyPhoneNumber({
+    @Header("Authorization") required String bearerToken,
+    @Path("id") required String id,
+    @Body() required VerifyPhoneNumber body,
   });
 
   @GET('driver')
@@ -97,6 +138,21 @@ abstract class AccountClient {
     @Body() required Map<String, dynamic> body,
   });
 
+  @POST('driver/phone/verification')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<Response> driverVerifyPhoneNumber({
+    @Header("Authorization") required String bearerToken,
+    @Body() required Verification body,
+  });
+
+  @POST("driver/phone/verification/{id}")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<Response> driverFinishVerifyPhoneNumber({
+    @Header("Authorization") required String bearerToken,
+    @Path("id") required String id,
+    @Body() required VerifyPhoneNumber body,
+  });
+
   @GET('merchant')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<dynamic> getMerchant({
@@ -138,5 +194,20 @@ abstract class AccountClient {
   Future<Response> merchantAssignDeviceToken({
     @Header("Authorization") required String bearerToken,
     @Body() required DeviceToken body,
+  });
+
+  @POST('merchant/phone/verification')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<Response> merchantVerifyPhoneNumber({
+    @Header("Authorization") required String bearerToken,
+    @Body() required Verification body,
+  });
+
+  @POST("merchant/phone/verification/{id}")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<Response> merchantFinishVerifyPhoneNumber({
+    @Header("Authorization") required String bearerToken,
+    @Path("id") required String id,
+    @Body() required VerifyPhoneNumber body,
   });
 }

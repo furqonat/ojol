@@ -3,6 +3,7 @@ import 'package:lugo_customer/route/route_name.dart';
 
 const inVerification = 'inVerification';
 const verifcationPage = 'verifcationPage';
+const isSignIn = 'isSignIn';
 
 class LocalStorage {
   final GetStorage storage;
@@ -23,5 +24,13 @@ class LocalStorage {
 
   String getVerifcationPage() {
     return storage.read(verifcationPage) ?? Routes.auth;
+  }
+
+  void setIsSignIn(bool value) {
+    storage.write(isSignIn, value);
+  }
+
+  bool getIsSignIn() {
+    return storage.read(isSignIn) ?? false;
   }
 }
