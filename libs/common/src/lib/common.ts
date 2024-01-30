@@ -44,7 +44,7 @@ export function otpGenerator() {
 
 export async function sendSms(phoneNumber: string, message: string) {
   const resp = await axios.post(
-    'https://console.zenziva.net/reguler/api/sendsms/',
+    'https://console.zenziva.net/wareguler/api/sendWA/',
     {
       userkey: 'd0b112ded62a',
       passkey: 'e35637077be45d3ebb8c7985',
