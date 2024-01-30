@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/mart_pay/controller_marpay.dart';
-import 'package:lugo_customer/route/route_name.dart';
+import 'package:lugo_customer/shared/utils.dart';
 
 class PageMartPay extends GetView<ControllerMartPay> {
   const PageMartPay({super.key});
@@ -33,7 +35,7 @@ class PageMartPay extends GetView<ControllerMartPay> {
               ),
             )),
       ),
-      body: Column(
+      body: Obx(() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
@@ -41,49 +43,10 @@ class PageMartPay extends GetView<ControllerMartPay> {
             child: Text(
               "Detail Pesanan",
               style: GoogleFonts.readexPro(
-                fontSize: 12,
+                fontSize: 14,
                 color: Colors.black87,
                 fontWeight: FontWeight.bold,
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  "ID Pesanan",
-                  style: GoogleFonts.readexPro(
-                    fontSize: 12,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  "123xxxxx",
-                  style: GoogleFonts.readexPro(
-                    fontSize: 12,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Row(
-              children: <Widget>[
-                const Icon(Icons.shopping_bag_rounded, color: Colors.grey),
-                Text(
-                  "Nama Toko",
-                  style: GoogleFonts.readexPro(
-                    fontSize: 12,
-                    color: Colors.black87,
-                  ),
-                ),
-              ],
             ),
           ),
           Padding(
@@ -95,71 +58,111 @@ class PageMartPay extends GetView<ControllerMartPay> {
                   elevation: 5,
                   color: Colors.white,
                   surfaceTintColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: ListView.builder(
-                    itemCount: 10,
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(10),
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3),
-                        child: InkWell(
-                          onTap: () {},
-                          child: Row(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: const Image(
-                                      width: 80,
-                                      height: 80,
-                                      fit: BoxFit.cover,
-                                      image: AssetImage(
-                                          'assets/images/items.png')),
-                                ),
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Nama Item",
-                                      style: GoogleFonts.readexPro(
-                                        fontSize: 16,
-                                        color: Colors.black87,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      "Rp 10.000",
-                                      style: GoogleFonts.readexPro(
-                                        fontSize: 12,
-                                        color: Colors.black87,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Text(
-                                        "1X",
-                                        style: GoogleFonts.readexPro(
-                                          fontSize: 12,
-                                          color: Colors.black87,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  child: controller.loading.value == Status.success
+                          ? ListView.builder(
+                              itemCount: controller.carts.length,
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(10),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 3),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:const EdgeInsets.only(right: 10),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(12),
+                                          child: CachedNetworkImage(
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.cover,
+                                            imageUrl: controller.carts[index].product?.image ?? "",
+                                            errorWidget: (context, url, error) =>
+                                                const Image(
+                                                    width: 80,
+                                                    height: 80,
+                                                    fit: BoxFit.cover,
+                                                    image: AssetImage('assets/images/sample_food.png')),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "${controller.carts[index].product?.name}",
+                                              style: GoogleFonts.readexPro(
+                                                fontSize: 16,
+                                                color: Colors.black87,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              convertToIdr(controller.carts[index].product?.price, 0),
+                                              style: GoogleFonts.readexPro(
+                                                fontSize: 12,
+                                                color: Colors.black87,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Obx(() => Row(
+                                                  mainAxisAlignment:MainAxisAlignment.end,
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    InkWell(
+                                                      onTap: () => controller.updateCartMethod("${controller.carts[index].productId}", controller.listQuantity[index]["quantity"].value),
+                                                      child: const Icon(CupertinoIcons.pencil, color: Color(0xFF3978EF)),
+                                                    ),
+                                                    const Spacer(),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        controller.listQuantity[index]["quantity"].value == 0
+                                                            ? controller.listQuantity[index]["quantity"].value = 0
+                                                            : controller.listQuantity[index]["quantity"].value = controller.listQuantity[index]["quantity"].value -1;
+                                                      },
+                                                      child: const Icon(
+                                                          CupertinoIcons.minus_circle_fill,
+                                                          color: Color(0xFF3978EF)),
+                                                    ),
+                                                    Padding(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                      child: Text(
+                                                        "${controller.listQuantity[index]["quantity"].value}",
+                                                        style: GoogleFonts.readexPro(
+                                                          fontSize: 12,
+                                                          color: Colors.black87,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        controller.listQuantity[index]["quantity"].value += 1;
+                                                      },
+                                                      child: const Icon(
+                                                          CupertinoIcons.add_circled_solid,
+                                                          color: Color(0xFF3978EF)),
+                                                    )
+                                                  ],
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                          : controller.loading.value == Status.failed
+                              ? const Center(child: Text("Ada yang salah"))
+                              : controller.loading.value == Status.loading
+                                  ? const Center(
+                                      child: CircularProgressIndicator(
+                                          color: Color(0xFF3978EF)))
+                                  : const SizedBox(),
                 ),
               )),
           Padding(
@@ -189,7 +192,7 @@ class PageMartPay extends GetView<ControllerMartPay> {
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              const BorderSide(width: 1, color: Colors.grey)),
+                          const BorderSide(width: 1, color: Colors.grey)),
                       focusedErrorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide: const BorderSide(
@@ -197,34 +200,10 @@ class PageMartPay extends GetView<ControllerMartPay> {
                       errorBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              const BorderSide(width: 1, color: Colors.red)),
-                      suffixIcon: InkWell(
-                        onTap: () {},
-                        child: const Icon(Icons.check_box_rounded,
-                            color: Colors.deepOrangeAccent),
-                      )),
+                          const BorderSide(width: 1, color: Colors.red))),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: RichText(
-                text: TextSpan(
-                    style: GoogleFonts.readexPro(
-                      fontSize: 12,
-                      color: const Color(0xFF3978EF),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: <TextSpan>[
-                  const TextSpan(text: 'ID Transaksi '),
-                  TextSpan(
-                      text: '123xxxxx',
-                      style: GoogleFonts.readexPro(
-                        fontSize: 12,
-                        color: Colors.black87,
-                      )),
-                ])),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -240,7 +219,7 @@ class PageMartPay extends GetView<ControllerMartPay> {
                   ),
                 ),
                 Text(
-                  "Rp 0",
+                  convertToIdr(controller.orderPrice.value, 0),
                   style: GoogleFonts.readexPro(
                     fontSize: 12,
                     color: Colors.black87,
@@ -264,7 +243,7 @@ class PageMartPay extends GetView<ControllerMartPay> {
                   ),
                 ),
                 Text(
-                  "Rp 0",
+                  convertToIdr(controller.shppingCost.value, 0),
                   style: GoogleFonts.readexPro(
                     fontSize: 12,
                     color: Colors.black87,
@@ -323,7 +302,7 @@ class PageMartPay extends GetView<ControllerMartPay> {
                       ),
                     ),
                     Text(
-                      "Rp 0",
+                      convertToIdr(controller.shppingCost.value + controller.orderPrice.value, 0),
                       style: GoogleFonts.readexPro(
                         fontSize: 12,
                         color: Colors.black87,
@@ -332,8 +311,29 @@ class PageMartPay extends GetView<ControllerMartPay> {
                   ],
                 ),
                 ElevatedButton(
-                    onPressed: () => Get.toNamed(Routes.check_order,
-                        arguments: {'request_type': 'mart'}),
+                    onPressed: () {
+                      if(controller.categoryType.value == "DANA"){
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog.adaptive(
+                            backgroundColor: Colors.white,
+                            surfaceTintColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)
+                            ),
+                            content: const Image(
+                              image: AssetImage('assets/images/coming_soon.jpg'),
+                            ),
+                          ),
+                        );
+                      }else if(controller.categoryType.value == "Pembayaran"){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Harap pilih metode pembayaran anda"))
+                        );
+                      }else{
+                        controller.orderFoodMart();
+                      }
+                    },
                     style: ElevatedButton.styleFrom(
                         elevation: 5,
                         fixedSize: Size(Get.width * 0.3, Get.height * 0.03),
@@ -349,7 +349,7 @@ class PageMartPay extends GetView<ControllerMartPay> {
             ),
           )
         ],
-      ),
+      )),
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:lugo_customer/page/history_order/page_history.dart';
 import 'package:lugo_customer/page/main_page/page_main.dart';
 import 'package:lugo_customer/page/profile/page_profile.dart';
-import 'package:lugo_customer/page/room_chat/page_rromchat.dart';
+import 'package:lugo_customer/page/room_chat/page_roomchat.dart';
 import 'package:lugo_customer/page/running_order/page_running.dart';
 
 class ControllerHome extends GetxController {

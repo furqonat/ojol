@@ -106,6 +106,36 @@ export class DriverController {
       data.longitude,
     )
   }
+
+  @Roles(Role.DRIVER)
+  @Post('/phone/verification')
+  async obtainVerificationCode(
+    @Body('phone') phone: string,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.driverService.obtainVerificationCode(phone)
+    }
+    throw new UnauthorizedException()
+  }
+
+  @Roles(Role.DRIVER)
+  @Post('/phone/verification/:verificationId')
+  async verifyVerificationCode(
+    @Param('verificationId') verificationId: string,
+    @Body('code') code: number,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.driverService.phoneVerification(
+        req?.uid,
+        verificationId,
+        code,
+      )
+    }
+    throw new UnauthorizedException()
+  }
+
   @Roles(Role.DRIVER, Role.USER)
   @Get('/:id')
   async getDriverById(

@@ -4,8 +4,10 @@ import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_customer/api/local_service.dart';
 import 'package:lugo_customer/page/delivery_finish/controller_delivfinish.dart';
 import 'package:lugo_customer/route/route_name.dart';
+import 'package:lugo_customer/shared/utils.dart';
 
 class PageDelivFinish extends GetView<ControllerDelivFinish> {
   const PageDelivFinish({super.key});
@@ -132,7 +134,7 @@ class PageDelivFinish extends GetView<ControllerDelivFinish> {
                             fontWeight: FontWeight.bold,
                             color: const Color(0xFF3978EF),
                           )),
-                      Text('Cash',
+                      Text(controller.paymentType.value,
                           style: GoogleFonts.readexPro(
                             fontSize: 18,
                             color: Colors.black54,
@@ -146,7 +148,7 @@ class PageDelivFinish extends GetView<ControllerDelivFinish> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
                   child: Center(
-                    child: Text('Rp 20.000',
+                    child: Text(convertToIdr(controller.price.value, 0),
                         style: GoogleFonts.readexPro(
                           fontSize: 22,
                           color: Colors.black87,
@@ -198,7 +200,10 @@ class PageDelivFinish extends GetView<ControllerDelivFinish> {
                           ],
                         ),
                         ElevatedButton(
-                            onPressed: () => Get.offAllNamed(Routes.home),
+                            onPressed: () async {
+                              await LocalService().orderFinish();
+                              Get.offAllNamed(Routes.home);
+                            },
                             style: ElevatedButton.styleFrom(
                                 elevation: 5,
                                 fixedSize: Size(Get.width, Get.height * 0.06),

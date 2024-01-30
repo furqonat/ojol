@@ -18,17 +18,18 @@ class ControllerOtp extends GetxController {
 
   final formkeyPhone = GlobalKey<FormState>();
 
-  var edtPhone = TextEditingController();
-  var edtOTP = TextEditingController();
+  final edtPhone = TextEditingController();
+  final edtOTP = TextEditingController();
 
-  var loading = Status.idle.obs;
+  final loading = Status.idle.obs;
 
-  var firebase = FirebaseAuth.instance;
+  final _fbAuth = FirebaseAuth.instance;
+  final loadingPhoneVerification = false.obs;
 
   //Verify no hp
   firebasePhoneVerification(BuildContext context) async {
     try {
-      await firebase.verifyPhoneNumber(
+      await _fbAuth.verifyPhoneNumber(
         phoneNumber: '+62${edtPhone.text}',
         verificationFailed: (error) {},
         codeAutoRetrievalTimeout: (verificationId) {},
@@ -86,15 +87,14 @@ class ControllerOtp extends GetxController {
                     selectedFillColor: const Color(0xFF95A1AC),
                   ),
                 ),
-                const Spacer(),
                 ElevatedButton(
                     onPressed: () async {
                       final credential = PhoneAuthProvider.credential(
                           verificationId: verificationId, smsCode: edtOTP.text);
-                      firebase.currentUser
+                      _fbAuth.currentUser
                           ?.updatePhoneNumber(credential)
                           .then((value) async {
-                        var useToken = await firebase.currentUser?.getIdToken();
+                        var useToken = await _fbAuth.currentUser?.getIdToken();
                         sendToken(context, useToken!);
                       });
                     },

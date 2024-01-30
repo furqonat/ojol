@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/saldo/controller_saldo.dart';
+import 'package:lugo_customer/route/route_name.dart';
+import 'package:lugo_customer/shared/utils.dart';
 
 class PageSaldo extends GetView<ControllerSaldo> {
   const PageSaldo({super.key});
@@ -16,7 +18,7 @@ class PageSaldo extends GetView<ControllerSaldo> {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         leading: InkWell(
-            onTap: () => Get.back(),
+            onTap: () => Get.offNamed(Routes.home),
             child: SizedBox(
               width: 55,
               height: 55,
@@ -39,161 +41,80 @@ class PageSaldo extends GetView<ControllerSaldo> {
               image: AssetImage("assets/images/1699744330264.png")),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Center(
-              child: Text(
-                "08121243567899",
-                style: GoogleFonts.readexPro(
-                    fontSize: 16,
-                    color: const Color(0xFF14181B),
-                    fontWeight: FontWeight.w600),
-              ),
-            ),
+            child: Obx(() => controller.loading.value == Status.loading
+                ? Text(
+                    "+62...",
+                    style: GoogleFonts.readexPro(
+                        fontSize: 16,
+                        color: const Color(0xFF14181B),
+                        fontWeight: FontWeight.w600),
+                  )
+                : Text(
+                    "${controller.firebase.currentUser?.phoneNumber}",
+                    style: GoogleFonts.readexPro(
+                        fontSize: 16,
+                        color: const Color(0xFF14181B),
+                        fontWeight: FontWeight.w600),
+                  )),
           )
         ],
       ),
-      body: Obx(() => Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                child: Center(
-                  child: Text(
-                    "Saldo tersedia",
-                    style: GoogleFonts.readexPro(
-                        fontSize: 18,
-                        color: const Color(0xFF3978EF),
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-              Center(
-                child: Text(
-                  "Rp 50.0000",
-                  style: GoogleFonts.readexPro(
-                      fontSize: 30,
-                      color: const Color(0xFF14181B),
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
+      body: Obx(() {
+        if (controller.loading.value == Status.loading) {
+          return const Center(
+            child: CircularProgressIndicator(
+              color: Color(0xFF3978EF),
+            ),
+          );
+        } else if (controller.loading.value == Status.success) {
+          return Container(
+            width: Get.width,
+            height: Get.height * 0.2,
+            margin: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              gradient: const LinearGradient(
+                  colors: [
+                    Color(0xFF3978EF),
+                    Colors.lightBlue
+                  ])
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  child: Center(
+                    child: Text(
                       "Saldo tersedia",
                       style: GoogleFonts.readexPro(
                           fontSize: 18,
-                          color: const Color(0xFF14181B),
+                          color: Colors.white,
                           fontWeight: FontWeight.w600),
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: Colors.grey.shade300, width: 1)),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: DropdownButton<String>(
-                        elevation: 2,
-                        icon: const Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: Color(0xFF95A1AC),
-                          size: 24,
-                        ),
-                        value: controller.orderValue.value,
-                        borderRadius: BorderRadius.circular(8),
-                        underline: const SizedBox(),
-                        items: controller.orderList.map((element) {
-                          return DropdownMenuItem(
-                            value: element,
-                            child: Text(
-                              element,
-                              style: GoogleFonts.poppins(
-                                fontSize: 12,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? value) =>
-                            controller.orderValue(value),
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-              Expanded(
-                  child: ListView.builder(
-                      itemCount: 10,
-                      physics: const BouncingScrollPhysics(),
-                      itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.only(bottom: 15),
-                            child: ListTile(
-                              leading: SizedBox(
-                                width: 55,
-                                height: 55,
-                                child: Card(
-                                  elevation: 0,
-                                  color: const Color(0xFF3978EF),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(100)),
-                                  child: const Center(
-                                    child: Icon(Icons.attach_money_rounded,
-                                        size: 24, color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    "Tipe Transaksi",
-                                    style: GoogleFonts.readexPro(
-                                        fontSize: 16,
-                                        color: const Color(0xFF14181B),
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    "ID Transaksi 0812345678",
-                                    style: GoogleFonts.readexPro(
-                                        fontSize: 14,
-                                        color: const Color(0xFF14181B),
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                  Text(
-                                    "11 November 2023 - 07.00",
-                                    style: GoogleFonts.readexPro(
-                                        fontSize: 14,
-                                        color: const Color(0xFF14181B),
-                                        fontWeight: FontWeight.w300),
-                                  ),
-                                ],
-                              ),
-                              trailing: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    "Rp 20.000",
-                                    style: GoogleFonts.readexPro(
-                                        fontSize: 16,
-                                        color: const Color(0xFF14181B),
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  Text(
-                                    "Berhasil",
-                                    style: GoogleFonts.readexPro(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w300,
-                                      color: const Color(0xFF3978EF),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )))
-            ],
-          )),
+                Center(
+                  child: Text(
+                    convertToIdr(double.parse(controller.saldo.value.value!), 0),
+                    style: GoogleFonts.readexPro(
+                        fontSize: 30,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return Center(
+            child: Text(
+              'Ada yang salah',
+              style: GoogleFonts.readexPro(fontSize: 12),
+            ),
+          );
+        }
+      }),
     );
   }
 }

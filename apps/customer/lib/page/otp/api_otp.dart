@@ -8,7 +8,7 @@ class ApiOtp {
     final body = {"sample": sample};
 
     var r = await ApiService()
-        .apiJSONPostWithFirebaseToken('auth/customer', body, token);
+        .apiJSONPostWithFirebaseToken('auth', 'customer', body, token);
     return r;
   }
 }

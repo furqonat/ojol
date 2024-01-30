@@ -6,8 +6,8 @@ import 'package:lugo_customer/page/main_page/api_main.dart';
 import 'package:lugo_customer/page/main_page/controller_main.dart';
 import 'package:lugo_customer/page/profile/api_profile.dart';
 import 'package:lugo_customer/page/profile/controller_profile.dart';
-import 'package:lugo_customer/page/room_chat/api_rromchat.dart';
-import 'package:lugo_customer/page/room_chat/controller_rromchat.dart';
+import 'package:lugo_customer/page/room_chat/api_roomchat.dart';
+import 'package:lugo_customer/page/room_chat/controller_roomchat.dart';
 import 'package:lugo_customer/page/running_order/api_running.dart';
 import 'package:lugo_customer/page/running_order/controller_running.dart';
 

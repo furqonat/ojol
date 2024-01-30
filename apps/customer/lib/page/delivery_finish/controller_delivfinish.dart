@@ -7,6 +7,8 @@ class ControllerDelivFinish extends GetxController {
   ControllerDelivFinish({required this.api});
 
   var imgPreview = ''.obs;
+  var price = 0.obs;
+  var paymentType = ''.obs;
 
   final ImagePicker picker = ImagePicker();
 
@@ -24,5 +26,12 @@ class ControllerDelivFinish extends GetxController {
     if (fileImage != null) {
       imgPreview.value = fileImage.path;
     }
+  }
+
+  @override
+  void onInit() {
+    price.value = Get.arguments["price"];
+    paymentType.value = Get.arguments["payment_type"];
+    super.onInit();
   }
 }

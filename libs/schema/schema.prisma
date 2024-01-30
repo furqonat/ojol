@@ -726,3 +726,11 @@ enum trx_company_type {
   ADMIN
   BONUS_DRIVER
 }
+
+
+model verification {
+  id          String   @id @default(cuid())
+  code        Int
+  phone       String
+  verified_at DateTime @default(now())
+}

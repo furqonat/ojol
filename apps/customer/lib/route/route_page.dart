@@ -11,6 +11,10 @@ import 'package:lugo_customer/page/delivery_finish/binding_delivfinish.dart';
 import 'package:lugo_customer/page/delivery_finish/page_delivfinish.dart';
 import 'package:lugo_customer/page/detail_point/binding_detailpoint.dart';
 import 'package:lugo_customer/page/detail_point/page_detailpoint.dart';
+import 'package:lugo_customer/page/digital_pay/binding_digitalpay.dart';
+import 'package:lugo_customer/page/digital_pay/page_digitalpay.dart';
+import 'package:lugo_customer/page/discount/binding_discount.dart';
+import 'package:lugo_customer/page/discount/page_discount.dart';
 import 'package:lugo_customer/page/edit_profile/binding_editprofile.dart';
 import 'package:lugo_customer/page/edit_profile/page_editprofile.dart';
 import 'package:lugo_customer/page/food/binding_food.dart';
@@ -53,18 +57,20 @@ import 'package:lugo_customer/page/saldo/binding_saldo.dart';
 import 'package:lugo_customer/page/saldo/page_saldo.dart';
 import 'package:lugo_customer/page/splash_screen/binding_splash.dart';
 import 'package:lugo_customer/page/splash_screen/page_splash.dart';
+import 'package:lugo_customer/page/webview/binding_webview.dart';
+import 'package:lugo_customer/page/webview/page_webview.dart';
 import 'package:lugo_customer/route/route_name.dart';
 import '../page/food_menu/binding_menu.dart';
 import '../page/food_menu/page_menu.dart';
-import '../page/room_chat/binding_rromchat.dart';
-import '../page/room_chat/page_rromchat.dart';
+import '../page/room_chat/binding_roomchat.dart';
+import '../page/room_chat/page_roomchat.dart';
 import '../page/running_order/binding_running.dart';
 import '../page/running_order/page_running.dart';
 
 class RoutingPages {
   static final pages = [
     GetPage(
-        name: Routes.INITIAL,
+        name: Routes.start,
         page: () => const PageSplash(),
         binding: BindingSplash()),
     GetPage(
@@ -84,7 +90,7 @@ class RoutingPages {
         page: () => const PagePoint(),
         binding: BindingPoint()),
     GetPage(
-        name: Routes.detail_point,
+        name: Routes.detailPoint,
         page: () => const PageDetailPoint(),
         binding: BindingDetailPoint()),
     GetPage(
@@ -96,23 +102,23 @@ class RoutingPages {
         page: () => const PageMain(),
         binding: BindingMain()),
     GetPage(
-        name: Routes.location_picker,
+        name: Routes.locationPicker,
         page: () => const PageLocationPicker(),
         binding: BindingLocationPicker()),
     GetPage(
-        name: Routes.check_order,
+        name: Routes.checkOrder,
         page: () => const PageCheckOrder(),
         binding: BindingCheckOrder()),
     GetPage(
-        name: Routes.order_finish,
+        name: Routes.orderFinish,
         page: () => const PageOrderFinish(),
         binding: BindingOrderFinish()),
     GetPage(
-        name: Routes.delivery_finish,
+        name: Routes.deliveryFinish,
         page: () => const PageDelivFinish(),
         binding: BindingDelivFinish()),
     GetPage(
-        name: Routes.room_chat,
+        name: Routes.roomChat,
         page: () => const PageRoomChat(),
         binding: BindingRoomChat()),
     GetPage(
@@ -120,11 +126,11 @@ class RoutingPages {
         page: () => const PageChat(),
         binding: BindingChat()),
     GetPage(
-        name: Routes.history_order,
+        name: Routes.orderHistory,
         page: () => const PageHistory(),
         binding: BindingHistory()),
     GetPage(
-        name: Routes.running_order,
+        name: Routes.runningOrder,
         page: () => const PageRunning(),
         binding: BindingRunning()),
     GetPage(
@@ -132,15 +138,15 @@ class RoutingPages {
         page: () => const PageFood(),
         binding: BindingFood()),
     GetPage(
-        name: Routes.food_menu,
+        name: Routes.foodMenu,
         page: () => const PageFoodMenu(),
         binding: BindingFoodMenu()),
     GetPage(
-        name: Routes.food_pay,
+        name: Routes.foodPay,
         page: () => const PageFoodPay(),
         binding: BindingFoodPay()),
     GetPage(
-        name: Routes.food_finish,
+        name: Routes.foodFinish,
         page: () => const PageFoodFinish(),
         binding: BindingFoodFinish()),
     GetPage(
@@ -148,19 +154,19 @@ class RoutingPages {
         page: () => const PageProfile(),
         binding: BindingProfile()),
     GetPage(
-        name: Routes.history_food,
+        name: Routes.historyFood,
         page: () => const PageHistoryFood(),
         binding: BindingHistoryFood()),
     GetPage(
-        name: Routes.edit_profile,
+        name: Routes.editProfile,
         page: () => const PageEditProfile(),
         binding: BindingEditProfile()),
     GetPage(
-        name: Routes.about_us,
+        name: Routes.aboutUs,
         page: () => const PageAboutUs(),
         binding: BindingAboutUs()),
     GetPage(
-        name: Routes.privacy_term,
+        name: Routes.privacyTerm,
         page: () => const PagePrivacyTerm(),
         binding: BindingPrivacyTerm()),
     GetPage(
@@ -168,16 +174,28 @@ class RoutingPages {
         page: () => const PageMart(),
         binding: BindingMart()),
     GetPage(
-        name: Routes.mart_menu,
+        name: Routes.martMenu,
         page: () => const PageMartMenu(),
         binding: BindingMartMenu()),
     GetPage(
-        name: Routes.mart_pay,
+        name: Routes.martPay,
         page: () => const PageMartPay(),
         binding: BindingMartPay()),
     GetPage(
-        name: Routes.history_mart,
+        name: Routes.historyMart,
         page: () => const PageMartHistory(),
         binding: BindingMartHistory()),
+    GetPage(
+        name: Routes.discount,
+        page: () => const PageDiscount(),
+        binding: BindingDiscount()),
+    GetPage(
+        name: Routes.digitalPay,
+        page: () => const PageDigitalPay(),
+        binding: BindingDigitalPay()),
+    GetPage(
+        name: Routes.webview,
+        page: () => const PageWebView(),
+        binding: BindingWebView()),
   ];
 }
