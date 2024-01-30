@@ -256,7 +256,7 @@ export class DriverService {
       },
     })
     const resp = await sendSms(phone, message)
-    if (resp == HttpStatus.OK) {
+    if (resp == HttpStatus.CREATED) {
       return {
         message: 'OK',
         res: verifcationId.id,
