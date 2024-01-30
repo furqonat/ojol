@@ -26,7 +26,7 @@ Widget phoneVerificationView(
       Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Text(
-          "Nomor Telepon",
+          "Nomor Telepon WhatsApp Anda",
           style: GoogleFonts.readexPro(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ Widget phoneVerificationView(
       Padding(
         padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
         child: Text(
-          "Masukan Nomor Telepon Veritifikasi Anda",
+          "Masukan Nomor Telepon WhatsApp Anda",
           style: GoogleFonts.readexPro(
             fontSize: 14.0,
             fontWeight: FontWeight.normal,
