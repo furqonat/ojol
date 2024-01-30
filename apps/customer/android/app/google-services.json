@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "319389880269",
-    "project_id": "lumajanglugo",
-    "storage_bucket": "lumajanglugo.appspot.com"
+    "project_number": "484579186038",
+    "project_id": "lumajanglugo-c6269",
+    "storage_bucket": "lumajanglugo-c6269.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319389880269:android:42bc403a980d08ab1dfe84",
+        "mobilesdk_app_id": "1:484579186038:android:97ee81d298d2330f241657",
         "android_client_info": {
-          "package_name": "com.example.lugo_customer"
+          "package_name": "com.gentatechnology.customer"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU"
+          "current_key": "AIzaSyBsqiBE9DPIRakTYuDQttsxmt8o1P2Gv-Q"
         }
       ],
       "services": {
@@ -26,15 +26,15 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319389880269:android:fea05a9861a26dce1dfe84",
+        "mobilesdk_app_id": "1:484579186038:android:6a1048d41916a34d241657",
         "android_client_info": {
-          "package_name": "com.example.lugo_driver"
+          "package_name": "com.gentatechnology.driver"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU"
+          "current_key": "AIzaSyBsqiBE9DPIRakTYuDQttsxmt8o1P2Gv-Q"
         }
       ],
       "services": {
@@ -45,15 +45,15 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:319389880269:android:4a3b62a73a372f9c1dfe84",
+        "mobilesdk_app_id": "1:484579186038:android:4bee4fbaea04f076241657",
         "android_client_info": {
-          "package_name": "com.example.lugo_marchant"
+          "package_name": "com.gentatechnology.merchant"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCOqC2IiY5GdegpRYJliVBYOOaLm-YjEvU"
+          "current_key": "AIzaSyBsqiBE9DPIRakTYuDQttsxmt8o1P2Gv-Q"
         }
       ],
       "services": {

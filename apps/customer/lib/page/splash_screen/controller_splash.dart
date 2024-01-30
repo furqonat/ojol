@@ -10,7 +10,7 @@ class ControllerSplash extends GetxController {
   @override
   void onInit() {
     Future.delayed(const Duration(seconds: 3)).then((value) {
-      if (storage.isInVerification()) {
+      if (!storage.getIsSignIn()) {
         Get.offNamed(storage.getVerifcationPage());
         return;
       } else {

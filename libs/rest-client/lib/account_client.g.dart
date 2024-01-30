@@ -129,6 +129,79 @@ class _AccountClient implements AccountClient {
   }
 
   @override
+  Future<Response> customerVerifyPhoneNumber({
+    required String bearerToken,
+    required Verification body,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': bearerToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Response>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/json',
+    )
+            .compose(
+              _dio.options,
+              'customer/phone/verification',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Response.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<Response> customerFinishVerifyPhoneNumber({
+    required String bearerToken,
+    required String id,
+    required VerifyPhoneNumber body,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': bearerToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Response>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/json',
+    )
+            .compose(
+              _dio.options,
+              'customer/phone/verification/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Response.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<dynamic> getDriver({
     required String bearerToken,
     Map<String, dynamic>? queries,
@@ -381,6 +454,79 @@ class _AccountClient implements AccountClient {
   }
 
   @override
+  Future<Response> driverVerifyPhoneNumber({
+    required String bearerToken,
+    required Verification body,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': bearerToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Response>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/json',
+    )
+            .compose(
+              _dio.options,
+              'driver/phone/verification',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Response.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<Response> driverFinishVerifyPhoneNumber({
+    required String bearerToken,
+    required String id,
+    required VerifyPhoneNumber body,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': bearerToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Response>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/json',
+    )
+            .compose(
+              _dio.options,
+              'driver/phone/verification/${id}',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Response.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<dynamic> getMerchant({
     required String bearerToken,
     Map<String, dynamic>? queries,
@@ -585,6 +731,79 @@ class _AccountClient implements AccountClient {
             .compose(
               _dio.options,
               'merchant/token',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Response.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<Response> merchantVerifyPhoneNumber({
+    required String bearerToken,
+    required Verification body,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': bearerToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Response>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/json',
+    )
+            .compose(
+              _dio.options,
+              'merchant/phone/verification',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = Response.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<Response> merchantFinishVerifyPhoneNumber({
+    required String bearerToken,
+    required String id,
+    required VerifyPhoneNumber body,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': bearerToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    _data.addAll(body.toJson());
+    final _result =
+        await _dio.fetch<Map<String, dynamic>>(_setStreamType<Response>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/json',
+    )
+            .compose(
+              _dio.options,
+              'merchant/phone/verification/${id}',
               queryParameters: queryParameters,
               data: _data,
             )

@@ -56,28 +56,37 @@ class ControllerAuth extends GetxController
     });
   }
 
-  handleSignUp() {
+  handleSignUp() async {
     loadingSignUp.value = true;
     _fbAuth
         .createUserWithEmailAndPassword(
       email: edtEmailDaftar.text,
       password: edtPasswordDaftar.text,
     )
-        .then((value) {
-      final token = value.user?.getIdToken();
-      authClient.customerSignIn(token: "Bearer $token").then((value) {
-        loadingSignUp.value = false;
-        Get.toNamed(Routes.otp);
-      }).onError((error, stackTrace) {
-        loadingSignUp.value = false;
-        log(error.toString());
-        log(stackTrace.toString());
-        Fluttertoast.showToast(msg: error.toString());
+        .then((value) async {
+      value.user?.getIdToken().then((token) {
+        authClient.customerSignIn(token: "Bearer $token").then((value) {
+          loadingSignUp.value = false;
+          Get.toNamed(Routes.otp);
+        }).onError((error, stackTrace) {
+          loadingSignUp.value = false;
+          log(error.toString());
+          log(stackTrace.toString());
+          Get.snackbar(
+            "Error",
+            error.toString(),
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        });
       });
     }).catchError((error) {
-      log(error.toString());
+      log(error.code.toString());
       loadingSignUp.value = false;
-      Fluttertoast.showToast(msg: "${error?.code?.toString()}");
+      Get.snackbar(
+        "Error",
+        "${error?.code?.toString()}",
+        snackPosition: SnackPosition.BOTTOM,
+      );
     });
   }
 

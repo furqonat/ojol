@@ -46,8 +46,8 @@ export async function sendSms(phoneNumber: string, message: string) {
   const resp = await axios.post(
     'https://console.zenziva.net/reguler/api/sendsms/',
     {
-      userKey: 'd0b112ded62a',
-      passKey: 'e35637077be45d3ebb8c7985',
+      userkey: 'd0b112ded62a',
+      passkey: 'e35637077be45d3ebb8c7985',
       to: phoneNumber,
       message: message,
     },

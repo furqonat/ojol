@@ -64,17 +64,35 @@ class PageOtp extends GetView<ControllerOtp> {
             child: Center(
               child: Button(
                 onPressed: () {
-                  if (controller.formkeyPhone.currentState!.validate()) {
-                    controller.firebasePhoneVerification(context);
+                  final okForm =
+                      controller.formkeyPhone.currentState!.validate();
+                  final isLoading = controller.loadingPhoneVerification.value;
+                  if (okForm && !isLoading) {
+                    controller.handleVerifyPhoneNumber().then((value) {
+                      if (value != null) {
+                        controller.bottomSheetOtp(value);
+                      } else {
+                        Get.snackbar(
+                          "Error",
+                          "Ada kesalahan, silahkan coba lagi",
+                        );
+                      }
+                    });
                   }
                 },
-                child: Text(
-                  "Masuk",
-                  style: GoogleFonts.readexPro(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
+                child: controller.loadingPhoneVerification.value
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text(
+                        "Lanjutkan",
+                        style: GoogleFonts.readexPro(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
               ),
             ),
           )
