@@ -53,38 +53,45 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
       body: PopScope(
           canPop: false,
           onPopInvoked: (bool didPop) {
-            if (didPop) {return;}
+            if (didPop) {
+              return;
+            }
             Get.offNamed(Routes.home);
           },
           child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              Obx(() => GoogleMap(
-                      mapType: MapType.terrain,
-                      zoomGesturesEnabled: true,
-                      zoomControlsEnabled: false,
-                      onTap: (argument) {
-                        controller.rute.clear();
-                        controller.setDestination(argument);
-                        controller.secondStep(false);
-                        controller.firstStep(true);
-                      },
-                      onMapCreated: (it) => controller.mapController.complete(it),
-                      initialCameraPosition: CameraPosition(
-                          zoom: 17,
-                          target: LatLng(
-                              controller.myLocation.value.latitude!,
-                              controller.myLocation.value.longitude!
-                          )),
-                      markers: Set.from(controller.markers),
-                      polylines: {
-                        Polyline(
-                            polylineId: const PolylineId("Rute Perjalanan"),
-                            points: controller.rute.toList(),
-                            color: const Color(0xFF3978EF),
-                            width: 5,
-                            geodesic: false)
-                      })),
+              Obx(
+                () => GoogleMap(
+                  mapType: MapType.terrain,
+                  zoomGesturesEnabled: true,
+                  zoomControlsEnabled: false,
+                  onTap: (argument) {
+                    controller.rute.clear();
+                    controller.setDestination(argument);
+                    controller.secondStep(false);
+                    controller.firstStep(true);
+                  },
+                  onMapCreated: (it) => controller.mapController.complete(it),
+                  initialCameraPosition: CameraPosition(
+                    zoom: 4,
+                    target: LatLng(
+                      controller.myLocation.value.latitude!,
+                      controller.myLocation.value.longitude!,
+                    ),
+                  ),
+                  markers: Set.from(controller.markers),
+                  polylines: {
+                    Polyline(
+                      polylineId: const PolylineId("Rute Perjalanan"),
+                      points: controller.rute.toList(),
+                      color: const Color(0xFF3978EF),
+                      width: 5,
+                      geodesic: false,
+                    )
+                  },
+                ),
+              ),
               DraggableScrollableSheet(
                 maxChildSize: 0.8,
                 minChildSize: 0.15,
@@ -93,7 +100,8 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                   return Container(
                     decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20))),
                     child: SingleChildScrollView(
                       controller: scrollController,
                       child: Obx(() => Column(
@@ -104,40 +112,41 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
                                   child: ElevatedButton(
-                                      onPressed: () async {
-                                        var trans = await LocalService()
-                                            .getTransactionId();
-                                        var service = await LocalService()
-                                            .getRequestType();
+                                    onPressed: () async {
+                                      var trans = await LocalService()
+                                          .getTransactionId();
+                                      var service =
+                                          await LocalService().getRequestType();
 
-                                        log("$trans \n$service");
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          elevation: 5,
-                                          fixedSize: Size(
-                                              Get.width, Get.height * 0.05),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12)),
-                                          backgroundColor: Colors.white),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          const Icon(Icons.location_on_rounded,
-                                              color: Color(0xFF3978EF)),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: Text(
-                                              "Lokasi Saya",
-                                              style: GoogleFonts.readexPro(
-                                                  fontSize: 14,
-                                                  color: Colors.black54),
-                                            ),
-                                          )
-                                        ],
-                                      )),
+                                      log("$trans \n$service");
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        elevation: 5,
+                                        fixedSize:
+                                            Size(Get.width, Get.height * 0.05),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        backgroundColor: Colors.white),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        const Icon(Icons.location_on_rounded,
+                                            color: Color(0xFF3978EF)),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          child: Text(
+                                            "Lokasi Saya",
+                                            style: GoogleFonts.readexPro(
+                                                fontSize: 14,
+                                                color: Colors.black54),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                               Visibility(
@@ -529,37 +538,48 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                       horizontal: 10, vertical: 10),
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        if (controller.requestType.value == 'BIKE' ||
-                                            controller.requestType.value == 'CAR') {
-                                          if(controller.payType.value == "DANA"){
+                                        if (controller.requestType.value ==
+                                                'BIKE' ||
+                                            controller.requestType.value ==
+                                                'CAR') {
+                                          if (controller.payType.value ==
+                                              "DANA") {
                                             showDialog(
                                               context: context,
-                                              builder: (context) => AlertDialog.adaptive(
+                                              builder: (context) =>
+                                                  AlertDialog.adaptive(
                                                 backgroundColor: Colors.white,
                                                 surfaceTintColor: Colors.white,
                                                 shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(12)
-                                                ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
                                                 content: const Image(
-                                                  image: AssetImage('assets/images/coming_soon.jpg'),
+                                                  image: AssetImage(
+                                                      'assets/images/coming_soon.jpg'),
                                                 ),
                                               ),
                                             );
-                                          }else if(controller.payType.value == "Pembayaran"){
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              const SnackBar(content: Text("Anda belum memilih metode pembayaran"))
-                                            );
-                                          }else{
+                                          } else if (controller.payType.value ==
+                                              "Pembayaran") {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text(
+                                                        "Anda belum memilih metode pembayaran")));
+                                          } else {
                                             controller.createBikeCarOrder();
                                           }
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
                                           elevation: 0,
-                                          fixedSize: Size(Get.width, Get.height * 0.06),
+                                          fixedSize: Size(
+                                              Get.width, Get.height * 0.06),
                                           shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(12)),
-                                          backgroundColor:const Color(0xFF3978EF)),
+                                              borderRadius:
+                                                  BorderRadius.circular(12)),
+                                          backgroundColor:
+                                              const Color(0xFF3978EF)),
                                       child: Text(
                                         "Lanjutkan",
                                         style: GoogleFonts.readexPro(
@@ -842,26 +862,33 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                       horizontal: 10, vertical: 10),
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        if (controller.requestType.value == 'DELIVERY') {
-                                          if(controller.payType.value == "DANA"){
+                                        if (controller.requestType.value ==
+                                            'DELIVERY') {
+                                          if (controller.payType.value ==
+                                              "DANA") {
                                             showDialog(
                                               context: context,
-                                              builder: (context) => AlertDialog.adaptive(
+                                              builder: (context) =>
+                                                  AlertDialog.adaptive(
                                                 backgroundColor: Colors.white,
                                                 surfaceTintColor: Colors.white,
                                                 shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(12)
-                                                ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
                                                 content: const Image(
-                                                  image: AssetImage('assets/images/coming_soon.jpg'),
+                                                  image: AssetImage(
+                                                      'assets/images/coming_soon.jpg'),
                                                 ),
                                               ),
                                             );
-                                          }else if(controller.payType.value == "Pembayaran"){
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(content: Text("Anda belum memilih metode pembayaran"))
-                                            );
-                                          }else{
+                                          } else if (controller.payType.value ==
+                                              "Pembayaran") {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text(
+                                                        "Anda belum memilih metode pembayaran")));
+                                          } else {
                                             controller.createDeliveryOrder();
                                           }
                                         }

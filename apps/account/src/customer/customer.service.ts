@@ -62,7 +62,9 @@ export class CustomerService {
         res: customerId,
       }
     } catch (e) {
-      throw new InternalServerErrorException()
+      throw new InternalServerErrorException({
+        message: `Internal Server Error ${e?.toString()}`,
+      })
     }
   }
 
