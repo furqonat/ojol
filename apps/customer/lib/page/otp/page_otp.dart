@@ -59,40 +59,44 @@ class PageOtp extends GetView<ControllerOtp> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Center(
-              child: Button(
-                onPressed: () {
-                  final okForm =
-                      controller.formkeyPhone.currentState!.validate();
-                  final isLoading = controller.loadingPhoneVerification.value;
-                  if (okForm && !isLoading) {
-                    controller.handleVerifyPhoneNumber().then((value) {
-                      if (value != null) {
-                        controller.bottomSheetOtp(value);
-                      } else {
-                        Get.snackbar(
-                          "Error",
-                          "Ada kesalahan, silahkan coba lagi",
-                        );
-                      }
-                    });
-                  }
-                },
-                child: controller.loadingPhoneVerification.value
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
+          Obx(
+            () => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Center(
+                child: Button(
+                  onPressed: () {
+                    final okForm =
+                        controller.formkeyPhone.currentState!.validate();
+                    final isLoading = controller.loadingPhoneVerification.value;
+                    if (okForm && !isLoading) {
+                      controller.handleVerifyPhoneNumber().then((value) {
+                        if (value != null) {
+                          controller.loadingPhoneVerification.value = false;
+                          controller.bottomSheetOtp(value);
+                        } else {
+                          controller.loadingPhoneVerification.value = false;
+                          Get.snackbar(
+                            "Error",
+                            "Ada kesalahan, silahkan coba lagi",
+                          );
+                        }
+                      });
+                    }
+                  },
+                  child: controller.loadingPhoneVerification.value
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          "Lanjutkan",
+                          style: GoogleFonts.readexPro(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
-                      )
-                    : Text(
-                        "Lanjutkan",
-                        style: GoogleFonts.readexPro(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
+                ),
               ),
             ),
           )
