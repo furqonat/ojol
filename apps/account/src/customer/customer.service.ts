@@ -110,6 +110,7 @@ export class CustomerService {
         code: code,
       },
     })
+    console.log(code)
     const resp = await sendSms(phone, message)
     if (resp == HttpStatus.CREATED) {
       return {
