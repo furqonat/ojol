@@ -42,14 +42,15 @@ export function otpGenerator() {
   return Math.floor(100000 + Math.random() * 900000)
 }
 
-export async function sendSms(phoneNumber: string, message: string) {
+export async function sendSms(phoneNumber: string, otp: string) {
   const resp = await axios.post(
-    'https://console.zenziva.net/wareguler/api/sendWA/',
+    'https://console.zenziva.net/waofficial/api/sendWAOfficial/',
     {
       userkey: 'd0b112ded62a',
       passkey: 'e35637077be45d3ebb8c7985',
       to: phoneNumber,
-      message: message,
+      otp: otp,
+      brand: 'Lugo',
     },
   )
   return resp.status

@@ -103,7 +103,6 @@ export class CustomerService {
 
   async obtainVerificationCode(phone: string) {
     const code = otpGenerator()
-    const message = `Y0ur V3R1f1c4t10n C0d3 Is ${code}.`
     const verifcationId = await this.prismaService.verification.create({
       data: {
         phone: phone,
@@ -111,7 +110,7 @@ export class CustomerService {
       },
     })
     console.log(code)
-    const resp = await sendSms(phone, message)
+    const resp = await sendSms(phone, `${code}`)
     if (resp == HttpStatus.CREATED) {
       return {
         message: 'OK',
