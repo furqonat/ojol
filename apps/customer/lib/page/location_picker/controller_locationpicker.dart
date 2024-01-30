@@ -72,32 +72,46 @@ class ControllerLocationPicker extends GetxController {
 
   argumentChecker() => Get.arguments['request_type'];
 
-  Rx<LocationData> myLocation =
-      LocationData.fromMap({"latitude": 0.0, "longitude": 0.0}).obs;
+  Rx<LocationData> myLocation = LocationData.fromMap(
+    {
+      "latitude": -6.340760195639559,
+      "longitude": 106.47253623803584,
+    },
+  ).obs;
 
   Rx<LocationData> destinationLocation =
       LocationData.fromMap({"latitude": 0.0, "longitude": 0.0}).obs;
 
   initialLocation() async {
     GoogleMapController googleMapController = await mapController.future;
-    googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+    googleMapController.animateCamera(
+      CameraUpdate.newCameraPosition(
         CameraPosition(
-            zoom: 17,
-            target: LatLng(
-                myLocation.value.latitude!, myLocation.value.longitude!))));
+          zoom: 17,
+          target: LatLng(
+            myLocation.value.latitude!,
+            myLocation.value.longitude!,
+          ),
+        ),
+      ),
+    );
   }
 
   getLocation() async {
     GoogleMapController googleMapController = await mapController.future;
 
     await location.getLocation().then((location) {
-      myLocation.value = LocationData.fromMap(
-          {"latitude": location.latitude, "longitude": location.longitude});
+      myLocation.value = LocationData.fromMap({
+        "latitude": location.latitude,
+        "longitude": location.longitude,
+      });
 
       geo
           .placemarkFromCoordinates(location.latitude!, location.longitude!)
-          .then((value) => edtPickUp.text =
-              "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}");
+          .then(
+            (value) => edtPickUp.text =
+                "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}",
+          );
 
       googleMapController.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(
