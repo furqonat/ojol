@@ -1,8 +1,12 @@
+import { otpGenerator, sendSms } from '@lugo/common'
 import { Prisma, PrismaService } from '@lugo/prisma'
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common'
 
 @Injectable()
@@ -162,5 +166,63 @@ export class MerchantService {
       message: 'OK',
       res: merchant.id,
     }
+  }
+
+  async obtainVerificationCode(phone: string) {
+    const code = otpGenerator()
+    const message = `Y0ur V3R1f1c4t10n C0d3 Is ${code}.`
+    const verifcationId = await this.prismaService.verification.create({
+      data: {
+        phone: phone,
+        code: code,
+      },
+    })
+    const resp = await sendSms(phone, message)
+    if (resp == HttpStatus.OK) {
+      return {
+        message: 'OK',
+        res: verifcationId.id,
+      }
+    } else {
+      await this.prismaService.verification.delete({
+        where: {
+          id: verifcationId.id,
+        },
+      })
+      throw new InternalServerErrorException({
+        message: 'Internal Server Error',
+        error: resp,
+      })
+    }
+  }
+
+  async phoneVerification(
+    merchantId: string,
+    verifcationId: string,
+    smsCode: number,
+  ) {
+    const verification = await this.prismaService.verification.findUnique({
+      where: {
+        id: verifcationId,
+      },
+    })
+    if (verification.code == smsCode) {
+      await this.prismaService.merchant.update({
+        where: {
+          id: merchantId,
+        },
+        data: {
+          phone_verified: true,
+          phone: verification.phone,
+        },
+      })
+      return {
+        message: 'OK',
+        res: merchantId,
+      }
+    }
+    throw new UnauthorizedException({
+      message: 'Invalid verification code',
+    })
   }
 }

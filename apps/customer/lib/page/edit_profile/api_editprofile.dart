@@ -17,7 +17,7 @@ class ApiEditProfile {
     };
 
     var r = await ApiService()
-        .apiJSONPutWithFirebaseToken('account/customer', body, token);
+        .apiJSONPutWithFirebaseToken('account', 'customer', body, token);
 
     log('input user => $body');
     log('feedback => $r');

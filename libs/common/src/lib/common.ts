@@ -1,3 +1,4 @@
+import axios from 'axios'
 export function str2obj(input?: unknown) {
   if (!input) {
     return undefined
@@ -29,4 +30,27 @@ export function toJson(input?: unknown) {
       (key, value) => (typeof value === 'bigint' ? value.toString() : value), // return everything else unchanged
     ),
   )
+}
+
+export function nameGenerator() {
+  // generate unique name start with lugo
+  return 'lugo' + Math.random().toString(36).substring(2)
+}
+
+export function otpGenerator() {
+  // generate 6 digit otp
+  return Math.floor(100000 + Math.random() * 900000)
+}
+
+export async function sendSms(phoneNumber: string, message: string) {
+  const resp = await axios.post(
+    'https://console.zenziva.net/reguler/api/sendsms/',
+    {
+      userKey: 'd0b112ded62a',
+      passKey: 'e35637077be45d3ebb8c7985',
+      to: phoneNumber,
+      message: message,
+    },
+  )
+  return resp.status
 }

@@ -194,7 +194,7 @@ class PageMenu extends GetView<ControllerMenu> {
                     ),
                   ),
                   InkWell(
-                    onTap: () => Get.toNamed(Routes.food_pay),
+                    onTap: () => Get.toNamed(Routes.foodPay),
                     child: Text(
                       "Order",
                       style: GoogleFonts.readexPro(

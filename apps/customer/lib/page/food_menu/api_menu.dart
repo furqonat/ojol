@@ -1,33 +1,33 @@
 import 'package:lugo_customer/api/api_service.dart';
 
 class ApiFoodMenu {
-  Future<dynamic> getProducts({required String token}) async {
+  Future<dynamic> getProducts(
+      {required String token, required String merchantId}) async {
     var r = await ApiService().apiJSONGetWitFirebaseToken(
-        'product/?id=true&name=true&description=true&price=true&image=true&_count={select: {customer_product_review: true}}&favorites={select: {customer_id: true}}',
+        'product',
+        '?id=true&name=true&description=true&price=true&merchant_id=$merchantId&image=true&_count={select: {customer_product_review: true}}&favorites={select: {customer_id: true}}',
         token);
     return r;
   }
 
   Future<dynamic> postLikeProduct(
-      {required String id_product, required String token}) async {
-    var r = await ApiService().apiJSONGetWitFirebaseToken(
-        'product/product/favorite/$id_product', token);
+      {required String productId, required String token}) async {
+    var r = await ApiService()
+        .apiJSONGetWitFirebaseToken('product', 'favorite/$productId', token);
     return r;
   }
 
   Future<dynamic> cart(
-      {required String id_product,
+      {required String productId,
       required int quantity,
       required String token}) async {
-    final body = {'productId': id_product, 'quantity': quantity};
+    final body = {'productId': productId, 'quantity': quantity};
 
-    var r =
-        await ApiService().apiJSONPostWithFirebaseToken('cart', body, token);
+    var r = await ApiService()
+        .apiJSONPostWithFirebaseToken('cart', "cart", body, token);
     return r;
   }
 
-  Future<dynamic> getCart({required String token}) async {
-    var r = await ApiService().apiJSONGetWitFirebaseToken('cart', token);
-    return r;
-  }
+  Future<dynamic> getBanner({required String token}) async => await ApiService()
+      .apiJSONGetWitFirebaseToken('gate', 'lugo/banner', token);
 }

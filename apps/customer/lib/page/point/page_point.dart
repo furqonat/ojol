@@ -69,7 +69,7 @@ class PagePoint extends GetView<ControllerPoint> {
             itemCount: 10,
             padding: const EdgeInsets.all(10),
             itemBuilder: (context, index) => GestureDetector(
-              onTap: () => Get.toNamed(Routes.detail_point),
+              onTap: () => Get.toNamed(Routes.detailPoint),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: Stack(

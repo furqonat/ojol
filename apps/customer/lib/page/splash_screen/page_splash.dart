@@ -9,7 +9,11 @@ class PageSplash extends GetView<ControllerSplash> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Splash Screen"),
+        child: Image(
+            width: 300.0,
+            height: 200.0,
+            fit: BoxFit.contain,
+            image: AssetImage('assets/images/2023-07-23.jpg')),
       ),
     );
   }
