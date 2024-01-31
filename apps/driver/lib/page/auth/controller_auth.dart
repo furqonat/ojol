@@ -58,7 +58,7 @@ class ControllerAuth extends GetxController
         preferences.setPatnerType(partnerType.value);
         Get.toNamed(Routes.phoneVerification);
       } else {
-        Fluttertoast.showToast(msg: resp.message);
+        Get.snackbar('Error', resp.message);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
