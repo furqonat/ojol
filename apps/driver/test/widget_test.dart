@@ -7,24 +7,29 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get/get.dart';
+import 'package:lugo_driver/page/auth/controller_auth.dart';
+import 'package:lugo_driver/page/auth/page_auth.dart';
+import 'package:mockito/mockito.dart';
 
-import 'package:lugo_driver/main.dart';
+class AuthControllerMock extends GetxController
+    with Mock
+    implements ControllerAuth {}
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const AppEntry());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+  testWidgets('SignIn Test return null', (WidgetTester tester) async {
+    final authController = Get.put<ControllerAuth>(AuthControllerMock());
+    authController.tabController = TabController(length: 2, vsync: tester);
+    await tester.pumpWidget(const GetMaterialApp(
+      home: PageAuth(),
+    ));
+    // enter text to email form field
+    await tester.enterText(find.byKey(const Key("emailSignIn")), "email");
+    // enter text to password form field
+    await tester.enterText(find.byKey(const Key("passwordSignIn")), "password");
+    // tap on button
+    await tester.tap(find.byKey(const Key("signInButton")));
     await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(authController.handlSignIn(), null);
   });
 }
