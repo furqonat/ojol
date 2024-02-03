@@ -24,7 +24,7 @@
     </queries>
 
     <application
-        android:label="lugo_customer"
+        android:label="Lugo"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -35,6 +35,7 @@ func (s OrderRoutes) Setup() {
 		orderApi.GET("/merchant", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.orderController.MerchantGetOrders)
 		orderApi.GET("/merchant/sell", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.orderController.MerchantGetOrderInThisDay)
 		orderApi.GET("/merchant/order", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.orderController.MerchantGetOrderSellThisDay)
+		orderApi.GET("/merchant/period", s.authMiddleware.HandleAuthWithRoles(utils.MERCHANT), s.orderController.MerchantGetOrderInPeriod)
 		orderApi.GET("/customer", s.authMiddleware.HandleAuthWithRoles(utils.USER), s.orderController.CustomerGetOrders)
 
 		orderApi.PUT("/:id", s.authMiddleware.HandleAuthWithRoles(utils.USER, utils.MERCHANT), s.orderController.CancelOrder)

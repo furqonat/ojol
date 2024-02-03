@@ -1,11 +1,14 @@
 import {
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { Prisma, PrismaService } from '@lugo/prisma'
 import { FirebaseService } from '@lugo/firebase'
 import { CustomerBasicUpdate } from '../dto/customer.dto'
+import { otpGenerator, sendSms } from '@lugo/common'
 
 @Injectable()
 export class CustomerService {
@@ -59,7 +62,9 @@ export class CustomerService {
         res: customerId,
       }
     } catch (e) {
-      throw new InternalServerErrorException()
+      throw new InternalServerErrorException({
+        message: `Internal Server Error ${e?.toString()}`,
+      })
     }
   }
 
@@ -96,5 +101,63 @@ export class CustomerService {
       message: 'OK',
       res: deviceToken.id,
     }
+  }
+
+  async obtainVerificationCode(phone: string) {
+    const code = otpGenerator()
+    const verifcationId = await this.prismaService.verification.create({
+      data: {
+        phone: phone,
+        code: code,
+      },
+    })
+    console.log(code)
+    const resp = await sendSms(phone, `${code}`)
+    if (resp == HttpStatus.CREATED) {
+      return {
+        message: 'OK',
+        res: verifcationId.id,
+      }
+    } else {
+      await this.prismaService.verification.delete({
+        where: {
+          id: verifcationId.id,
+        },
+      })
+      throw new InternalServerErrorException({
+        message: 'Internal Server Error',
+        error: resp,
+      })
+    }
+  }
+
+  async phoneVerification(
+    customerId: string,
+    verifcationId: string,
+    smsCode: number,
+  ) {
+    const verification = await this.prismaService.verification.findUnique({
+      where: {
+        id: verifcationId,
+      },
+    })
+    if (verification.code == smsCode) {
+      await this.prismaService.customer.update({
+        where: {
+          id: customerId,
+        },
+        data: {
+          phone_verified: true,
+          phone: verification.phone,
+        },
+      })
+      return {
+        message: 'OK',
+        res: customerId,
+      }
+    }
+    throw new UnauthorizedException({
+      message: 'Invalid verification code',
+    })
   }
 }

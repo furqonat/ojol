@@ -174,7 +174,9 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                       child: Text(
                         "Selesai",
                         style: GoogleFonts.readexPro(
-                            fontSize: 16, color: Colors.white),
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
                       ))
                 ],
               ),

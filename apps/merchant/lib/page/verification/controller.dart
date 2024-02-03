@@ -64,6 +64,9 @@ class VerificationController extends GetxController {
   final activeStep = 0.obs;
   final verificationStatus =
       PhoneVerificationStatus(status: false, message: "").obs;
+  final loadingVerification = false.obs;
+  final loadingPhoneVerification = false.obs;
+  final isSuccesVerification = false.obs;
 
   final _fbAuth = FirebaseAuth.instance;
   final verificationId = "".obs;
@@ -167,6 +170,17 @@ class VerificationController extends GetxController {
   }
 
   void handleSaveDetail() async {
+    loadingVerification.value = true;
+    if (fullName.text.isEmpty || address.text.isEmpty) {
+      Fluttertoast.showToast(msg: "Please fill all field");
+      loadingVerification.value = false;
+      return;
+    }
+    if (shopImages1.value.isEmpty || shopImages2.value.isEmpty) {
+      Fluttertoast.showToast(msg: "Please fill all field");
+      loadingVerification.value = false;
+      return;
+    }
     final body = {
       "name": fullName.value.text,
       "phone": _fbAuth.currentUser?.phoneNumber,
@@ -191,10 +205,12 @@ class VerificationController extends GetxController {
     final token = await _fbAuth.currentUser?.getIdToken(true);
     final result = await apiService.applyMerchant(body: body, token: token);
     if (result.message == 'OK') {
+      loadingVerification.value = false;
       LocalService().setIsLogin(isLogin: true);
       LocalService().setInVerification(false);
       Get.offAllNamed(Routes.bottomNav);
     } else {
+      loadingVerification.value = false;
       Fluttertoast.showToast(msg: "unable apply merchant");
     }
   }
@@ -202,102 +218,66 @@ class VerificationController extends GetxController {
   Future<void> handleVerificationPhone(
     Function(String verificationId) callback,
   ) async {
+    loadingPhoneVerification.value = true;
     const regionInfo = RegionInfo(name: "Indonesia", code: "ID", prefix: 62);
     final phone = await PhoneNumberUtil().parse(
       phoneNumber.text,
       regionCode: regionInfo.code,
     );
-    _fbAuth.verifyPhoneNumber(
-      phoneNumber: phone.e164,
-      verificationCompleted: (phoneAuthCredential) {
-        if (verificationState == VerificationState.full.toString()) {
-          _fbAuth.currentUser
-              ?.linkWithCredential(phoneAuthCredential)
-              .then((value) {
-            verificationStatus.value = PhoneVerificationStatus(
-              status: true,
-              message: "OK",
-            );
-            activeStep.value = 1;
-          }).catchError((error) {
-            verificationStatus.value = PhoneVerificationStatus(
-              status: false,
-              message: error.code,
-            );
-          });
-        } else {
-          _fbAuth.currentUser
-              ?.reauthenticateWithCredential(phoneAuthCredential)
-              .then((value) {
-            verificationStatus.value = PhoneVerificationStatus(
-              status: true,
-              message: "OK",
-            );
-            LocalService().setIsLogin(isLogin: true);
-            LocalService().setInVerification(false);
-            LocalService().setInVerificationStep(VerificationState.phoneOnly);
-            Get.offAllNamed(Routes.bottomNav);
-          }).catchError((error) {
-            verificationStatus.value = PhoneVerificationStatus(
-              status: false,
-              message: error.code,
-            );
-          });
-        }
-      },
-      verificationFailed: (error) {
-        verificationStatus.value = PhoneVerificationStatus(
-          status: false,
-          message: error.code,
-        );
-      },
-      codeSent: (verificationId, forceResendingToken) {
-        callback(verificationId);
-      },
-      codeAutoRetrievalTimeout: (verificationId) {},
-      timeout: const Duration(seconds: 60),
-    );
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final resp =
+        await apiService.verifyPhone(phoneNumber: phone.e164, token: token!);
+    if (resp.message == 'OK') {
+      verificationStatus.value = PhoneVerificationStatus(
+        status: true,
+        message: resp.message,
+      );
+      verificationId.value = resp.res;
+      callback(resp.res);
+      loadingPhoneVerification.value = false;
+      return;
+    } else {
+      loadingPhoneVerification.value = false;
+      verificationStatus.value = PhoneVerificationStatus(
+        status: false,
+        message: resp.message,
+      );
+      Get.snackbar("Error", resp.message);
+      return;
+    }
   }
 
   Future handleContinueVerification(
     String smsCode,
     String verificationId,
   ) async {
-    final credential = PhoneAuthProvider.credential(
+    final token = await _fbAuth.currentUser?.getIdToken();
+    final resp = await apiService.verifyOTP(
+      token: token!,
+      otp: smsCode,
       verificationId: verificationId,
-      smsCode: smsCode,
     );
-    if (verificationState == VerificationState.full.toString()) {
-      _fbAuth.currentUser?.linkWithCredential(credential).then((value) {
+    if (resp.message == 'OK') {
+      if (verificationState == VerificationState.full.toString()) {
         verificationStatus.value = PhoneVerificationStatus(
           status: true,
           message: "OK",
         );
         activeStep.value = 1;
-      }).catchError((error) {
-        verificationStatus.value = PhoneVerificationStatus(
-          status: false,
-          message: error.code,
-        );
-      });
-    } else {
-      _fbAuth.currentUser
-          ?.reauthenticateWithCredential(credential)
-          .then((value) {
-        verificationStatus.value = PhoneVerificationStatus(
-          status: true,
-          message: "OK",
-        );
+      } else {
         LocalService().setIsLogin(isLogin: true);
         LocalService().setInVerification(false);
         LocalService().setInVerificationStep(VerificationState.phoneOnly);
         Get.offAllNamed(Routes.bottomNav);
-      }).catchError((error) {
-        verificationStatus.value = PhoneVerificationStatus(
-          status: false,
-          message: error.code,
-        );
-      });
+      }
+      return;
+    } else {
+      verificationStatus.value = PhoneVerificationStatus(
+        status: false,
+        message: resp.message,
+      );
+      Get.snackbar("Error", resp.message);
+      return;
     }
   }
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_customer/response/banner.dart';
 import 'package:lugo_customer/shared/utils.dart';
 import '../../response/product.dart';
 import 'api_menu.dart';
@@ -18,6 +19,9 @@ class ControllerFoodMenu extends GetxController {
   var loading = Status.idle.obs;
   final firebase = FirebaseAuth.instance;
 
+  var merchantId = ''.obs;
+  var merchantAddress = ''.obs;
+
   RxList<Product> product = <Product>[].obs;
   List<Map<String, dynamic>> favoriteStatus = <Map<String, dynamic>>[];
   List<Map<String, dynamic>> listQuantity = <Map<String, dynamic>>[];
@@ -29,12 +33,17 @@ class ControllerFoodMenu extends GetxController {
     'assets/images/2023-05-12_(2).jpg'
   ];
 
+  RxList<Banners> banner = <Banners>[].obs;
+
+  var bannerLoader = false.obs;
+
   getProductsMethod() async {
     try {
       loading(Status.loading);
       product.clear();
       var token = await firebase.currentUser?.getIdToken();
-      var r = await api.getProducts(token: token!);
+      var r =
+          await api.getProducts(token: token!, merchantId: merchantId.value);
       if (r["data"] != null) {
         var list = r["data"];
         product(RxList<Product>.from(list.map((e) => Product.fromJson(e))));
@@ -64,7 +73,7 @@ class ControllerFoodMenu extends GetxController {
   postLikeProductMethod(String idProduct, int index) async {
     try {
       var token = await firebase.currentUser?.getIdToken();
-      var r = await api.postLikeProduct(id_product: idProduct, token: token!);
+      var r = await api.postLikeProduct(productId: idProduct, token: token!);
       if (r["message"] == "OK") {
         if (favoriteStatus[index]['status'].value == true) {
           favoriteStatus[index]['status'].value = false;
@@ -85,7 +94,7 @@ class ControllerFoodMenu extends GetxController {
       var firebaseToken = await firebase.currentUser?.getIdToken();
       if (idProduct.isNotEmpty && quantity != 0) {
         var r = await api.cart(
-            id_product: idProduct, quantity: quantity, token: firebaseToken!);
+            productId: idProduct, quantity: quantity, token: firebaseToken!);
         if (r['message'] == "OK") {
           total.value = total.value + (price * quantity);
         } else {
@@ -129,7 +138,7 @@ class ControllerFoodMenu extends GetxController {
                   errorWidget: (context, url, error) => Image(
                       width: Get.width,
                       height: Get.height * 0.3,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fitWidth,
                       image: const AssetImage('assets/images/sample_food.png')),
                 ),
               ),
@@ -189,9 +198,33 @@ class ControllerFoodMenu extends GetxController {
     );
   }
 
+  getBanner() async {
+    try {
+      bannerLoader(true);
+      var token = await firebase.currentUser?.getIdToken();
+      var r = await api.getBanner(token: token!);
+      if (r != null) {
+        var list = r;
+        banner(
+            RxList<Banners>.from(list?.map((e) => Banners.fromJson(e)) ?? []));
+        bannerLoader(false);
+      } else {
+        Fluttertoast.showToast(msg: "Ada yang salah");
+        bannerLoader(false);
+      }
+    } catch (e, stackTrace) {
+      log('$e');
+      log('$stackTrace');
+      bannerLoader(false);
+    }
+  }
+
   @override
-  void onInit() {
+  void onInit() async {
+    merchantId.value = Get.arguments["merchantId"];
+    merchantAddress.value = Get.arguments["merchantAddress"];
     getProductsMethod();
+    getBanner();
     super.onInit();
   }
 }

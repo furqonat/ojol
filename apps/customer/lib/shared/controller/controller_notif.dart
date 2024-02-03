@@ -1,39 +1,46 @@
 import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
-import '../../route/route_name.dart';
+import 'package:lugo_customer/api/local_service.dart';
 import '../local_notif.dart';
 
 class ControllerNotification extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    subscribeFmcTopic();
     initNotificationHandler();
+  }
+
+  subscribeFmcTopic() async {
+    log("did i run");
+    await FirebaseMessaging.instance.subscribeToTopic("MERCHANT");
   }
 
   initNotificationHandler() async {
     await FirebaseMessaging.instance.requestPermission();
 
     var token = await FirebaseMessaging.instance.getToken();
-    log('token = $token');
+    if (token != null) {
+      await LocalService().setTokenDevice(tokenDevice: token);
+    }
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((event) async {
+      await LocalService().setTokenDevice(tokenDevice: event);
+    });
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       log("instance");
     });
 
-    // only work in foreground
     FirebaseMessaging.onMessage.listen((message) {
       log("onMessage");
       LocalNotificationService.displayNotification(message);
     });
 
-    // when the app is in backgroudn but opened
-    // User tap notification in tray
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       log("onMessageOpenedApp");
-      try {
-        Get.toNamed(Routes.home);
-      } catch (e) {
+      try {} catch (e) {
         log("error $e");
       }
     });

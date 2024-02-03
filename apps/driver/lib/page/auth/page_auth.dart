@@ -67,7 +67,7 @@ class PageAuth extends GetView<ControllerAuth> {
           SliverToBoxAdapter(
             child: SizedBox(
               width: Get.width,
-              height: Get.height * 0.58,
+              height: Get.height * 0.8,
               child: Obx(
                 () => TabBarView(
                   controller: controller.tabController,
@@ -79,6 +79,7 @@ class PageAuth extends GetView<ControllerAuth> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                             child: TextFormField(
+                              key: const Key("emailSignIn"),
                               autofocus: false,
                               controller: controller.emailSignIn,
                               keyboardType: TextInputType.emailAddress,
@@ -117,6 +118,7 @@ class PageAuth extends GetView<ControllerAuth> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
                             child: TextFormField(
+                              key: const Key('passwordSignIn'),
                               autofocus: false,
                               controller: controller.passwordSignIn,
                               obscureText: controller.showPass.value,
@@ -168,6 +170,7 @@ class PageAuth extends GetView<ControllerAuth> {
                               vertical: 20,
                             ),
                             child: LugoButton(
+                              key: const Key("buttonSignIn"),
                               textButton: 'Masuk',
                               textColor: Colors.white,
                               textSize: 12,

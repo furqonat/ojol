@@ -12,10 +12,6 @@ class LocalNotificationService {
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings("@mipmap/ic_launcher");
 
-    // =======================
-    // TODO ADD IOS CONFIG HERE
-    // =======================
-
     const InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
     await _notificationPlugin.initialize(

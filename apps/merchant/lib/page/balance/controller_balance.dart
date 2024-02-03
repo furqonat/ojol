@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,6 +23,7 @@ class ControllerBalance extends GetxController {
     "Minggu Ini",
     "Hari Ini",
   ].obs;
+  final isRequestWd = false.obs;
 
   handleGetTrx([trxIn = "month"]) async {
     final token = await _fbAuth.currentUser?.getIdToken();
@@ -50,14 +53,19 @@ class ControllerBalance extends GetxController {
     return '';
   }
 
-  handleWithdraw(Function callback) async {
-    final token = await _fbAuth.currentUser?.getIdToken();
-    final resp = await apiBalance.withdraw(
-      token: token!,
-      amount: int.parse(amountWd.text),
-    );
-    if (resp['message'] == 'OK') {
-      callback();
+  handleWithdraw() async {
+    isRequestWd.value = true;
+    try {
+      final token = await _fbAuth.currentUser?.getIdToken();
+      await apiBalance.withdraw(
+        token: token!,
+        amount: int.parse(amountWd.text),
+      );
+      Get.back();
+      isRequestWd.value = false;
+    } catch (e) {
+      log("error $e");
+      isRequestWd.value = false;
     }
   }
 

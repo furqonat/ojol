@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/otp/controller_otp.dart';
+import 'package:lugo_customer/shared/widget/button.dart';
+import 'package:lugo_customer/shared/widget/input.dart';
 import 'package:validatorless/validatorless.dart';
 
 class PageOtp extends GetView<ControllerOtp> {
@@ -16,16 +18,17 @@ class PageOtp extends GetView<ControllerOtp> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         leading: InkWell(
-            onTap: () => Get.back(),
-            child: Card(
-              elevation: 0,
-              color: const Color(0xFF3978EF),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100)),
-              child: const Center(
-                child: Icon(Icons.chevron_left, size: 24, color: Colors.white),
-              ),
-            )),
+          onTap: () => Get.back(),
+          child: Card(
+            elevation: 0,
+            color: const Color(0xFF3978EF),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100)),
+            child: const Center(
+              child: Icon(Icons.chevron_left, size: 24, color: Colors.white),
+            ),
+          ),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,62 +48,56 @@ class PageOtp extends GetView<ControllerOtp> {
             key: controller.formkeyPhone,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-              child: TextFormField(
-                autofocus: false,
+              child: Input(
                 controller: controller.edtPhone,
                 keyboardType: TextInputType.phone,
-                decoration: InputDecoration(
-                    labelText: 'Nomor Telepon',
-                    labelStyle: GoogleFonts.readexPro(
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                      color: const Color(0xFF95A1AC),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40),
-                        borderSide: const BorderSide(
-                            width: 1, color: Color(0xFF4B39EF))),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40),
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.grey)),
-                    focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40),
-                        borderSide: const BorderSide(
-                            width: 1, color: Color(0xFF1D2428))),
-                    errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(40),
-                        borderSide:
-                            const BorderSide(width: 1, color: Colors.red)),
-                    contentPadding: const EdgeInsets.all(24)),
+                hintText: 'Nomor Telepon',
                 validator: Validatorless.multiple([
                   Validatorless.required('Ponsel tidak boleh kosong'),
-                  Validatorless.regex(RegExp(r'^[1-9][0-9]{8,}$'),
-                      'Ponsel tidak sesuai, cukup gunakan 813xxxxxxxx'),
+                  Validatorless.min(10, 'Ponsel tidak boleh kurang dari 10'),
                 ]),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Center(
-              child: ElevatedButton(
+          Obx(
+            () => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Center(
+                child: Button(
                   onPressed: () {
-                    if (controller.formkeyPhone.currentState!.validate()) {
-                      controller.firebasePhoneVerification(context);
+                    final okForm =
+                        controller.formkeyPhone.currentState!.validate();
+                    final isLoading = controller.loadingPhoneVerification.value;
+                    if (okForm && !isLoading) {
+                      controller.handleVerifyPhoneNumber().then((value) {
+                        if (value != null) {
+                          controller.loadingPhoneVerification.value = false;
+                          controller.bottomSheetOtp(value);
+                        } else {
+                          controller.loadingPhoneVerification.value = false;
+                          Get.snackbar(
+                            "Error",
+                            "Ada kesalahan, silahkan coba lagi",
+                          );
+                        }
+                      });
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                      elevation: 5,
-                      fixedSize: Size(Get.width * 0.5, Get.height * 0.07),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(40)),
-                      backgroundColor: const Color(0xFF3978EF)),
-                  child: Text(
-                    "Masuk",
-                    style: GoogleFonts.readexPro(
-                        fontSize: 16, color: Colors.white),
-                  )),
+                  child: controller.loadingPhoneVerification.value
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          "Lanjutkan",
+                          style: GoogleFonts.readexPro(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
             ),
           )
         ],

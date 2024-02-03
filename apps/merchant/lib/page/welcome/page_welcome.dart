@@ -27,7 +27,7 @@ class PageWelcome extends GetView<ControllerWelcome> {
       body: SingleChildScrollView(
         child: SizedBox(
           width: Get.width,
-          height: Get.height * 0.87,
+          height: Get.height * 0.7,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,

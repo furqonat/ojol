@@ -26,7 +26,7 @@ Widget phoneVerificationView(
       Padding(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
         child: Text(
-          "Nomor Telepon",
+          "Nomor Telepon WhatsApp Anda",
           style: GoogleFonts.readexPro(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -37,7 +37,7 @@ Widget phoneVerificationView(
       Padding(
         padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
         child: Text(
-          "Masukan Nomor Telepon Veritifikasi Anda",
+          "Masukan Nomor Telepon WhatsApp Anda",
           style: GoogleFonts.readexPro(
             fontSize: 14.0,
             fontWeight: FontWeight.normal,
@@ -105,7 +105,9 @@ Widget phoneVerificationView(
               controller.handleVerificationPhone((verification) {
                 controller.verificationId.value = verification;
               }).then((value) {
-                bottomSheet(context, controller);
+                if (!controller.loadingPhoneVerification.value) {
+                  bottomSheet(context, controller);
+                }
               });
             }
           },
@@ -117,10 +119,17 @@ Widget phoneVerificationView(
             ),
             backgroundColor: const Color(0xFF3978EF),
           ),
-          child: Text(
-            "Masuk",
-            style: GoogleFonts.readexPro(fontSize: 16, color: Colors.white),
-          ),
+          child: controller.loadingPhoneVerification.value
+              ? const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                )
+              : Text(
+                  "Masuk",
+                  style:
+                      GoogleFonts.readexPro(fontSize: 16, color: Colors.white),
+                ),
         ),
       )
     ],

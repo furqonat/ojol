@@ -26,4 +26,17 @@ class ApiRunningOrder {
     );
     return resp;
   }
+
+  Future findDriver({
+    required String token,
+    required String orderId,
+    required Map<String, dynamic> body,
+  }) async {
+    final resp = await orderClient.orderFindDriver(
+      bearerToken: "Bearer $token",
+      orderId: orderId,
+      body: body,
+    );
+    return resp;
+  }
 }

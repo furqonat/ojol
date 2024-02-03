@@ -29,7 +29,7 @@ func (order OrderService) MerchantAcceptOrder(orderId string) error {
 }
 
 func (order OrderService) MerchantRejectOrder(orderId string) error {
-	_, errGetOrder := order.database.Order.FindUnique(
+	orderDb, errGetOrder := order.database.Order.FindUnique(
 		db.Order.ID.Equals(orderId),
 	).Update(
 		db.Order.OrderStatus.Set(db.OrderStatusCanceled),
@@ -37,10 +37,15 @@ func (order OrderService) MerchantRejectOrder(orderId string) error {
 	if errGetOrder != nil {
 		return nil
 	}
-
-	_, err := order.CancelOrder(orderId, "Merchant rejected or not responding")
-	if err != nil {
-		return err
+	if orderDb.PaymentType == db.PaymentTypeDana {
+		_, err := order.CancelOrder(orderId, "Merchant rejected or not responding")
+		if err != nil {
+			return err
+		}
+		errFrs := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusCanceled))
+		if errFrs != nil {
+			return errFrs
+		}
 	}
 	errFrs := order.updateTrxStatusOnFirestore(orderId, string(db.OrderStatusCanceled))
 	if errFrs != nil {
@@ -86,12 +91,12 @@ func (order OrderService) GetOrderMerchants(merchantId string, take, skip int) (
 }
 
 func (order OrderService) MerchantGetSellStatusInDay(merchantId string) (*TotalOrder, error) {
-	totalCanceled, errorCancel := order.getSellStatusInDay(merchantId, db.OrderStatusCanceled)
+	totalCanceled, errorCancel := order.getSellStatusInDay(merchantId, []db.OrderStatus{db.OrderStatusCanceled})
 	if errorCancel != nil {
 		return nil, errorCancel
 	}
 
-	totalDone, errorDone := order.getSellStatusInDay(merchantId, db.OrderStatusDone)
+	totalDone, errorDone := order.getSellStatusInDay(merchantId, []db.OrderStatus{db.OrderStatusDone})
 	if errorDone != nil {
 		return nil, errorCancel
 	}
@@ -109,12 +114,12 @@ func (order OrderService) MerchantGetSellStatusInDay(merchantId string) (*TotalO
 }
 
 func (order OrderService) MerchantGetSellInDay(merchantId string) ([]db.OrderModel, []db.OrderModel, []db.OrderModel, error) {
-	canceled, errorCancel := order.getSellStatusInDay(merchantId, db.OrderStatusWaitingMerchant)
+	canceled, errorCancel := order.getSellStatusInDay(merchantId, []db.OrderStatus{db.OrderStatusWaitingMerchant, db.OrderStatusCreated})
 	if errorCancel != nil {
 		return nil, nil, nil, errorCancel
 	}
 
-	done, errorDone := order.getSellStatusInDay(merchantId, db.OrderStatusDone)
+	done, errorDone := order.getSellStatusInDay(merchantId, []db.OrderStatus{db.OrderStatusDone})
 	if errorDone != nil {
 		return nil, nil, nil, errorCancel
 	}
@@ -155,7 +160,102 @@ func (order OrderService) MerchantGetSellInDay(merchantId string) ([]db.OrderMod
 
 }
 
-func (order OrderService) getSellStatusInDay(merchantId string, status db.OrderStatus) ([]db.OrderModel, error) {
+func (order OrderService) MerchantGetOrders(merchantId string, dayTime string) ([]db.OrderModel, error) {
+	if dayTime == "day" {
+		return order.merchantGetOrderInDay(merchantId)
+	} else if dayTime == "week" {
+		return order.merchantGetOrderInWeek(merchantId)
+	} else if dayTime == "month" {
+		return order.merchantGetOrderInMonth(merchantId)
+	}
+	return nil, nil
+}
+
+func (order OrderService) merchantGetOrderInDay(merchantId string) ([]db.OrderModel, error) {
+	orderDb, errorOrderDb := order.database.Order.FindMany(
+		db.Order.OrderItems.Some(
+			db.OrderItem.Product.Where(
+				db.Product.MerchantID.Equals(merchantId),
+			),
+		),
+		db.Order.CreatedAt.Lte(order.getNextDay()),
+		db.Order.CreatedAt.Gte(order.getPreviousDay()),
+	).With(
+		db.Order.OrderItems.Fetch().With(
+			db.OrderItem.Product.Fetch(),
+		),
+		db.Order.Customer.Fetch(),
+		db.Order.Driver.Fetch().With(
+			db.Driver.DriverDetails.Fetch().With(
+				db.DriverDetails.Vehicle.Fetch(),
+			),
+		),
+		db.Order.OrderDetail.Fetch(),
+	).Exec(context.Background())
+	if errorOrderDb != nil {
+		return nil, errorOrderDb
+	}
+
+	return orderDb, nil
+}
+
+func (order OrderService) merchantGetOrderInWeek(merchantId string) ([]db.OrderModel, error) {
+	orderDb, errorOrderDb := order.database.Order.FindMany(
+		db.Order.OrderItems.Some(
+			db.OrderItem.Product.Where(
+				db.Product.MerchantID.Equals(merchantId),
+			),
+		),
+		db.Order.CreatedAt.Lte(order.getNextWeek()),
+		db.Order.CreatedAt.Gte(order.getPreviousWeek()),
+	).With(
+		db.Order.OrderItems.Fetch().With(
+			db.OrderItem.Product.Fetch(),
+		),
+		db.Order.Customer.Fetch(),
+		db.Order.Driver.Fetch().With(
+			db.Driver.DriverDetails.Fetch().With(
+				db.DriverDetails.Vehicle.Fetch(),
+			),
+		),
+		db.Order.OrderDetail.Fetch(),
+	).Exec(context.Background())
+	if errorOrderDb != nil {
+		return nil, errorOrderDb
+	}
+
+	return orderDb, nil
+}
+
+func (order OrderService) merchantGetOrderInMonth(merchantId string) ([]db.OrderModel, error) {
+	orderDb, errorOrderDb := order.database.Order.FindMany(
+		db.Order.OrderItems.Some(
+			db.OrderItem.Product.Where(
+				db.Product.MerchantID.Equals(merchantId),
+			),
+		),
+		db.Order.CreatedAt.Lte(order.getNextMonth()),
+		db.Order.CreatedAt.Gte(order.getPreviousMonth()),
+	).With(
+		db.Order.OrderItems.Fetch().With(
+			db.OrderItem.Product.Fetch(),
+		),
+		db.Order.Customer.Fetch(),
+		db.Order.Driver.Fetch().With(
+			db.Driver.DriverDetails.Fetch().With(
+				db.DriverDetails.Vehicle.Fetch(),
+			),
+		),
+		db.Order.OrderDetail.Fetch(),
+	).Exec(context.Background())
+	if errorOrderDb != nil {
+		return nil, errorOrderDb
+	}
+
+	return orderDb, nil
+}
+
+func (order OrderService) getSellStatusInDay(merchantId string, status []db.OrderStatus) ([]db.OrderModel, error) {
 	currentTime := time.Now()
 	oneDayAgo := currentTime.Add(-24 * time.Hour)
 	nextDay := currentTime.Add(24 * time.Hour)
@@ -167,7 +267,7 @@ func (order OrderService) getSellStatusInDay(merchantId string, status db.OrderS
 				db.Product.MerchantID.Equals(merchantId),
 			),
 		),
-		db.Order.OrderStatus.Equals(status),
+		db.Order.OrderStatus.In(status),
 	).With(
 		db.Order.OrderItems.Fetch().With(
 			db.OrderItem.Product.Fetch(),

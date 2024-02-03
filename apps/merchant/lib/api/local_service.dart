@@ -75,7 +75,13 @@ class LocalService {
   Future cleanUp() async {
     await local.remove(cacheUser);
     await local.remove(cacheToken);
-    await local.remove(loginState);
     await local.remove(signUpStatus);
+  }
+
+  Future cleanUpLogout() async {
+    final prefs = await preferences;
+    await prefs.remove(loginState);
+    await prefs.remove(inVerification);
+    await prefs.remove(verificationStep);
   }
 }

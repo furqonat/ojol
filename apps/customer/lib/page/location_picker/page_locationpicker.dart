@@ -1,10 +1,13 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lugo_customer/api/local_service.dart';
 import 'package:lugo_customer/page/location_picker/controller_locationpicker.dart';
 import 'package:lugo_customer/route/route_name.dart';
+import 'package:lugo_customer/shared/utils.dart';
 
 class PageLocationPicker extends GetView<ControllerLocationPicker> {
   const PageLocationPicker({super.key});
@@ -31,9 +34,7 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
             )),
         actions: [
           InkWell(
-              onTap: () {
-                log(controller.argumentChecker());
-              },
+              onTap: () => Get.toNamed(Routes.discount),
               child: SizedBox(
                 width: 55,
                 height: 55,
@@ -55,17 +56,42 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
             if (didPop) {
               return;
             }
-
             Get.offNamed(Routes.home);
           },
           child: Stack(
             fit: StackFit.expand,
             children: <Widget>[
-              const GoogleMap(
+              Obx(
+                () => GoogleMap(
                   mapType: MapType.terrain,
+                  zoomGesturesEnabled: true,
                   zoomControlsEnabled: false,
+                  onTap: (argument) {
+                    controller.rute.clear();
+                    controller.setDestination(argument);
+                    controller.secondStep(false);
+                    controller.firstStep(true);
+                  },
+                  onMapCreated: (it) => controller.mapController.complete(it),
                   initialCameraPosition: CameraPosition(
-                      zoom: 15, target: LatLng(-7.8032485, 110.3336448))),
+                    zoom: 4,
+                    target: LatLng(
+                      controller.myLocation.value.latitude!,
+                      controller.myLocation.value.longitude!,
+                    ),
+                  ),
+                  markers: Set.from(controller.markers),
+                  polylines: {
+                    Polyline(
+                      polylineId: const PolylineId("Rute Perjalanan"),
+                      points: controller.rute.toList(),
+                      color: const Color(0xFF3978EF),
+                      width: 5,
+                      geodesic: false,
+                    )
+                  },
+                ),
+              ),
               DraggableScrollableSheet(
                 maxChildSize: 0.8,
                 minChildSize: 0.15,
@@ -86,33 +112,41 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(10),
                                   child: ElevatedButton(
-                                      onPressed: () {},
-                                      style: ElevatedButton.styleFrom(
-                                          elevation: 5,
-                                          fixedSize: Size(
-                                              Get.width, Get.height * 0.05),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12)),
-                                          backgroundColor: Colors.white),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          const Icon(Icons.location_on_rounded,
-                                              color: Color(0xFF3978EF)),
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 5),
-                                            child: Text(
-                                              "Lokasi Lanjut",
-                                              style: GoogleFonts.readexPro(
-                                                  fontSize: 14,
-                                                  color: Colors.black54),
-                                            ),
-                                          )
-                                        ],
-                                      )),
+                                    onPressed: () async {
+                                      var trans = await LocalService()
+                                          .getTransactionId();
+                                      var service =
+                                          await LocalService().getRequestType();
+
+                                      log("$trans \n$service");
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                        elevation: 5,
+                                        fixedSize:
+                                            Size(Get.width, Get.height * 0.05),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        backgroundColor: Colors.white),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        const Icon(Icons.location_on_rounded,
+                                            color: Color(0xFF3978EF)),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5),
+                                          child: Text(
+                                            "Lokasi Saya",
+                                            style: GoogleFonts.readexPro(
+                                                fontSize: 14,
+                                                color: Colors.black54),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
                               Visibility(
@@ -122,7 +156,7 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                       const EdgeInsets.fromLTRB(10, 5, 10, 5),
                                   child: SizedBox(
                                     width: Get.width,
-                                    height: 50,
+                                    height: 60,
                                     child: TextFormField(
                                       style:
                                           GoogleFonts.readexPro(fontSize: 12),
@@ -213,7 +247,7 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                       const EdgeInsets.fromLTRB(10, 5, 10, 10),
                                   child: SizedBox(
                                     width: Get.width,
-                                    height: 50,
+                                    height: 60,
                                     child: TextFormField(
                                       style:
                                           GoogleFonts.readexPro(fontSize: 12),
@@ -260,14 +294,16 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                   child: ElevatedButton(
                                       onPressed: () {
                                         if (controller.requestType.value ==
-                                                'rider' ||
+                                                'BIKE' ||
                                             controller.requestType.value ==
-                                                'driver') {
+                                                'CAR') {
                                           controller.firstStep(false);
                                           controller.secondStep(true);
+                                          controller.setRoutes();
                                         } else {
                                           controller.firstStep(false);
                                           controller.deliveryStep(true);
+                                          controller.setRoutes();
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -307,22 +343,24 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
                                       Icon(
-                                        controller.requestType.value == 'rider'
+                                        controller.requestType.value == 'BIKE'
                                             ? Icons.directions_bike_rounded
                                             : Icons.drive_eta_rounded,
                                         color: const Color(0xFF3978EF),
                                         size: 24.0,
                                       ),
+                                      controller.priceLoading.value == false
+                                          ? Text(
+                                              '${controller.distance.value} km',
+                                              style: GoogleFonts.readexPro(
+                                                fontSize: 18,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            )
+                                          : const CircularProgressIndicator(),
                                       Text(
-                                        '20 km',
-                                        style: GoogleFonts.readexPro(
-                                          fontSize: 18,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Rp 20.000',
+                                        convertToIdr(controller.price.value, 0),
                                         style: GoogleFonts.readexPro(
                                           fontSize: 18,
                                           color: Colors.black54,
@@ -427,7 +465,7 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                         ),
                                       ),
                                       Text(
-                                        'Rp 20.000',
+                                        convertToIdr(controller.price.value, 0),
                                         style: GoogleFonts.readexPro(
                                           fontSize: 18,
                                           color: Colors.black54,
@@ -501,16 +539,36 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                   child: ElevatedButton(
                                       onPressed: () {
                                         if (controller.requestType.value ==
-                                                'rider' ||
+                                                'BIKE' ||
                                             controller.requestType.value ==
-                                                'driver') {
-                                          controller.secondStep(false);
-                                          controller.firstStep(true);
-                                          Get.toNamed(Routes.check_order,
-                                              arguments: {
-                                                'request_type':
-                                                    controller.requestType.value
-                                              });
+                                                'CAR') {
+                                          if (controller.payType.value ==
+                                              "DANA") {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  AlertDialog.adaptive(
+                                                backgroundColor: Colors.white,
+                                                surfaceTintColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                                content: const Image(
+                                                  image: AssetImage(
+                                                      'assets/images/coming_soon.jpg'),
+                                                ),
+                                              ),
+                                            );
+                                          } else if (controller.payType.value ==
+                                              "Pembayaran") {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text(
+                                                        "Anda belum memilih metode pembayaran")));
+                                          } else {
+                                            controller.createBikeCarOrder();
+                                          }
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -554,16 +612,18 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                         color: Color(0xFF3978EF),
                                         size: 24.0,
                                       ),
+                                      controller.priceLoading.value == false
+                                          ? Text(
+                                              '${controller.distance.value} km',
+                                              style: GoogleFonts.readexPro(
+                                                fontSize: 18,
+                                                color: Colors.black54,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            )
+                                          : const CircularProgressIndicator(),
                                       Text(
-                                        '20 km',
-                                        style: GoogleFonts.readexPro(
-                                          fontSize: 18,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Rp 20.000',
+                                        convertToIdr(controller.price.value, 0),
                                         style: GoogleFonts.readexPro(
                                           fontSize: 18,
                                           color: Colors.black54,
@@ -589,6 +649,37 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                     controller: controller.edtPackage,
                                     decoration: InputDecoration(
                                         hintText: 'Apa isi paket kamu?',
+                                        labelStyle: GoogleFonts.readexPro(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                          color: const Color(0xFF95A1AC),
+                                        ),
+                                        errorBorder: InputBorder.none,
+                                        focusedBorder: InputBorder.none,
+                                        enabledBorder: InputBorder.none,
+                                        focusedErrorBorder: InputBorder.none,
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 10)),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: controller.deliveryStep.value,
+                                child: Container(
+                                  height: 50,
+                                  width: Get.width,
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey.shade300,
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: TextFormField(
+                                    style: GoogleFonts.readexPro(fontSize: 12),
+                                    controller: controller.edtWeight,
+                                    keyboardType: TextInputType.number,
+                                    decoration: InputDecoration(
+                                        hintText: 'Berat paket kamu?',
                                         labelStyle: GoogleFonts.readexPro(
                                           fontSize: 16,
                                           fontWeight: FontWeight.normal,
@@ -698,7 +789,7 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                                         ),
                                       ),
                                       Text(
-                                        'Rp 20.000',
+                                        convertToIdr(controller.price.value, 0),
                                         style: GoogleFonts.readexPro(
                                           fontSize: 18,
                                           color: Colors.black54,
@@ -711,20 +802,95 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
                               ),
                               Visibility(
                                 visible: controller.deliveryStep.value,
+                                child: Container(
+                                  height: 50,
+                                  width: Get.width,
+                                  margin:
+                                      const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                          width: 1,
+                                          color: Colors.grey.shade300)),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        'Pembayaran',
+                                        style: GoogleFonts.readexPro(
+                                          fontSize: 18,
+                                          color: Colors.black54,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      DropdownButton<String>(
+                                        elevation: 2,
+                                        icon: const Icon(
+                                          Icons.keyboard_arrow_down_rounded,
+                                          color: Color(0xFF95A1AC),
+                                          size: 24,
+                                        ),
+                                        value: controller.payType.value,
+                                        borderRadius: BorderRadius.circular(8),
+                                        underline: const SizedBox(),
+                                        items: controller.payTypeList
+                                            .map((element) {
+                                          return DropdownMenuItem(
+                                            value: element,
+                                            child: Text(
+                                              element,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                        onChanged: (String? value) =>
+                                            controller.payType(value),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: controller.deliveryStep.value,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10, vertical: 10),
                                   child: ElevatedButton(
                                       onPressed: () {
                                         if (controller.requestType.value ==
-                                            'delivery') {
-                                          controller.deliveryStep(false);
-                                          controller.firstStep(true);
-                                          Get.toNamed(Routes.check_order,
-                                              arguments: {
-                                                'request_type':
-                                                    controller.requestType.value
-                                              });
+                                            'DELIVERY') {
+                                          if (controller.payType.value ==
+                                              "DANA") {
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) =>
+                                                  AlertDialog.adaptive(
+                                                backgroundColor: Colors.white,
+                                                surfaceTintColor: Colors.white,
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                                content: const Image(
+                                                  image: AssetImage(
+                                                      'assets/images/coming_soon.jpg'),
+                                                ),
+                                              ),
+                                            );
+                                          } else if (controller.payType.value ==
+                                              "Pembayaran") {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(const SnackBar(
+                                                    content: Text(
+                                                        "Anda belum memilih metode pembayaran")));
+                                          } else {
+                                            controller.createDeliveryOrder();
+                                          }
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -754,6 +920,14 @@ class PageLocationPicker extends GetView<ControllerLocationPicker> {
               )
             ],
           )),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xFF3978EF),
+        onPressed: () => controller.initialLocation(),
+        child: const Icon(
+          Icons.circle_outlined,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }

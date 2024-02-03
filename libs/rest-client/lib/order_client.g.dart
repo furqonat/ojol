@@ -90,6 +90,7 @@ class _OrderClient implements OrderClient {
   Future<dynamic> orderFindDriver({
     required String bearerToken,
     required String orderId,
+    required Map<String, dynamic> body,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -98,7 +99,8 @@ class _OrderClient implements OrderClient {
       r'Authorization': bearerToken,
     };
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
     final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
       method: 'PUT',
       headers: _headers,
@@ -343,6 +345,40 @@ class _OrderClient implements OrderClient {
         .compose(
           _dio.options,
           'merchant',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+    final value = _result.data;
+    return value;
+  }
+
+  @override
+  Future<dynamic> merchantGetOrderPeriod({
+    required String bearerToken,
+    required String time,
+  }) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'time': time};
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': bearerToken,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final Map<String, dynamic>? _data = null;
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'application/json',
+    )
+        .compose(
+          _dio.options,
+          'merchant/period',
           queryParameters: queryParameters,
           data: _data,
         )

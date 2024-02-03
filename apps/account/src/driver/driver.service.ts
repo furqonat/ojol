@@ -1,10 +1,13 @@
+import { otpGenerator, sendSms } from '@lugo/common'
 import { FirebaseService } from '@lugo/firebase'
 import { Prisma, PrismaService } from '@lugo/prisma'
 import {
   BadRequestException,
+  HttpStatus,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common'
 
 @Injectable()
@@ -241,5 +244,62 @@ export class DriverService {
     } catch (e) {
       throw new InternalServerErrorException(e)
     }
+  }
+
+  async obtainVerificationCode(phone: string) {
+    const code = otpGenerator()
+    const verifcationId = await this.prismaService.verification.create({
+      data: {
+        phone: phone,
+        code: code,
+      },
+    })
+    const resp = await sendSms(phone, `${code}`)
+    if (resp == HttpStatus.CREATED) {
+      return {
+        message: 'OK',
+        res: verifcationId.id,
+      }
+    } else {
+      await this.prismaService.verification.delete({
+        where: {
+          id: verifcationId.id,
+        },
+      })
+      throw new InternalServerErrorException({
+        message: 'Internal Server Error',
+        error: resp,
+      })
+    }
+  }
+
+  async phoneVerification(
+    driverId: string,
+    verifcationId: string,
+    smsCode: number,
+  ) {
+    const verification = await this.prismaService.verification.findUnique({
+      where: {
+        id: verifcationId,
+      },
+    })
+    if (verification.code == smsCode) {
+      await this.prismaService.driver.update({
+        where: {
+          id: driverId,
+        },
+        data: {
+          phone_verified: true,
+          phone: verification.phone,
+        },
+      })
+      return {
+        message: 'OK',
+        res: driverId,
+      }
+    }
+    throw new UnauthorizedException({
+      message: 'Invalid verification code',
+    })
   }
 }
