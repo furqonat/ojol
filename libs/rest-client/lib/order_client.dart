@@ -27,6 +27,7 @@ abstract class OrderClient {
   Future orderFindDriver({
     @Header("Authorization") required String bearerToken,
     @Path("orderId") required String orderId,
+    @Body() required Map<String, dynamic> body,
   });
 
   @PUT("driver/sign/{orderId}")
@@ -75,6 +76,13 @@ abstract class OrderClient {
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future merchantGetOrders({
     @Header("Authorization") required String bearerToken,
+  });
+
+  @GET("merchant/period")
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future merchantGetOrderPeriod({
+    @Header("Authorization") required String bearerToken,
+    @Query("time") required String time,
   });
 
   @GET("merchant/sell")

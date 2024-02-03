@@ -65,14 +65,15 @@ class PageHome extends GetView<ControllerHome> {
                         children: <TextSpan>[
                           const TextSpan(text: 'Penjualan hari ini\n'),
                           TextSpan(
-                              text: intlNumberCurrency(
-                                controller.sell.value.totalIncome,
-                              ),
-                              style: GoogleFonts.readexPro(
-                                fontSize: 18,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              )),
+                            text: intlNumberCurrency(
+                              controller.sell.value.totalIncome,
+                            ),
+                            style: GoogleFonts.readexPro(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -169,8 +170,7 @@ class PageHome extends GetView<ControllerHome> {
                                                 controller
                                                     .handleGenerateSignInUrl();
                                               },
-                                              child:
-                                                  const Text("Hubungkan Akun"),
+                                              child: const Text("Hubungkan"),
                                             )
                                           : displayDanaBalance(),
                                     ],
@@ -199,9 +199,7 @@ class PageHome extends GetView<ControllerHome> {
                                   intlNumberCurrency(
                                     controller.merchant.value.wallet?.balance,
                                   ),
-                                  style: GoogleFonts.readexPro(
-                                    fontSize: 24,
-                                  ),
+                                  style: GoogleFonts.readexPro(),
                                 ),
                               ),
                             ],
@@ -359,9 +357,7 @@ class PageHome extends GetView<ControllerHome> {
       children: [
         Text(
           intlNumberCurrency(double.parse(balance.value.value?.value ?? '0.0')),
-          style: GoogleFonts.readexPro(
-            fontSize: 24,
-          ),
+          style: GoogleFonts.readexPro(),
         )
       ],
     );

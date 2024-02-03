@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_marchant/api/local_service.dart';
 import 'package:lugo_marchant/page/profile/controller_profile.dart';
 import 'package:lugo_marchant/route/route_name.dart';
 
@@ -230,6 +231,37 @@ class PageProfile extends GetView<ControllerProfile> {
                   )),
             ),
           ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 5),
+              child: ElevatedButton(
+                  onPressed: () async {
+                    await LocalService().cleanUp();
+                    await LocalService().cleanUpLogout();
+                    Get.offAllNamed(Routes.auth);
+                  },
+                  style: ElevatedButton.styleFrom(
+                      elevation: 5,
+                      fixedSize: Size(Get.width, Get.height * 0.055),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      backgroundColor: const Color(0xFF3978EF)),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          "Keluar",
+                          style: GoogleFonts.readexPro(
+                              fontSize: 12, color: Colors.white),
+                        ),
+                        const Spacer(),
+                        const Icon(Icons.logout, color: Colors.white)
+                      ],
+                    ),
+                  )),
+            ),
+          )
         ],
       ),
     );

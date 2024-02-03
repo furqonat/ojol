@@ -62,6 +62,35 @@ export class MerchantController {
   }
 
   @Roles(Role.MERCHANT)
+  @Post('/phone/verification')
+  async obtainVerificationCode(
+    @Body('phone') phone: string,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.merchantService.obtainVerificationCode(phone)
+    }
+    throw new UnauthorizedException()
+  }
+
+  @Roles(Role.MERCHANT)
+  @Post('/phone/verification/:verificationId')
+  async verifyVerificationCode(
+    @Param('verificationId') verificationId: string,
+    @Body('code') code: number,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.merchantService.phoneVerification(
+        req?.uid,
+        verificationId,
+        code,
+      )
+    }
+    throw new UnauthorizedException()
+  }
+
+  @Roles(Role.MERCHANT)
   @Put('/operation/:id')
   async updateOperationTime(
     @Param('id') opId: string,

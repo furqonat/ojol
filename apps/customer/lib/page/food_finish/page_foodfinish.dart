@@ -2,6 +2,7 @@ import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_customer/api/local_service.dart';
 import 'package:lugo_customer/page/food_finish/controller_foodfinish.dart';
 
 import '../../route/route_name.dart';
@@ -146,7 +147,10 @@ class PageFoodFinish extends GetView<ControllerFoodFinish> {
             child: Padding(
               padding: const EdgeInsets.all(30),
               child: ElevatedButton(
-                  onPressed: () => Get.offAllNamed(Routes.home),
+                  onPressed: () async {
+                    await LocalService().orderFinish();
+                    Get.offNamed(Routes.home);
+                  },
                   style: ElevatedButton.styleFrom(
                       elevation: 5,
                       fixedSize: Size(Get.width, Get.height * 0.06),

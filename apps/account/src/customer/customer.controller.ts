@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -52,6 +53,31 @@ export class CustomerController {
   ) {
     if (req?.uid) {
       return this.customerService.saveDeviceToken(req.uid, token)
+    }
+    throw new UnauthorizedException()
+  }
+
+  @Roles(Role.USER)
+  @Post('/phone/verification')
+  async obtainVerificationCode(
+    @Body('phone') phone: string,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.customerService.obtainVerificationCode(phone)
+    }
+    throw new UnauthorizedException()
+  }
+
+  @Roles(Role.USER)
+  @Post('/phone/verification/:verificationId')
+  async verifyVerificationCode(
+    @Param('verificationId') phone: string,
+    @Body('code') code: number,
+    @Request() req?: { uid?: string },
+  ) {
+    if (req?.uid) {
+      return this.customerService.phoneVerification(req?.uid, phone, code)
     }
     throw new UnauthorizedException()
   }

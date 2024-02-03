@@ -307,3 +307,16 @@ func (order OrderController) DriverGetOrders(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"data": orderDb, "total": total})
 }
+
+func (order OrderController) MerchantGetOrderInPeriod(ctx *gin.Context) {
+	merchantId := ctx.GetString(utils.UID)
+	timeDay := ctx.Query("time")
+	merchants, err := order.service.MerchantGetOrders(merchantId, timeDay)
+	if err != nil {
+		order.logger.Infof("unable get order %s", err.Error())
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Internal server error", "error": err.Error()})
+		ctx.Abort()
+		return
+	}
+	ctx.JSON(http.StatusOK, merchants)
+}

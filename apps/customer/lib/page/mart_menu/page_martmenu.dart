@@ -1,4 +1,5 @@
 import 'package:animated_rating_stars/animated_rating_stars.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_customer/page/mart_menu/controller_martmenu.dart';
 import 'package:lugo_customer/route/route_name.dart';
+import 'package:lugo_customer/shared/utils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PageMartMenu extends GetView<ControllerMartMenu> {
   const PageMartMenu({super.key});
@@ -41,20 +44,41 @@ class PageMartMenu extends GetView<ControllerMartMenu> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            CarouselSlider.builder(
-              itemCount: controller.listImg.length,
-              options: CarouselOptions(
-                  viewportFraction: 1,
-                  autoPlay: true,
-                  aspectRatio: 2,
-                  initialPage: 0),
-              itemBuilder: (context, index, realIndex) {
-                return Image(
-                    fit: BoxFit.fill,
+            Obx(() => controller.bannerLoader.value == false
+                ? CarouselSlider.builder(
+                    itemCount: controller.banner.first.images!.length,
+                    options: CarouselOptions(
+                        viewportFraction: 1,
+                        autoPlay: true,
+                        aspectRatio: 2,
+                        initialPage: 0),
+                    itemBuilder: (context, index, realIndex) {
+                      return Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: CachedNetworkImage(
+                              width: Get.width,
+                              fit: BoxFit.fill,
+                              height: Get.height * 0.3,
+                              imageUrl:
+                                  controller.banner.first.images![index].link ??
+                                      '',
+                              errorWidget: (context, url, error) => Image(
+                                  fit: BoxFit.fill,
+                                  width: Get.width,
+                                  image: AssetImage(controller.listImg.first))),
+                        ),
+                      );
+                    },
+                  )
+                : SizedBox(
+                    height: Get.height * 0.2,
                     width: Get.width,
-                    image: AssetImage(controller.listImg[index]));
-              },
-            ),
+                    child: Shimmer.fromColors(
+                        baseColor: Colors.grey.shade300,
+                        highlightColor: Colors.white,
+                        child: const Card(elevation: 0)))),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Text(
@@ -172,40 +196,43 @@ class PageMartMenu extends GetView<ControllerMartMenu> {
                 );
               },
             )),
-            Container(
-              width: Get.width,
-              height: Get.height * 0.07,
-              margin: const EdgeInsets.only(top: 10),
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              decoration: BoxDecoration(
-                  color: const Color(0xFF3978EF),
-                  borderRadius: BorderRadius.circular(12)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  const Icon(Icons.shopping_bag_rounded, color: Colors.white),
-                  Text(
-                    "Rp 20.000",
-                    style: GoogleFonts.readexPro(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => Get.toNamed(Routes.mart_pay),
-                    child: Text(
-                      "Order",
-                      style: GoogleFonts.readexPro(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+            Obx(() => Container(
+                  width: Get.width,
+                  height: Get.height * 0.07,
+                  margin: const EdgeInsets.only(top: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                      color: const Color(0xFF3978EF),
+                      borderRadius: BorderRadius.circular(12)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      const Icon(Icons.shopping_bag_rounded,
+                          color: Colors.white),
+                      Text(
+                        convertToIdr(controller.total.value, 0),
+                        style: GoogleFonts.readexPro(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                      InkWell(
+                        onTap: () => Get.toNamed(Routes.martPay, arguments: {
+                          "merchantAddress": controller.merchantAddress.value
+                        }),
+                        child: Text(
+                          "Order",
+                          style: GoogleFonts.readexPro(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            )
+                ))
           ],
         ),
       ),

@@ -17,14 +17,14 @@ class Verification extends GetView<VerificationController> {
     }
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            controller.verificationState == VerificationState.full.toString()
-                ? Column(
-                    children: [
-                      Obx(
-                        () => EasyStepper(
+        child: Obx(
+          () => Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              controller.verificationState == VerificationState.full.toString()
+                  ? Column(
+                      children: [
+                        EasyStepper(
                           activeStep: controller.activeStep.value,
                           activeStepTextColor: Colors.black87,
                           finishedStepTextColor: Colors.black87,
@@ -68,15 +68,12 @@ class Verification extends GetView<VerificationController> {
                             ),
                           ],
                         ),
-                      ),
-                      Obx(
-                        () => verificationStep(
-                            context, controller.activeStep.value),
-                      )
-                    ],
-                  )
-                : phoneVerificationView(context, controller),
-          ],
+                        verificationStep(context, controller.activeStep.value),
+                      ],
+                    )
+                  : phoneVerificationView(context, controller),
+            ],
+          ),
         ),
       ),
     );

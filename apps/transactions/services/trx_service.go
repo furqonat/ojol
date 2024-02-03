@@ -158,24 +158,32 @@ func (trxService TrxService) adjustMerchantBalance(trxId string, statusTrx strin
 		trxService.logger.Info(trxId)
 		trx, err := trxService.database.MerchantTrx.FindUnique(
 			db.MerchantTrx.ID.Equals(trxId),
-		).Update(
-			db.MerchantTrx.Status.Set(db.TrxStatusSuccess),
 		).Exec(context.Background())
 		if err != nil {
 			return err
 		}
-		trxService.logger.Info(trx.MerchantID)
-		_, errB := trxService.database.MerchantWallet.FindUnique(
-			db.MerchantWallet.MerchantID.Equals(trx.MerchantID),
-		).Update(
-			db.MerchantWallet.Balance.Increment(trx.Amount),
-		).Exec(context.Background())
+		if trx.Status == db.TrxStatusProcess {
+			_, err := trxService.database.MerchantTrx.FindUnique(
+				db.MerchantTrx.ID.Equals(trxId),
+			).Update(
+				db.MerchantTrx.Status.Set(db.TrxStatusSuccess),
+			).Exec(context.Background())
+			if err != nil {
+				return err
+			}
+			trxService.logger.Info(trx.MerchantID)
+			_, errB := trxService.database.MerchantWallet.FindUnique(
+				db.MerchantWallet.MerchantID.Equals(trx.MerchantID),
+			).Update(
+				db.MerchantWallet.Balance.Increment(trx.Amount),
+			).Exec(context.Background())
 
-		if errB != nil {
-			return errB
-		}
-		if err := trxService.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeMerchant, trx.Amount); err != nil {
-			return err
+			if errB != nil {
+				return errB
+			}
+			if err := trxService.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeMerchant, trx.Amount); err != nil {
+				return err
+			}
 		}
 	}
 	if status == db.TransactionStatusDone || status == db.TransactionStatusCanceled {
@@ -191,23 +199,32 @@ func (trxService TrxService) adjustDriverBalance(trxId string, statusTrx string)
 	if status == db.TransactionStatusPaid {
 		trx, err := trxService.database.DriverTrx.FindUnique(
 			db.DriverTrx.ID.Equals(trxId),
-		).Update(
-			db.DriverTrx.Status.Set(db.TrxStatusSuccess),
 		).Exec(context.Background())
 		if err != nil {
 			return err
 		}
-		_, errB := trxService.database.DriverWallet.FindUnique(
-			db.DriverWallet.DriverID.Equals(trx.DriverID),
-		).Update(
-			db.DriverWallet.Balance.Increment(trx.Amount),
-		).Exec(context.Background())
 
-		if errB != nil {
-			return errB
-		}
-		if err := trxService.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeDriver, trx.Amount); err != nil {
-			return err
+		if trx.Status == db.TrxStatusProcess {
+			_, err := trxService.database.DriverTrx.FindUnique(
+				db.DriverTrx.ID.Equals(trxId),
+			).Update(
+				db.DriverTrx.Status.Set(db.TrxStatusSuccess),
+			).Exec(context.Background())
+			if err != nil {
+				return err
+			}
+			_, errB := trxService.database.DriverWallet.FindUnique(
+				db.DriverWallet.DriverID.Equals(trx.DriverID),
+			).Update(
+				db.DriverWallet.Balance.Increment(trx.Amount),
+			).Exec(context.Background())
+
+			if errB != nil {
+				return errB
+			}
+			if err := trxService.createTrxCompnay(db.TrxTypeAdjustment, db.TrxCompanyTypeDriver, trx.Amount); err != nil {
+				return err
+			}
 		}
 
 	}

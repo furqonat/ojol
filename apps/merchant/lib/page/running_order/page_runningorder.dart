@@ -45,7 +45,6 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                 controller: controller.tabController,
                 children: [
                   SizedBox(
-                    width: Get.width,
                     height: Get.height,
                     child: Column(
                       children: controller.newOrder.map((element) {
@@ -121,78 +120,102 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                         ],
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Nama Driver',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['name']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Plat Nomor',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['driver_details']['vehicle']['vehicle_rn']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Kendaraan',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['driver_details']['vehicle']['vehicle_brand']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    element['driver'] != null
+                                        ? Column(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 5, 10, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Nama Driver',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${element['driver']['name']}',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 5, 10, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Plat Nomor',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${element['driver']['driver_details']['vehicle']['vehicle_rn']}',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 5, 10, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Kendaraan',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${element['driver']['driver_details']['vehicle']['vehicle_brand']}',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : const SizedBox(),
                                     const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Divider(
@@ -368,7 +391,6 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                     ),
                   ),
                   SizedBox(
-                    width: Get.width,
                     height: Get.height,
                     child: Column(
                       children: controller.proccess.map((element) {
@@ -444,78 +466,102 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                         ],
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Nama Driver',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['name']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Plat Nomor',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['driver_details']['vehicle']['vehicle_rn']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 5, 10, 0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Text(
-                                            'Kendaraan',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          Text(
-                                            '${element['driver']['driver_details']['vehicle']['vehicle_brand']}',
-                                            style: GoogleFonts.readexPro(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                    element['driver'] != null
+                                        ? Column(
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 5, 10, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Nama Driver',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${element['driver']['name']}',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 5, 10, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Plat Nomor',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${element['driver']['driver_details']['vehicle']['vehicle_rn']}',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 5, 10, 0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: <Widget>[
+                                                    Text(
+                                                      'Kendaraan',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      '${element['driver']['driver_details']['vehicle']['vehicle_brand']}',
+                                                      style:
+                                                          GoogleFonts.readexPro(
+                                                        color: Colors.black87,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : const SizedBox(),
                                     const Padding(
                                       padding: EdgeInsets.all(10),
                                       child: Divider(
@@ -666,7 +712,6 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                     ),
                   ),
                   SizedBox(
-                    width: Get.width,
                     height: Get.height,
                     child: Column(
                       children: controller.done.map((element) {

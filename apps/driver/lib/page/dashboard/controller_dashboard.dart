@@ -46,6 +46,7 @@ class ControllerDashboard extends GetxController {
   final OrderClient orderClient;
   final AccountClient accountClient;
   final LocalService localService;
+
   ControllerDashboard({
     required this.api,
     required this.orderClient,
@@ -118,6 +119,10 @@ class ControllerDashboard extends GetxController {
 
   // 2. sekarang kita track lokasi
   getLocation() async {
+    location.changeSettings(
+      distanceFilter: 100,
+      accuracy: LocationAccuracy.balanced,
+    );
     var permission = await location.hasPermission();
     var service = await location.serviceEnabled();
     if (permission != PermissionStatus.granted ||
@@ -133,8 +138,11 @@ class ControllerDashboard extends GetxController {
     }
     try {
       location.getLocation().then((location) {
-        locationData.value = LocationData.fromMap(
-            {"latitude": location.latitude, "longitude": location.longitude});
+        locationData.value = LocationData.fromMap({
+          "latitude": location.latitude,
+          "longitude": location.longitude,
+          "isMock": 0,
+        });
 
         geocoding
             .placemarkFromCoordinates(location.latitude!, location.longitude!)
@@ -150,23 +158,33 @@ class ControllerDashboard extends GetxController {
       location.onLocationChanged.listen((it) async {
         locationData.value = it;
 
-        googleMapController.animateCamera(CameraUpdate.newCameraPosition(
+        googleMapController.animateCamera(
+          CameraUpdate.newCameraPosition(
             CameraPosition(
-                zoom: 17, target: LatLng(it.latitude!, it.longitude!))));
+              zoom: 17,
+              target: LatLng(
+                it.latitude!,
+                it.longitude!,
+              ),
+            ),
+          ),
+        );
 
         geocoding.placemarkFromCoordinates(it.latitude!, it.longitude!).then(
-            (value) => address(
-                "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"));
+              (value) => address(
+                  "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"),
+            );
 
         await api.listenLocation(
-            id: controllerUser.user.value.id ?? "user id",
-            address: address.value,
-            isOnline: autoBid.value,
-            latitude: num.parse(it.latitude.toString()),
-            longitude: num.parse(it.longitude.toString()),
-            name: controllerUser.user.value.name ?? "name",
-            type: orderType.value,
-            document: docId.value);
+          id: controllerUser.user.value.id ?? "user id",
+          address: address.value,
+          isOnline: autoBid.value,
+          latitude: num.parse(it.latitude.toString()),
+          longitude: num.parse(it.longitude.toString()),
+          name: controllerUser.user.value.name ?? "name",
+          type: orderType.value,
+          document: docId.value,
+        );
       });
     } catch (e, stackTrace) {
       log("$e");
@@ -556,11 +574,8 @@ class ControllerDashboard extends GetxController {
   }
 
   void getRealtimeOrder() {
-    _db
-        .collection("order")
-        .snapshots()
-        .listen((event) {
-        orderFrs.value = OrderFirestore.fromJson(event.docs.first.data());
+    _db.collection("order").snapshots().listen((event) {
+      orderFrs.value = OrderFirestore.fromJson(event.docs.first.data());
     });
   }
 

@@ -7,6 +7,7 @@ import { Role } from '@lugo/guard'
 import { FirebaseService } from '@lugo/firebase'
 import { PrismaService } from '@lugo/prisma'
 import { DecodedIdToken } from 'firebase-admin/auth'
+import { nameGenerator } from '@lugo/common'
 
 @Injectable()
 export class CustomerService {
@@ -48,7 +49,12 @@ export class CustomerService {
 
   private async handleNewUser(user: DecodedIdToken, token: string) {
     const userDb = await this.prismaService.customer.create({
-      data: { id: user.uid, email: user.email, phone: user.phone_number },
+      data: {
+        id: user.uid,
+        email: user.email,
+        phone: user.phone_number,
+        name: user.name ?? nameGenerator(),
+      },
     })
 
     await this.firebaseService.auth.setCustomUserClaims(userDb.id, {

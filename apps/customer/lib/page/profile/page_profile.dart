@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_customer/api/local_service.dart';
 import 'package:lugo_customer/page/profile/controller_profile.dart';
 import 'package:lugo_customer/route/route_name.dart';
 
@@ -72,7 +72,7 @@ class PageProfile extends GetView<ControllerProfile> {
                           const Spacer(),
                           ElevatedButton(
                               onPressed: () =>
-                                  Get.toNamed(Routes.edit_profile, arguments: {
+                                  Get.toNamed(Routes.editProfile, arguments: {
                                     'name': controller
                                             .controllerUser.user.value.name ??
                                         "",
@@ -138,7 +138,7 @@ class PageProfile extends GetView<ControllerProfile> {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: ElevatedButton(
-                    onPressed: () => Get.toNamed(Routes.about_us),
+                    onPressed: () => Get.toNamed(Routes.aboutUs),
                     style: ElevatedButton.styleFrom(
                         elevation: 5,
                         fixedSize: Size(Get.width, Get.height * 0.07),
@@ -157,7 +157,7 @@ class PageProfile extends GetView<ControllerProfile> {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: ElevatedButton(
-                    onPressed: () => Get.toNamed(Routes.privacy_term),
+                    onPressed: () => Get.toNamed(Routes.privacyTerm),
                     style: ElevatedButton.styleFrom(
                         elevation: 5,
                         fixedSize: Size(Get.width, Get.height * 0.07),
@@ -177,13 +177,7 @@ class PageProfile extends GetView<ControllerProfile> {
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: ElevatedButton(
                     onPressed: () async {
-                      var token =
-                          await FirebaseAuth.instance.currentUser?.getIdToken();
-
-                      final pattern = RegExp('.{1,800}');
-                      pattern
-                          .allMatches(token!)
-                          .forEach((match) => debugPrint(match.group(0)));
+                      await LocalService().setIsBinding(isBinding: true);
                     },
                     style: ElevatedButton.styleFrom(
                         elevation: 5,
@@ -222,7 +216,10 @@ class PageProfile extends GetView<ControllerProfile> {
               Padding(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await LocalService().removeStorageForLogout();
+                      Get.offAllNamed(Routes.auth);
+                    },
                     style: ElevatedButton.styleFrom(
                         elevation: 5,
                         fixedSize: Size(Get.width, Get.height * 0.07),

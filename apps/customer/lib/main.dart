@@ -14,16 +14,15 @@ import 'package:lugo_customer/shared/local_notif.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   LocalNotificationService.initialize();
-  // FirebaseMessaging.onBackgroundMessage(backgroundHandler);
-  await GetStorage.init();
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   runApp(const MyApp());
 }
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   log(message.data.toString());
-  // log(message.notification?.title?.toString());
 }
 
 class MyApp extends StatelessWidget {
@@ -75,36 +74,40 @@ class _AppViewState extends State<AppView> with WidgetsBindingObserver {
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent));
+
     return ScreenUtilInit(
-        designSize: const Size(393, 830),
-        builder: (BuildContext context, Widget? child) => GetMaterialApp(
-              navigatorKey: Get.key,
-              title: 'Lugo Customer',
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                platform: TargetPlatform.android,
-                brightness: Brightness.light,
+      designSize: const Size(393, 830),
+      builder: (BuildContext context, Widget? child) => GetMaterialApp(
+        navigatorKey: Get.key,
+        title: 'Lugo Customer',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          platform: TargetPlatform.android,
+          brightness: Brightness.light,
+        ),
+        builder: (context, child) => MediaQuery(
+            data: MediaQuery.of(context)
+                .copyWith(textScaler: const TextScaler.linear(1)),
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+              child: Stack(
+                children: [child!],
               ),
-              builder: (context, child) => MediaQuery(
-                  data: MediaQuery.of(context)
-                      .copyWith(textScaler: const TextScaler.linear(1)),
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                    child: Stack(
-                      children: [child!],
-                    ),
-                  )),
-              getPages: RoutingPages.pages,
-              initialBinding: ControllerMain(),
-              initialRoute: Routes.INITIAL,
-              locale: const Locale('id', 'ID'),
-              routingCallback: (value) {
-                if (value != null) {
-                  updatePageRoute(value);
-                }
-              },
-              defaultTransition: Transition.cupertino,
-            ));
+            )),
+        getPages: RoutingPages.pages,
+        initialBinding: ControllerMain(),
+        initialRoute: Routes.start,
+        locale: const Locale('id', 'ID'),
+        routingCallback: (value) {
+          if (value != null) {
+            updatePageRoute(value);
+          }
+        },
+        defaultTransition: Transition.cupertino,
+      ),
+    );
   }
 }
