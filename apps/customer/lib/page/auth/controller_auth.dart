@@ -39,8 +39,8 @@ class ControllerAuth extends GetxController
       email: edtEmail.text,
       password: edtPassword.text,
     )
-        .then((value) {
-      final token = value.user?.getIdToken();
+        .then((value) async {
+      final token = await value.user?.getIdToken();
       authClient.customerSignIn(token: "Bearer $token").then((value) {
         loadingSignIn.value = false;
         Get.toNamed(Routes.otp);

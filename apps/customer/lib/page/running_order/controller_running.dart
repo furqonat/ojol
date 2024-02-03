@@ -50,6 +50,7 @@ class ControllerRunning extends GetxController {
 
   Stream<LiveTransaction?>? trackTransaction() =>
       api.getOrder<LiveTransaction?>(
-          documentId: orderId.value,
-          fromJson: (data) => LiveTransaction.fromJson(data));
+        documentId: orderId.value,
+        fromJson: (data) => LiveTransaction.fromJson(data),
+      );
 }
