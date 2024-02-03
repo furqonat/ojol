@@ -147,9 +147,11 @@ class PageHistory extends GetView<ControllerHistory> {
                                     MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Text(
-                                    'Nomor Transaksi',
+                                    'Transaksi ID',
                                     style: GoogleFonts.readexPro(
-                                        color: Colors.grey, fontSize: 12),
+                                      color: Colors.grey,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                   Text(
                                     '${controller.orders[index].customer?.id}',
@@ -321,7 +323,7 @@ class PageHistory extends GetView<ControllerHistory> {
                                               color: Color(0xFF3978EF)),
                                           const SizedBox(width: 5),
                                           SizedBox(
-                                            width: Get.width * 0.75,
+                                            width: Get.width * 0.7,
                                             child: Text(
                                               "${controller.orders[index].orderDetail?.address}",
                                               maxLines: 1,
@@ -340,7 +342,7 @@ class PageHistory extends GetView<ControllerHistory> {
                                               color: Colors.deepOrange),
                                           const SizedBox(width: 5),
                                           SizedBox(
-                                            width: Get.width * 0.75,
+                                            width: Get.width * 0.7,
                                             child: Text(
                                               controller
                                                       .orders[index]

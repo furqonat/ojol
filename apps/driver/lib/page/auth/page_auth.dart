@@ -67,7 +67,7 @@ class PageAuth extends GetView<ControllerAuth> {
           SliverToBoxAdapter(
             child: SizedBox(
               width: Get.width,
-              height: Get.height * 0.58,
+              height: Get.height * 0.8,
               child: Obx(
                 () => TabBarView(
                   controller: controller.tabController,
