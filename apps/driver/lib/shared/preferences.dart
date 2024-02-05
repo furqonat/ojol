@@ -52,4 +52,11 @@ class Preferences {
   void setAlreadySignIn(bool value) {
     preferences.setBool(alreadySignIn, value);
   }
+
+  void cleanrepo(){
+    preferences.remove(referal);
+    preferences.remove(patnerType);
+    preferences.remove(alreadyJoin);
+    preferences.remove(alreadySignIn);
+  }
 }

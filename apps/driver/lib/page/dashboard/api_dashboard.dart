@@ -2,8 +2,7 @@ import 'package:lugo_driver/api/api_service.dart';
 import 'package:lugo_driver/api/firestore_service.dart';
 
 class ApiDashboard {
-  Future<dynamic> acceptOrder(
-      {required String orderId, required String token}) async {
+  Future<dynamic> acceptOrder({required String orderId, required String token}) async {
     final sample = {"sample": "sample"};
 
     var r = await ApiService().apiJSONPutWithFirebaseToken(
@@ -11,8 +10,7 @@ class ApiDashboard {
     return r;
   }
 
-  Future<dynamic> rejectOrder(
-      {required String orderId, required String token}) async {
+  Future<dynamic> rejectOrder({required String orderId, required String token}) async {
     final sample = {"sample": "sample"};
 
     var r = await ApiService().apiJSONPutWithFirebaseToken(
@@ -20,21 +18,18 @@ class ApiDashboard {
     return r;
   }
 
-  Stream<List<T>> getOrder<T>(
-      {required T Function(Map<String, dynamic> data) fromJson}) {
+  Stream<List<T>> getOrder<T>({required T Function(Map<String, dynamic> data) fromJson}) {
     var r =
         FirestoreService().firestoreStreamGet<T>('order', fromJson: fromJson);
     return r;
   }
 
-  Future<List<T>> getDriver<T>(
-      {required T Function(Map<String, dynamic> data) fromJson}) async {
+  Future<List<T>> getDriver<T>({required T Function(Map<String, dynamic> data) fromJson}) async {
     var r = await FirestoreService().firestoreFutureGet("drivers");
     return r.map<T>((e) => fromJson(e)).toList();
   }
 
-  Future<dynamic> getDetailOrder(
-      {required String orderId, required String token}) async {
+  Future<dynamic> getDetailOrder({required String orderId, required String token}) async {
     var r =
         await ApiService().apiJSONGetWitFirebaseToken('order', orderId, token);
     return r;

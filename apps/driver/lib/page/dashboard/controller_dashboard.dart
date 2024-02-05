@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -74,8 +73,7 @@ class ControllerDashboard extends GetxController {
   final orderFrs = OrderFirestore().obs;
   final marker = BitmapDescriptor.defaultMarker.obs;
 
-  final locationData =
-      LocationData.fromMap({"latitude": 0.0, "longitude": 0.0}).obs;
+  final locationData = LocationData.fromMap({"latitude": 0.0, "longitude": 0.0}).obs;
 
   final Completer<GoogleMapController> mapController = Completer();
 

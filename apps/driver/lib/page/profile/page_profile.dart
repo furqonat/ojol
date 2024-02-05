@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lugo_driver/route/route_name.dart';
+import 'package:lugo_driver/shared/preferences.dart';
 import 'controller_profile.dart';
 
 class PageProfile extends GetView<ControllerProfile> {
@@ -156,7 +157,10 @@ class PageProfile extends GetView<ControllerProfile> {
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
             child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Preferences(LocalStorage.instance).cleanrepo();
+                  Get.offAllNamed(Routes.auth);
+                },
                 style: ElevatedButton.styleFrom(
                     elevation: 5,
                     fixedSize: Size(Get.width, Get.height * 0.07),

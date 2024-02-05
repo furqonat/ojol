@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lugo_driver/route/route_name.dart';
-
 import '../../shared/custom_widget/lugo_button.dart';
 import '../../shared/utils.dart';
 import 'controller_dashboard.dart';
@@ -19,7 +18,6 @@ class PageDashboard extends GetView<ControllerDashboard> {
       extendBodyBehindAppBar: true,
       body: Obx(
         () {
-          print("driverID => ${controller.orderFrs.value.orderId}");
           return Stack(
             alignment: Alignment.bottomCenter,
             children: [
