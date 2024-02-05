@@ -37,53 +37,76 @@ class PageMain extends GetView<ControllerMain> {
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Obx(() => SafeArea(
+            Obx(() {
+              if(controller.loading.value == false){
+                return controller.banner.first.images != null
+                    ? SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: controller.loading.value == false &&
-                            controller.banner.isNotEmpty
-                        ? CarouselSlider.builder(
-                            itemCount:
-                                controller.banner.first.images!.isNotEmpty
-                                    ? controller.banner.first.images!.length
-                                    : controller.listImg.length,
-                            options: CarouselOptions(
-                                viewportFraction: 1,
-                                autoPlay: true,
-                                aspectRatio: 2,
-                                initialPage: 0),
-                            itemBuilder: (context, index, realIndex) {
-                              return Padding(
-                                padding: const EdgeInsets.all(5),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: CachedNetworkImage(
-                                      width: Get.width,
-                                      fit: BoxFit.fill,
-                                      height: Get.height * 0.3,
-                                      imageUrl: controller.banner.first
-                                              .images![index].link ??
-                                          '',
-                                      errorWidget: (context, url, error) =>
-                                          Image(
-                                              fit: BoxFit.fill,
-                                              width: Get.width,
-                                              image: AssetImage(
-                                                  controller.listImg[index]))),
-                                ),
-                              );
-                            },
-                          )
-                        : SizedBox(
-                            height: Get.height * 0.2,
-                            width: Get.width,
-                            child: Shimmer.fromColors(
-                                baseColor: Colors.grey.shade300,
-                                highlightColor: Colors.white,
-                                child: const Card(elevation: 0)),
+                    child: CarouselSlider.builder(
+                      itemCount: controller.banner.first.images!.length,
+                      options: CarouselOptions(
+                          viewportFraction: 1,
+                          autoPlay: true,
+                          aspectRatio: 2,
+                          initialPage: 0),
+                      itemBuilder: (context, index, realIndex) {
+                        return Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: CachedNetworkImage(
+                                width: Get.width,
+                                fit: BoxFit.fill,
+                                height: Get.height * 0.3,
+                                imageUrl: controller.banner.first.images![index].link ?? '',
+                                errorWidget: (context, url, error) =>
+                                    Image(
+                                        fit: BoxFit.fill,
+                                        width: Get.width,
+                                        image: AssetImage(controller.listImg.first))),
                           ),
+                        );
+                      },
+                    ),
                   ),
-                )),
+                )
+                    : SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: CarouselSlider.builder(
+                      itemCount: controller.listImg.length,
+                      options: CarouselOptions(
+                          viewportFraction: 1,
+                          autoPlay: true,
+                          aspectRatio: 2,
+                          initialPage: 0),
+                      itemBuilder: (context, index, realIndex) {
+                        return Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image(
+                                fit: BoxFit.fill,
+                                width: Get.width,
+                                image: AssetImage(controller.listImg.first)),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              }else{
+                return SizedBox(
+                  height: Get.height * 0.2,
+                  width: Get.width,
+                  child: Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.white,
+                      child: const Card(elevation: 0)),
+                );
+              }
+            }),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -319,46 +342,66 @@ class PageMain extends GetView<ControllerMain> {
                 ),
               ),
             ),
-            Obx(() => controller.loading.value == false &&
-                    controller.banner.isNotEmpty
-                ? CarouselSlider.builder(
-                    itemCount: controller.banner.first.images!.isNotEmpty
-                        ? controller.banner.first.images!.length
-                        : controller.listImg.length,
-                    options: CarouselOptions(
-                        viewportFraction: 1,
-                        autoPlay: true,
-                        aspectRatio: 2,
-                        initialPage: 0),
-                    itemBuilder: (context, index, realIndex) {
-                      return Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: CachedNetworkImage(
-                              width: Get.width,
-                              fit: BoxFit.fill,
-                              height: Get.height * 0.3,
-                              imageUrl:
-                                  controller.banner.first.images![index].link ??
-                                      '',
-                              errorWidget: (context, url, error) => Image(
-                                  fit: BoxFit.fill,
-                                  width: Get.width,
-                                  image:
-                                      AssetImage(controller.listImg[index]))),
-                        ),
-                      );
-                    },
-                  )
-                : SizedBox(
-                    height: Get.height * 0.2,
-                    width: Get.width,
-                    child: Shimmer.fromColors(
-                        baseColor: Colors.grey.shade300,
-                        highlightColor: Colors.white,
-                        child: const Card(elevation: 0)),
-                  )),
+            Obx(() {
+              if(controller.loading.value == false){
+                return controller.banner.first.images != null
+                    ? CarouselSlider.builder(
+                      itemCount: controller.banner.first.images!.length,
+                      options: CarouselOptions(
+                          viewportFraction: 1,
+                          autoPlay: true,
+                          aspectRatio: 2,
+                          initialPage: 0),
+                      itemBuilder: (context, index, realIndex) {
+                        return Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: CachedNetworkImage(
+                                width: Get.width,
+                                fit: BoxFit.fill,
+                                height: Get.height * 0.3,
+                                imageUrl: controller.banner.first.images![index].link ?? '',
+                                errorWidget: (context, url, error) =>
+                                    Image(
+                                        fit: BoxFit.fill,
+                                        width: Get.width,
+                                        image: AssetImage(controller.listImg.first))),
+                          ),
+                        );
+                      },
+                    )
+                    : CarouselSlider.builder(
+                      itemCount: controller.listImg.length,
+                      options: CarouselOptions(
+                          viewportFraction: 1,
+                          autoPlay: true,
+                          aspectRatio: 2,
+                          initialPage: 0),
+                      itemBuilder: (context, index, realIndex) {
+                        return Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image(
+                                fit: BoxFit.fill,
+                                width: Get.width,
+                                image: AssetImage(controller.listImg.first)),
+                          ),
+                        );
+                      },
+                    );
+              }else{
+                return SizedBox(
+                  height: Get.height * 0.2,
+                  width: Get.width,
+                  child: Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.white,
+                      child: const Card(elevation: 0)),
+                );
+              }
+            }),
             Obx(() => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
