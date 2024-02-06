@@ -8,19 +8,17 @@ class ControllerOrderSetting extends GetxController {
   static String service(int index) {
     switch (index) {
       case 0:
-        return 'Ride';
+        return 'FOOD';
       case 1:
-        return 'Driver';
+        return 'MART';
       case 2:
-        return 'Food';
-      case 3:
-        return 'Mart';
+        return 'DELIVERY';
       default:
         return '';
     }
   }
 
-  final List<Map<String, dynamic>> orderSetting = List.generate(4, (i) {
+  final List<Map<String, dynamic>> orderSetting = List.generate(3, (i) {
     final layanan = service(i);
     return {
       'Layanan': layanan,
