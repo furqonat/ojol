@@ -99,13 +99,13 @@ class PageOrderSetting extends GetView<ControllerOrderSetting> {
                     height: 60,
                     color: const Color(0xFF3978EF),
                     onTap: () {
-                      // controller.serviceSetup(
-                      //     controller.orderSetting[0]['Status'].value,
-                      //     int.parse(controller.orderSetting[0]['Harga'].value),
-                      //     controller.orderSetting[1]['Status'].value,
-                      //     int.parse(controller.orderSetting[1]['Harga'].value),
-                      //     controller.orderSetting[2]['Status'].value,
-                      //     int.parse(controller.orderSetting[2]['Harga'].value));
+                      controller.serviceSetup(
+                          controller.orderSetting[0]['Status'].value,
+                          int.parse(controller.orderSetting[0]['Harga'].value),
+                          controller.orderSetting[1]['Status'].value,
+                          int.parse(controller.orderSetting[1]['Harga'].value),
+                          controller.orderSetting[2]['Status'].value,
+                          int.parse(controller.orderSetting[2]['Harga'].value));
                     })
               )
             ],
