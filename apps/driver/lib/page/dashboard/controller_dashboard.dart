@@ -16,11 +16,13 @@ import 'package:lugo_driver/response/driver.dart';
 import 'package:lugo_driver/response/order.dart' as od;
 import 'package:lugo_driver/response/rider.dart';
 import 'package:lugo_driver/shared/controller/controller_user.dart';
+import 'package:lugo_driver/shared/preferences.dart';
 import 'package:lugo_driver/shared/query_builder.dart';
 import 'package:lugo_driver/shared/utils.dart';
 import 'package:rest_client/account_client.dart';
 import 'package:rest_client/order_client.dart';
 
+import '../../route/route_name.dart';
 import 'api_dashboard.dart';
 
 class OrderFirestore {
@@ -55,10 +57,7 @@ class ControllerDashboard extends GetxController {
 
   final autoBid = true.obs;
   final driver = Driver().obs;
-
   var locationReady = false.obs;
-  var docId = "".obs;
-  var orderType = "".obs;
 
   var showBottomSheet = false.obs;
   var showPickUpLocation = true.obs;
@@ -71,7 +70,7 @@ class ControllerDashboard extends GetxController {
 
   final order = od.Order().obs;
   final orderFrs = OrderFirestore().obs;
-  final marker = BitmapDescriptor.defaultMarker.obs;
+  final iconMarker = BitmapDescriptor.defaultMarker.obs;
 
   final locationData = LocationData.fromMap({"latitude": 0.0, "longitude": 0.0}).obs;
 
@@ -80,15 +79,13 @@ class ControllerDashboard extends GetxController {
   PolylinePoints polylinePoints = PolylinePoints();
 
   final rute = <LatLng>[].obs;
+  RxSet<Marker> markers = RxSet<Marker>();
 
   final address = ''.obs;
 
-  late StreamSubscription<List<Order>> check;
-
-  late StreamSubscription<List<Riders>> checkRider;
-
   RxList<Riders> riders = <Riders>[].obs;
 
+  // 1. initial setting
   handleSetAutoBid() async {
     final token = await firebase.currentUser?.getIdToken();
     final resp = await accountClient.updateDriverOrderSetting(
@@ -112,15 +109,81 @@ class ControllerDashboard extends GetxController {
       queries: queries.toMap(),
     );
     driver.value = Driver.fromJson(resp);
-    autoBid.value = driver.value.setting?.autoBid ?? false;
+    autoBid.value = driver.value.setting?.autoBid ?? true;
+    Preferences(LocalStorage.instance).setOrderStatus(driver.value.setting?.autoBid ?? true);
+  }
+
+  initialSetting() async {
+    if (autoBid.value == false) {
+      var step = Preferences(LocalStorage.instance).getOrderStep();
+      order.value = od.Order.fromJson(Preferences(LocalStorage.instance).getOrder());
+      if (step == 'STEP_1') {
+        showBottomSheet(true);
+        markers.add(Marker(
+            markerId: const MarkerId('Lokasi Tujuan'),
+            position: LatLng(order.value.orderDetail!.latitude!,
+                order.value.orderDetail!.longitude!)));
+        setRoutes(order.value.orderDetail!.latitude, order.value.orderDetail!.longitude);
+      } else if (step == 'STEP_2') {
+        showBottomSheet(true);
+        markers.add(Marker(
+            markerId: const MarkerId('Lokasi Tujuan'),
+            position: LatLng(order.value.orderDetail!.dstLatitude!, order.value.orderDetail!.dstLongitude!)));
+        setRoutes(order.value.orderDetail!.dstLatitude, order.value.orderDetail!.dstLongitude);
+      } else {
+        log("tidak pesanan yang sedang berjalan");
+      }
+    }
+  }
+
+  settingDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog.adaptive(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        title: Text(
+          'Pengaturan',
+          style:
+          GoogleFonts.readexPro(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        content: SizedBox(
+          width: Get.width,
+          height: Get.height * 0.08,
+          child: Obx(() => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: <Widget>[
+                  Text(
+                    "Otomatis menerima pesanan",
+                    style: GoogleFonts.readexPro(
+                      fontSize: 12,
+                    ),
+                  ),
+                  const Spacer(),
+                  Switch.adaptive(
+                    activeColor: const Color(0xFF3978EF),
+                    value: autoBid.value,
+                    onChanged: (value) async {
+                      autoBid(value);
+                      Preferences(LocalStorage.instance).setOrderStatus(value);
+                      handleSetAutoBid();
+                    },
+                  )
+                ],
+              ),
+            ],
+          )),
+        ),
+        actionsAlignment: MainAxisAlignment.center,
+      ),
+    );
   }
 
   // 2. sekarang kita track lokasi
   getLocation() async {
-    location.changeSettings(
-      distanceFilter: 100,
-      accuracy: LocationAccuracy.balanced,
-    );
     var permission = await location.hasPermission();
     var service = await location.serviceEnabled();
     if (permission != PermissionStatus.granted ||
@@ -134,21 +197,30 @@ class ControllerDashboard extends GetxController {
     if (!service) {
       await location.requestService();
     }
+
+    location.changeSettings(
+      distanceFilter: 100,
+      accuracy: LocationAccuracy.balanced,
+    );
+
     try {
-      location.getLocation().then((location) {
+      await location.getLocation().then((location) {
         locationData.value = LocationData.fromMap({
           "latitude": location.latitude,
           "longitude": location.longitude,
           "isMock": 0,
         });
 
-        geocoding
-            .placemarkFromCoordinates(location.latitude!, location.longitude!)
-            .then(
+        geocoding.placemarkFromCoordinates(location.latitude!, location.longitude!).then(
               (value) => address(
-                "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}",
-              ),
-            );
+                "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"));
+
+        markers.add(Marker(
+            icon: iconMarker.value,
+            markerId: const MarkerId('Lokasi saya'),
+            position: LatLng(location.latitude!, location.longitude!)));
+
+        Future.delayed(const Duration(seconds: 30), () => updateLocation(location.latitude!, location.longitude!));
       });
 
       GoogleMapController googleMapController = await mapController.future;
@@ -159,30 +231,28 @@ class ControllerDashboard extends GetxController {
         googleMapController.animateCamera(
           CameraUpdate.newCameraPosition(
             CameraPosition(
-              zoom: 17,
-              target: LatLng(
-                it.latitude!,
-                it.longitude!,
-              ),
-            ),
-          ),
-        );
+              zoom: 17, target: LatLng(it.latitude!, it.longitude!))));
 
         geocoding.placemarkFromCoordinates(it.latitude!, it.longitude!).then(
               (value) => address(
-                  "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"),
-            );
+                  "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"),);
 
-        await api.listenLocation(
-          id: controllerUser.user.value.id ?? "user id",
-          address: address.value,
-          isOnline: autoBid.value,
-          latitude: num.parse(it.latitude.toString()),
-          longitude: num.parse(it.longitude.toString()),
-          name: controllerUser.user.value.name ?? "name",
-          type: orderType.value,
-          document: docId.value,
+        markers.removeWhere((element) {
+          if (element.markerId.value == const MarkerId('Lokasi saya').value) {
+            return true;
+          }
+          return false;
+        });
+
+        markers.add(
+          Marker(
+            icon: iconMarker.value,
+            markerId: const MarkerId('Lokasi saya'),
+            position: LatLng(it.latitude!, it.longitude!),
+          ),
         );
+
+        updateLocation(it.latitude!, it.longitude!);
       });
     } catch (e, stackTrace) {
       log("$e");
@@ -190,8 +260,45 @@ class ControllerDashboard extends GetxController {
     }
   }
 
-  Stream<List<od.Order>> getOrder() {
-    return api.getOrder(fromJson: (data) => od.Order.fromJson(data));
+  updateLocation(double latitude, double longitude)async{
+    try{
+      var token = await firebase.currentUser?.getIdToken(true);
+      await accountClient.updateDriverCoordinate(
+          bearerToken: token!,
+          body: {
+            'latitude': latitude,
+            'longitude': longitude
+          });
+    }catch(e, stackTrace){
+      log('$e');
+      log('$stackTrace');
+    }
+  }
+
+  // 3. get order berdasarkan status order setting dan tampilin order dialog kalau sesuai
+  Stream<List<OrderFirestore>> getOrder() => _db
+      .collection('order')
+      .where('driverId', isEqualTo: controllerUser.user.value.id)
+      .orderBy('created_at', descending: true)
+      .snapshots()
+      .map((event) {
+    return event.docs
+        .map((e) => OrderFirestore.fromJson(e.data()))
+        .toList();
+  });
+
+  getDetailOrder(String orderId) async {
+    try {
+      var token = await firebase.currentUser?.getIdToken();
+      var resp = await orderClient.getOrder(bearerToken: token!, orderId: orderId);
+      if (resp != null) {
+        order.value = od.Order.fromJson(resp);
+        orderDialog(Get.context!);
+      }
+    } catch (e, stackTrace) {
+      log('$e');
+      log('$stackTrace');
+    }
   }
 
   orderDialog(BuildContext context) {
@@ -351,7 +458,10 @@ class ControllerDashboard extends GetxController {
         actionsAlignment: MainAxisAlignment.center,
         actions: [
           OutlinedButton(
-              onPressed: () => acceptOrder(),
+              onPressed: () {
+                acceptOrder();
+                Get.back();
+              },
               style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Color(0xFF3978EF), width: 1),
                   shape: RoundedRectangleBorder(
@@ -383,38 +493,30 @@ class ControllerDashboard extends GetxController {
     );
   }
 
-  acceptOrder() async {
+  // 4. accept order
+  acceptOrder({String? idOrder}) async {
     try {
       final token = await firebase.currentUser?.getIdToken();
       final resp = await orderClient.driverAcceptOrder(
         bearerToken: "Bearer $token",
-        orderId: order.value.id!,
+        orderId: order.value.id ?? idOrder!,
       );
       if (resp["message"] == 'OK') {
         showBottomSheet(true);
         initiateChat();
         autoBid(false);
+        Preferences(LocalStorage.instance).setOrderStatus(false);
+        Preferences(LocalStorage.instance).setOrder(order.value);
+        Preferences(LocalStorage.instance).setOrderStep('STEP_1');
+        markers.add(Marker(
+            markerId: const MarkerId('Lokasi Tujuan'),
+            position: LatLng(order.value.orderDetail!.latitude!,
+                order.value.orderDetail!.longitude!)));
+        setRoutes(order.value.orderDetail!.latitude, order.value.orderDetail!.longitude);
         Get.back();
       } else {
         Fluttertoast.showToast(msg: "Ada yang salah");
       }
-    } catch (e, stackTrace) {
-      log('$e');
-      log('$stackTrace');
-    }
-  }
-
-  initiateChat() async {
-    try {
-      var r = await api.makeRoomChat(
-          customerName: order.value.customer!.name!,
-          merchantName: order.value.customer!.name!,
-          driverName: order.value.customer!.name!,
-          customerId: controllerUser.user.value.id!,
-          merchantId: controllerUser.user.value.id!,
-          driverId: controllerUser.user.value.id!,
-          status: true);
-      debugPrint(r);
     } catch (e, stackTrace) {
       log('$e');
       log('$stackTrace');
@@ -439,7 +541,52 @@ class ControllerDashboard extends GetxController {
     }
   }
 
-  // 5. kalau tolak jalankan method reject
+  initiateChat() async {
+    try {
+      var r = await api.makeRoomChat(
+          id: order.value.id!,
+          customer_id: order.value.customerId!,
+          merchant_id: "",
+          driver_id: controllerUser.user.value.id!,
+          dateTime: DateTime.now(),
+          status: true);
+      debugPrint(r);
+    } catch (e, stackTrace) {
+      log('$e');
+      log('$stackTrace');
+    }
+  }
+
+  // 5. driver otw
+  driverOtw() async {
+    try {
+      var token = await firebase.currentUser?.getIdToken();
+      var r =
+      await api.orderOtw(token: token!, order_id: order.value.id!);
+      if (r["message"] == "OK") {
+        markers.removeWhere((element) {
+          if (element.markerId.value == const MarkerId('Lokasi Tujuan').value) {
+            return true;
+          }
+          return false;
+        });
+        markers.add(Marker(
+            markerId: const MarkerId('Lokasi Tujuan'),
+            position: LatLng(order.value.orderDetail!.dstLatitude!,
+                order.value.orderDetail!.dstLongitude!)));
+        setRoutes(order.value.orderDetail!.dstLatitude,
+            order.value.orderDetail!.dstLongitude);
+        Preferences(LocalStorage.instance).setOrderStep('STEP_2');
+        showPickUpLocation(false);
+        showDropDownLocation(true);
+      }
+    } catch (e, stackTrace) {
+      log('$e');
+      log('$stackTrace');
+    }
+  }
+
+  // 6. reject order
   rejectOrder() async {
     try {
       final token = await firebase.currentUser?.getIdToken();
@@ -459,122 +606,46 @@ class ControllerDashboard extends GetxController {
     }
   }
 
-  // 6. jangan lupa inisiasi lokasi jangan lupa
-  Future<List<Riders>> checkLocation() {
-    return api.getDriver(fromJson: (data) => Riders.fromJson(data));
-  }
-
-  initiateLocation() async {
+  // 7. finish order
+  finishOrder() async {
     try {
-      var r = await api.initialLocation(
-          id: controllerUser.user.value.id ?? "user id",
-          address: address.value,
-          isOnline: autoBid.value,
-          latitude: locationData.value.latitude ?? 0,
-          longitude: locationData.value.longitude ?? 0,
-          name: controllerUser.user.value.name ?? "user name",
-          type: orderType.value);
-      docId(r);
-      await localService.setDocument(doc: r);
+      var token = await firebase.currentUser?.getIdToken();
+      var r = await orderClient.driverFinishOrder(bearerToken: token!, orderId: order.value.id!);
+      if (r["message"] == 'OK') {
+        Get.toNamed(Routes.orderFinish);
+      }
     } catch (e, stackTrace) {
-      log("$e");
-      log("$stackTrace");
+      log('$e');
+      log('$stackTrace');
     }
   }
 
   @override
   void onInit() async {
-    orderType.value = await localService.getOrderType() ?? "-";
-
-    docId.value = await localService.getDocument() ?? "";
-
-    // handleSetAutoBid();
-    handleGetAutoBid();
     getLocation();
-    // if (orderSetting.value == true) {
-    //   check = getOrder().listen((event) {
-    //     if (event.last.id == controllerUser.user.value.id) {
-    //       orderDialog(Get.context!);
-    //     }
-    //   });
-    // }
-
-    // checkLocation().then((it) {
-    //   locationReady.value = it.any((element) => element.id == "user id");
-
-    //   if (!locationReady.value) {
-    //     initiateLocation();
-    //   } else {
-    //     log("lokasi sudah terdaftar");
-    //   }
-    // });
+    initialSetting();
+    handleGetAutoBid();
     BitmapDescriptor.fromAssetImage(
       const ImageConfiguration(
         devicePixelRatio: 2.0,
         textDirection: TextDirection.ltr,
       ),
       'assets/images/driver-marker.png',
-    ).then((value) {
-      marker.value = value;
-    });
+    ).then((value) => iconMarker.value = value);
     super.onInit();
-  }
-
-  settingDialog(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog.adaptive(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        title: Text(
-          'Pengaturan',
-          style:
-              GoogleFonts.readexPro(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        content: SizedBox(
-          width: Get.width,
-          height: Get.height * 0.08,
-          child: Obx(() => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        "Otomatis menerima pesanan",
-                        style: GoogleFonts.readexPro(
-                          fontSize: 12,
-                        ),
-                      ),
-                      const Spacer(),
-                      Switch.adaptive(
-                        activeColor: const Color(0xFF3978EF),
-                        value: autoBid.value,
-                        onChanged: (value) async {
-                          autoBid(value);
-                          await localService.setAutoBid(statusOrder: value);
-                        },
-                      )
-                    ],
-                  ),
-                ],
-              )),
-        ),
-        actionsAlignment: MainAxisAlignment.center,
-      ),
-    );
   }
 
   @override
   void onReady() {
-    getRealtimeOrder();
-    super.onReady();
-  }
-
-  void getRealtimeOrder() {
-    _db.collection("order").snapshots().listen((event) {
-      orderFrs.value = OrderFirestore.fromJson(event.docs.first.data());
+    getOrder().listen((event) {
+      for(var i in event){
+        var checker = i.driverId == firebase.currentUser?.uid;
+        if (checker == true){
+          getDetailOrder(i.orderId ?? '');
+        }
+      }
     });
+    super.onReady();
   }
 
   ControllerUser controllerUser = Get.find<ControllerUser>();

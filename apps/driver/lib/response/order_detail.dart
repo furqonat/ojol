@@ -12,11 +12,11 @@ String orderDetailToJson(OrderDetail data) => json.encode(data.toJson());
 class OrderDetail {
   String? id;
   String? orderId;
-  int? latitude;
-  int? longitude;
+  double? latitude;
+  double? longitude;
   String? address;
-  int? dstLatitude;
-  int? dstLongitude;
+  double? dstLatitude;
+  double? dstLongitude;
   String? dstAddress;
 
   OrderDetail({
@@ -33,11 +33,11 @@ class OrderDetail {
   factory OrderDetail.fromJson(Map<String, dynamic> json) => OrderDetail(
         id: json["id"],
         orderId: json["order_id"],
-        latitude: json["latitude"],
-        longitude: json["longitude"],
+        latitude: json["latitude"] ?? 0.0,
+        longitude: json["longitude"] ?? 0.0,
         address: json["address"],
-        dstLatitude: json["dst_latitude"],
-        dstLongitude: json["dst_longitude"],
+        dstLatitude: json["dst_latitude"] ?? 0.0,
+        dstLongitude: json["dst_longitude"] ?? 0.0,
         dstAddress: json["dst_address"],
       );
 

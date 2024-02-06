@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -181,11 +179,11 @@ class ControllerPhoneVerification extends GetxController {
     final details = driver.value.details;
     if (details == null) {
       preferences.setAlreadyJoin(false);
-      Get.offAndToNamed(Routes.joinLugo);
+      Get.offAllNamed(Routes.joinLugo);
       return;
     }
     preferences.setAlreadyJoin(true);
-    Get.offAndToNamed(Routes.main);
+    Get.offAllNamed(Routes.main);
   }
 
   @override

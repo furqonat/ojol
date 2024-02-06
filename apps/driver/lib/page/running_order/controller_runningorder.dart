@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:lugo_driver/page/dashboard/controller_dashboard.dart';
+import 'package:lugo_driver/page/main/controller_main.dart';
 import 'package:lugo_driver/response/free_order.dart';
 import 'api_runningorder.dart';
 
@@ -20,6 +22,9 @@ class ControllerRunningOrder extends GetxController {
 
   var empty = ''.obs;
 
+  ControllerMain controllerBottomNav = Get.find<ControllerMain>();
+  ControllerDashboard controllerHome = Get.find<ControllerDashboard>();
+
   getListOrder() async {
     try {
       var token = await firebase.currentUser?.getIdToken();
@@ -27,8 +32,7 @@ class ControllerRunningOrder extends GetxController {
       var r = await api.listOrder(token!);
       if (r["total"] != 0) {
         var list = r["data"];
-        freeOrder(
-            RxList<FreeOrder>.from(list.map((e) => FreeOrder.fromJson(e))));
+        freeOrder(RxList<FreeOrder>.from(list.map((e) => FreeOrder.fromJson(e))));
         loading(Status.success);
       } else if (r["total"] == 0) {
         empty("Tidak ada pesanan yang bisa di pilih");

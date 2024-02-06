@@ -2,6 +2,9 @@ import 'package:lugo_driver/api/api_service.dart';
 import 'package:lugo_driver/api/firestore_service.dart';
 
 class ApiDashboard {
+  Future<dynamic> orderOtw({required String token, required String order_id}) async =>
+      await ApiService().apiJSONPutWithFirebaseToken('order', 'driver/shipping/$order_id', {"": ""}, token);
+
   Future<dynamic> acceptOrder({required String orderId, required String token}) async {
     final sample = {"sample": "sample"};
 
@@ -36,21 +39,19 @@ class ApiDashboard {
   }
 
   Future<dynamic> makeRoomChat({
-    required String customerName,
-    required String merchantName,
-    required String driverName,
-    required String customerId,
-    required String merchantId,
-    required String driverId,
+    required String id,
+    required String customer_id,
+    required String merchant_id,
+    required String driver_id,
+    required DateTime dateTime,
     required bool status,
   }) async {
     final body = {
-      "customer_name": customerName,
-      "merchant_name": merchantName,
-      "driver_name": driverName,
-      "customer_id": customerId,
-      "merchant_id": merchantId,
-      "driver_id": driverId,
+      "id": id,
+      "customer_id": customer_id,
+      "merchant_id": merchant_id,
+      "driver_id": driver_id,
+      "datetime": dateTime,
       "status": status,
     };
 

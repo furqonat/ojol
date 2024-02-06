@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:lugo_driver/response/user.dart';
+
 import 'order_detail.dart';
+import 'order_item.dart';
 
 FreeOrder freeOrderFromJson(String str) => FreeOrder.fromJson(json.decode(str));
 
@@ -21,6 +24,8 @@ class FreeOrder {
   int? version;
   bool? showable;
   OrderDetail? orderDetail;
+  List<OrderItem>? orderItems;
+  UserResponse? customer;
 
   FreeOrder({
     this.id,
@@ -37,39 +42,49 @@ class FreeOrder {
     this.version,
     this.showable,
     this.orderDetail,
+    this.orderItems,
+    this.customer
   });
 
   factory FreeOrder.fromJson(Map<String, dynamic> json) => FreeOrder(
-        id: json["id"],
-        orderType: json["order_type"],
-        orderStatus: json["order_status"],
-        paymentType: json["payment_type"],
-        createdAt: DateTime.parse(json["created_at"]),
-        customerId: json["customer_id"],
-        grossAmount: json["gross_amount"],
-        netAmount: json["net_amount"],
-        totalAmount: json["total_amount"],
-        shippingCost: json["shipping_cost"],
-        weightCost: json["weight_cost"],
-        version: json["version"],
-        showable: json["showable"],
-        orderDetail: OrderDetail.fromJson(json["order_detail"]),
-      );
+      id: json["id"],
+      orderType: json["order_type"],
+      orderStatus: json["order_status"],
+      paymentType: json["payment_type"],
+      createdAt: DateTime.parse(json["created_at"]),
+      customerId: json["customer_id"],
+      grossAmount: json["gross_amount"],
+      netAmount: json["net_amount"],
+      totalAmount: json["total_amount"],
+      shippingCost: json["shipping_cost"],
+      weightCost: json["weight_cost"],
+      version: json["version"],
+      showable: json["showable"],
+      orderDetail: OrderDetail.fromJson(json["order_detail"]),
+      orderItems: json["order_items"] != null
+          ? List<OrderItem>.from(json["order_items"].map((x) => OrderItem.fromJson(x)))
+          : null,
+      customer: json["customer"] != null ? UserResponse.fromJson(json["customer"]) : null
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "order_type": orderType,
-        "order_status": orderStatus,
-        "payment_type": paymentType,
-        "created_at": createdAt?.toIso8601String(),
-        "customer_id": customerId,
-        "gross_amount": grossAmount,
-        "net_amount": netAmount,
-        "total_amount": totalAmount,
-        "shipping_cost": shippingCost,
-        "weight_cost": weightCost,
-        "version": version,
-        "showable": showable,
-        "order_detail": orderDetail?.toJson(),
+    "id": id,
+    "order_type": orderType,
+    "order_status": orderStatus,
+    "payment_type": paymentType,
+    "created_at": createdAt?.toIso8601String(),
+    "customer_id": customerId,
+    "gross_amount": grossAmount,
+    "net_amount": netAmount,
+    "total_amount": totalAmount,
+    "shipping_cost": shippingCost,
+    "weight_cost": weightCost,
+    "version": version,
+    "showable": showable,
+    "order_detail": orderDetail?.toJson(),
+    "order_items": orderItems != null
+        ? List<OrderItem>.from(orderItems!.map((x) => x.toJson()))
+        : null,
+    "customer": customer?.toJson(),
       };
 }

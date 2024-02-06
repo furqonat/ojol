@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final orderItem = orderItemFromJson(jsonString);
-
 import 'dart:convert';
 
 OrderItem orderItemFromJson(String str) => OrderItem.fromJson(json.decode(str));
@@ -22,16 +18,16 @@ class OrderItem {
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) => OrderItem(
-        id: json["id"],
-        productId: json["product_id"],
-        quantity: json["quantity"],
-        orderId: json["order_id"],
-      );
+    id: json["id"],
+    productId: json["product_id"],
+    quantity: json["quantity"],
+    orderId: json["order_id"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "product_id": productId,
-        "quantity": quantity,
-        "order_id": orderId,
-      };
+    "id": id,
+    "product_id": productId,
+    "quantity": quantity,
+    "order_id": orderId,
+  };
 }
