@@ -19,8 +19,8 @@ class ControllerWebView extends GetxController {
           log("link apa => ${change.url}");
           var checker = change.url!.contains('responseMessage=Successful');
           if (checker == true) {
-            Get.offAllNamed(Routes.saldo);
-          } else {
+            Get.offAllNamed(Routes.home);
+          }else{
             log('${change.url}');
           }
         },

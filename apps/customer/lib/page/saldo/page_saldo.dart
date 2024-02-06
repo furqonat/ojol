@@ -29,7 +29,7 @@ class PageSaldo extends GetView<ControllerSaldo> {
                     borderRadius: BorderRadius.circular(100)),
                 child: const Center(
                   child:
-                      Icon(Icons.chevron_left, size: 24, color: Colors.white),
+                  Icon(Icons.chevron_left, size: 24, color: Colors.white),
                 ),
               ),
             )),
@@ -43,19 +43,19 @@ class PageSaldo extends GetView<ControllerSaldo> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Obx(() => controller.loading.value == Status.loading
                 ? Text(
-                    "+62...",
-                    style: GoogleFonts.readexPro(
-                        fontSize: 16,
-                        color: const Color(0xFF14181B),
-                        fontWeight: FontWeight.w600),
-                  )
+              "+62...",
+              style: GoogleFonts.readexPro(
+                  fontSize: 16,
+                  color: const Color(0xFF14181B),
+                  fontWeight: FontWeight.w600),
+            )
                 : Text(
-                    "${controller.firebase.currentUser?.phoneNumber}",
-                    style: GoogleFonts.readexPro(
-                        fontSize: 16,
-                        color: const Color(0xFF14181B),
-                        fontWeight: FontWeight.w600),
-                  )),
+              "${controller.firebase.currentUser?.phoneNumber}",
+              style: GoogleFonts.readexPro(
+                  fontSize: 16,
+                  color: const Color(0xFF14181B),
+                  fontWeight: FontWeight.w600),
+            )),
           )
         ],
       ),
@@ -72,12 +72,12 @@ class PageSaldo extends GetView<ControllerSaldo> {
             height: Get.height * 0.2,
             margin: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFF3978EF),
-                    Colors.lightBlue
-                  ])
+                borderRadius: BorderRadius.circular(12),
+                gradient: const LinearGradient(
+                    colors: [
+                      Color(0xFF3978EF),
+                      Colors.lightBlue
+                    ])
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
