@@ -22,8 +22,8 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
         automaticallyImplyLeading: false,
         title: Text(
           'Pesanan Berjalan',
-          style:
-              GoogleFonts.readexPro(fontSize: 22, fontWeight: FontWeight.w400),
+          style: GoogleFonts.readexPro(
+              fontSize: 22, fontWeight: FontWeight.w400),
         ),
       ),
       body: Obx(() {
@@ -60,7 +60,8 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                 ),
                               ),
                               Text(
-                                DateFormat('dd/MM/yyyy - HH:mm').format(controller.freeOrder[index].createdAt!),
+                                DateFormat('dd/MM/yyyy - HH:mm').format(
+                                    controller.freeOrder[index].createdAt!),
                                 style: GoogleFonts.readexPro(
                                   color: Colors.black87,
                                   fontWeight: FontWeight.bold,
@@ -109,7 +110,8 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                     color: Colors.grey, fontSize: 12),
                               ),
                               Text(
-                                convertToIdr(controller.freeOrder[index].totalAmount, 0),
+                                convertToIdr(
+                                    controller.freeOrder[index].totalAmount, 0),
                                 style: GoogleFonts.readexPro(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
@@ -187,8 +189,7 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
                                 width: Get.width,
                                 height: Get.height * 0.05,
                                 color: const Color(0xFF3978EF),
-                                onTap: (){}
-                            ),
+                                onTap: () => controller.orderAccept(controller.freeOrder[index].id!, index)),
                           ),
                         ),
                       ],
@@ -200,7 +201,21 @@ class PageRunningOrder extends GetView<ControllerRunningOrder> {
           );
         } else if (controller.freeOrder.isEmpty) {
           return Center(
-            child: Text(controller.empty.value),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                    onPressed: () => controller.getListOrder(),
+                    icon: const Icon(CupertinoIcons.refresh_circled_solid,
+                        size: 100, color: Color(0xFF3978EF))),
+                Text(
+                  "Tidak ada pesanan untuk sekarang\nCoba lagi.",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.readexPro(fontSize: 16),
+                )
+              ],
+            ),
           );
         } else {
           return const Center(

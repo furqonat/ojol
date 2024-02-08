@@ -85,6 +85,85 @@ class ControllerDashboard extends GetxController {
 
   RxList<Riders> riders = <Riders>[].obs;
 
+  userHelp(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SizedBox(
+          width: Get.width,
+          height: Get.height * 0.35,
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+                child: Text(
+                    textAlign: TextAlign.center,
+                    'Kontak & Informasi\nBantuan',
+                    style: GoogleFonts.readexPro(
+                      fontSize: 24,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+                child: Row(
+                  children: <Widget>[
+                    RichText(
+                      text: TextSpan(
+                          style: GoogleFonts.readexPro(
+                              fontSize: 14, color: Colors.black87),
+                          children: <TextSpan>[
+                            const TextSpan(
+                              text: 'Whatsapp ',
+                            ),
+                            TextSpan(
+                                text: '081234567899',
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ]),
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.phone_rounded, color: Colors.green)
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
+                child: Row(
+                  children: <Widget>[
+                    RichText(
+                      text: TextSpan(
+                          style: GoogleFonts.readexPro(
+                              fontSize: 14, color: Colors.black87),
+                          children: <TextSpan>[
+                            const TextSpan(
+                              text: 'Email ',
+                            ),
+                            TextSpan(
+                                text: 'admin@email.com',
+                                style: GoogleFonts.readexPro(
+                                  fontSize: 14,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ]),
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.email_rounded, color: Colors.red)
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   // 1. initial setting
   handleSetAutoBid() async {
     final token = await firebase.currentUser?.getIdToken();

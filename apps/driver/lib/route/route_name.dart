@@ -11,4 +11,5 @@ abstract class Routes {
   static const phoneVerification = "/phoneVerification";
   static const forgotPassword = "/forgot_password";
   static const wallet = "/wallet";
+  static const edit_profile = "/edit_profile";
 }

@@ -1,6 +1,8 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:lugo_driver/page/auth/binding_auth.dart';
 import 'package:lugo_driver/page/auth/page_auth.dart';
+import 'package:lugo_driver/page/edit_profile/binding_editprofile.dart';
+import 'package:lugo_driver/page/edit_profile/page_editprofile.dart';
 import 'package:lugo_driver/page/forgot_password/binding_forgot_password.dart';
 import 'package:lugo_driver/page/forgot_password/page_forgot_password.dart';
 import 'package:lugo_driver/page/main/binding_main.dart';
@@ -86,6 +88,11 @@ class RoutingPages {
       name: Routes.wallet,
       page: () => const PageWallet(),
       binding: BindingWallet(),
+    ),
+    GetPage(
+      name: Routes.edit_profile,
+      page: () => const PageEditProfile(),
+      binding: BindingEditProfile(),
     ),
   ];
 }
