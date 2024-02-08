@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:lugo_driver/api/local_serivce.dart';
+import 'package:lugo_driver/page/history_order/api_history_order.dart';
 import 'package:lugo_driver/page/main/controller_main.dart';
 import 'package:lugo_driver/page/history_order/controller_history_order.dart';
 import 'package:lugo_driver/page/dashboard/api_dashboard.dart';
@@ -43,6 +44,7 @@ class BindingMain implements Bindings {
     );
     Get.lazyPut<ControllerHistoryOrder>(
       () => ControllerHistoryOrder(
+        api: ApiHistoryOrder(),
         transactionClient: TransactionClient(dio),
       ),
     );

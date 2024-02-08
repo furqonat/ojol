@@ -68,7 +68,7 @@ class PageProfile extends GetView<ControllerProfile> {
                         ),
                         const Spacer(),
                         ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () => Get.toNamed(Routes.edit_profile),
                             style: ElevatedButton.styleFrom(
                                 elevation: 0,
                                 fixedSize:

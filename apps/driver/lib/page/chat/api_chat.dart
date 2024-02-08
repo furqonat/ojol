@@ -1,27 +1,25 @@
 import '../../api/firestore_service.dart';
 
 class ApiChat {
-  Stream<List<T>> getChat<T>(
-      {required T Function(Map<String, dynamic> data) fromJson}) {
-    var r =
-        FirestoreService().firestoreStreamGet<T>('chat', fromJson: fromJson);
+  Stream<List<T>> getChat<T>({required T Function(Map<String, dynamic> data) fromJson}) {
+    var r = FirestoreService().firestoreStreamGet<T>('chat', fromJson: fromJson);
     return r;
   }
 
   Future<dynamic> sendChat({
     required String msg,
-    required String idSender,
-    required String idReceiver,
+    required String senderId,
+    required String chatFor,
     required DateTime time,
-    required String idTrx,
+    required String orderTransaksiId,
     required String attachment,
   }) async {
     final body = {
       "msg": msg,
-      "id_sender": idSender,
-      "id_receiver": idReceiver,
+      "id_sender": senderId,
+      "chatFor": chatFor,
       "time": time,
-      "id_transaksi": idTrx,
+      "orderTransaksiId": orderTransaksiId,
       "attachment": attachment
     };
 

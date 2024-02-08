@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:lugo_driver/response/room.dart';
 import '../../route/route_name.dart';
 import 'controller_roomchat.dart';
@@ -42,10 +43,14 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
           stream: controller.getRoomChat(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: 10,
+              return snapshot.data!.isNotEmpty
+                  ? ListView.builder(
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) => ListTile(
-                  onTap: () => Get.toNamed(Routes.chat),
+                  onTap: () => Get.toNamed(Routes.chat, arguments: {
+                    'orderTransaksiId': snapshot.data?[index].id,
+                    'sendTo': "MERCHANT"
+                  }),
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
                     child: CachedNetworkImage(
@@ -66,7 +71,10 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
                     ),
                   ),
                   title: Text(
-                    "user name",
+                    snapshot.data?[index].merchantId == null ||
+                        snapshot.data?[index].merchantId == ""
+                        ? "Merchant ID"
+                        : "${snapshot.data?[index].merchantId}",
                     style: GoogleFonts.readexPro(
                       fontSize: 12,
                       color: Colors.black,
@@ -74,7 +82,7 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
                     ),
                   ),
                   subtitle: Text(
-                    "Pesanan selesai",
+                    DateFormat('dd/MM/yyyy').format(snapshot.data![index].dateTime!),
                     style: GoogleFonts.readexPro(
                       fontSize: 12,
                       color: Colors.black87,
@@ -82,10 +90,13 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
                     ),
                   ),
                 ),
+              )
+                  : const Center(
+                child: Text("Tidak ada obrolan yang bisa ditampilkan"),
               );
             } else {
               return const Center(
-                child: Text("Ada yang salah"),
+                child: CircularProgressIndicator(),
               );
             }
           },
@@ -95,11 +106,16 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
           stream: controller.getRoomChat(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Expanded(
-                  child: ListView.builder(
-                itemCount: 10,
+              return snapshot.data!.isNotEmpty
+                  ? ListView.builder(
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) => ListTile(
-                  onTap: () => Get.toNamed(Routes.chat),
+                  onTap: () {
+                    Get.toNamed(Routes.chat, arguments: {
+                      'orderTransaksiId': snapshot.data?[index].id,
+                      'sendTo': "CUSTOMER"
+                    });
+                  },
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(100),
                     child: CachedNetworkImage(
@@ -120,7 +136,10 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
                     ),
                   ),
                   title: Text(
-                    "user name",
+                    snapshot.data?[index].customerId == null ||
+                        snapshot.data?[index].customerId == ""
+                        ? "Customer ID"
+                        : "${snapshot.data?[index].customerId}",
                     style: GoogleFonts.readexPro(
                       fontSize: 12,
                       color: Colors.black,
@@ -128,7 +147,8 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
                     ),
                   ),
                   subtitle: Text(
-                    "Pesanan selesai",
+                    DateFormat('dd/MM/yyyy')
+                        .format(snapshot.data![index].dateTime!),
                     style: GoogleFonts.readexPro(
                       fontSize: 12,
                       color: Colors.black87,
@@ -136,15 +156,18 @@ class PageRoomChat extends GetView<ControllerRoomChat> {
                     ),
                   ),
                 ),
-              ));
+              )
+                  : const Center(
+                child: Text("Tidak ada obrolan yang bisa ditampilkan"),
+              );
             } else {
               return const Center(
-                child: Text("Ada yang salah"),
+                child: CircularProgressIndicator(),
               );
             }
           },
         ),
-      ]),
+      ])
     );
   }
 }

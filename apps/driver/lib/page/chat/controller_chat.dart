@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -26,6 +27,9 @@ class ControllerChat extends GetxController {
     }
   ].obs.reversed.toList();
 
+  var orderTransaksiId = ''.obs;
+  var roomType = ''.obs;
+
   var receiverId = ''.obs;
   var transactionId = ''.obs;
   var attachment = ''.obs;
@@ -47,30 +51,72 @@ class ControllerChat extends GetxController {
     super.dispose();
   }
 
-  Stream<List<Chat>> getChat() {
-    return api.getChat(fromJson: (data) => Chat.fromJson(data)).map(
-        (chatList) => chatList
-            .where((chat) =>
-                chat.idSender == controllerUser.user.value.id &&
-                chat.idReceiver == receiverId.value &&
-                chat.idTransaksi == transactionId.value)
-            .toList()
-            .reversed
-            .toList());
+  @override
+  void onInit() {
+    orderTransaksiId.value = Get.arguments["orderTransaksiId"];
+    roomType.value = Get.arguments["sendTo"];
+    super.onInit();
   }
 
+  //FROM AND FOR MERCHANT
+  Stream<List<Chat>> getChatMerchant() {
+    return FirebaseFirestore.instance
+        .collection('chat')
+        .where('chatFor', isEqualTo: 'MERCHANT')
+        .where('orderTransaksiId', isEqualTo: orderTransaksiId.value)
+        .orderBy('time', descending: false)
+        .snapshots()
+        .map((event) => event.docs
+        .map((e) {
+      return Chat.fromJson(e.data());
+    })
+        .toList()
+        .reversed
+        .toList());
+  }
+  sendChatMerchant() async {
+    try {
+      await api.sendChat(
+          msg: edtChat.text,
+          senderId: controllerUser.user.value.id!,
+          chatFor: 'MERCHANT',
+          time: DateTime.now(),
+          orderTransaksiId: orderTransaksiId.value,
+          attachment: upload.value);
+    } catch (e, stackTrace) {
+      log('$e');
+      log('$stackTrace');
+    }
+  }
+
+  //FROM AND FOR CUSTOMER
+  Stream<List<Chat>> getChat() {
+    return FirebaseFirestore.instance
+        .collection('chat')
+        .where('chatFor', isEqualTo: 'CUSTOMER')
+        .where('orderTransaksiId', isEqualTo: orderTransaksiId.value)
+        .orderBy('time', descending: false)
+        .snapshots()
+        .map((event) => event.docs
+        .map((e) {
+      return Chat.fromJson(e.data());
+    })
+        .toList()
+        .reversed
+        .toList());
+  }
   sendChat() async {
     try {
       await api.sendChat(
           msg: edtChat.text,
-          idSender: controllerUser.user.value.id!,
-          idReceiver: receiverId.value,
+          senderId: controllerUser.user.value.id!,
+          chatFor: 'CUSTOMER',
           time: DateTime.now(),
-          idTrx: transactionId.value,
-          attachment: attachment.value);
+          orderTransaksiId: orderTransaksiId.value,
+          attachment: upload.value);
     } catch (e, stackTrace) {
-      log("$e");
-      log("$stackTrace");
+      log('$e');
+      log('$stackTrace');
     }
   }
 
@@ -111,7 +157,6 @@ class ControllerChat extends GetxController {
       // uploadImage();
     }
   }
-
   getFromFile() async {
     final XFile? fileImage =
         await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
@@ -122,7 +167,6 @@ class ControllerChat extends GetxController {
       // uploadImage();
     }
   }
-
   uploadImage() async {
     if (file == null) {
       log('Error: File is null.');
