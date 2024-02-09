@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lugo_driver/route/route_name.dart';
+import 'package:lugo_driver/shared/preferences.dart';
 import '../../shared/custom_widget/lugo_button.dart';
 import '../../shared/utils.dart';
 import 'controller_dashboard.dart';
@@ -455,7 +456,11 @@ class PageDashboard extends GetView<ControllerDashboard> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => controller.settingDialog(context),
+        onPressed: () async {
+          controller.settingDialog(context);
+          var fromLocal = Preferences(LocalStorage.instance).getOrderStatus();
+          print('object => $fromLocal');
+        },
         backgroundColor: const Color(0xFF3978EF),
         child: const Icon(CupertinoIcons.settings, color: Colors.white),
       ),

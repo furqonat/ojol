@@ -166,30 +166,42 @@ class ControllerDashboard extends GetxController {
 
   // 1. initial setting
   handleSetAutoBid() async {
-    final token = await firebase.currentUser?.getIdToken();
-    final resp = await accountClient.updateDriverOrderSetting(
-      bearerToken: "Bearer $token",
-      body: {
-        "autoBid": autoBid.value,
-      },
-    );
-    if (resp.message == 'OK') {
-      log("OK setAutoBid");
+    try{
+      final token = await firebase.currentUser?.getIdToken();
+      final resp = await accountClient.updateDriverOrderSetting(
+        bearerToken: "Bearer $token",
+        body: {
+          "autoBid": autoBid.value,
+          'isOnline': autoBid.value,
+        },
+      );
+      print('object error => $resp');
+      if (resp.message == 'OK') {
+        log("OK setAutoBid");
+      }
+    }catch(e, stackTrace){
+      log('message err => $e');
+      log('message stack => $stackTrace');
     }
   }
 
   handleGetAutoBid() async {
-    final token = await firebase.currentUser?.getIdToken();
-    final queries = QueryBuilder()
-      ..addQuery("id", "true")
-      ..addQuery("driver_settings", "true");
-    final resp = await accountClient.getDriver(
-      bearerToken: "Bearer $token",
-      queries: queries.toMap(),
-    );
-    driver.value = Driver.fromJson(resp);
-    autoBid.value = driver.value.setting?.autoBid ?? true;
-    Preferences(LocalStorage.instance).setOrderStatus(driver.value.setting?.autoBid ?? true);
+    try{
+      final token = await firebase.currentUser?.getIdToken();
+      final queries = QueryBuilder()
+        ..addQuery("id", "true")
+        ..addQuery("driver_settings", "true");
+      final resp = await accountClient.getDriver(
+        bearerToken: "Bearer $token",
+        queries: queries.toMap(),
+      );
+      driver.value = Driver.fromJson(resp);
+      autoBid.value = driver.value.setting?.autoBid ?? true;
+      Preferences(LocalStorage.instance).setOrderStatus(driver.value.setting?.autoBid ?? true);
+    }catch(e, stackTrace){
+      log('err => $e');
+      log('stack => $stackTrace');
+    }
   }
 
   initialSetting() async {
