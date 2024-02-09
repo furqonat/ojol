@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lugo_customer/api/local_service.dart';
 import 'package:lugo_customer/page/otp/api_otp.dart';
 import 'package:lugo_customer/route/route_name.dart';
-import 'package:lugo_customer/shared/local_storage.dart';
 import 'package:lugo_customer/shared/phone_e16.dart';
 import 'package:lugo_customer/shared/widget/button.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -15,9 +15,8 @@ enum Status { idle, loading, success, failed }
 class ControllerOtp extends GetxController {
   final ApiOtp api;
   final AccountClient accountClient;
-  final LocalStorage storage;
   ControllerOtp(
-      {required this.api, required this.accountClient, required this.storage});
+      {required this.api, required this.accountClient});
 
   final formkeyPhone = GlobalKey<FormState>();
 
@@ -136,7 +135,7 @@ class ControllerOtp extends GetxController {
     );
     if (resp.message == 'OK') {
       loadingOTP.value = false;
-      storage.setIsSignIn(true);
+      await LocalService().setIsSignIn(value: true);
       Get.offAllNamed(Routes.home);
     } else {
       loadingOTP.value = false;
@@ -146,7 +145,7 @@ class ControllerOtp extends GetxController {
 
   @override
   void onInit() {
-    storage.setVerifcationPage(Routes.otp);
+    LocalService().setVerifcationPage(value: Routes.otp);
     super.onInit();
   }
 

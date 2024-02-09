@@ -46,6 +46,11 @@ class ControllerMain extends GetxController {
     "longitude": 0.0,
   }).obs;
 
+  Rx<LocationData> destinationLocation = LocationData.fromMap({
+    "latitude" : 0.0,
+    "longitude" : 0.0
+  }).obs;
+
   ControllerUser controllerUser = Get.find<ControllerUser>();
 
   var orderLimit = false.obs;
@@ -63,6 +68,12 @@ class ControllerMain extends GetxController {
     orderType.value = await LocalService().getRequestType() ?? "";
     trxId.value = await LocalService().getTransactionId() ?? "";
     price.value = await LocalService().getPrice() ?? 0;
+    await LocalService().getDestination().then((value) {
+      destinationLocation.value = LocationData.fromMap({
+        'latitude' : value?["latitude"],
+        'longitude' : value?["longitude"]
+      });
+    });
 
     if (orderType.value != "" && trxId.value != "" && price.value != 0) {
       orderLimit.value = true;
@@ -144,6 +155,8 @@ class ControllerMain extends GetxController {
         "price": price.value,
         "latitude": myLocation.value.latitude,
         "longitude": myLocation.value.longitude,
+        "dstLatitude": destinationLocation.value.latitude,
+        "dstLongitude": destinationLocation.value.longitude
       });
     } else {
       Fluttertoast.showToast(

@@ -138,7 +138,7 @@ class ControllerLocationPicker extends GetxController {
     });
   }
 
-  setDestination(LatLng point) {
+  setDestination(LatLng point) async {
     final destination = Marker(
       markerId: const MarkerId("Tujuan"),
       position: point,
@@ -146,6 +146,11 @@ class ControllerLocationPicker extends GetxController {
 
     if (markers.length == 1) {
       markers.add(destination);
+
+      await LocalService().setDestination(data: {
+        "latitude" : point.latitude,
+        "longitude" : point.longitude
+      });
 
       destinationLocation.value = LocationData.fromMap({
         "latitude": point.latitude,
@@ -157,6 +162,11 @@ class ControllerLocationPicker extends GetxController {
               "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}");
     } else if (markers.length == 2) {
       markers[1] = destination;
+
+      await LocalService().setDestination(data: {
+        "latitude" : point.latitude,
+        "longitude" : point.longitude
+      });
 
       destinationLocation.value = LocationData.fromMap({
         "latitude": point.latitude,
