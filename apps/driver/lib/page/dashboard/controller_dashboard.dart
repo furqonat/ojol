@@ -193,6 +193,7 @@ class ControllerDashboard extends GetxController {
   }
 
   initialSetting() async {
+    autoBid.value = Preferences(LocalStorage.instance).getOrderStatus();
     if (autoBid.value == false) {
       var step = Preferences(LocalStorage.instance).getOrderStep();
       var keeper = Preferences(LocalStorage.instance).getOrder();
@@ -632,7 +633,7 @@ class ControllerDashboard extends GetxController {
     try {
       var token = await firebase.currentUser?.getIdToken();
       var r =
-      await api.orderOtw(token: "Bearer $token", order_id: order.value.id!);
+      await api.orderOtw(token: token!, order_id: order.value.id!);
       if (r["message"] == "OK") {
         markers.removeWhere((element) {
           if (element.markerId.value == const MarkerId('Lokasi Tujuan').value) {
@@ -693,8 +694,8 @@ class ControllerDashboard extends GetxController {
   @override
   void onInit() async {
     getLocation();
-    initialSetting();
     handleGetAutoBid();
+    initialSetting();
     super.onInit();
   }
 
