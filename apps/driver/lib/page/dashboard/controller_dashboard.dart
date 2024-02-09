@@ -168,7 +168,7 @@ class ControllerDashboard extends GetxController {
   handleSetAutoBid() async {
     try{
       final token = await firebase.currentUser?.getIdToken();
-      final resp = await accountClient.updateDriverOrderSetting(
+      final resp = await accountClient.updateDriverSetting(
         bearerToken: "Bearer $token",
         body: {
           "autoBid": autoBid.value,
