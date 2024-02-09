@@ -63,7 +63,7 @@ class Preferences {
     return preferences.get(cacheOrderDetail) ?? '';
   }
   void setOrder(dynamic value) {
-    preferences.setBool(cacheOrderDetail, value);
+    preferences.setString(cacheOrderDetail, value);
   }
 
   String getOrderStep() {
@@ -71,6 +71,11 @@ class Preferences {
   }
   void setOrderStep(String value) {
     preferences.setString(cahceOrderStep, value);
+  }
+
+  void finishOrder(){
+    preferences.remove(cacheOrderDetail);
+    preferences.remove(cahceOrderStep);
   }
 
   void cleanrepo(){

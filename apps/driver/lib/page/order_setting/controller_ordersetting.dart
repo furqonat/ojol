@@ -53,7 +53,7 @@ class ControllerOrderSetting extends GetxController {
     try{
       var token = await firebase.currentUser?.getIdToken();
       await accountClient.updateDriverOrderSetting(
-          bearerToken: token!,
+          bearerToken: 'Bearer $token',
           body: {
             'food' : foodStatus,
             'food_price' : foodPrice,

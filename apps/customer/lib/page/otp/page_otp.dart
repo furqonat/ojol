@@ -65,8 +65,7 @@ class PageOtp extends GetView<ControllerOtp> {
               child: Center(
                 child: Button(
                   onPressed: () {
-                    final okForm =
-                        controller.formkeyPhone.currentState!.validate();
+                    final okForm = controller.formkeyPhone.currentState!.validate();
                     final isLoading = controller.loadingPhoneVerification.value;
                     if (okForm && !isLoading) {
                       controller.handleVerifyPhoneNumber().then((value) {

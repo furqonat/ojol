@@ -60,8 +60,7 @@ class Order {
         weightCost: json["weight_cost"],
         version: json["version"],
         showable: json["showable"],
-        orderItems: List<OrderItem>.from(
-            json["order_items"].map((x) => OrderItem.fromJson(x))),
+        orderItems: json["order_items"] != null ? List<OrderItem>.from(json["order_items"].map((x) => OrderItem.fromJson(x))) : null,
         orderDetail: OrderDetail.fromJson(json["order_detail"]),
         customer: UserResponse.fromJson(json["customer"]),
       );
@@ -80,7 +79,7 @@ class Order {
         "weight_cost": weightCost,
         "version": version,
         "showable": showable,
-        "order_items": List<dynamic>.from(orderItems!.map((x) => x.toJson())),
+        "order_items": orderItems != null ? List<dynamic>.from(orderItems!.map((x) => x.toJson())) : null,
         "order_detail": orderDetail?.toJson(),
         "customer": customer?.toJson(),
       };

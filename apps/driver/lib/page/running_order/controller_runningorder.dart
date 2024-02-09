@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,7 @@ class ControllerRunningOrder extends GetxController {
       var token = await firebase.currentUser?.getIdToken();
       loading(Status.loading);
       var r = await api.listOrder(token!);
+      print('object -> $r');
       if (r["total"] != 0) {
         var list = r["data"];
         freeOrder(RxList<FreeOrder>.from(list.map((e) => FreeOrder.fromJson(e))));
@@ -45,8 +47,8 @@ class ControllerRunningOrder extends GetxController {
         loading(Status.failed);
       }
     } catch (e, stackTrace) {
-      log('$e');
-      log('$stackTrace');
+      log('err => $e');
+      log('stack => $stackTrace');
     }
   }
 
@@ -70,8 +72,9 @@ class ControllerRunningOrder extends GetxController {
         controllerHome.initiateChat();
         controllerHome.showBottomSheet(true);
         controllerHome.autoBid(false);
+        var keeper = jsonEncode(controllerHome.order.value.toJson());
         Preferences(LocalStorage.instance).setOrderStatus(false);
-        Preferences(LocalStorage.instance).setOrder(controllerHome.order.value);
+        Preferences(LocalStorage.instance).setOrder(keeper);
         Preferences(LocalStorage.instance).setOrderStep('STEP_1');
         controllerBottomNav.currentPage(0);
         controllerBottomNav.pageController.jumpToPage(0);
@@ -82,8 +85,8 @@ class ControllerRunningOrder extends GetxController {
       );
     }
   }catch(e, stackTrace){
-    log('$e');
-    log('$stackTrace');
+    log('err => $e');
+    log('stack => $stackTrace');
   }
 }
 

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -70,7 +71,6 @@ class ControllerDashboard extends GetxController {
 
   final order = od.Order().obs;
   final orderFrs = OrderFirestore().obs;
-  final iconMarker = BitmapDescriptor.defaultMarker.obs;
 
   final locationData = LocationData.fromMap({"latitude": 0.0, "longitude": 0.0}).obs;
 
@@ -195,7 +195,9 @@ class ControllerDashboard extends GetxController {
   initialSetting() async {
     if (autoBid.value == false) {
       var step = Preferences(LocalStorage.instance).getOrderStep();
-      order.value = od.Order.fromJson(Preferences(LocalStorage.instance).getOrder());
+      var keeper = Preferences(LocalStorage.instance).getOrder();
+      var decode = jsonDecode(keeper);
+      order.value = od.Order.fromJson(decode);
       if (step == 'STEP_1') {
         showBottomSheet(true);
         markers.add(Marker(
@@ -269,81 +271,70 @@ class ControllerDashboard extends GetxController {
         permission != PermissionStatus.grantedLimited) {
       await location.requestPermission();
     }
-    if (permission == PermissionStatus.denied ||
-        permission == PermissionStatus.deniedForever) {
-      // continue;
-    }
     if (!service) {
       await location.requestService();
     }
 
-    location.changeSettings(
-      distanceFilter: 100,
-      accuracy: LocationAccuracy.balanced,
+    BitmapDescriptor iconMarker = await BitmapDescriptor.fromAssetImage(
+      const ImageConfiguration(),
+      "assets/images/driver-marker.png",
     );
 
-    try {
-      await location.getLocation().then((location) {
-        locationData.value = LocationData.fromMap({
-          "latitude": location.latitude,
-          "longitude": location.longitude,
-          "isMock": 0,
-        });
-
-        geocoding.placemarkFromCoordinates(location.latitude!, location.longitude!).then(
-              (value) => address(
-                "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"));
-
-        markers.add(Marker(
-            icon: iconMarker.value,
-            markerId: const MarkerId('Lokasi saya'),
-            position: LatLng(location.latitude!, location.longitude!)));
-
-        Future.delayed(const Duration(seconds: 30), () => updateLocation(location.latitude!, location.longitude!));
+    await location.getLocation().then((location) {
+      locationData.value = LocationData.fromMap({
+        "latitude": location.latitude,
+        "longitude": location.longitude,
+        "isMock": 0,
       });
 
-      GoogleMapController googleMapController = await mapController.future;
+      geocoding.placemarkFromCoordinates(location.latitude!, location.longitude!).then(
+              (value) => address(
+              "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"));
 
-      location.onLocationChanged.listen((it) async {
-        locationData.value = it;
+      markers.add(Marker(
+          icon: iconMarker,
+          markerId: const MarkerId('Lokasi saya'),
+          position: LatLng(location.latitude!, location.longitude!)));
 
-        googleMapController.animateCamera(
+      updateLocation(location.latitude!, location.longitude!);
+    });
+
+    GoogleMapController googleMapController = await mapController.future;
+
+    location.onLocationChanged.listen((it) async {
+      locationData.value = it;
+
+      googleMapController.animateCamera(
           CameraUpdate.newCameraPosition(
-            CameraPosition(
-              zoom: 17, target: LatLng(it.latitude!, it.longitude!))));
+              CameraPosition(zoom: 17, target: LatLng(it.latitude!, it.longitude!))));
 
-        geocoding.placemarkFromCoordinates(it.latitude!, it.longitude!).then(
-              (value) => address(
-                  "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"),);
+      geocoding.placemarkFromCoordinates(it.latitude!, it.longitude!).then((value) => address(
+          "${value.first.street}, ${value.first.subLocality}, ${value.first.locality}, ${value.first.administrativeArea}, ${value.first.country}, ${value.first.postalCode}"),);
 
-        markers.removeWhere((element) {
-          if (element.markerId.value == const MarkerId('Lokasi saya').value) {
-            return true;
-          }
-          return false;
-        });
-
-        markers.add(
-          Marker(
-            icon: iconMarker.value,
-            markerId: const MarkerId('Lokasi saya'),
-            position: LatLng(it.latitude!, it.longitude!),
-          ),
-        );
-
-        updateLocation(it.latitude!, it.longitude!);
+      markers.removeWhere((element) {
+        if (element.markerId.value == const MarkerId('Lokasi saya').value) {
+          return true;
+        }
+        return false;
       });
-    } catch (e, stackTrace) {
-      log("$e");
-      log("$stackTrace");
-    }
+
+      markers.add(
+        Marker(
+          icon: iconMarker,
+          markerId: const MarkerId('Lokasi saya'),
+          position: LatLng(it.latitude!, it.longitude!),
+        ),
+      );
+
+      updateLocation(it.latitude!, it.longitude!);
+    });
   }
 
   updateLocation(double latitude, double longitude)async{
     try{
       var token = await firebase.currentUser?.getIdToken(true);
       await accountClient.updateDriverCoordinate(
-          bearerToken: token!,
+          bearerToken: 'Bearer $token',
           body: {
             'latitude': latitude,
             'longitude': longitude
@@ -369,7 +360,7 @@ class ControllerDashboard extends GetxController {
   getDetailOrder(String orderId) async {
     try {
       var token = await firebase.currentUser?.getIdToken();
-      var resp = await orderClient.getOrder(bearerToken: token!, orderId: orderId);
+      var resp = await orderClient.getOrder(bearerToken: 'Bearer $token', orderId: orderId);
       if (resp != null) {
         order.value = od.Order.fromJson(resp);
         orderDialog(Get.context!);
@@ -626,7 +617,7 @@ class ControllerDashboard extends GetxController {
           id: order.value.id!,
           customer_id: order.value.customerId!,
           merchant_id: "",
-          driver_id: controllerUser.user.value.id!,
+          driver_id: controllerUser.user.value.id ?? 'user_id',
           dateTime: DateTime.now(),
           status: true);
       debugPrint(r);
@@ -641,7 +632,7 @@ class ControllerDashboard extends GetxController {
     try {
       var token = await firebase.currentUser?.getIdToken();
       var r =
-      await api.orderOtw(token: token!, order_id: order.value.id!);
+      await api.orderOtw(token: "Bearer $token", order_id: order.value.id!);
       if (r["message"] == "OK") {
         markers.removeWhere((element) {
           if (element.markerId.value == const MarkerId('Lokasi Tujuan').value) {
@@ -689,7 +680,7 @@ class ControllerDashboard extends GetxController {
   finishOrder() async {
     try {
       var token = await firebase.currentUser?.getIdToken();
-      var r = await orderClient.driverFinishOrder(bearerToken: token!, orderId: order.value.id!);
+      var r = await orderClient.driverFinishOrder(bearerToken: 'Bearer $token', orderId: order.value.id!);
       if (r["message"] == 'OK') {
         Get.toNamed(Routes.orderFinish);
       }
@@ -704,13 +695,6 @@ class ControllerDashboard extends GetxController {
     getLocation();
     initialSetting();
     handleGetAutoBid();
-    BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(
-        devicePixelRatio: 2.0,
-        textDirection: TextDirection.ltr,
-      ),
-      'assets/images/driver-marker.png',
-    ).then((value) => iconMarker.value = value);
     super.onInit();
   }
 

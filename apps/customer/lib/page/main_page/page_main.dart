@@ -39,7 +39,7 @@ class PageMain extends GetView<ControllerMain> {
           children: <Widget>[
             Obx(() {
               if(controller.loading.value == false){
-                return controller.banner.first.images != null
+                return controller.banner.isNotEmpty
                     ? SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
@@ -344,7 +344,7 @@ class PageMain extends GetView<ControllerMain> {
             ),
             Obx(() {
               if(controller.loading.value == false){
-                return controller.banner.first.images != null
+                return controller.banner.isNotEmpty
                     ? CarouselSlider.builder(
                       itemCount: controller.banner.first.images!.length,
                       options: CarouselOptions(

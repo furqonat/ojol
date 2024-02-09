@@ -1,7 +1,10 @@
 import 'package:animated_rating_stars/animated_rating_stars.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../route/route_name.dart';
+import '../../shared/preferences.dart';
 import 'controller_orderfinish.dart';
 
 class PageOrderFinish extends GetView<ControllerOrderFinish> {
@@ -30,11 +33,17 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
               children: <Widget>[
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: const Image(
-                      width: 90,
-                      height: 90,
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/images/sample_food.png')),
+                  child: CachedNetworkImage(
+                    width: 90,
+                    height: 90,
+                    fit: BoxFit.cover,
+                    imageUrl: controller.controllerUser.user.value.avatar ?? '',
+                    errorWidget: (context, url, error) => const Image(
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.cover,
+                        image: AssetImage('assets/images/sample_food.png')),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
@@ -42,7 +51,7 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'User name',
+                        '${controller.controllerUser.user.value.name}',
                         style: GoogleFonts.readexPro(
                           fontSize: 14,
                           color: Colors.black87,
@@ -87,12 +96,12 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                  const TextSpan(text: 'ID Transaksi'),
-                  TextSpan(
-                      text: ' 1234567899',
-                      style: GoogleFonts.readexPro(
-                          fontSize: 16, color: Colors.black54)),
-                ])),
+                      const TextSpan(text: 'ID Transaksi'),
+                      TextSpan(
+                          text: ' 1234567899',
+                          style: GoogleFonts.readexPro(
+                              fontSize: 16, color: Colors.black54)),
+                    ])),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
@@ -103,12 +112,12 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                  const TextSpan(text: 'ID Order'),
-                  TextSpan(
-                      text: ' 1234567899',
-                      style: GoogleFonts.readexPro(
-                          fontSize: 16, color: Colors.black54)),
-                ])),
+                      const TextSpan(text: 'ID Order'),
+                      TextSpan(
+                          text: ' 1234567899',
+                          style: GoogleFonts.readexPro(
+                              fontSize: 16, color: Colors.black54)),
+                    ])),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 30, 10, 0),
@@ -119,12 +128,12 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                         fontWeight: FontWeight.bold,
                         color: const Color(0xFF3978EF)),
                     children: <TextSpan>[
-                  const TextSpan(text: 'Pembayaran'),
-                  TextSpan(
-                      text: ' | cash',
-                      style: GoogleFonts.readexPro(
-                          fontSize: 16, color: Colors.black54)),
-                ])),
+                      const TextSpan(text: 'Pembayaran'),
+                      TextSpan(
+                          text: ' | cash',
+                          style: GoogleFonts.readexPro(
+                              fontSize: 16, color: Colors.black54)),
+                    ])),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(10, 50, 10, 50),
@@ -164,7 +173,12 @@ class PageOrderFinish extends GetView<ControllerOrderFinish> {
                     ],
                   ),
                   ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Preferences(LocalStorage.instance).setOrderStatus(true);
+                        Preferences(LocalStorage.instance).finishOrder();
+                        Get.offAllNamed(Routes.main);
+
+                      },
                       style: ElevatedButton.styleFrom(
                           elevation: 5,
                           fixedSize: Size(Get.width, Get.height * 0.06),

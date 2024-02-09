@@ -155,7 +155,7 @@ class ControllerEditProfile extends GetxController{
       final query = QueryBuilder()
         ..addQuery("id", "true")
         ..addQuery("driver_wallet", "true");
-      var resp = await accountClient.getDriver(bearerToken: token!, queries: query.toMap());
+      var resp = await accountClient.getDriver(bearerToken: 'Bearer $token', queries: query.toMap());
       driver.value = Driver.fromJson(resp);
     }catch(e, stackTrace){
       log('$e');
@@ -187,7 +187,7 @@ class ControllerEditProfile extends GetxController{
     try{
       var token = await firebase.currentUser?.getIdToken(true);
       var resp = await accountClient.updateApplyToBeDriver(
-          bearerToken: token!,
+          bearerToken: 'Bearer $token',
           body: {
             "address": edtAddress.text,
             "license_image": uploadKendaraan.value,

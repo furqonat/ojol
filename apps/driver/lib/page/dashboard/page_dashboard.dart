@@ -25,19 +25,19 @@ class PageDashboard extends GetView<ControllerDashboard> {
             zoomControlsEnabled: false,
             onMapCreated: (it) => controller.mapController.complete(it),
             initialCameraPosition: CameraPosition(
-              zoom: 17,
-              target: LatLng(
-                controller.locationData.value.latitude ?? -7.8032485,
-                controller.locationData.value.longitude ?? 110.3336448,
-              ),
+                zoom: 17,
+                target: LatLng(
+                    controller.locationData.value.latitude ?? -7.8032485,
+                    controller.locationData.value.longitude ?? 110.3336448
+                )
             ),
             polylines: {
               Polyline(
-                polylineId: const PolylineId("Rute Perjalanan"),
-                points: controller.rute.toList(),
-                color: const Color(0xFF3978EF),
-                width: 5,
-                geodesic: false,
+                  polylineId: const PolylineId("Rute Perjalanan"),
+                  points: controller.rute.toList(),
+                  color: const Color(0xFF3978EF),
+                  width: 5,
+                  geodesic: false
               )
             },
             markers: Set.from(controller.markers),
@@ -239,7 +239,7 @@ class PageDashboard extends GetView<ControllerDashboard> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
                               child: LugoButton(
-                                  textButton: 'Sudah Sampai',
+                                  textButton: 'Mulai antar',
                                   textColor: Colors.white,
                                   textSize: 12,
                                   width: Get.width * 0.45,

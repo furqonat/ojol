@@ -123,8 +123,7 @@ class ControllerMain extends GetxController {
       var r = await api.getBanner(token: token!);
       if (r != null) {
         var list = r;
-        banner(
-            RxList<Banners>.from(list.map((e) => Banners.fromJson(e)) ?? []));
+        banner(RxList<Banners>.from(list.map((e) => Banners.fromJson(e)) ?? []));
         loading(false);
       } else {
         Fluttertoast.showToast(msg: "Ada yang salah");
