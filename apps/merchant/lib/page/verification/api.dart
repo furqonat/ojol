@@ -16,8 +16,7 @@ class ApiService {
     return CommonResponse(message: resp.message, res: resp.res);
   }
 
-  Future<Response> verifyPhone(
-      {required String phoneNumber, required String token}) async {
+  Future<Response> verifyPhone({required String phoneNumber, required String token}) async {
     final resp = await accountClient.merchantVerifyPhoneNumber(
       bearerToken: "Bearer $token",
       body: Verification(phoneNumber: phoneNumber),

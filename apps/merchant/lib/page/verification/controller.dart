@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
@@ -215,35 +216,37 @@ class VerificationController extends GetxController {
     }
   }
 
-  Future<void> handleVerificationPhone(
-    Function(String verificationId) callback,
-  ) async {
-    loadingPhoneVerification.value = true;
-    const regionInfo = RegionInfo(name: "Indonesia", code: "ID", prefix: 62);
-    final phone = await PhoneNumberUtil().parse(
-      phoneNumber.text,
-      regionCode: regionInfo.code,
-    );
-    final token = await _fbAuth.currentUser?.getIdToken();
-    final resp =
-        await apiService.verifyPhone(phoneNumber: phone.e164, token: token!);
-    if (resp.message == 'OK') {
-      verificationStatus.value = PhoneVerificationStatus(
-        status: true,
-        message: resp.message,
+  Future<void> handleVerificationPhone(Function(String verificationId) callback) async {
+    try{
+      loadingPhoneVerification.value = true;
+      const regionInfo = RegionInfo(name: "Indonesia", code: "ID", prefix: 62);
+      final phone = await PhoneNumberUtil().parse(
+        phoneNumber.text,
+        regionCode: regionInfo.code,
       );
-      verificationId.value = resp.res;
-      callback(resp.res);
-      loadingPhoneVerification.value = false;
-      return;
-    } else {
-      loadingPhoneVerification.value = false;
-      verificationStatus.value = PhoneVerificationStatus(
-        status: false,
-        message: resp.message,
-      );
-      Get.snackbar("Error", resp.message);
-      return;
+      final token = await _fbAuth.currentUser?.getIdToken(true);
+      final resp = await apiService.verifyPhone(phoneNumber: phone.e164, token: token ?? "");
+      if (resp.message == 'OK') {
+        verificationStatus.value = PhoneVerificationStatus(
+          status: true,
+          message: resp.message,
+        );
+        verificationId.value = resp.res;
+        callback(resp.res);
+        loadingPhoneVerification.value = false;
+        return;
+      } else {
+        loadingPhoneVerification.value = false;
+        verificationStatus.value = PhoneVerificationStatus(
+          status: false,
+          message: resp.message,
+        );
+        Get.snackbar("Error", resp.message);
+        return;
+      }
+    }catch(e, stackTrace){
+      log('err => $e');
+      log('stack => $stackTrace');
     }
   }
 
