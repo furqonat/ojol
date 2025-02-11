@@ -45,3 +45,5 @@ Thumbs.db
 *.http
 .serverless
 .env.local
+.env
+.env.example
